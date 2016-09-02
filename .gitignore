@@ -1,0 +1,11 @@
+*.pr
+*.ids
+*.iws
+*.iml
+.idea/
+target/
+target
+.DS_Store
+.settings/
+bin/
+.settings
