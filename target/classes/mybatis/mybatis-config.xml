@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	
+	<typeAliases>
+		<typeAlias alias="FreeUseinfoPo" type="com.timeline.vpn.model.po.FreeUseinfoPo" />
+		<typeAlias alias="HostPo" type="com.timeline.vpn.model.po.HostPo" />
+		<typeAlias alias="AppVersion" type="com.timeline.vpn.model.po.AppVersion" />
+		<typeAlias alias="RecommendPo" type="com.timeline.vpn.model.po.RecommendPo" />
+		<typeAlias alias="ServerPo" type="com.timeline.vpn.model.po.ServerPo" />
+		<typeAlias alias="Version" type="com.timeline.vpn.model.po.AppVersion" />
+		<typeAlias alias="LocationPo" type="com.timeline.vpn.model.po.LocationPo" />
+		<typeAlias alias="UserPo" type="com.timeline.vpn.model.po.UserPo" />
+	</typeAliases>
+	
+</configuration>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.RecommendDao">
+	<resultMap id="RecommendMap" type="RecommendPo">
+		<id column="id" property="id" />
+		<id column="title" property="title" />
+		<id column="actionUrl" property="actionUrl" />
+		<result column="img" property="img" />
+		<result column="desc" property="desc" />
+		<result column="color" property="color" />
+		<result column="rate" property="rate" />
+	</resultMap>
+
+	<select id="getAll" resultMap="RecommendMap">
+		select * from recommend
+	</select>
+</mapper>
