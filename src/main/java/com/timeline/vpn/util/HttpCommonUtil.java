@@ -62,8 +62,8 @@ public class HttpCommonUtil {
     public static final String UTF8_CHARSET = DEFAULT_CHARSET;
     private static final String UA =
             "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-    private static RequestConfig config =
-            RequestConfig.custom().setConnectTimeout(15000).setSocketTimeout(30000).setConnectionRequestTimeout(20000).build();
+    private static RequestConfig config = RequestConfig.custom().setConnectTimeout(15000)
+            .setSocketTimeout(30000).setConnectionRequestTimeout(20000).build();
     private static HttpClientBuilder httpClientBuilder = null;
     private static final int MAX_PERROUTE = 800;
     private static final int MAXTOTAL = 2500;
@@ -74,23 +74,20 @@ public class HttpCommonUtil {
             connectionManager.setDefaultMaxPerRoute(MAX_PERROUTE); // 每个host最多100个连接
             connectionManager.setMaxTotal(MAXTOTAL); // 一共800个连接
             httpClientBuilder = HttpClientBuilder.create()
-//                    .addInterceptorFirst(new AcceptEncodingRequestInterceptor())
-//                    .addInterceptorLast(new ContentEncodingResponseInterceptor())
+                    // .addInterceptorFirst(new AcceptEncodingRequestInterceptor())
+                    // .addInterceptorLast(new ContentEncodingResponseInterceptor())
                     .setDefaultRequestConfig(config).setUserAgent(UA)
                     .setConnectionManager(connectionManager);
             httpClient = httpClientBuilder.build();
 
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-                    SSLContexts.custom().loadTrustMaterial(
-                            new TrustStrategy() {
-                                @Override
-                                public boolean isTrusted(X509Certificate[] x509Certificates, String s)
-                                        throws CertificateException {
-                                    return true;
-                                }
-                            }
-                    ).build(),
-                    new HostnameVerifier() {
+                    SSLContexts.custom().loadTrustMaterial(new TrustStrategy() {
+                        @Override
+                        public boolean isTrusted(X509Certificate[] x509Certificates, String s)
+                                throws CertificateException {
+                            return true;
+                        }
+                    }).build(), new HostnameVerifier() {
                         @Override
                         public boolean verify(String hostname, SSLSession session) {
                             return true;
@@ -98,30 +95,30 @@ public class HttpCommonUtil {
 
                     });
             Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
-                    .<ConnectionSocketFactory> create().register("https", sslsf)
-                    .build();
+                    .<ConnectionSocketFactory>create().register("https", sslsf).build();
             PoolingHttpClientConnectionManager ccmSsl =
                     new PoolingHttpClientConnectionManager(socketFactoryRegistry);
             ccmSsl.setDefaultMaxPerRoute(MAX_PERROUTE); // 每个host最多100个连接
             ccmSsl.setMaxTotal(MAXTOTAL); // 一共800个连接
             httpClientBuilder.setConnectionManager(ccmSsl);
             httpClientSsl = httpClientBuilder.build();
-            
+
         } catch (Exception e) {
             LOGGER.error("错误", e);
         }
     }
-    
+
     /**
      * Constructor
      */
     private HttpCommonUtil() {}
-    public static void printHeader(HttpServletRequest request){
+
+    public static void printHeader(HttpServletRequest request) {
         Enumeration<String> e = request.getHeaderNames();
-        while(e.hasMoreElements()){  
+        while (e.hasMoreElements()) {
             String name = e.nextElement();
-            LOGGER.info("head = "+name+"--"+request.getHeader(name)); 
-        } 
+            LOGGER.info("head = " + name + "--" + request.getHeader(name));
+        }
     }
 
 
@@ -135,18 +132,21 @@ public class HttpCommonUtil {
      */
     public static String sendPost(String url, Map<String, String> parameterMap) throws Exception {
         boolean ssl = false;
-        if(url.startsWith("https")){
+        if (url.startsWith("https")) {
             ssl = true;
         }
         return sendPost(url, parameterMap, null, DEFAULT_CHARSET, ssl);
     }
-    public static String sendPost(String url, Map<String, String> parameterMap,Map<String, String> header) throws Exception {
+
+    public static String sendPost(String url, Map<String, String> parameterMap,
+            Map<String, String> header) throws Exception {
         boolean ssl = false;
-        if(url.startsWith("https")){
+        if (url.startsWith("https")) {
             ssl = true;
         }
         return sendPost(url, parameterMap, header, DEFAULT_CHARSET, ssl);
     }
+
     /**
      * Send post to URL with parameters by given encoding.
      * 
@@ -208,7 +208,7 @@ public class HttpCommonUtil {
     public static String sendPost(String url, String param, Map<String, String> headerMap,
             boolean ssl) throws Exception {
         StringEntity entity = null;
-        entity = new StringEntity(param,DEFAULT_CHARSET);
+        entity = new StringEntity(param, DEFAULT_CHARSET);
         entity.setContentType(URLEncodedUtils.CONTENT_TYPE);
         return sendPostWithEntity(url, entity, headerMap, ssl);
     }
@@ -398,8 +398,8 @@ public class HttpCommonUtil {
             for (Entry<String, String> entry : headers.entrySet()) {
                 httpGet.setHeader(entry.getKey(), entry.getValue());
             }
-        } 
-        
+        }
+
         try {
             HttpResponse response = null;
             boolean ssl = url.contains("https") ? true : false;
@@ -430,16 +430,18 @@ public class HttpCommonUtil {
         }
         return sendGetWithHeaders(url, charset, headers);
     }
+
     private static String encoderParam(String param) {
         try {
-            return URLEncoder.encode(param,DEFAULT_CHARSET);
+            return URLEncoder.encode(param, DEFAULT_CHARSET);
         } catch (Exception e) {
             LOGGER.error("UrlEncoder:" + param, e);
         }
         return null;
     }
+
     public static void main(String[] args) {
         sendGet("https://collection.lianjia.com/homelink/inner/sleep");
     }
-    
+
 }

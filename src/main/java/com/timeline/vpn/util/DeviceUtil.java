@@ -54,10 +54,9 @@ public class DeviceUtil {
         Matcher matcher = versionPattern.matcher(version);
         if (matcher.find()) {
             StringBuilder sb = new StringBuilder();
-            DecimalFormat df = new DecimalFormat(FORMAT); 
+            DecimalFormat df = new DecimalFormat(FORMAT);
             for (int i = 1; i <= VERSION_COUNT; i++) {
-                sb.append(
-                        df.format(Integer.parseInt(matcher.group(i))));
+                sb.append(df.format(Integer.parseInt(matcher.group(i))));
             }
             return sb.toString();
         }
@@ -66,25 +65,26 @@ public class DeviceUtil {
 
     public static DevApp getAPPInfo(HttpServletRequest webRequest) {
         String ua = webRequest.getHeader(HTTP_UA);
-        String devId = webRequest.getHeader(DEVID); 
-        if (ua != null && devId!=null) {
+        String devId = webRequest.getHeader(DEVID);
+        if (ua != null && devId != null) {
             Matcher matcher = pattern.matcher(ua);
             if (matcher.find()) {
-                String versionName = matcher.group(2); 
-                DevApp app = new DevApp(devId,webRequest.getRemoteAddr(),versionName, getAppVersion(versionName),
-                        getPlatForm(webRequest));
-                String timeSign = ua.substring(ua.lastIndexOf(",")+1, ua.length());
+                String versionName = matcher.group(2);
+                DevApp app = new DevApp(devId, webRequest.getRemoteAddr(), versionName,
+                        getAppVersion(versionName), getPlatForm(webRequest));
+                String timeSign = ua.substring(ua.lastIndexOf(",") + 1, ua.length());
                 long now = new Date().getTime();
                 int len = String.valueOf(now).length();
                 app.setSign(timeSign.substring(len, timeSign.length()));
-                app.setTime(Long.parseLong(timeSign.substring(0,len)));
+                app.setTime(Long.parseLong(timeSign.substring(0, len)));
                 return app;
             }
 
-        }  
+        }
         return null;
     }
-    public static Locale getLocale(HttpServletRequest webRequest){
+
+    public static Locale getLocale(HttpServletRequest webRequest) {
         String language = webRequest.getHeader(Constant.LANG);
         return new Locale(language);
     }

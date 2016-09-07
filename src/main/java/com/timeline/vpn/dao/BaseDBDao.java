@@ -1,4 +1,5 @@
 package com.timeline.vpn.dao;
+
 import java.util.List;
 
 /**

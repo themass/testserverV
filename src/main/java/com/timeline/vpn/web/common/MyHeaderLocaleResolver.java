@@ -14,7 +14,7 @@ import com.timeline.vpn.Constant;
  * @date 2016年8月31日 上午3:20:50
  * @version V1.0
  */
-public class MyHeaderLocaleResolver implements LocaleResolver{
+public class MyHeaderLocaleResolver implements LocaleResolver {
 
     @Override
     public Locale resolveLocale(HttpServletRequest request) {

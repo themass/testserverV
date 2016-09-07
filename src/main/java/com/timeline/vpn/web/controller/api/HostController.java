@@ -19,9 +19,11 @@ import com.timeline.vpn.web.controller.BaseController;
 @RequestMapping("/api/host")
 public class HostController extends BaseController {
     @RequestMapping(value = "/server/list.json", method = RequestMethod.GET)
-    public JsonResult serverList(@UserInfo BaseQuery baseQuery,@RequestParam(defaultValue="0") int location) {
-        return new JsonResult(hostService.getHostInfo(baseQuery,location));
+    public JsonResult serverList(@UserInfo BaseQuery baseQuery,
+            @RequestParam(defaultValue = "0") int location) {
+        return new JsonResult(hostService.getHostInfo(baseQuery, location));
     }
+
     @RequestMapping(value = "/server/location.json", method = RequestMethod.GET)
     public JsonResult locationList(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(hostService.getAllLocation());

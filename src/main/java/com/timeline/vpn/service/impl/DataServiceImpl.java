@@ -1,13 +1,23 @@
 package com.timeline.vpn.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.deser.Deserializers.Base;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.VersionDao;
+import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.param.PageBaseParam;
+import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.RecommendPo;
+import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
@@ -20,29 +30,55 @@ import com.timeline.vpn.service.DataService;
  * @version V1.0
  */
 @Service
-public class DataServiceImpl implements DataService{
+public class DataServiceImpl implements DataService {
     @Autowired
     private VersionDao versionDao;
     @Autowired
     private RecommendDao recommendDao;
+    @Autowired
+    private IWannaDao iWannaDao;
 
     @Override
-    public InfoListVo<RecommendVo> getRecommendList() {
+    public InfoListVo<RecommendVo> getRecommendPage(PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getAll();
-        List<RecommendPo> poList1 = recommendDao.getAll();
-        List<RecommendPo> poList2 = recommendDao.getAll();
-        List<RecommendPo> poList3 = recommendDao.getAll();
-        poList.addAll(poList1);
-        poList.addAll(poList2);
-        poList.addAll(poList3);
-        InfoListVo<RecommendVo> vo = VoBuilder.buildListInfoVo(poList,RecommendVo.class);
-        vo.setHasMore(false);
-        return vo;
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class);
     }
+
     @Override
     public VersionInfoVo getVersion(String platform) {
-        return VoBuilder.buildVo(versionDao.getLast(platform),VersionInfoVo.class);
+        return VoBuilder.buildVo(versionDao.getLast(platform), VersionInfoVo.class);
     }
-    
+
+    @Override
+    public InfoListVo<IWannaVo> getIwannaPage(BaseQuery baseQuery, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        Page<IWannaPo> data = (Page<IWannaPo>) iWannaDao.getPage();
+        return VoBuilder.buildIWannaPageInfoVo(data, baseQuery.getUser().getName());
+    }
+
+    @Override
+    public IWannaVo addIwanna(BaseQuery baseQuery, String content) {
+        IWannaPo po = new IWannaPo();
+        po.setContent(content);
+        po.setCreateTime(new Date());
+        po.setLikes(0);
+        po.setLikeUsers("8>");
+        po.setName(baseQuery.getUser().getName());
+        iWannaDao.insert(po);
+        return VoBuilder.buildIWannaVo(po, baseQuery.getUser().getName());
+    }
+
+    @Override
+    public void addIwannaLike(BaseQuery baseQuery, long id) {
+        IWannaPo po = iWannaDao.get(id);
+        po.setLikes(po.getLikes() + 1);
+        if (!po.getLikeUsers().contains(baseQuery.getUser().getName())) {
+            po.setLikeUsers(po.getLikeUsers() + "," + baseQuery.getUser().getName());
+        }
+        iWannaDao.like(po);
+
+    }
+
 }
 

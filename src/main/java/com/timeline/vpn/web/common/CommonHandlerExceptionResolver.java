@@ -28,6 +28,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
     private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
     @Autowired
     private ResourceBundleMessageSource messagesource;
+
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
             Object handler, Exception ex) {
@@ -38,29 +39,31 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
         LOGGER.error("error url=" + requestUrl, ex);
         if (ex instanceof MissingServletRequestParameterException) { // 缺少请求参数
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
-            result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR,request)+((MissingServletRequestParameterException) ex).getParameterName());
+            result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR, request)
+                    + ((MissingServletRequestParameterException) ex).getParameterName());
         } else if (ex instanceof HttpRequestMethodNotSupportedException) { // 请求方法错误
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
             result.setError(ex.getMessage());
         } else if (ex instanceof TypeMismatchException) { // 请求参数类型错误
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
-            result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR,request));
+            result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR, request));
         } else if (ex instanceof ApiException) {
             result.setErrno(((ApiException) ex).getStatus());
-            result.setError(getMessage(ex.getMessage(),request));
+            result.setError(getMessage(ex.getMessage(), request));
         } else if (ex instanceof BindException) {
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
-            result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR,request));
-        }else {
+            result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR, request));
+        } else {
             result.setErrno(Constant.ResultErrno.ERRNO_SYSTEM);
-            result.setError(getMessage(Constant.ResultMsg.RESULT_SYSTEMERROR,request));
+            result.setError(getMessage(Constant.ResultMsg.RESULT_SYSTEMERROR, request));
             LOGGER.error(requestUrl, ex);
         }
-//        result.setData(new Object());
+        // result.setData(new Object());
         return new ModelAndView("", JsonResult.MODEL_KEY, result);
     }
-    private String getMessage(String key,HttpServletRequest request){
-        return messagesource.getMessage(key,null,DeviceUtil.getLocale(request));
+
+    private String getMessage(String key, HttpServletRequest request) {
+        return messagesource.getMessage(key, null, DeviceUtil.getLocale(request));
     }
 
 }

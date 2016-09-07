@@ -10,6 +10,7 @@ import com.timeline.vpn.model.po.FreeUseinfoPo;
  */
 public interface FreeUseinfoDao extends BaseDBDao<FreeUseinfoPo> {
     public FreeUseinfoPo get(String devId);
+
     public void update(FreeUseinfoPo po);
 }
 

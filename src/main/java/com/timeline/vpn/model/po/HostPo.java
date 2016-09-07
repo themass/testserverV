@@ -1,4 +1,5 @@
 package com.timeline.vpn.model.po;
+
 /**
  * @author gqli
  * @date 2016年3月7日 下午1:44:59
@@ -10,36 +11,46 @@ public class HostPo {
     private int port;
     private int location;
     private String cert;
+
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public String getGateway() {
         return gateway;
     }
+
     public void setGateway(String gateway) {
         this.gateway = gateway;
     }
+
     public int getPort() {
         return port;
     }
+
     public void setPort(int port) {
         this.port = port;
     }
+
     public int getLocation() {
         return location;
     }
+
     public void setLocation(int location) {
         this.location = location;
     }
+
     public String getCert() {
         return cert;
     }
+
     public void setCert(String cert) {
         this.cert = cert;
     }
-    
+
 }
 

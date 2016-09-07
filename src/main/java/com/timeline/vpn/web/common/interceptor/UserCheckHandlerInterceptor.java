@@ -24,17 +24,18 @@ import com.timeline.vpn.service.CacheService;
 public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private CacheService cacheService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
         String token = request.getHeader(Constant.HTTP_TOKEN_KEY);
-        if(StringUtils.isEmpty(token)){
+        if (StringUtils.isEmpty(token)) {
             return true;
         }
-        UserPo po = cacheService.getUser(token); 
-        if(po!=null){
+        UserPo po = cacheService.getUser(token);
+        if (po != null) {
             request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
-        }else{
+        } else {
             request.setAttribute(Constant.HTTP_ATTR_RET, Constant.ResultErrno.ERRNO_CLEAR_LOGIN);
         }
         return true;
@@ -44,13 +45,13 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
         super.postHandle(request, response, handler, modelAndView);
-        Integer ret = (Integer)request.getAttribute(Constant.HTTP_ATTR_RET);
-        if(ret!=null){
-            JsonResult result = (JsonResult)modelAndView.getModel().get(JsonResult.MODEL_KEY);
+        Integer ret = (Integer) request.getAttribute(Constant.HTTP_ATTR_RET);
+        if (ret != null) {
+            JsonResult result = (JsonResult) modelAndView.getModel().get(JsonResult.MODEL_KEY);
             result.setErrno(ret);
         }
     }
-    
+
 
 
 }

@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quartz.version>2.2.1</quartz.version>
-		<springframework.version>4.0.9.RELEASE</springframework.version>
+		<springframework.version>4.3.2.RELEASE</springframework.version>
 		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.12</slf4j.version>
 		<org.slf4j-version>1.7.12</org.slf4j-version>
@@ -28,7 +28,8 @@
 		<jedis.version>2.6.2</jedis.version>
 		<usercenter-api.version>2.0.0-d80079a7</usercenter-api.version>
 		<zkclient.version>0.5</zkclient.version>
-		<mybatis.version>1.1.1</mybatis.version>
+		<mybatis.version>3.3.1</mybatis.version>
+		<mybatis.spring.version>1.2.5</mybatis.spring.version>
 		<mysql.version>5.1.36</mysql.version>
 		<c3p0.version>0.9.1.2</c3p0.version>
 		<httpclient.version>4.5.1</httpclient.version>
@@ -39,10 +40,17 @@
 		<jackson.version>2.6.0</jackson.version>
 		<influxdb-java.version>2.1</influxdb-java.version>
 		<jetty-util.version>6.1.26</jetty-util.version>
-		 <druid.version>1.0.7</druid.version>
+		<druid.version>1.0.7</druid.version>
+		<pagehelper.version>4.1.0</pagehelper.version>
 	</properties>
 	<dependencies>
 		<!--spring -->
+		<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>${springframework.version}</version>
+</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jms</artifactId>
@@ -107,8 +115,14 @@
 		<!-- mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
+			<artifactId>mybatis</artifactId>
 			<version>${mybatis.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${mybatis.spring.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -240,10 +254,15 @@
 			<version>${jetty-util.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${druid.version}</version>
-        </dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${druid.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper</artifactId>
+			<version>${pagehelper.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>vpn-api</finalName>

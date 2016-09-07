@@ -6,6 +6,6 @@ package com.timeline.vpn;
  * @version V1.0
  */
 public class BeanBuilder {
-    
+
 }
 

@@ -10,23 +10,26 @@ import com.timeline.vpn.Constant;
  * @version V1.0
  */
 public class LoginForm {
-    @NotBlank(message=Constant.ResultMsg.RESULT_DATA_EMPETY_ERROR)
+    @NotBlank(message = Constant.ResultMsg.RESULT_DATA_EMPETY_ERROR)
     private String name;
-    @NotBlank(message=Constant.ResultMsg.RESULT_DATA_EMPETY_ERROR)
+    @NotBlank(message = Constant.ResultMsg.RESULT_DATA_EMPETY_ERROR)
     private String pwd;
-   
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public String getPwd() {
         return pwd;
     }
+
     public void setPwd(String pwd) {
         this.pwd = pwd;
     }
-    
+
 }
 

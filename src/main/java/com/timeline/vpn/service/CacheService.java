@@ -9,8 +9,11 @@ import com.timeline.vpn.model.po.UserPo;
  */
 public interface CacheService {
     public String getToken(String name);
+
     public UserPo getUser(String token);
+
     public String putUser(UserPo user);
+
     public void del(String token);
 }
 

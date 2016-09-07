@@ -13,8 +13,9 @@ public class InfoListVo<T> implements Serializable {
     /**
      * @Fields serialVersionUID :
      */
-    public int total;
-    public boolean hasMore;
+    private int total;
+    private boolean hasMore;
+    private int pageNum;
     private static final long serialVersionUID = 1L;
     private List<T> voList;
 
@@ -46,6 +47,14 @@ public class InfoListVo<T> implements Serializable {
 
     public void setHasMore(boolean hasMore) {
         this.hasMore = hasMore;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 
     @Override

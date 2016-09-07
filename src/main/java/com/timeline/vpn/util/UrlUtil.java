@@ -74,6 +74,7 @@ public class UrlUtil {
     public static String getFullRequestUrl(HttpServletRequest request) {
         return request.getRequestURL() + "?" + getQueryString(request);
     }
+
     /**
      * 
      * @Description: 获取url，全路径，
@@ -83,6 +84,7 @@ public class UrlUtil {
     public static String getRequestUrl(HttpServletRequest request) {
         return request.getRequestURL().toString();
     }
+
     public static String getFullRequestUriWithHeader(HttpServletRequest request) {
         Enumeration<String> e = request.getHeaderNames();
         StringBuilder header = new StringBuilder(" header:");

@@ -15,8 +15,8 @@ public class UserInfoResolver extends BaseResolver {
     @Override
     void resolve(BaseQuery baseQuery, HttpServletRequest webRequest, boolean required) {
         String token = webRequest.getHeader(Constant.HTTP_TOKEN_KEY);
-        UserPo po = (UserPo)webRequest.getAttribute(Constant.HTTP_ATTR_TOKEN);
-        if(required && (StringUtils.isEmpty(token)||po==null)){
+        UserPo po = (UserPo) webRequest.getAttribute(Constant.HTTP_ATTR_TOKEN);
+        if (required && (StringUtils.isEmpty(token) || po == null)) {
             throw new DataException(Constant.ResultMsg.RESULT_TOKEN_EXPIRE);
         }
         baseQuery.setUser(po);

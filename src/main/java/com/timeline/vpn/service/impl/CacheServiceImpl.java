@@ -20,23 +20,27 @@ public class CacheServiceImpl implements CacheService {
     private static final String TOKEN_ITEM_KEY = "token_%s";
     @Autowired
     private RedisTemplate<String, String> jedisTemplate;
-    public String getToken(String name){
-        return String.format(TOKEN_ITEM_KEY, name) ;
+
+    public String getToken(String name) {
+        return String.format(TOKEN_ITEM_KEY, name);
     }
-    public UserPo getUser(String token){
-        if(!StringUtils.isEmpty(token))
-            return JsonUtil.readValue(jedisTemplate.opsForValue().get(token),UserPo.class);
+
+    public UserPo getUser(String token) {
+        if (!StringUtils.isEmpty(token))
+            return JsonUtil.readValue(jedisTemplate.opsForValue().get(token), UserPo.class);
         return null;
     }
+
     @Override
     public String putUser(UserPo user) {
         String token = String.format(TOKEN_ITEM_KEY, AuthUtil.nameToToken(user.getName()));
         jedisTemplate.opsForValue().set(token, JsonUtil.writeValueAsString(user));
         return token;
     }
+
     @Override
     public void del(String token) {
-        if(!StringUtils.isEmpty(token))
+        if (!StringUtils.isEmpty(token))
             jedisTemplate.delete(token);
     }
 

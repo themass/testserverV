@@ -14,4 +14,7 @@
 	<select id="getAll" resultMap="RecommendMap">
 		select * from recommend
 	</select>
+	<select id="get" resultMap="RecommendMap">
+		select * from recommend
+	</select>
 </mapper>

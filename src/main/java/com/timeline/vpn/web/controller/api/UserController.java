@@ -23,36 +23,43 @@ import com.timeline.vpn.web.controller.BaseController;
  */
 @Controller
 @RequestMapping("/api/user")
-public class UserController extends BaseController{
+public class UserController extends BaseController {
     @RequestMapping(value = "/update.json", method = RequestMethod.POST)
-    public JsonResult update(@UserInfo(required=true) BaseQuery baseQuery, @RequestParam long useTime) {
+    public JsonResult update(@UserInfo(required = true) BaseQuery baseQuery,
+            @RequestParam long useTime) {
         userService.updateFreeUseinfo(baseQuery, useTime);
         return Constant.RESULT_SUCCESS;
     }
+
     @RequestMapping(value = "/reg.json", method = RequestMethod.POST)
     public JsonResult reg(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserRegForm form) {
-        userService.reg(form,baseQuery.getAppInfo());
+        userService.reg(form, baseQuery.getAppInfo());
         return Constant.RESULT_SUCCESS;
     }
+
     @RequestMapping(value = "/info.json", method = RequestMethod.GET)
-    public JsonResult info(@UserInfo(required=true) BaseQuery baseQuery) {
+    public JsonResult info(@UserInfo(required = true) BaseQuery baseQuery) {
         return new JsonResult(userService.info(baseQuery));
     }
+
     @RequestMapping(value = "/login.json", method = RequestMethod.POST)
     public JsonResult login(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute LoginForm form) {
-        return new JsonResult(userService.login(baseQuery, form.getName(),form.getPwd()));
+        return new JsonResult(userService.login(baseQuery, form.getName(), form.getPwd()));
     }
+
     @RequestMapping(value = "/logout.json", method = RequestMethod.POST)
     public JsonResult logout(@UserInfo BaseQuery baseQuery) {
         userService.logout(baseQuery);
         return Constant.RESULT_SUCCESS;
     }
+
     @RequestMapping(value = "/ads/score.json", method = RequestMethod.GET)
-    public JsonResult adsFabCLick(@UserInfo(required=true) BaseQuery baseQuery,@RequestParam int score) {
-        if(score==Constant.ADS_FAB_SCORE || score==Constant.ADS_CLICK_SCORE){
-            return new JsonResult( userService.score(baseQuery,score));
+    public JsonResult adsFabCLick(@UserInfo(required = true) BaseQuery baseQuery,
+            @RequestParam int score) {
+        if (score == Constant.ADS_FAB_SCORE || score == Constant.ADS_CLICK_SCORE) {
+            return new JsonResult(userService.score(baseQuery, score));
         }
-       return  Constant.RESULT_SUCCESS;
+        return Constant.RESULT_SUCCESS;
     }
 }
 

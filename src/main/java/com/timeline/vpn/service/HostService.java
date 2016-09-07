@@ -11,7 +11,8 @@ import com.timeline.vpn.model.vo.ServerVo;
  * @version V1.0
  */
 public interface HostService {
-    public ServerVo getHostInfo(BaseQuery baseQuery,int location);
+    public ServerVo getHostInfo(BaseQuery baseQuery, int location);
+
     public InfoListVo<LocationVo> getAllLocation();
 }
 

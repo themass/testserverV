@@ -23,6 +23,7 @@ import com.timeline.vpn.web.common.annotation.UserInfoResolver;
 public class CustomWebArgumentResolver implements HandlerMethodArgumentResolver {
     @Autowired
     private UserInfoResolver userInfoResolver;
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return true;
@@ -35,7 +36,8 @@ public class CustomWebArgumentResolver implements HandlerMethodArgumentResolver 
             BaseQuery baseQuery =
                     userInfoResolver.resolve((ServletRequest) webRequest.getNativeRequest(),
                             parameter.getParameterAnnotation(UserInfo.class).required()); // resolve
-            if (parameter.getParameterAnnotation(UserInfo.class).appinfo() && baseQuery.getAppInfo()==null) {
+            if (parameter.getParameterAnnotation(UserInfo.class).appinfo()
+                    && baseQuery.getAppInfo() == null) {
                 throw new ParamException();
             }
             return baseQuery;

@@ -14,7 +14,7 @@ public class DateTimeUtils {
 
     public static final String TIMEFORMAT = "HHmmss";
     public static final String DATEFORMAT = "yyyyMMdd";
-    public static final String MM_DD_E="MM.dd(E)";
+    public static final String MM_DD_E = "MM.dd(E)";
     public static final String DATETIMEFORMAT = DATEFORMAT + TIMEFORMAT;
     public static final String YYYY_MM_DDHH_MM = "yyyy-MM-dd HH:mm";
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
@@ -23,7 +23,7 @@ public class DateTimeUtils {
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String DATE_CN_FORMAT = "yyyy年MM月dd日HH时mm分ss秒";
-    public static final String DATE_MM_DD="MM月dd日";
+    public static final String DATE_MM_DD = "MM月dd日";
 
     public static String getCurrentTimeString(String format, long mills) {
         SimpleDateFormat simpleFormat = new SimpleDateFormat(format);

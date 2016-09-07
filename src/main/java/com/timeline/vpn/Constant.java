@@ -23,9 +23,9 @@ public class Constant {
 
     public static class ResultErrno {
         public static final int ERRNO_SUCCESS = 0;
-        public static final int ERRNO_SYSTEM=10000;
-        public static final int ERRNO_CLEAR_LOGIN=1;
-        // 
+        public static final int ERRNO_SYSTEM = 10000;
+        public static final int ERRNO_CLEAR_LOGIN = 1;
+        //
         public static final int ERRNO_PWD = 11001;// 用户名密码错误
         public static final int ERRNO_PARAM = 11002; // 参数错误
         public static final int ERRNO_DATA = 21000; // 参数错误
@@ -34,20 +34,22 @@ public class Constant {
         public static final int LEVEL_FREE = 0;
         public static final int LEVEL_VIP = 1;
     }
+
     public static final JsonResult RESULT_SUCCESS =
-            new JsonResult(new RetInfoVo(true),Constant.ResultErrno.ERRNO_SUCCESS, null);
+            new JsonResult(new RetInfoVo(true), Constant.ResultErrno.ERRNO_SUCCESS, null);
     public static final String HTTP_UA = "user-agent";
-    public static final String HTTP_TOKEN_KEY = "vpn-token"; 
-    public static final String HTTP_ATTR_TOKEN = "token_key"; 
-    public static final String HTTP_ATTR_RET = "ret_key"; 
+    public static final String HTTP_TOKEN_KEY = "vpn-token";
+    public static final String HTTP_ATTR_TOKEN = "token_key";
+    public static final String HTTP_ATTR_RET = "ret_key";
     public static final String LANG = "Accept-Language";
-    //0：免费地区，1vip，2高级vip
+    // 0：免费地区，1vip，2高级vip
     public static final int SERVER_TYPE_FREE = 0;
     public static final int SERVER_TYPE_VIP = 1;
     public static final int SERVER_TYPE_HVIP = 2;
     public static final int LOCATION_ALL = 0;
-    public static final long FREE_TIME = 20*24*60*60;
+    public static final long FREE_TIME = 20 * 24 * 60 * 60;
     public static final long ADS_FAB_SCORE = 10;
     public static final long ADS_CLICK_SCORE = 20;
-    public static final long MIN_TIME = 30*60*1000;
+    public static final long MIN_TIME = 30 * 60 * 1000;
+    public static final int MIN_PAGESIZE = 30;
 }

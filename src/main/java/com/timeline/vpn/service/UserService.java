@@ -15,11 +15,16 @@ import com.timeline.vpn.model.vo.UserVo;
  * @version V1.0
  */
 public interface UserService {
-    public void updateFreeUseinfo(BaseQuery baseQuery,long useTime);
-    public UserVo login(BaseQuery baseQuery,String name, String pwd);
+    public void updateFreeUseinfo(BaseQuery baseQuery, long useTime);
+
+    public UserVo login(BaseQuery baseQuery, String name, String pwd);
+
     public void logout(BaseQuery baseQuery);
+
     public void reg(UserRegForm form, DevApp appInfo);
-    public UserVo score(BaseQuery baseQuery,int score);
+
+    public UserVo score(BaseQuery baseQuery, int score);
+
     public UserVo info(BaseQuery baseQuery);
 }
 

@@ -15,22 +15,25 @@ public class DevApp {
     private String sign;
     private long time;
 
-    public DevApp(String devId,String userIp, String versionName, String version, String platform) {
+    public DevApp(String devId, String userIp, String versionName, String version,
+            String platform) {
         this.versionName = versionName;
         this.platform = platform;
         this.version = version;
         this.devId = devId;
         this.userIp = userIp;
     }
-    public boolean check(){
+
+    public boolean check() {
         long now = new Date().getTime();
-        if(now-time>Constant.MIN_TIME){
+        if (now - time > Constant.MIN_TIME) {
             return false;
         }
-        if(!Md5.encode(devId+"|"+time).equals(sign))
+        if (!Md5.encode(devId + "|" + time).equals(sign))
             return false;
         return true;
     }
+
     public String getVersion() {
         return version;
     }
@@ -86,11 +89,13 @@ public class DevApp {
     public void setSign(String sign) {
         this.sign = sign;
     }
+
     public long getTime() {
         return time;
     }
+
     public void setTime(long time) {
         this.time = time;
     }
-    
+
 }

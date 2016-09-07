@@ -20,12 +20,13 @@ public abstract class BaseResolver implements ArgumentResolver<BaseQuery> {
         BaseQuery query = new BaseQuery();
         HttpServletRequest req = (HttpServletRequest) webRequest;
         DevApp app = DeviceUtil.getAPPInfo(req);
-        if(app==null || !app.check()){
+        if (app == null || !app.check()) {
             throw new ParamException();
         }
         query.setAppInfo(app);
         resolve(query, req, required);
         return query;
     }
+
     abstract void resolve(BaseQuery baseQuery, HttpServletRequest webRequest, boolean required);
 }

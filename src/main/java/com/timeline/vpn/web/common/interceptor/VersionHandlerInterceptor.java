@@ -30,8 +30,8 @@ public class VersionHandlerInterceptor extends HandlerInterceptorAdapter {
             Object handler) throws Exception {
         DevApp app = DeviceUtil.getAPPInfo(request);
         VersionInfoVo vo = dataService.getVersion(app.getPlatform());
-        long version = Long.parseLong(app.getVersion()); 
-        if(version<vo.getMinBuild()){  
+        long version = Long.parseLong(app.getVersion());
+        if (version < vo.getMinBuild()) {
             throw new ParamException(Constant.ResultMsg.RESULT_VERSION_ERROR);
         }
         return true;

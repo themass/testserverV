@@ -8,7 +8,7 @@ import com.timeline.vpn.model.po.LocationPo;
  * @date 2016年8月9日 下午12:23:47
  * @version V1.0
  */
-public interface LocationDao extends BaseDBDao<LocationPo>{
-    
+public interface LocationDao extends BaseDBDao<LocationPo> {
+
 }
 

@@ -12,21 +12,27 @@ public class BaseQuery {
     private DevApp appInfo;
     private String token;
     private UserPo user;
+
     public DevApp getAppInfo() {
         return appInfo;
     }
+
     public void setAppInfo(DevApp appInfo) {
         this.appInfo = appInfo;
     }
+
     public String getToken() {
         return token;
     }
+
     public void setToken(String token) {
         this.token = token;
     }
+
     public UserPo getUser() {
         return user;
     }
+
     public void setUser(UserPo user) {
         this.user = user;
     }
