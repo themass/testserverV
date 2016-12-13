@@ -3,9 +3,13 @@
  */
 package com.timeline.vpn.util;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.Security;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -80,5 +84,12 @@ public class AESUtil {
             LOGGER.error("", ex);
         }
         return null;
+    }
+    public static void main(String[]args) throws NoSuchAlgorithmException{
+        KeyGenerator kgen = KeyGenerator.getInstance("AES");
+        kgen.init(128, new SecureRandom("12345678".getBytes()));
+        SecretKey secretKey = kgen.generateKey();
+        String str = AESUtil.getInstance().encrypt("11112e3dsadsads", new String(secretKey.getEncoded()));
+        System.out.print(str);
     }
 }

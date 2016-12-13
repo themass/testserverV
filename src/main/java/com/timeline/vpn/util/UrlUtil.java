@@ -100,6 +100,7 @@ public class UrlUtil {
         return request.getHeader(Constant.HTTP_UA);
     }
 
+    @SuppressWarnings("deprecation")
     public static boolean isJsonRequest(HttpServletRequest request) {
         String filename = WebUtils.extractFullFilenameFromUrlPath(getRequestUri(request));
         String extension = StringUtils.getFilenameExtension(filename);

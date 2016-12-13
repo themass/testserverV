@@ -14,6 +14,7 @@ public class DevApp {
     private String lang;
     private String sign;
     private long time;
+    private String authKey;
 
     public DevApp(String devId, String userIp, String versionName, String version,
             String platform) {
@@ -26,6 +27,9 @@ public class DevApp {
 
     public boolean check() {
         long now = new Date().getTime();
+        if(platform==null||version==null||devId==null){
+            return false;
+        }
         if (now - time > Constant.MIN_TIME) {
             return false;
         }
@@ -96,6 +100,14 @@ public class DevApp {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public String getAuthKey() {
+        return authKey;
+    }
+
+    public void setAuthKey(String authKey) {
+        this.authKey = authKey;
     }
 
 }

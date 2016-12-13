@@ -185,27 +185,4 @@ public class DateTimeUtils {
         String time = formatDate(DATE_CN_FORMAT, date);
         return time.substring(0, 11);
     }
-
-    public static String getShowDate(Date date) {
-        String showDate = null;
-        if (date != null) {
-            Date now = new Date();
-            showDate = formatDate(YYYY_MM_DD, date);
-            if (now.getYear() == date.getYear()) {
-                String today = formatDate(YYYY_MM_DD, now);
-                if (showDate.equals(today)) {
-                    showDate = "今天";
-                } else {
-                    String yesterday = formatDate(YYYY_MM_DD, addDay(now, -1));
-                    if (showDate.equals(yesterday)) {
-                        showDate = "昨天";
-                    } else {
-                        showDate = showDate.substring(5);
-                    }
-                }
-            }
-        }
-        return showDate;
-    }
-
 }

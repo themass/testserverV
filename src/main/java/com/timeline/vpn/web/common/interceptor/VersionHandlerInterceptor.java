@@ -11,7 +11,7 @@ import com.timeline.vpn.exception.ParamException;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.service.DataService;
-import com.timeline.vpn.util.DeviceUtil;
+import com.timeline.vpn.web.common.DevAppContext;
 
 /**
  * 
@@ -28,7 +28,7 @@ public class VersionHandlerInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
-        DevApp app = DeviceUtil.getAPPInfo(request);
+        DevApp app = DevAppContext.get();
         VersionInfoVo vo = dataService.getVersion(app.getPlatform());
         long version = Long.parseLong(app.getVersion());
         if (version < vo.getMinBuild()) {

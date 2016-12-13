@@ -1,7 +1,5 @@
 package com.timeline.vpn.util;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,20 +12,13 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
@@ -42,13 +33,11 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -277,53 +266,6 @@ public class HttpCommonUtil {
             return httpClient;
         }
     }
-
-    private static class AcceptEncodingRequestInterceptor implements HttpRequestInterceptor {
-        @Override
-        public void process(HttpRequest request, HttpContext context)
-                throws HttpException, IOException {
-            if (!request.containsHeader("Accept-Encoding")) {
-                request.addHeader("Accept-Encoding", "gzip");
-            }
-        }
-    }
-
-    private static class ContentEncodingResponseInterceptor implements HttpResponseInterceptor {
-        public void process(final HttpResponse response, final HttpContext context)
-                throws HttpException {
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                Header ceheader = entity.getContentEncoding();
-                if (ceheader != null) {
-                    HeaderElement[] codecs = ceheader.getElements();
-                    for (int i = 0; i < codecs.length; i++) {
-                        if ("gzip".equalsIgnoreCase(codecs[i].getName())) {
-                            response.setEntity(new GzipDecompressingEntity(response.getEntity()));
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private static class GzipDecompressingEntity extends HttpEntityWrapper {
-        public GzipDecompressingEntity(final HttpEntity entity) {
-            super(entity);
-        }
-
-        @Override
-        public InputStream getContent() throws IOException {
-            InputStream wrappedin = wrappedEntity.getContent();
-            return new GZIPInputStream(wrappedin);
-        }
-
-        @Override
-        public long getContentLength() {
-            return -1;
-        }
-    }
-
 
     /**
      * 返回请求响应的状态码

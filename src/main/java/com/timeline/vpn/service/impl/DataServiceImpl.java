@@ -1,15 +1,14 @@
 package com.timeline.vpn.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.VersionDao;
@@ -54,7 +53,7 @@ public class DataServiceImpl implements DataService {
     public InfoListVo<IWannaVo> getIwannaPage(BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         Page<IWannaPo> data = (Page<IWannaPo>) iWannaDao.getPage();
-        return VoBuilder.buildIWannaPageInfoVo(data, baseQuery.getUser().getName());
+        return VoBuilder.buildIWannaPageInfoVo(data, baseQuery);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class DataServiceImpl implements DataService {
         po.setContent(content);
         po.setCreateTime(new Date());
         po.setLikes(0);
-        po.setLikeUsers("8>");
+        po.setLikeUsers(Constant.superMan);
         po.setName(baseQuery.getUser().getName());
         iWannaDao.insert(po);
         return VoBuilder.buildIWannaVo(po, baseQuery.getUser().getName());
@@ -73,7 +72,7 @@ public class DataServiceImpl implements DataService {
     public void addIwannaLike(BaseQuery baseQuery, long id) {
         IWannaPo po = iWannaDao.get(id);
         po.setLikes(po.getLikes() + 1);
-        if (!po.getLikeUsers().contains(baseQuery.getUser().getName())) {
+        if (baseQuery.getUser()!=null && !po.getLikeUsers().contains(baseQuery.getUser().getName())) {
             po.setLikeUsers(po.getLikeUsers() + "," + baseQuery.getUser().getName());
         }
         iWannaDao.like(po);

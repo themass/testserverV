@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.timeline.vpn.Constant;
@@ -21,6 +23,8 @@ import com.timeline.vpn.model.param.DevApp;
  */
 @Component
 public class DeviceUtil {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(DeviceUtil.class);
     public static final String ANDROID = "android";
     public static final String IOS = "ios";
     private static final String FORMAT = "000";
@@ -30,8 +34,8 @@ public class DeviceUtil {
     private static final String HTTP_UA = "user-agent";
     private static final Pattern pattern = Pattern.compile(VPNVERSION);
     private static final String VERSION = "([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)";
+    private static final String AUTHKEY = ",IE([0-9]+),";
     private static final Pattern versionPattern = Pattern.compile(VERSION);
-
     public static String getPlatForm(HttpServletRequest webRequest) {
         String ua = webRequest.getHeader(HTTP_UA);
         if (ua != null) {
@@ -66,21 +70,25 @@ public class DeviceUtil {
     public static DevApp getAPPInfo(HttpServletRequest webRequest) {
         String ua = webRequest.getHeader(HTTP_UA);
         String devId = webRequest.getHeader(DEVID);
-        if (ua != null && devId != null) {
+        if (ua != null) {
             Matcher matcher = pattern.matcher(ua);
             if (matcher.find()) {
                 String versionName = matcher.group(2);
                 DevApp app = new DevApp(devId, webRequest.getRemoteAddr(), versionName,
                         getAppVersion(versionName), getPlatForm(webRequest));
-                String timeSign = ua.substring(ua.lastIndexOf(",") + 1, ua.length());
+                String timeSign = ua.substring(ua.lastIndexOf(",IE") + 3, ua.length());
                 long now = new Date().getTime();
                 int len = String.valueOf(now).length();
-                app.setSign(timeSign.substring(len, timeSign.length()));
-                app.setTime(Long.parseLong(timeSign.substring(0, len)));
+                String auth = ua.substring(ua.length()-16,ua.length());
+                app.setAuthKey(auth);
+              //TODO 暂时注释;
+//                app.setSign(timeSign.substring(len, timeSign.length()));
+//                app.setTime(Long.parseLong(timeSign.substring(0, len)));
                 return app;
             }
 
         }
+        LOGGER.error("ua或者版本不多，有可能抓取数据:{}", ua);
         return null;
     }
 

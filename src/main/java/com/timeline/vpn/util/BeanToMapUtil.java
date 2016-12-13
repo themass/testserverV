@@ -23,7 +23,7 @@ public class BeanToMapUtil {
             Preconditions.checkNotNull(obj, "参数不能为空");
             logger.info("BeanToMapUtil.toMap params : {}", JsonUtil.writeValueAsString(obj));
 
-            Class clazz = obj.getClass();
+            Class<? extends Object> clazz = obj.getClass();
             BeanInfo beanInfo;
             beanInfo = Introspector.getBeanInfo(clazz);
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();

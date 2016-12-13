@@ -10,7 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.Page;
-import com.sun.tools.classfile.StackMap_attribute.stack_map_frame;
+import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.ServerPo;
@@ -69,15 +70,13 @@ public class VoBuilder {
         BeanUtils.copyProperties(serverPo, vo);
 
         List<HostVo> list = buildListVo(hostList, HostVo.class);
-        for (HostVo hostVo : list) {
-            hostVo.setCert(StringUtils.replace(hostVo.getCert(), "\\n", "\n").replaceAll(" ", ""));
-        }
         vo.setHostList(list);
         vo.setRemainingTime(remainingTime);
         return vo;
     }
 
-    public static InfoListVo<IWannaVo> buildIWannaPageInfoVo(Page<IWannaPo> data, String name) {
+    public static InfoListVo<IWannaVo> buildIWannaPageInfoVo(Page<IWannaPo> data, BaseQuery baseQuery) {
+        String name = baseQuery.getUser()==null?Constant.superMan:baseQuery.getUser().getName();
         InfoListVo<IWannaVo> page = new InfoListVo<IWannaVo>();
         List<IWannaVo> list = new ArrayList<>();
         if (!CollectionUtils.isEmpty(data)) {

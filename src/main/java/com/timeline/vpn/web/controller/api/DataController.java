@@ -42,7 +42,7 @@ public class DataController extends BaseController {
     }
 
     @RequestMapping(value = "/feed/wanna.json", method = RequestMethod.POST)
-    public JsonResult wanna(@UserInfo BaseQuery baseQuery, @RequestParam String content) {
+    public JsonResult wanna(@UserInfo(required=true) BaseQuery baseQuery, @RequestParam String content) {
        return new JsonResult(dataService.addIwanna(baseQuery, content));
     }
     @RequestMapping(value = "/feed/wanna/{id}.json", method = RequestMethod.POST)

@@ -52,4 +52,5 @@ public class Constant {
     public static final long ADS_CLICK_SCORE = 20;
     public static final long MIN_TIME = 30 * 60 * 1000;
     public static final int MIN_PAGESIZE = 30;
+    public static final String superMan = "gqli";
 }
