@@ -81,8 +81,8 @@ public class DeviceUtil {
                 String auth = ua.substring(ua.length()-16,ua.length());
                 app.setAuthKey(auth);
               //TODO 暂时注释;
-//                app.setSign(timeSign.substring(len, timeSign.length()));
-//                app.setTime(Long.parseLong(timeSign.substring(0, len)));
+                app.setSign(timeSign.substring(len, timeSign.length()));
+                app.setTime(Long.parseLong(timeSign.substring(0, len)));
                 return app;
             }
 
