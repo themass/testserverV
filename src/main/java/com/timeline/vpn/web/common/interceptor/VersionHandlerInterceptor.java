@@ -3,6 +3,8 @@ package com.timeline.vpn.web.common.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -23,6 +25,7 @@ import com.timeline.vpn.web.common.DevAppContext;
  *
  */
 public class VersionHandlerInterceptor extends HandlerInterceptorAdapter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(VersionHandlerInterceptor.class);
     @Autowired
     private DataService dataService;
 
@@ -31,6 +34,7 @@ public class VersionHandlerInterceptor extends HandlerInterceptorAdapter {
             Object handler) throws Exception {
         DevApp app = DevAppContext.get();
         if (app == null || !app.check()) {
+            LOGGER.error("devapp={}",app);
             throw new MonitorException("服务异常，请稍后再试");
         }
         VersionInfoVo vo = dataService.getVersion(app.getPlatform());

@@ -110,4 +110,11 @@ public class DevApp {
         this.authKey = authKey;
     }
 
+    @Override
+    public String toString() {
+        return "DevApp [devId=" + devId + ", versionName=" + versionName + ", version=" + version
+                + ", platform=" + platform + ", userIp=" + userIp + ", lang=" + lang + ", sign="
+                + sign + ", time=" + time + ", authKey=" + authKey + "]";
+    }
+
 }

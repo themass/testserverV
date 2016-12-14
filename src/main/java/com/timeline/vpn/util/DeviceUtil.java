@@ -34,7 +34,6 @@ public class DeviceUtil {
     private static final String HTTP_UA = "user-agent";
     private static final Pattern pattern = Pattern.compile(VPNVERSION);
     private static final String VERSION = "([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)";
-    private static final String AUTHKEY = ",IE([0-9]+),";
     private static final Pattern versionPattern = Pattern.compile(VERSION);
     public static String getPlatForm(HttpServletRequest webRequest) {
         String ua = webRequest.getHeader(HTTP_UA);
