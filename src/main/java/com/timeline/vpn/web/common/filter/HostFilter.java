@@ -31,9 +31,9 @@ public class HostFilter implements Filter{
             throws IOException, ServletException {
         DevApp app = DeviceUtil.getAPPInfo((HttpServletRequest) request);
         //TODO 暂时注释;
-//        if (app == null || !app.check()) {
-//            throw new MonitorException("服务异常，请稍后再试");
-//        }
+        if (app == null || !app.check()) {
+            throw new MonitorException("服务异常，请稍后再试");
+        }
         DevAppContext.set(app);
         chain.doFilter(request, response);
     }

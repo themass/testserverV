@@ -50,12 +50,12 @@ public class MappingJacksonJsonViewWrapper extends MappingJackson2JsonView {
             JsonResult result = (JsonResult)model.get(modelKey);
             DevApp app = DevAppContext.get();
             //TODO 测试时注释
-//            if(result.getData()!=null){
-//                String json = JsonUtil.writeValueAsString(result.getData());
-//                String encry = AES2.encode(json, app.getAuthKey());
-//                result.setData(encry);
-//                model.put(modelKey, result);
-//            }
+            if(result.getData()!=null){
+                String json = JsonUtil.writeValueAsString(result.getData());
+                String encry = AES2.encode(json, app.getAuthKey());
+                result.setData(encry);
+                model.put(modelKey, result);
+            }
         }
         super.renderMergedOutputModel(model, request, response);
     }
