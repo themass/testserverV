@@ -39,13 +39,22 @@ public class UserServiceImpl implements UserService {
     private CacheService cacheService;
 
     private DevUseinfoPo updateDevUseinfo(DevApp appInfo) {
-        DevUseinfoPo po = new DevUseinfoPo();
-        po.setCreatTime(new Date());
-        po.setDevId(appInfo.getDevId());
-        po.setLastUpdate(new Date());
-        po.setPlatform(appInfo.getPlatform());
-        po.setVersion(appInfo.getVersion());
-        devInfoDao.replace(po);
+        DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
+        if(po==null){
+            po = new DevUseinfoPo();
+            po.setCreatTime(new Date());
+            po.setDevId(appInfo.getDevId());
+            po.setLastUpdate(new Date());
+            po.setPlatform(appInfo.getPlatform());
+            po.setVersion(appInfo.getVersion());
+            devInfoDao.replace(po);
+        }else{
+            po.setDevId(appInfo.getDevId());
+            po.setLastUpdate(new Date());
+            po.setPlatform(appInfo.getPlatform());
+            po.setVersion(appInfo.getVersion());
+            devInfoDao.update(po);
+        }
         return po;
     }
 

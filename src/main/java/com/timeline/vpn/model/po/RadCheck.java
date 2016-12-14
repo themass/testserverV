@@ -5,6 +5,7 @@ package com.timeline.vpn.model.po;
  * @version V1.0
  */
 public class RadCheck {
+    private Integer id;
     private String userName;
     private String attribute;
     private String op;
@@ -32,6 +33,12 @@ public class RadCheck {
     }
     public void setValue(String value) {
         this.value = value;
+    }
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
     }
     
 }

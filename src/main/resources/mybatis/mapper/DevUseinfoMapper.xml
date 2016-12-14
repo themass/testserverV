@@ -8,11 +8,11 @@
 		<result column="creatTime" property="creatTime" />
 		<result column="lastUpdate" property="lastUpdate" />
 	</resultMap>
-	<insert id="insert">
-		insert into
-		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate,useTime)
+	<insert id="replace">
+		replace into
+		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate)
 		values
-		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{useTime})
+		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate})
 	</insert>
 	<select id="get" resultMap="DevUseinfoPoMap">
 		select * from vpn.devuseinfo where devId=#{devId}
@@ -31,9 +31,6 @@
 				</if> 
 				<if test="platform != null">
 					platform = #{platform},
-				</if> 
-				<if test="useTime != null">
-					useTime = #{useTime},
 				</if> 
 			</set>
 			where devId = #{devId}

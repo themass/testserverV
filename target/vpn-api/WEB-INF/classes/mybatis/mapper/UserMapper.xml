@@ -15,7 +15,7 @@
 		insert into
 		vpn.user(name,pwd,sex,level,time)
 		values
-		(,#{name},#{pwd},#{sex},#{level},#{time})
+		(#{name},#{pwd},#{sex},#{level},#{time})
 	</insert>
 	<select id="exist" resultMap="UserPoMap">
 		select * from vpn.user where name=#{name}

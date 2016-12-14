@@ -9,5 +9,7 @@ import com.timeline.vpn.model.po.DevUseinfoPo;
  */
 public interface DevUseinfoDao {
     public void replace(DevUseinfoPo po);
+    public void update(DevUseinfoPo po);
+    public DevUseinfoPo get(String devId);
 }
 
