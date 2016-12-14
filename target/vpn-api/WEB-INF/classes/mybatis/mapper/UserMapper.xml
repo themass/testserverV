@@ -3,30 +3,28 @@
 <mapper namespace="com.timeline.vpn.dao.db.UserDao">
 	<resultMap id="UserPoMap" type="UserPo">
 		<id column="id" property="id" />
-		<result column="devId" property="devId" />
 		<result column="name" property="name" />
 		<result column="pwd" property="pwd" />
 		<result column="sex" property="sex" />
 		<result column="level" property="level" />
-		<result column="useCount" property="useCount" />
 		<result column="time" property="time" />
 		<result column="score" property="score" />
 		
 	</resultMap>
 	<insert id="insert">
 		insert into
-		user(devId,name,pwd,sex,level,useCount,time)
+		vpn.user(name,pwd,sex,level,time)
 		values
-		(#{devId},#{name},#{pwd},#{sex},#{level},#{useCount},#{time})
+		(,#{name},#{pwd},#{sex},#{level},#{time})
 	</insert>
 	<select id="exist" resultMap="UserPoMap">
-		select * from user where name=#{name}
+		select * from vpn.user where name=#{name}
 	</select>
 	<select id="get" resultMap="UserPoMap">
-		select * from user where name=#{name} and pwd=#{pwd}
+		select * from vpn.user where name=#{name} and pwd=#{pwd}
 	</select>
 	<update id="score">
-	    update user set score=score+#{score} where name=#{name}
+	    update vpn.user set score=score+#{score} where name=#{name}
 	</update>
 	
 </mapper>

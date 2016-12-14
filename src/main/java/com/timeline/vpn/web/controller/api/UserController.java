@@ -13,8 +13,11 @@ import com.timeline.vpn.model.form.LoginForm;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
-import com.timeline.vpn.web.common.annotation.UserInfo;
+import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author gqli
@@ -23,14 +26,10 @@ import com.timeline.vpn.web.controller.BaseController;
  */
 @Controller
 @RequestMapping("/api/user")
+@Api(tags = "用户信息接口")
 public class UserController extends BaseController {
-    @RequestMapping(value = "/update.json", method = RequestMethod.POST)
-    public JsonResult update(@UserInfo(required = true) BaseQuery baseQuery,
-            @RequestParam long useTime) {
-        userService.updateFreeUseinfo(baseQuery, useTime);
-        return Constant.RESULT_SUCCESS;
-    }
-
+    
+    @ApiOperation(value = "注册用户")
     @RequestMapping(value = "/reg.json", method = RequestMethod.POST)
     public JsonResult reg(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserRegForm form) {
         userService.reg(form, baseQuery.getAppInfo());

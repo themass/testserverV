@@ -14,7 +14,6 @@ import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.model.po.IWannaPo;
-import com.timeline.vpn.model.po.ServerPo;
 import com.timeline.vpn.util.ArrayUtil;
 
 /**
@@ -64,14 +63,13 @@ public class VoBuilder {
     }
 
 
-    public static ServerVo buildServerVo(ServerPo serverPo, List<HostPo> hostList,
-            long remainingTime) {
+    public static ServerVo buildServerVo(String name,String pwd,Integer type, List<HostPo> hostList) {
         ServerVo vo = new ServerVo();
-        BeanUtils.copyProperties(serverPo, vo);
-
+        vo.setName(name);
+        vo.setPwd(pwd);
+        vo.setType(type);
         List<HostVo> list = buildListVo(hostList, HostVo.class);
         vo.setHostList(list);
-        vo.setRemainingTime(remainingTime);
         return vo;
     }
 

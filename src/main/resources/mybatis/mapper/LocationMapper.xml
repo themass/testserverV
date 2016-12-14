@@ -13,6 +13,6 @@
 	</resultMap>
 
 	<select id="getAll" resultMap="LocationPoMap">
-		select * from location where enable=1
+		select * from vpn.location where enable=1
 	</select>
 </mapper>

@@ -7,15 +7,16 @@
 	</settings>
 
 	<typeAliases>
-		<typeAlias alias="FreeUseinfoPo" type="com.timeline.vpn.model.po.FreeUseinfoPo" />
+		<typeAlias alias="DevUseinfoPo" type="com.timeline.vpn.model.po.DevUseinfoPo" />
 		<typeAlias alias="HostPo" type="com.timeline.vpn.model.po.HostPo" />
 		<typeAlias alias="AppVersion" type="com.timeline.vpn.model.po.AppVersion" />
 		<typeAlias alias="RecommendPo" type="com.timeline.vpn.model.po.RecommendPo" />
-		<typeAlias alias="ServerPo" type="com.timeline.vpn.model.po.ServerPo" />
 		<typeAlias alias="Version" type="com.timeline.vpn.model.po.AppVersion" />
 		<typeAlias alias="LocationPo" type="com.timeline.vpn.model.po.LocationPo" />
 		<typeAlias alias="UserPo" type="com.timeline.vpn.model.po.UserPo" />
 		<typeAlias alias="IWannaPo" type="com.timeline.vpn.model.po.IWannaPo" />
+		<typeAlias alias="RadCheck" type="com.timeline.vpn.model.po.RadCheck" />
+		<typeAlias alias="RadUserGroup" type="com.timeline.vpn.model.po.RadUserGroup" />
 	</typeAliases>
 	<plugins>
 		<plugin interceptor="com.github.pagehelper.PageHelper">

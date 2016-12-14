@@ -13,10 +13,10 @@
 	</resultMap>
 
 	<select id="getAll" resultMap="VersionMap">
-		select * from version
+		select * from vpn.version
 	</select>
 	<select id="getLast" resultMap="VersionMap">
-		select * from version where
+		select * from vpn.version where
 		platform=#{platform} order by maxBuild desc limit 1
 	</select>
 	

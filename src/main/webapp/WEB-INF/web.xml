@@ -63,7 +63,7 @@
     </filter>
     <filter-mapping>
         <filter-name>hostFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>*.json</url-pattern>
     </filter-mapping>
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>

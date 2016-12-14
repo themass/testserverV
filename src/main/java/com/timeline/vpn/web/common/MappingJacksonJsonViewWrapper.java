@@ -10,7 +10,6 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.vo.JsonResult;
-import com.timeline.vpn.util.AES;
 import com.timeline.vpn.util.AES2;
 import com.timeline.vpn.util.JsonUtil;
 

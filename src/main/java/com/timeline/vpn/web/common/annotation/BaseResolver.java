@@ -24,5 +24,5 @@ public abstract class BaseResolver implements ArgumentResolver<BaseQuery> {
         return query;
     }
 
-    abstract void resolve(BaseQuery baseQuery, HttpServletRequest webRequest, boolean required);
+    public abstract void resolve(BaseQuery baseQuery, HttpServletRequest webRequest, boolean required);
 }

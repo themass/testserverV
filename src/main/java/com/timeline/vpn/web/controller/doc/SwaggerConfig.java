@@ -1,0 +1,30 @@
+package com.timeline.vpn.web.controller.doc;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import io.swagger.annotations.Api;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2).groupName("vpn-api")
+                .select().apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+                .apis(RequestHandlerSelectors.basePackage("com.timeline.vpn.web.controller.api")).build()
+                .apiInfo(apiInfo());
+    }
+    private ApiInfo apiInfo() {
+        ApiInfo apiInfo = new ApiInfo("GTE API", "GTE API", "API TOS", "vpn@次空间.com",
+                new Contact("", "", ""), "API License URL", "");
+        return apiInfo;
+    }
+}

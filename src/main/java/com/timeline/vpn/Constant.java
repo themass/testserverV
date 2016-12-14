@@ -34,6 +34,10 @@ public class Constant {
         public static final int LEVEL_FREE = 0;
         public static final int LEVEL_VIP = 1;
     }
+    public static class UserGroup {
+        public static final String RAD_GROUP_FREE = "VPN_FREE";
+        public static final String RAD_GROUP_REG = "VPN_REG";
+    }
 
     public static final JsonResult RESULT_SUCCESS =
             new JsonResult(new RetInfoVo(true), Constant.ResultErrno.ERRNO_SUCCESS, null);
@@ -52,5 +56,9 @@ public class Constant {
     public static final long ADS_CLICK_SCORE = 20;
     public static final long MIN_TIME = 30 * 60 * 1000;
     public static final int MIN_PAGESIZE = 30;
-    public static final String superMan = "gqli";
+    public static final String RAD_PASS = "Cleartext-Password";
+    public static final String RAD_EQ = ":=";
+    
+    public static final int RAD_PRIORITY_DEF = 2;
+    public static String superMan = "FREE_VPN";
 }

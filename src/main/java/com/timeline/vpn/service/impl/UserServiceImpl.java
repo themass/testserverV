@@ -4,20 +4,22 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.timeline.vpn.Constant;
-import com.timeline.vpn.dao.db.FreeUseinfoDao;
+import com.timeline.vpn.dao.db.DevUseinfoDao;
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.exception.LoginException;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
-import com.timeline.vpn.model.po.FreeUseinfoPo;
+import com.timeline.vpn.model.po.DevUseinfoPo;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.UserVo;
 import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.service.CacheService;
+import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.UserService;
 
 /**
@@ -28,35 +30,22 @@ import com.timeline.vpn.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    private FreeUseinfoDao pushSettingDao;
+    private DevUseinfoDao devInfoDao;
     @Autowired
     private UserDao userDao;
     @Autowired
+    private RadUserCheckService checkService;
+    @Autowired
     private CacheService cacheService;
 
-    @Override
-    public void updateFreeUseinfo(BaseQuery baseQuery, long useTime) {
-        addOrUpdateFreeUseinfo(baseQuery.getAppInfo(), useTime);
-    }
-
-    private FreeUseinfoPo addOrUpdateFreeUseinfo(DevApp appInfo, long useTime) {
-        FreeUseinfoPo po = pushSettingDao.get(appInfo.getDevId());
-        if (po == null) {
-            po = new FreeUseinfoPo();
-            po.setCreatTime(new Date());
-            po.setDevId(appInfo.getDevId());
-            po.setLastUpdate(new Date());
-            po.setPlatform(appInfo.getPlatform());
-            po.setVersion(appInfo.getVersion());
-            po.setUseTime(0l);
-            pushSettingDao.insert(po);
-        } else {
-            po.setLastUpdate(new Date());
-            po.setVersion(appInfo.getVersion());
-            po.setPlatform(appInfo.getPlatform());
-            po.setUseTime(po.getUseTime() + useTime);
-            pushSettingDao.update(po);
-        }
+    private DevUseinfoPo updateDevUseinfo(DevApp appInfo) {
+        DevUseinfoPo po = new DevUseinfoPo();
+        po.setCreatTime(new Date());
+        po.setDevId(appInfo.getDevId());
+        po.setLastUpdate(new Date());
+        po.setPlatform(appInfo.getPlatform());
+        po.setVersion(appInfo.getVersion());
+        devInfoDao.replace(po);
         return po;
     }
 
@@ -64,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public UserVo login(BaseQuery baseQuery, String name, String pwd) {
         UserPo po = userDao.get(name, pwd);
         if (po != null) {
-            updateFreeUseinfo(baseQuery, 0l);
+            updateDevUseinfo(baseQuery.getAppInfo());
             String token = cacheService.putUser(po);
             UserVo vo = VoBuilder.buildVo(po, UserVo.class);
             vo.setToken(token);
@@ -80,15 +69,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void reg(UserRegForm form, DevApp appInfo) {
         if (form.getPwd().equals(form.getRePwd())) {
             UserPo po = userDao.exist(form.getName());
             if (po == null) {
                 po = new UserPo();
-                po.setDevId(appInfo.getDevId()).setTime(new Date())
+                po.setTime(new Date())
                         .setLevel(Constant.UserLevel.LEVEL_FREE).setName(form.getName())
-                        .setPwd(form.getPwd()).setUseCount(0).setSex(form.getSex());
+                        .setPwd(form.getPwd()).setSex(form.getSex());
                 userDao.insert(po);
+                checkService.addRadUser(form.getName(), form.getPwd(), Constant.UserGroup.RAD_GROUP_REG);
             } else {
                 throw new DataException(Constant.ResultMsg.RESULT_EXIST_ERROR);
             }

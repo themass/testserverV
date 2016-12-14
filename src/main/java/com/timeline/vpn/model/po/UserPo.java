@@ -9,13 +9,11 @@ import java.util.Date;
  */
 public class UserPo {
     private long id;
-    private String devId;
     private String name;
     private String pwd;
     private Date time;
     private String sex;
     private int level;
-    private int useCount;
     private String photo;
     private long score;
 
@@ -72,25 +70,6 @@ public class UserPo {
         this.level = level;
         return this;
     }
-
-    public int getUseCount() {
-        return useCount;
-    }
-
-    public UserPo setUseCount(int useCount) {
-        this.useCount = useCount;
-        return this;
-    }
-
-    public String getDevId() {
-        return devId;
-    }
-
-    public UserPo setDevId(String devId) {
-        this.devId = devId;
-        return this;
-    }
-
     public String getPhoto() {
         return photo;
     }

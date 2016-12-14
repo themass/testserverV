@@ -11,7 +11,7 @@
 		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
 	<context:component-scan base-package="com.timeline.vpn.web.controller" use-default-filters="false">
-	    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>   
+	    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  
 	</context:component-scan>
 
 	<!-- json接口性能监控拦截器 -->
@@ -60,7 +60,8 @@
 	<bean class="com.timeline.vpn.web.common.CustomMethodHandlerAdapter">
 		<property name="customArgumentResolvers">
 		    <list>
-		        <bean class="com.timeline.vpn.web.common.CustomWebArgumentResolver" />
+		        <bean class="com.timeline.vpn.web.common.resolver.UserInfoArgumentResolver" />
+		        <bean class="com.timeline.vpn.web.common.resolver.RequestFormParamArgumentResolver" />
 		    </list>
 		</property>
 		<property name="webBindingInitializer">
@@ -72,27 +73,31 @@
 		</property>
 	</bean>
 	<bean id="conversionService"
-		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-		<property name="converters">
-			<set>
-				<bean
-					class="com.timeline.vpn.web.common.StringToDateConverter">
-					<property name="dateFormatPatterns">
-						<list>
-						    <value>yyyy-MM-dd HH:mm:ss</value>
-						    <value>yyyy-MM-dd HH:mm</value>
-						    <value>yyyy-MM-dd HH</value>
-						    <value>yyyy-MM-dd</value>
-							<value>yyyyMMdd</value>
-							<value>yyyy/MM/dd HH:mm:ss</value>
-							<value>yyyy/MM/dd HH:mm</value>
-							<value>yyyy/MM/dd</value>
-						</list>
-					</property>
-				</bean>
-			</set>
-		</property>
-	</bean>
+          class="com.timeline.vpn.web.common.MyFormattingConversionServiceFactoryBean">
+        <property name="formatters">
+            <set>
+                <bean class="com.timeline.vpn.web.common.resolver.MyDoubleAnnotationFormatterFactory"/>
+            </set>
+        </property>
+        <property name="converters">
+            <set>
+                <bean class="com.timeline.vpn.web.common.StringToDateConverter">
+                    <property name="dateFormatPatterns">
+                        <list>
+                            <value>yyyy-MM-dd HH:mm:ss</value>
+                            <value>yyyy-MM-dd HH:mm</value>
+                            <value>yyyy-MM-dd HH</value>
+                            <value>yyyy-MM-dd</value>
+                            <value>yyyyMMdd</value>
+                            <value>yyyy/MM/dd HH:mm:ss</value>
+                            <value>yyyy/MM/dd HH:mm</value>
+                            <value>yyyy/MM/dd</value>
+                        </list>
+                    </property>
+                </bean>
+            </set>
+        </property>
+    </bean>
 	<!--use JSR-303 validation -->
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
