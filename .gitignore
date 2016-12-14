@@ -1,11 +1,40 @@
-*.pr
-*.ids
-*.iws
+# excluding gitignore in sub folders
+
+**/sftp-config.json
+# eclipse setting files
+maven-eclipse.xml
+.springBeans
+.pydevproject
+
+# maven target folder
+/target
+*/target
+
+*/ci
+
+**/rebel.xml
+
+# idea
+/.idea
+*/.idea
 *.iml
-.idea/
-target/
-target
 .DS_Store
-.settings/
-bin/
-.settings
+
+gradlew.bat
+gradlew
+gradle
+classes
+.gradle
+.gradletasknamecache
+/ci/bin
+/ci/lib
+/ci/conf
+
+pom.xml.versionsBackup
+
+/.settings
+*/.settings
+.project
+.classpath
+.sonar
+*/.sonar
