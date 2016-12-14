@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.exception.MonitorException;
 import com.timeline.vpn.exception.ParamException;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.vo.VersionInfoVo;
@@ -29,6 +30,9 @@ public class VersionHandlerInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
         DevApp app = DevAppContext.get();
+        if (app == null || !app.check()) {
+            throw new MonitorException("服务异常，请稍后再试");
+        }
         VersionInfoVo vo = dataService.getVersion(app.getPlatform());
         long version = Long.parseLong(app.getVersion());
         if (version < vo.getMinBuild()) {
