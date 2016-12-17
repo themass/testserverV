@@ -1,6 +1,9 @@
 package com.timeline.vpn.service;
 
+import java.util.List;
+
 import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.vo.DnsResverVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.LocationVo;
 import com.timeline.vpn.model.vo.ServerVo;
@@ -12,7 +15,7 @@ import com.timeline.vpn.model.vo.ServerVo;
  */
 public interface HostService {
     public ServerVo getHostInfo(BaseQuery baseQuery, int location);
-
     public InfoListVo<LocationVo> getAllLocation();
+    public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains);
 }
 

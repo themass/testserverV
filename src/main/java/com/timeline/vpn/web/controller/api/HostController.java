@@ -1,10 +1,14 @@
 package com.timeline.vpn.web.controller.api;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.web.common.resolver.UserInfo;
@@ -27,6 +31,11 @@ public class HostController extends BaseController {
     @RequestMapping(value = "/server/location.json", method = RequestMethod.GET)
     public JsonResult locationList(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(hostService.getAllLocation());
+    }
+    @RequestMapping(value = "/server/dns.json", method = RequestMethod.GET)
+    public JsonResult dns(@UserInfo BaseQuery baseQuery,@RequestParam String d) {
+        List<String> list = Arrays.asList(d.split(Constant.comma));
+        return new JsonResult(hostService.getDnsResver(baseQuery, list));
     }
 }
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.DnsResverDao">
+	<resultMap id="DnsResverMap" type="DnsResverPo">
+	</resultMap>
+	
+	<select id="get" resultMap="DnsResverMap">
+		select * from vpn.dns where domain in
+		 <foreach collection="domain" index="index" item="item" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
+	</select>
+	
+</mapper>

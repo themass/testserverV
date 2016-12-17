@@ -10,7 +10,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import com.timeline.vpn.exception.MonitorException;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.util.DeviceUtil;
 import com.timeline.vpn.web.common.DevAppContext;
@@ -27,11 +26,21 @@ public class HostFilter implements Filter{
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(ServletRequest servletRequest, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        DevApp app = DeviceUtil.getAPPInfo((HttpServletRequest) request);
-        //TODO 暂时注释;
-        DevAppContext.set(app);
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        String uri = request.getRequestURI();
+        if(uri.contains("test")){
+            DevApp app = new DevApp();
+            app.setTest(true);
+            app.setAuthKey("ssssssdddeee4eee");
+            DevAppContext.set(app);
+        }else{
+            DevApp app = DeviceUtil.getAPPInfo(request);
+            //TODO 暂时注释;
+            DevAppContext.set(app);
+        }
+        
         chain.doFilter(request, response);
     }
 

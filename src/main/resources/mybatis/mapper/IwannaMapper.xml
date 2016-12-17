@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.timeline.vpn.dao.db.IWannaDao">
-	<resultMap id="IWannaPoMap" type="IWannaPo">
+	<resultMap id="IWannaMap" type="IWannaPo">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
 		<result column="likes" property="likes" />
@@ -15,13 +15,13 @@
 		values
 		(#{name},#{likes},#{likeUsers},#{createTime},#{content})
 	</insert>
-	<select id="getAll" resultMap="IWannaPoMap">
+	<select id="getAll" resultMap="IWannaMap">
 		select * from vpn.iwanna createTime desc
 	</select>
-	<select id="getPage" resultMap="IWannaPoMap">
+	<select id="getPage" resultMap="IWannaMap">
 		select * from vpn.iwanna order by createTime desc
 	</select>
-	<select id="get" resultMap="IWannaPoMap">
+	<select id="get" resultMap="IWannaMap">
 		select * from vpn.iwanna where id = #{id}
 	</select>
 	<update id="like" >

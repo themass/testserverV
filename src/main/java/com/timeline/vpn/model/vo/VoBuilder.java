@@ -1,7 +1,10 @@
 package com.timeline.vpn.model.vo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -12,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import com.github.pagehelper.Page;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.po.DnsResverPo;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.util.ArrayUtil;
@@ -100,6 +104,28 @@ public class VoBuilder {
         page.setHasMore(data.getPageNum() < data.getPages());
         page.setPageNum(data.getPageNum() + 1);
         return page;
+    }
+
+    public static InfoListVo<DnsResverVo> buildDnsResverInfoList(List<DnsResverPo> list) {
+        InfoListVo<DnsResverVo> vo = new  InfoListVo<DnsResverVo>();
+        List<DnsResverVo> voItemList = new ArrayList<>();
+        vo.setVoList(voItemList);
+        Map<String,List<DnsResverItemVo>> map = new HashMap<>();
+        for(DnsResverPo po:list){
+            List<DnsResverItemVo> itemList = map.get(po.getDomain());
+            if(itemList==null){
+                itemList = new ArrayList<>();
+                map.put(po.getDomain(), itemList);
+            }
+            DnsResverItemVo item = new DnsResverItemVo();
+            item.setIp(po.getIp());
+            item.setTtl(po.getTtl());
+            itemList.add(item);
+        }
+        for(Entry<String, List<DnsResverItemVo>> item:map.entrySet()){
+            voItemList.add(new DnsResverVo(item.getKey(),item.getValue()));
+        }
+        return vo;
     }
 }
 

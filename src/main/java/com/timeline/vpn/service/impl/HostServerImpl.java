@@ -7,12 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.dao.db.DnsResverDao;
 import com.timeline.vpn.dao.db.HostDao;
 import com.timeline.vpn.dao.db.LocationDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.po.DnsResverPo;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.model.po.RadCheck;
+import com.timeline.vpn.model.vo.DnsResverVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.LocationVo;
 import com.timeline.vpn.model.vo.ServerVo;
@@ -34,6 +37,8 @@ public class HostServerImpl implements HostService {
     private LocationDao cityDao;
     @Autowired
     private RadUserCheckService checkService;
+    @Autowired
+    private DnsResverDao dnsResverDao;
 
     @Override
     public ServerVo getHostInfo(BaseQuery baseQuery, int location) {
@@ -58,6 +63,12 @@ public class HostServerImpl implements HostService {
     @Override
     public InfoListVo<LocationVo> getAllLocation() {
         return VoBuilder.buildListInfoVo(cityDao.getAll(), LocationVo.class);
+    }
+
+    @Override
+    public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains) {
+        List<DnsResverPo> list = dnsResverDao.get(domains);
+        return VoBuilder.buildDnsResverInfoList(list);
     }
 
 }

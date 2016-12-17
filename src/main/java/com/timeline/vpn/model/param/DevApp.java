@@ -15,7 +15,8 @@ public class DevApp {
     private String sign;
     private long time;
     private String authKey;
-
+    private boolean isTest;
+    public DevApp(){}
     public DevApp(String devId, String userIp, String versionName, String version,
             String platform) {
         this.versionName = versionName;
@@ -108,6 +109,14 @@ public class DevApp {
 
     public void setAuthKey(String authKey) {
         this.authKey = authKey;
+    }
+
+    public boolean isTest() {
+        return isTest;
+    }
+
+    public void setTest(boolean isTest) {
+        this.isTest = isTest;
     }
 
     @Override

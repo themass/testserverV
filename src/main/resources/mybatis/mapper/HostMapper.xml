@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.timeline.vpn.dao.db.HostDao">
-	<resultMap id="HostPoMap" type="HostPo">
+	<resultMap id="HostMap" type="HostPo">
 		<id column="id" property="id" />
 		<result column="gateway" property="gateway" />
 		<result column="port" property="port" />
@@ -14,13 +14,13 @@
 		values
 		(#{gateway},#{port},#{location},#{cert})
 	</insert>
-	<select id="get" resultMap="HostPoMap">
+	<select id="get" resultMap="HostMap">
 		select * from vpn.host where id=#{id}
 	</select>
-	<select id="getAll" resultMap="HostPoMap">
+	<select id="getAll" resultMap="HostMap">
 		select * from vpn.host
 	</select>
-	<select id="getByLocation" resultMap="HostPoMap">
+	<select id="getByLocation" resultMap="HostMap">
 		select * from vpn.host where location=#{location}
 	</select>
 	

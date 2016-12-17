@@ -33,6 +33,9 @@ public class VersionHandlerInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
         DevApp app = DevAppContext.get();
+        if(app.isTest()){
+            return true;
+        }
         if (app == null || !app.check()) {
             LOGGER.error("devapp={}",app);
             throw new MonitorException("服务异常，请稍后再试");

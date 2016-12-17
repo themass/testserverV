@@ -22,6 +22,7 @@ import org.springframework.util.StringValueResolver;
  * @date 2016年10月12日 下午12:55:08
  * @version V1.0
  */
+@SuppressWarnings("deprecation")
 public class MyDoubleAnnotationFormatterFactory implements AnnotationFormatterFactory<MyDoubleFormat>, EmbeddedValueResolverAware {
 
     private final Set<Class<?>> fieldTypes;

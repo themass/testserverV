@@ -61,4 +61,6 @@ public class Constant {
     
     public static final int RAD_PRIORITY_DEF = 2;
     public static String superMan = "FREE_VPN";
+    
+    public static final String comma = ",";
 }

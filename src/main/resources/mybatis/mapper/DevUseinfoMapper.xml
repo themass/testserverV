@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.timeline.vpn.dao.db.DevUseinfoDao">
-	<resultMap id="DevUseinfoPoMap" type="DevUseinfoPo">
+	<resultMap id="DevUseinfoMap" type="DevUseinfoPo">
 		<id column="devId" property="devId" />
 		<result column="platform" property="platform" />
 		<result column="version" property="version" />
@@ -14,10 +14,10 @@
 		values
 		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate})
 	</insert>
-	<select id="get" resultMap="DevUseinfoPoMap">
+	<select id="get" resultMap="DevUseinfoMap">
 		select * from vpn.devuseinfo where devId=#{devId}
 	</select>
-	<select id="getAll" resultMap="DevUseinfoPoMap">
+	<select id="getAll" resultMap="DevUseinfoMap">
 		select * from vpn.devuseinfo
 	</select>
 	<update id="update">

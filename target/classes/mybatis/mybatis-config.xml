@@ -17,6 +17,7 @@
 		<typeAlias alias="IWannaPo" type="com.timeline.vpn.model.po.IWannaPo" />
 		<typeAlias alias="RadCheck" type="com.timeline.vpn.model.po.RadCheck" />
 		<typeAlias alias="RadUserGroup" type="com.timeline.vpn.model.po.RadUserGroup" />
+		<typeAlias alias="DnsResverPo" type="com.timeline.vpn.model.po.DnsResverPo" />
 	</typeAliases>
 	<plugins>
 		<plugin interceptor="com.github.pagehelper.PageHelper">
