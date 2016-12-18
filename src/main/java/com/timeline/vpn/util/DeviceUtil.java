@@ -32,6 +32,7 @@ public class DeviceUtil {
     private static final String DEVID = "devid";
     private static final int VERSION_COUNT = 4;
     private static final String HTTP_UA = "user-agent";
+    private static final String HTTP_HOST= "user-agent";
     private static final Pattern pattern = Pattern.compile(VPNVERSION);
     private static final String VERSION = "([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)";
     private static final Pattern versionPattern = Pattern.compile(VERSION);
@@ -83,6 +84,7 @@ public class DeviceUtil {
               //TODO 暂时注释;
                 app.setSign(timeSign.substring(len, timeSign.length()));
                 app.setTime(Long.parseLong(timeSign.substring(0, len)));
+                app.setHost(webRequest.getHeader(HTTP_HOST));
                 return app;
             }
 

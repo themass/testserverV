@@ -10,12 +10,12 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.service.job.reload.DnsCache;
 import com.timeline.vpn.util.AES2;
 import com.timeline.vpn.util.JsonUtil;
-
 public class MappingJacksonJsonViewWrapper extends MappingJackson2JsonView {
     private String modelKey;
-
+    private DnsCache dnsCache;
     public MappingJacksonJsonViewWrapper() {
         super();
         setObjectMapper(JsonUtil.getMapper());
@@ -56,8 +56,18 @@ public class MappingJacksonJsonViewWrapper extends MappingJackson2JsonView {
                 result.setData(encry);
                 model.put(modelKey, result);
             }
+            result.setIp(dnsCache.getByDomain(app.getHost()));
         }
         super.renderMergedOutputModel(model, request, response);
     }
+
+    public DnsCache getDnsCache() {
+        return dnsCache;
+    }
+
+    public void setDnsCache(DnsCache dnsCache) {
+        this.dnsCache = dnsCache;
+    }
+    
     
 }

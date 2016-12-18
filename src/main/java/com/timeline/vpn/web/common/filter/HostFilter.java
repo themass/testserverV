@@ -34,6 +34,7 @@ public class HostFilter implements Filter{
             DevApp app = new DevApp();
             app.setTest(true);
             app.setAuthKey("ssssssdddeee4eee");
+            app.setHost(request.getHeader("Host"));
             DevAppContext.set(app);
         }else{
             DevApp app = DeviceUtil.getAPPInfo(request);

@@ -11,5 +11,8 @@
             #{item}
         </foreach>
 	</select>
+	<select id="getAll" resultMap="DnsResverMap">
+	    select * from vpn.dns
+	</select>
 	
 </mapper>

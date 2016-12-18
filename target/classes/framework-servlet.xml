@@ -108,6 +108,7 @@
 				class="com.timeline.vpn.web.common.MappingJacksonJsonViewWrapper">
 				<property name="contentType" value="application/json;charset=utf-8" />
 				<property name="modelKey" value="jsonResult" />
+				<property name="dnsCache" ref="dnsCache"/>
 			</bean>
 		</property>
 	</bean>
