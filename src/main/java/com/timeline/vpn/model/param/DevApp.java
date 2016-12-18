@@ -16,6 +16,7 @@ public class DevApp {
     private long time;
     private String authKey;
     private boolean isTest;
+    private String host;
     public DevApp(){}
     public DevApp(String devId, String userIp, String versionName, String version,
             String platform) {
@@ -119,6 +120,12 @@ public class DevApp {
         this.isTest = isTest;
     }
 
+    public String getHost() {
+        return host;
+    }
+    public void setHost(String host) {
+        this.host = host;
+    }
     @Override
     public String toString() {
         return "DevApp [devId=" + devId + ", versionName=" + versionName + ", version=" + version

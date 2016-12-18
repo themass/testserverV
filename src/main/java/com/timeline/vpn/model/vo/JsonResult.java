@@ -18,6 +18,7 @@ public class JsonResult {
     private Object data;
     private String error;
     private long cost;
+    private String ip;
 
     /**
      * 根据结果和消息生成返回json
@@ -90,6 +91,14 @@ public class JsonResult {
 
     public void setCost(long cost) {
         this.cost = cost;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
 

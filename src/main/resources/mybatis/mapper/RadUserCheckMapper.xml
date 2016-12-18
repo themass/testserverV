@@ -26,6 +26,6 @@
 		(#{userName},#{groupName},#{priority})
 	</insert>
 	<select id="getUserPass" resultMap="RadCheckMap">
-		select * from radius.radcheck where username=#{userName}
+		select * from radius.radcheck where username=#{userName} and attribute='Cleartext-Password'
 	</select>
 </mapper>
