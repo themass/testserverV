@@ -16,7 +16,7 @@
 		(#{name},#{likes},#{likeUsers},#{createTime},#{content})
 	</insert>
 	<select id="getAll" resultMap="IWannaMap">
-		select * from vpn.iwanna createTime desc
+		select * from vpn.iwanna create_time desc
 	</select>
 	<select id="getPage" resultMap="IWannaMap">
 		select * from vpn.iwanna order by createTime desc
