@@ -2,6 +2,7 @@ package com.timeline.vpn.web.controller.api;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.service.ReportService;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 
@@ -22,6 +24,8 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/monitor")
 public class MonitorController extends BaseController {
+    @Autowired
+    private ReportService reportService;
     @RequestMapping(value = "/leak.json", method = RequestMethod.POST)
     public JsonResult leak(@UserInfo BaseQuery baseQuery,@RequestParam List<MultipartFile> fileList) {
         return Constant.RESULT_SUCCESS;
@@ -29,6 +33,7 @@ public class MonitorController extends BaseController {
 
     @RequestMapping(value = "/bug.json", method = RequestMethod.POST)
     public JsonResult bug(@UserInfo BaseQuery baseQuery,@RequestParam List<MultipartFile> fileList) {
+        reportService.reportBug(baseQuery, fileList);
         return Constant.RESULT_SUCCESS;
     }
 
