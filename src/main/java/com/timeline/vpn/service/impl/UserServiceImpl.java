@@ -11,7 +11,6 @@ import com.timeline.vpn.dao.db.DevUseinfoDao;
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.exception.LoginException;
-import com.timeline.vpn.exception.RegCodeException;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;

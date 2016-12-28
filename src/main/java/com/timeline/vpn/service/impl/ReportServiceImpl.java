@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.druid.filter.AutoLoad;
 import com.timeline.vpn.ConstantProfile;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.service.ReportService;
@@ -19,7 +19,7 @@ import com.timeline.vpn.util.DateTimeUtils;
  * @date 2016年12月28日 下午8:59:42
  * @version V1.0
  */
-@AutoLoad
+@Component
 public class ReportServiceImpl implements ReportService{
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportServiceImpl.class);
     @Override
@@ -32,7 +32,7 @@ public class ReportServiceImpl implements ReportService{
         for(MultipartFile file:fileList){
             // 转存文件  
             try {
-                String name = file.getOriginalFilename()+"_"+baseQuery.getAppInfo().getDevId()+"_"+DateTimeUtils.formatDate(DateTimeUtils.TIMEFORMAT,new Date());
+                String name = file.getOriginalFilename()+"_"+DateTimeUtils.formatDate(DateTimeUtils.TIMEFORMAT,new Date());
                 file.transferTo(new File(datePath,name));
             } catch (Exception e) {
                 LOGGER.error("",e);
