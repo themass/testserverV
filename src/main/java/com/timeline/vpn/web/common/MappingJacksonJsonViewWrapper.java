@@ -11,7 +11,6 @@ import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.job.reload.DnsCache;
-import com.timeline.vpn.util.AES2;
 import com.timeline.vpn.util.JsonUtil;
 public class MappingJacksonJsonViewWrapper extends MappingJackson2JsonView {
     private String modelKey;
@@ -49,13 +48,6 @@ public class MappingJacksonJsonViewWrapper extends MappingJackson2JsonView {
         if(model!=null && model.get(modelKey)!=null){
             JsonResult result = (JsonResult)model.get(modelKey);
             DevApp app = DevAppContext.get();
-            //TODO 测试时注释
-            if(result.getData()!=null){
-                String json = JsonUtil.writeValueAsString(result.getData());
-                String encry = AES2.encode(json, app.getAuthKey());
-                result.setData(encry);
-                model.put(modelKey, result);
-            }
             result.setIp(dnsCache.getByDomain(app.getHost()));
         }
         super.renderMergedOutputModel(model, request, response);

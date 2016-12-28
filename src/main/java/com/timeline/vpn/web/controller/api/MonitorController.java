@@ -1,0 +1,36 @@
+package com.timeline.vpn.web.controller.api;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.web.common.resolver.UserInfo;
+import com.timeline.vpn.web.controller.BaseController;
+
+/**
+ * @author gqli
+ * @date 2015年7月24日 下午3:16:25
+ * @version V1.0
+ */
+@Controller
+@RequestMapping("/api/monitor")
+public class MonitorController extends BaseController {
+    @RequestMapping(value = "/leak.json", method = RequestMethod.POST)
+    public JsonResult leak(@UserInfo BaseQuery baseQuery,@RequestParam List<MultipartFile> fileList) {
+        return Constant.RESULT_SUCCESS;
+    }
+
+    @RequestMapping(value = "/bug.json", method = RequestMethod.POST)
+    public JsonResult bug(@UserInfo BaseQuery baseQuery,@RequestParam List<MultipartFile> fileList) {
+        return Constant.RESULT_SUCCESS;
+    }
+
+}
+

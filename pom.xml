@@ -42,6 +42,9 @@
 		<jetty-util.version>6.1.26</jetty-util.version>
 		<druid.version>1.0.7</druid.version>
 		<pagehelper.version>4.1.0</pagehelper.version>
+        <apache.commons.lang.version>3.4</apache.commons.lang.version>
+        <commons-fileupload.version>1.3.1</commons-fileupload.version>
+		
 	</properties>
 	<dependencies>
 		<!--spring -->
@@ -233,6 +236,16 @@
 			<artifactId>commons-lang</artifactId>
 			<version>${commons-lang.version}</version>
 		</dependency>
+		 <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons.lang.version}</version>
+            </dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -270,6 +283,13 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.12</version>
 		</dependency>
+		<dependency>
+		<!-- mail -->
+   		<groupId>javax.mail</groupId>
+    		<artifactId>mail</artifactId>
+    		<version>1.4.7</version>
+		</dependency>
+
 		
 	</dependencies>
 	<build>

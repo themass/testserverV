@@ -3,8 +3,6 @@ package com.timeline.vpn.service.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,6 @@ import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.service.DataService;
-import com.timeline.vpn.web.common.CommonHandlerExceptionResolver;
 
 /**
  * @author gqli
@@ -33,8 +30,6 @@ import com.timeline.vpn.web.common.CommonHandlerExceptionResolver;
  */
 @Service
 public class DataServiceImpl implements DataService {
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(DataServiceImpl.class);
 
     @Autowired
     private VersionDao versionDao;
@@ -64,7 +59,6 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public IWannaVo addIwanna(BaseQuery baseQuery, String content) {
-        LOGGER.info("addIwanna->"+content);
         IWannaPo po = new IWannaPo();
         po.setContent(content);
         po.setCreateTime(new Date());

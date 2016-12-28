@@ -18,6 +18,8 @@ public class UserRegForm {
     private String rePwd;
     @NotBlank(message = Constant.ResultMsg.RESULT_DATA_EMPETY_ERROR)
     private String sex;
+    private String code;
+    private String channel;
 
     public String getName() {
         return name;
@@ -49,6 +51,22 @@ public class UserRegForm {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
 }

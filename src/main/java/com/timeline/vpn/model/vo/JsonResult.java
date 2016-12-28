@@ -11,6 +11,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.support.RequestContext;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.param.DevApp;
+import com.timeline.vpn.util.AES2;
+import com.timeline.vpn.util.JsonUtil;
+import com.timeline.vpn.web.common.DevAppContext;
 
 public class JsonResult {
     public static final String MODEL_KEY = "jsonResult";
@@ -61,6 +65,14 @@ public class JsonResult {
 
 
     public Object getData() {
+        DevApp app = DevAppContext.get();
+        //TODO 测试时注释
+        if(data!=null){
+            String json = JsonUtil.writeValueAsString(data);
+            String encry = AES2.encode(json, app.getAuthKey());
+            System.out.println("json="+json+"  ;encry="+encry);
+            return encry;
+        }
         return data;
     }
 

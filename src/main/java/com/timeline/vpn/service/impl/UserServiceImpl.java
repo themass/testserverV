@@ -11,15 +11,18 @@ import com.timeline.vpn.dao.db.DevUseinfoDao;
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.exception.LoginException;
+import com.timeline.vpn.exception.RegCodeException;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.po.DevUseinfoPo;
 import com.timeline.vpn.model.po.UserPo;
+import com.timeline.vpn.model.vo.RegCodeVo;
 import com.timeline.vpn.model.vo.UserVo;
 import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.RadUserCheckService;
+import com.timeline.vpn.service.RegAuthService;
 import com.timeline.vpn.service.UserService;
 
 /**
@@ -37,6 +40,8 @@ public class UserServiceImpl implements UserService {
     private RadUserCheckService checkService;
     @Autowired
     private CacheService cacheService;
+    @Autowired
+    private RegAuthService regAuthService;
 
     private DevUseinfoPo updateDevUseinfo(DevApp appInfo) {
         DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
@@ -81,6 +86,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void reg(UserRegForm form, DevApp appInfo) {
         if (form.getPwd().equals(form.getRePwd())) {
+//            String code = cacheService.get(form.getChannel());
+//            if(!form.getCode().equals(code)){
+//                throw new RegCodeException(Constant.ResultMsg.RESULT_REG_REGCODE);
+//            }
             UserPo po = userDao.exist(form.getName());
             if (po == null) {
                 po = new UserPo();
@@ -89,6 +98,7 @@ public class UserServiceImpl implements UserService {
                         .setPwd(form.getPwd()).setSex(form.getSex());
                 userDao.insert(po);
                 checkService.addRadUser(form.getName(), form.getPwd(), Constant.UserGroup.RAD_GROUP_REG);
+                
             } else {
                 throw new DataException(Constant.ResultMsg.RESULT_EXIST_ERROR);
             }
@@ -113,6 +123,14 @@ public class UserServiceImpl implements UserService {
         cacheService.del(baseQuery.getToken());
         String token = cacheService.putUser(po);
         vo.setToken(token);
+        return vo;
+    }
+
+    @Override
+    public RegCodeVo getRegCode(String channel) {
+        String code = regAuthService.reg(channel);
+        RegCodeVo vo = new RegCodeVo();
+        vo.setCode(code);
         return vo;
     }
 

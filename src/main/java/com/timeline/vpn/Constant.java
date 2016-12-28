@@ -19,6 +19,7 @@ public class Constant {
         public static final String RESULT_USE_TIME_ERROR = "RESULT.ERROR.USE.TIME";
         public static final String RESULT_PERM_ERROR = "RESULT.ERROR.PERM";
         public static final String RESULT_VERSION_ERROR = "RESULT.ERROR.VERSION";
+        public static final String RESULT_REG_REGCODE = "RESULT.ERROR.REGCODE";
     }
 
     public static class ResultErrno {

@@ -3,6 +3,7 @@ package com.timeline.vpn.service;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
+import com.timeline.vpn.model.vo.RegCodeVo;
 import com.timeline.vpn.model.vo.UserVo;
 
 /**
@@ -20,5 +21,6 @@ public interface UserService {
     public UserVo score(BaseQuery baseQuery, int score);
 
     public UserVo info(BaseQuery baseQuery);
+    public RegCodeVo getRegCode(String channel); 
 }
 

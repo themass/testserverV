@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,16 @@ public class CacheServiceImpl implements CacheService {
     public void del(String token) {
         if (!StringUtils.isEmpty(token))
             jedisTemplate.delete(token);
+    }
+
+    @Override
+    public void put(String key, String val, long timeout) {
+        jedisTemplate.opsForValue().set(key, val,timeout,TimeUnit.MINUTES);        
+    }
+
+    @Override
+    public String get(String key) {
+        return jedisTemplate.opsForValue().get(key);
     }
 
 }
