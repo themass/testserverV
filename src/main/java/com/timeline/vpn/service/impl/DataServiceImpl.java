@@ -41,7 +41,7 @@ public class DataServiceImpl implements DataService {
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<RecommendPo> poList = recommendDao.getAll();
+        List<RecommendPo> poList = recommendDao.getPage();
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class);
     }
 

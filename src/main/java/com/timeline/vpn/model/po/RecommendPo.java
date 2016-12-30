@@ -13,6 +13,7 @@ public class RecommendPo {
     private String desc;
     private String color;
     private float rate;
+    private String imgPath;
 
     public int getId() {
         return id;
@@ -39,7 +40,7 @@ public class RecommendPo {
     }
 
     public String getImg() {
-        return img;
+        return imgPath+img;
     }
 
     public void setImg(String img) {
@@ -68,6 +69,14 @@ public class RecommendPo {
 
     public void setRate(float rate) {
         this.rate = rate;
+    }
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
     }
 
 
