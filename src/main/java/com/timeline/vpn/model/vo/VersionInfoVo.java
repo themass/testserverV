@@ -11,6 +11,7 @@ public class VersionInfoVo {
     private String url;
     private int minBuild;
     private int maxBuild;
+    private Boolean adsShow;
 
     public String getVersion() {
         return version;
@@ -50,6 +51,14 @@ public class VersionInfoVo {
 
     public void setMaxBuild(String maxBuild) {
         this.maxBuild = Integer.parseInt(maxBuild);
+    }
+
+    public Boolean getAdsShow() {
+        return adsShow;
+    }
+
+    public void setAdsShow(Boolean adsShow) {
+        this.adsShow = adsShow;
     }
 
     @Override
