@@ -13,7 +13,7 @@ import com.timeline.vpn.model.vo.VersionInfoVo;
  * @version V1.0
  */
 public interface DataService {
-    public InfoListVo<RecommendVo> getRecommendPage(PageBaseParam param);
+    public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery,PageBaseParam param);
 
     public InfoListVo<IWannaVo> getIwannaPage(BaseQuery baseQuery, PageBaseParam param);
 

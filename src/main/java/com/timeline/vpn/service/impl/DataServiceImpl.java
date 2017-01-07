@@ -39,9 +39,11 @@ public class DataServiceImpl implements DataService {
     private IWannaDao iWannaDao;
 
     @Override
-    public InfoListVo<RecommendVo> getRecommendPage(PageBaseParam param) {
+    public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
+        int type = baseQuery.getUser()==null?Constant.RecommendType.TYPE_OTHER:
+            (baseQuery.getUser().getLevel()==Constant.UserLevel.LEVEL_VIP?Constant.RecommendType.TYPE_REG:Constant.RecommendType.TYPE_VIP);
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<RecommendPo> poList = recommendDao.getPage();
+        List<RecommendPo> poList = recommendDao.getPage(type);
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class);
     }
 

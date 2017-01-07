@@ -39,7 +39,11 @@ public class Constant {
         public static final String RAD_GROUP_FREE = "VPN_FREE";
         public static final String RAD_GROUP_REG = "VPN_REG";
     }
-
+    public static class RecommendType {
+        public static final int TYPE_OTHER = 0;
+        public static final int TYPE_REG = 1;
+        public static final int TYPE_VIP= 2;
+    }
     public static final JsonResult RESULT_SUCCESS =
             new JsonResult(new RetInfoVo(true), Constant.ResultErrno.ERRNO_SUCCESS, null);
     public static final String HTTP_UA = "user-agent";

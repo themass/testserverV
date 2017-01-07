@@ -14,6 +14,8 @@ public class RecommendPo {
     private String color;
     private float rate;
     private String imgPath;
+    private int type;
+    private Boolean adsShow;
 
     public int getId() {
         return id;
@@ -77,6 +79,22 @@ public class RecommendPo {
 
     public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public Boolean getAdsShow() {
+        return adsShow;
+    }
+
+    public void setAdsShow(Boolean adsShow) {
+        this.adsShow = adsShow;
     }
 
 

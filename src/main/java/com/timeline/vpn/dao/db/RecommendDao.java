@@ -2,6 +2,8 @@ package com.timeline.vpn.dao.db;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.timeline.vpn.dao.BaseDBDao;
 import com.timeline.vpn.model.po.RecommendPo;
 
@@ -11,6 +13,6 @@ import com.timeline.vpn.model.po.RecommendPo;
  * @version V1.0
  */
 public interface RecommendDao extends BaseDBDao<RecommendPo> {
-    public List<RecommendPo> getPage();
+    public List<RecommendPo> getPage(@Param("type")int type);
 }
 

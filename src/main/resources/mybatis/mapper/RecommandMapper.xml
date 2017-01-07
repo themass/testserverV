@@ -16,7 +16,7 @@
 		select * from vpn.recommend
 	</select>
 	<select id="getPage" resultMap="RecommendMap">
-		select * from vpn.recommend
+		select * from vpn.recommend where type &lt;= #{type}
 	</select>
 	<select id="get" resultMap="RecommendMap">
 		select * from vpn.recommend
