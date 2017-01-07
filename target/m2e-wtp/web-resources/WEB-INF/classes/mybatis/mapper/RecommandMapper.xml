@@ -10,6 +10,8 @@
 		<result column="color" property="color" />
 		<result column="rate" property="rate" />
 		<result column="imgPath" property="imgPath" />
+		<result column="type" property="type" />
+		<result column="adsShow" property="adsShow" />
 	</resultMap>
 
 	<select id="getAll" resultMap="RecommendMap">
