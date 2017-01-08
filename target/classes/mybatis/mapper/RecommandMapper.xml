@@ -15,10 +15,10 @@
 	</resultMap>
 
 	<select id="getAll" resultMap="RecommendMap">
-		select * from vpn.recommend
+		select * from vpn.recommend order by sort asc
 	</select>
 	<select id="getPage" resultMap="RecommendMap">
-		select * from vpn.recommend where type &lt;= #{type}
+		select * from vpn.recommend where type &lt;= #{type} order by sort asc
 	</select>
 	<select id="get" resultMap="RecommendMap">
 		select * from vpn.recommend
