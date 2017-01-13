@@ -52,7 +52,7 @@ public class UserController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
 
-    @RequestMapping(value = "/ads/score.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/ads/score.json", method = RequestMethod.GET)
     public JsonResult adsFabCLick(@UserInfo(required = true) BaseQuery baseQuery,
             @RequestParam int score) {
         if (score == Constant.ADS_FAB_SCORE || score == Constant.ADS_CLICK_SCORE) {
