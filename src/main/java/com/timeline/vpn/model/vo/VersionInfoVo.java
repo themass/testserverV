@@ -12,6 +12,7 @@ public class VersionInfoVo {
     private int minBuild;
     private int maxBuild;
     private Boolean adsShow;
+    private Boolean logUp;
 
     public String getVersion() {
         return version;
@@ -59,6 +60,14 @@ public class VersionInfoVo {
 
     public void setAdsShow(Boolean adsShow) {
         this.adsShow = adsShow;
+    }
+
+    public Boolean getLogUp() {
+        return logUp;
+    }
+
+    public void setLogUp(Boolean logUp) {
+        this.logUp = logUp;
     }
 
     @Override

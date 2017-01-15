@@ -51,6 +51,7 @@ public class DataServiceImpl implements DataService {
     public VersionInfoVo getVersion(String platform) {
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform), VersionInfoVo.class);
         vo.setAdsShow(false);
+        vo.setLogUp(true);
         return vo;
     }
 
