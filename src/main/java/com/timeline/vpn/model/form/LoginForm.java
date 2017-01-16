@@ -14,7 +14,7 @@ public class LoginForm {
     private String name;
     @NotBlank(message = Constant.ResultMsg.RESULT_DATA_EMPETY_ERROR)
     private String pwd;
-
+    private Integer score;
     public String getName() {
         return name;
     }
@@ -29,6 +29,14 @@ public class LoginForm {
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
 }

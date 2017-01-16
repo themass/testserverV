@@ -69,13 +69,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserVo login(BaseQuery baseQuery, String name, String pwd) {
+    public UserVo login(BaseQuery baseQuery, String name, String pwd,Integer score) {
         UserPo po = userDao.get(name, pwd);
         if (po != null) {
+            if(score!=null&&score!=0){
+                userDao.score(score+po.getScore(), name);
+            }
             updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
             String token = cacheService.putUser(po);
             UserVo vo = VoBuilder.buildVo(po, UserVo.class);
             vo.setToken(token);
+            
             return vo;
         } else {
             throw new LoginException(Constant.ResultMsg.RESULT_PWD_ERROR);

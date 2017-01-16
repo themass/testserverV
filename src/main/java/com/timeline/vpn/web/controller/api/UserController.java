@@ -43,7 +43,7 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/login.json", method = RequestMethod.POST)
     public JsonResult login(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute LoginForm form) {
-        return new JsonResult(userService.login(baseQuery, form.getName(), form.getPwd()));
+        return new JsonResult(userService.login(baseQuery, form.getName(), form.getPwd(),form.getScore()));
     }
 
     @RequestMapping(value = "/logout.json", method = RequestMethod.POST)

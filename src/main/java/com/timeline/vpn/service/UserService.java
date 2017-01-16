@@ -13,7 +13,7 @@ import com.timeline.vpn.model.vo.UserVo;
  * @version V1.0
  */
 public interface UserService {
-    public UserVo login(BaseQuery baseQuery, String name, String pwd);
+    public UserVo login(BaseQuery baseQuery, String name, String pwd,Integer score);
 
     public void logout(BaseQuery baseQuery);
 
