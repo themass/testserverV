@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RegAuthService regAuthService;
 
-    public DevUseinfoPo updateDevUseinfo(DevApp appInfo) {
+    public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName) {
         DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
         if(po==null){
             po = new DevUseinfoPo();
@@ -51,12 +51,14 @@ public class UserServiceImpl implements UserService {
             po.setLastUpdate(new Date());
             po.setPlatform(appInfo.getPlatform());
             po.setVersion(appInfo.getVersion());
+            po.setUserName(userName);
             devInfoDao.replace(po);
         }else{
             po.setDevId(appInfo.getDevId());
             po.setLastUpdate(new Date());
             po.setPlatform(appInfo.getPlatform());
             po.setVersion(appInfo.getVersion());
+            po.setUserName(userName);
             devInfoDao.update(po);
         }
         return po;
@@ -66,7 +68,7 @@ public class UserServiceImpl implements UserService {
     public UserVo login(BaseQuery baseQuery, String name, String pwd) {
         UserPo po = userDao.get(name, pwd);
         if (po != null) {
-            updateDevUseinfo(baseQuery.getAppInfo());
+            updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
             String token = cacheService.putUser(po);
             UserVo vo = VoBuilder.buildVo(po, UserVo.class);
             vo.setToken(token);

@@ -55,7 +55,7 @@ public class DataServiceImpl implements DataService {
         vo.setAdsShow(false);
         vo.setLogUp(true);
         if(baseQuery!=null)
-            userService.updateDevUseinfo(baseQuery.getAppInfo());
+            userService.updateDevUseinfo(baseQuery.getAppInfo(),null);
         return vo;
     }
 

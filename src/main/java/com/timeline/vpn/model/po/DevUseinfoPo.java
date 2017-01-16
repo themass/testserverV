@@ -15,6 +15,7 @@ public class DevUseinfoPo {
     private Date lastUpdate;
     private String longitude;
     private String latitude;
+    private String userName;
 
     public String getDevId() {
         return devId;
@@ -70,6 +71,14 @@ public class DevUseinfoPo {
 
     public void setLatitude(String latitude) {
         this.latitude = latitude;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
     
 }

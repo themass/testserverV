@@ -23,6 +23,6 @@ public interface UserService {
 
     public UserVo info(BaseQuery baseQuery);
     public RegCodeVo getRegCode(String channel); 
-    public DevUseinfoPo updateDevUseinfo(DevApp appInfo);
+    public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName);
 }
 
