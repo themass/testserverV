@@ -87,6 +87,7 @@ public class DeviceUtil {
                 app.setSign(timeSign.substring(len, timeSign.length()));
                 app.setTime(Long.parseLong(timeSign.substring(0, len)));
                 app.setHost(webRequest.getHeader(HTTP_HOST));
+                parsLoc(webRequest,app);
                 return app;
             }
 
