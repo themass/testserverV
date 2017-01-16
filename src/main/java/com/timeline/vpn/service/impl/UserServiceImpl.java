@@ -52,6 +52,8 @@ public class UserServiceImpl implements UserService {
             po.setPlatform(appInfo.getPlatform());
             po.setVersion(appInfo.getVersion());
             po.setUserName(userName);
+            po.setLongitude(appInfo.getLon());
+            po.setLatitude(appInfo.getLat());
             devInfoDao.replace(po);
         }else{
             po.setDevId(appInfo.getDevId());
@@ -59,6 +61,8 @@ public class UserServiceImpl implements UserService {
             po.setPlatform(appInfo.getPlatform());
             po.setVersion(appInfo.getVersion());
             po.setUserName(userName);
+            po.setLongitude(appInfo.getLon());
+            po.setLatitude(appInfo.getLat());
             devInfoDao.update(po);
         }
         return po;

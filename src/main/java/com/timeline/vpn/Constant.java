@@ -68,4 +68,6 @@ public class Constant {
     public static String superMan = "FREE_VPN";
     
     public static final String comma = ",";
+    public static final String fen = ";";
+    public static final String mao = ":";
 }

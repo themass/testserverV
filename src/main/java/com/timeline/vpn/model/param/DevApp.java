@@ -17,6 +17,8 @@ public class DevApp {
     private String authKey;
     private boolean isTest;
     private String host;
+    private String lon;
+    private String lat;
     public DevApp(){}
     public DevApp(String devId, String userIp, String versionName, String version,
             String platform) {
@@ -125,6 +127,19 @@ public class DevApp {
     }
     public void setHost(String host) {
         this.host = host;
+    }
+    
+    public String getLon() {
+        return lon;
+    }
+    public void setLon(String lon) {
+        this.lon = lon;
+    }
+    public String getLat() {
+        return lat;
+    }
+    public void setLat(String lat) {
+        this.lat = lat;
     }
     @Override
     public String toString() {

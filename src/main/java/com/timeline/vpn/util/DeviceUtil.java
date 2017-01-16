@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.DevApp;
@@ -36,6 +37,7 @@ public class DeviceUtil {
     private static final Pattern pattern = Pattern.compile(VPNVERSION);
     private static final String VERSION = "([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)";
     private static final Pattern versionPattern = Pattern.compile(VERSION);
+    private static final String LOC = "loc";
     public static String getPlatForm(HttpServletRequest webRequest) {
         String ua = webRequest.getHeader(HTTP_UA);
         if (ua != null) {
@@ -91,6 +93,18 @@ public class DeviceUtil {
         }
         LOGGER.error("ua或者版本不多，有可能抓取数据:{}", ua);
         return null;
+    }
+    public static void parsLoc(HttpServletRequest webRequest,DevApp app){
+        String loc = webRequest.getHeader(LOC);
+        if(StringUtils.hasLength(loc)){
+            String[]locas = loc.split(Constant.fen);
+            if(locas.length==2){
+                String[]lon = locas[0].split(Constant.mao);
+                String[]lat = locas[1].split(Constant.mao);
+                app.setLat(lat[1]);
+                app.setLon(lon[1]);
+            }
+        }
     }
 
     public static Locale getLocale(HttpServletRequest webRequest) {
