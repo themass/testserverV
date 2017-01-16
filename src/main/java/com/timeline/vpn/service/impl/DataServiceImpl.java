@@ -54,8 +54,11 @@ public class DataServiceImpl implements DataService {
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform), VersionInfoVo.class);
         vo.setAdsShow(false);
         vo.setLogUp(true);
-        if(baseQuery!=null)
-            userService.updateDevUseinfo(baseQuery.getAppInfo(),null);
+        if(baseQuery!=null){
+            String userName = baseQuery.getUser()==null?null:baseQuery.getUser().getName();
+            userService.updateDevUseinfo(baseQuery.getAppInfo(),userName);
+        }
+            
         return vo;
     }
 
