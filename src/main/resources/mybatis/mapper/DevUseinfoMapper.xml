@@ -8,12 +8,14 @@
 		<result column="creatTime" property="creatTime" />
 		<result column="lastUpdate" property="lastUpdate" />
 		<result column="userName" property="userName" />
+		<result column="longitude" property="longitude" />
+		<result column="latitude" property="latitude" />
 	</resultMap>
 	<insert id="replace">
 		replace into
-		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate,userName)
+		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate,userName,latitude,longitude)
 		values
-		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{userName})
+		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{userName},#{latitude},#{longitude})
 	</insert>
 	<select id="get" resultMap="DevUseinfoMap">
 		select * from vpn.devuseinfo where devId=#{devId}
@@ -33,7 +35,9 @@
 				<if test="platform != null">
 					platform = #{platform},
 				</if> 
-				userName = #{userName}
+				userName = #{userName},
+				latitude = #{latitude},
+				longitude = #{longitude}
 			</set>
 			where devId = #{devId}
 	</update>
