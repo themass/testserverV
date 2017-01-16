@@ -32,7 +32,7 @@ public class DataController extends BaseController {
 
     @RequestMapping(value = "/version.json", method = RequestMethod.GET)
     public JsonResult version(@UserInfo BaseQuery baseQuery) {
-        return new JsonResult(dataService.getVersion(baseQuery.getAppInfo().getPlatform()));
+        return new JsonResult(dataService.getVersion(baseQuery,baseQuery.getAppInfo().getPlatform()));
     }
 
     @RequestMapping(value = "/feed/wanna.json", method = RequestMethod.GET)

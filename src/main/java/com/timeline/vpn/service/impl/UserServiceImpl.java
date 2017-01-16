@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RegAuthService regAuthService;
 
-    private DevUseinfoPo updateDevUseinfo(DevApp appInfo) {
+    public DevUseinfoPo updateDevUseinfo(DevApp appInfo) {
         DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
         if(po==null){
             po = new DevUseinfoPo();

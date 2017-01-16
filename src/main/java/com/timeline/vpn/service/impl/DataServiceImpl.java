@@ -22,6 +22,7 @@ import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.service.DataService;
+import com.timeline.vpn.service.UserService;
 
 /**
  * @author gqli
@@ -37,7 +38,8 @@ public class DataServiceImpl implements DataService {
     private RecommendDao recommendDao;
     @Autowired
     private IWannaDao iWannaDao;
-
+    @Autowired
+    private UserService userService;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         int type = baseQuery.getUser()==null?Constant.RecommendType.TYPE_OTHER:
@@ -48,10 +50,12 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public VersionInfoVo getVersion(String platform) {
+    public VersionInfoVo getVersion(BaseQuery baseQuery,String platform) {
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform), VersionInfoVo.class);
         vo.setAdsShow(false);
         vo.setLogUp(true);
+        if(baseQuery!=null)
+            userService.updateDevUseinfo(baseQuery.getAppInfo());
         return vo;
     }
 
