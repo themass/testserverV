@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService {
         if (po != null) {
             if(score!=null&&score!=0){
                 userDao.score(score, name);
+                po.setScore(score+po.getScore());
             }
             updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
             String token = cacheService.putUser(po);
