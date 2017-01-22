@@ -26,5 +26,7 @@
 	<update id="score">
 	    update vpn.user set score=score+#{score} where name=#{name}
 	</update>
-	
+	<update id="updateLevel">
+	    update vpn.user set level=#{level} where name=#{name}
+	</update>
 </mapper>

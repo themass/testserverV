@@ -1,6 +1,7 @@
 package com.timeline.vpn.service;
 
 import com.timeline.vpn.model.po.RadCheck;
+import com.timeline.vpn.model.po.RadUserGroup;
 
 /**
  * @author gqli
@@ -10,5 +11,6 @@ import com.timeline.vpn.model.po.RadCheck;
 public interface RadUserCheckService {
     public RadCheck addRadUser(String name,String pass,String group);
     public RadCheck getRadUser(String name);
+    public RadUserGroup updateRadUserGroup(String name,String group);
 }
 

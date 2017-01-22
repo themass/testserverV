@@ -71,16 +71,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVo login(BaseQuery baseQuery, String name, String pwd,Integer score) {
         UserPo po = userDao.get(name, pwd);
+        baseQuery.setUser(po);
         if (po != null) {
             if(score!=null&&score!=0){
-                userDao.score(score, name);
-                po.setScore(score+po.getScore());
+                UserVo tmp = score(baseQuery,score);
+                po.setScore(tmp.getScore());
+                po.setLevel(tmp.getLevel());
             }
             updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
             String token = cacheService.putUser(po);
             UserVo vo = VoBuilder.buildVo(po, UserVo.class);
             vo.setToken(token);
-            
             return vo;
         } else {
             throw new LoginException(Constant.ResultMsg.RESULT_PWD_ERROR);
@@ -121,6 +122,11 @@ public class UserServiceImpl implements UserService {
     public UserVo score(BaseQuery baseQuery, int score) {
         userDao.score(score, baseQuery.getUser().getName());
         UserPo po = userDao.exist(baseQuery.getUser().getName());
+        if(po.getScore()>=Constant.SCORE_TO_VIP && po.getLevel()==Constant.UserLevel.LEVEL_FREE){
+            po.setLevel(Constant.UserLevel.LEVEL_VIP);
+            userDao.updateLevel(po);
+            checkService.updateRadUserGroup(po.getName(), Constant.UserGroup.RAD_GROUP_VIP);
+        }
         UserVo vo = VoBuilder.buildVo(po, UserVo.class);
         vo.setToken(baseQuery.getToken());
         return vo;

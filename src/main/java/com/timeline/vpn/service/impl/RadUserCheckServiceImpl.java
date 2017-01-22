@@ -39,6 +39,15 @@ public class RadUserCheckServiceImpl implements RadUserCheckService{
     public RadCheck getRadUser(String name) {
         return radUserCheck.getUserPass(name);
     }
+    @Override
+    public RadUserGroup updateRadUserGroup(String name, String group) {
+        RadUserGroup g = new RadUserGroup();
+        g.setGroupName(group);
+        g.setPriority(Constant.RAD_PRIORITY_DEF);
+        g.setUserName(name);
+        radUserCheck.replaceUserGroup(g);
+        return g;
+    }
 
 }
 

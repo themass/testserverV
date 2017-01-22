@@ -38,6 +38,7 @@ public class Constant {
     public static class UserGroup {
         public static final String RAD_GROUP_FREE = "VPN_FREE";
         public static final String RAD_GROUP_REG = "VPN_REG";
+        public static final String RAD_GROUP_VIP = "VPN_VIP";
     }
     public static class RecommendType {
         public static final int TYPE_OTHER = 0;
@@ -63,7 +64,7 @@ public class Constant {
     public static final int MIN_PAGESIZE = 30;
     public static final String RAD_PASS = "Cleartext-Password";
     public static final String RAD_EQ = ":=";
-    
+    public static final int SCORE_TO_VIP = 150;
     public static final int RAD_PRIORITY_DEF = 2;
     public static String superMan = "FREE_VPN";
     
