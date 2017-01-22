@@ -73,13 +73,14 @@ public class UserServiceImpl implements UserService {
         UserPo po = userDao.get(name, pwd);
         baseQuery.setUser(po);
         if (po != null) {
+            updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
+            String token = cacheService.putUser(po);
+            baseQuery.setToken(token);
             if(score!=null&&score!=0){
                 UserVo tmp = score(baseQuery,score);
                 po.setScore(tmp.getScore());
                 po.setLevel(tmp.getLevel());
             }
-            updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
-            String token = cacheService.putUser(po);
             UserVo vo = VoBuilder.buildVo(po, UserVo.class);
             vo.setToken(token);
             return vo;
