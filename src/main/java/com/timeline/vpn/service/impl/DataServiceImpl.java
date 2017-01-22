@@ -12,7 +12,6 @@ import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.VersionDao;
-import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.IWannaPo;
