@@ -13,6 +13,7 @@ public interface CacheService {
     public UserPo getUser(String token);
 
     public String putUser(UserPo user);
+    public String updateUser(String token, UserPo user);
 
     public void del(String token);
     public void put(String key,String val, long timeout);

@@ -127,6 +127,7 @@ public class UserServiceImpl implements UserService {
             userDao.updateLevel(po);
             checkService.updateRadUserGroup(po.getName(), Constant.UserGroup.RAD_GROUP_VIP);
         }
+        cacheService.updateUser(baseQuery.getToken(),po);
         UserVo vo = VoBuilder.buildVo(po, UserVo.class);
         vo.setToken(baseQuery.getToken());
         return vo;

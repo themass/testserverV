@@ -52,9 +52,9 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public InfoListVo<RecommendVo> getRecommendVipPage(BaseQuery baseQuery, PageBaseParam param) {
-        if(baseQuery.getUser()==null||baseQuery.getUser().getLevel()!=Constant.UserLevel.LEVEL_VIP){
-            throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
-        }
+//        if(baseQuery.getUser()==null||baseQuery.getUser().getLevel()!=Constant.UserLevel.LEVEL_VIP){
+//            throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
+//        }
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getVipPage();
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class);

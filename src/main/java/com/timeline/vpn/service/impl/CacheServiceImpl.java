@@ -39,7 +39,11 @@ public class CacheServiceImpl implements CacheService {
         jedisTemplate.opsForValue().set(token, JsonUtil.writeValueAsString(user));
         return token;
     }
-
+    @Override
+    public String updateUser(String token, UserPo user) {
+        jedisTemplate.opsForValue().set(token, JsonUtil.writeValueAsString(user));
+        return token;
+    }
     @Override
     public void del(String token) {
         if (!StringUtils.isEmpty(token))
