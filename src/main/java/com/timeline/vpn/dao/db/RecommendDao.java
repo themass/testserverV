@@ -14,5 +14,6 @@ import com.timeline.vpn.model.po.RecommendPo;
  */
 public interface RecommendDao extends BaseDBDao<RecommendPo> {
     public List<RecommendPo> getPage(@Param("type")int type);
+    public List<RecommendPo> getVipPage();
 }
 

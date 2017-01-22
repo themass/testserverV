@@ -12,6 +12,7 @@ import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.VersionDao;
+import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.IWannaPo;
@@ -46,6 +47,16 @@ public class DataServiceImpl implements DataService {
             (baseQuery.getUser().getLevel()==Constant.UserLevel.LEVEL_VIP?Constant.RecommendType.TYPE_REG:Constant.RecommendType.TYPE_VIP);
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getPage(type);
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class);
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getRecommendVipPage(BaseQuery baseQuery, PageBaseParam param) {
+        if(baseQuery.getUser()==null||baseQuery.getUser().getLevel()!=Constant.UserLevel.LEVEL_VIP){
+            throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
+        }
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<RecommendPo> poList = recommendDao.getVipPage();
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class);
     }
 

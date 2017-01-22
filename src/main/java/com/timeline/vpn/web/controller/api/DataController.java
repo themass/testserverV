@@ -29,6 +29,11 @@ public class DataController extends BaseController {
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getRecommendPage(baseQuery,form.toParam()));
     }
+    @RequestMapping(value = "/recommend/vip.json", method = RequestMethod.GET)
+    public JsonResult vipList(@UserInfo BaseQuery baseQuery,
+            @ModelAttribute @Valid PageBaseForm form) {
+        return new JsonResult(dataService.getRecommendVipPage(baseQuery,form.toParam()));
+    }
 
     @RequestMapping(value = "/version.json", method = RequestMethod.GET)
     public JsonResult version(@UserInfo BaseQuery baseQuery) {

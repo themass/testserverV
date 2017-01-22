@@ -14,6 +14,7 @@ import com.timeline.vpn.model.vo.VersionInfoVo;
  */
 public interface DataService {
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery,PageBaseParam param);
+    public InfoListVo<RecommendVo> getRecommendVipPage(BaseQuery baseQuery,PageBaseParam param);
 
     public InfoListVo<IWannaVo> getIwannaPage(BaseQuery baseQuery, PageBaseParam param);
 

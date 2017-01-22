@@ -20,6 +20,9 @@
 	<select id="getPage" resultMap="RecommendMap">
 		select * from vpn.recommend where enable=1 and type &lt;= #{type} order by sort asc
 	</select>
+	<select id="getPage" resultMap="RecommendMap">
+		select * from vpn.recommendVip where enable=1 and order by sort asc
+	</select>
 	<select id="get" resultMap="RecommendMap">
 		select * from vpn.recommend where enable=1
 	</select>
