@@ -149,7 +149,7 @@ public class VoBuilder {
             long s = (time%(3600))%60;
             vo.setTimeUse(String.format(Constant.STATE_TIME_USE, h,m,s));
             String result = "0B";
-            double traffic = (state.getAcctInputOctets()+state.getAcctInputOctets());
+            double traffic = (state.getAcctInputOctets()+state.getAcctOutputOctets());
             double mb = traffic/1024/1024/1024;
             if(mb>0){
                 result = String.format(Constant.STATE_TRAFFIC_USE,mb)+"Gb";
