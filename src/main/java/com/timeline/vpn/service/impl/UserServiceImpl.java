@@ -108,6 +108,7 @@ public class UserServiceImpl implements UserService {
                 po.setTime(new Date())
                         .setLevel(Constant.UserLevel.LEVEL_FREE).setName(form.getName())
                         .setPwd(form.getPwd()).setSex(form.getSex());
+                po.setScore(350);
                 userDao.insert(po);
                 checkService.addRadUser(form.getName(), form.getPwd(), Constant.UserGroup.RAD_GROUP_REG);
                 
