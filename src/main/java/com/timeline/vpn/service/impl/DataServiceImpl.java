@@ -82,14 +82,15 @@ public class DataServiceImpl implements DataService {
         if(baseQuery!=null){
             String userName = baseQuery.getUser()==null?null:baseQuery.getUser().getName();
             userService.updateDevUseinfo(baseQuery.getAppInfo(),userName);
+            if(baseQuery.getUser()!=null){
+                StateUseVo state = userService.stateUse(Arrays.asList(baseQuery.getUser().getName(),baseQuery.getAppInfo().getDevId()));
+                vo.setStateUse(state);    
+            }else{
+                StateUseVo state = userService.stateUse(Arrays.asList(baseQuery.getAppInfo().getDevId()));
+                vo.setStateUse(state);    
+            }
         }
-        if(baseQuery.getUser()!=null){
-            StateUseVo state = userService.stateUse(Arrays.asList(baseQuery.getUser().getName(),baseQuery.getAppInfo().getDevId()));
-            vo.setStateUse(state);    
-        }else{
-            StateUseVo state = userService.stateUse(Arrays.asList(baseQuery.getAppInfo().getDevId()));
-            vo.setStateUse(state);    
-        }
+       
         return vo;
     }
 
