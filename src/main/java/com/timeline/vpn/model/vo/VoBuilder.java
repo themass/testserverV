@@ -143,17 +143,29 @@ public class VoBuilder {
     public static StateUseVo buildStateUseVo(RadacctState state){
         StateUseVo vo = new StateUseVo();
         if(state!=null){
-            long time = state.getAcctSessionTime()/1000;
+            long time = state.getAcctSessionTime();
             long h = time/(3600);
             long m = (time%(3600))/60;
             long s = (time%(3600))%60;
             vo.setTimeUse(String.format(Constant.STATE_TIME_USE, h,m,s));
-            double traffic = state.getAcctInputOctets()+state.getAcctInputOctets();
-            String result = String.format(Constant.STATE_TRAFFIC_USE,traffic);
+            String result = "0B";
+            double traffic = (state.getAcctInputOctets()+state.getAcctInputOctets());
+            double mb = traffic/1024/1024;
+            if(mb>0){
+                result = String.format(Constant.STATE_TRAFFIC_USE,mb);
+            }else{
+                double kb = traffic/1024;
+                if(kb>0){
+                    result = String.format(Constant.STATE_TRAFFIC_USE,kb);
+                }else{
+                    result = traffic+"B";
+                }
+            }
+            result = String.format(Constant.STATE_TRAFFIC_USE,result);
             vo.setTrafficUse(result);
         }else{
-            vo.setTimeUse("0H");
-            vo.setTrafficUse("0G");
+            vo.setTimeUse("0 s");
+            vo.setTrafficUse("0B");
         }
         return vo;
     }

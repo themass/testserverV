@@ -67,8 +67,8 @@ public class Constant {
     public static final int SCORE_TO_VIP = 150;
     public static final int RAD_PRIORITY_DEF = 2;
     public static String superMan = "FREE_VPN";
-    public static final String STATE_TIME_USE="%sH%sM%sS";
-    public static final String STATE_TRAFFIC_USE="%.2fG";
+    public static final String STATE_TIME_USE="%s h, %sm , %ss";
+    public static final String STATE_TRAFFIC_USE="%.2f";
     public static final String comma = ",";
     public static final String fen = ";";
     public static final String mao = ":";
