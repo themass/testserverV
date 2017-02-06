@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.RadacctDao">
+	<resultMap id="RadacctStateMap" type="RadacctState">
+		<result column="acctSessionTime" property="acctSessionTime" />
+		<result column="acctInputOctets" property="acctInputOctets" />
+		<result column="acctOutputOctets" property="acctOutputOctets" />
+	</resultMap>
+	
+	<select id="dateState" resultMap="RadacctStateMap">
+		select sum(acctsessiontime) acctSessionTime,sum(acctinputoctets)acctInputOctets, sum(acctoutputoctets) acctOutputOctets
+		from radius.radacct where username=#{userName}
+	</select>
+</mapper>
