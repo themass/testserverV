@@ -161,7 +161,6 @@ public class VoBuilder {
                     result = traffic+"B";
                 }
             }
-            result = String.format(Constant.STATE_TRAFFIC_USE,result);
             vo.setTrafficUse(result);
         }else{
             vo.setTimeUse("0 s");
