@@ -13,6 +13,7 @@ public class VersionInfoVo {
     private int maxBuild;
     private Boolean adsShow;
     private Boolean logUp;
+    private StateUseVo stateUse;
 
     public String getVersion() {
         return version;
@@ -68,6 +69,13 @@ public class VersionInfoVo {
 
     public void setLogUp(Boolean logUp) {
         this.logUp = logUp;
+    }
+    public StateUseVo getStateUse() {
+        return stateUse;
+    }
+
+    public void setStateUse(StateUseVo stateUse) {
+        this.stateUse = stateUse;
     }
 
     @Override

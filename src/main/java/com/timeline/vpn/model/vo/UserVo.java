@@ -12,6 +12,7 @@ public class UserVo {
     private String photo;
     private String token;
     private long score;
+    private StateUseVo stateUse;
 
     public String getName() {
         return name;
@@ -59,6 +60,14 @@ public class UserVo {
 
     public void setScore(long score) {
         this.score = score;
+    }
+
+    public StateUseVo getStateUse() {
+        return stateUse;
+    }
+
+    public void setStateUse(StateUseVo stateUse) {
+        this.stateUse = stateUse;
     }
 
 

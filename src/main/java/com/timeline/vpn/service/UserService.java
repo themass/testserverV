@@ -1,10 +1,13 @@
 package com.timeline.vpn.service;
 
+import java.util.List;
+
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.po.DevUseinfoPo;
 import com.timeline.vpn.model.vo.RegCodeVo;
+import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.UserVo;
 
 /**
@@ -24,5 +27,7 @@ public interface UserService {
     public UserVo info(BaseQuery baseQuery);
     public RegCodeVo getRegCode(String channel); 
     public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName);
+
+    public StateUseVo stateUse(List<String> name);
 }
 

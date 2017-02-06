@@ -1,6 +1,8 @@
 package com.timeline.vpn.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.DevUseinfoDao;
+import com.timeline.vpn.dao.db.RadacctDao;
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.exception.LoginException;
@@ -15,8 +18,10 @@ import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.po.DevUseinfoPo;
+import com.timeline.vpn.model.po.RadacctState;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.RegCodeVo;
+import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.UserVo;
 import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.service.CacheService;
@@ -41,6 +46,8 @@ public class UserServiceImpl implements UserService {
     private CacheService cacheService;
     @Autowired
     private RegAuthService regAuthService;
+    @Autowired
+    private RadacctDao radacctDao;
 
     public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName) {
         DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
@@ -82,6 +89,8 @@ public class UserServiceImpl implements UserService {
                 po.setLevel(tmp.getLevel());
             }
             UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
+            StateUseVo state = stateUse(Arrays.asList(vo.getName(),baseQuery.getAppInfo().getDevId()));
+            vo.setStateUse(state);
             vo.setToken(token);
             return vo;
         } else {
@@ -133,6 +142,19 @@ public class UserServiceImpl implements UserService {
         UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
         vo.setToken(baseQuery.getToken());
         return vo;
+    }
+    @Override
+    public StateUseVo stateUse(List<String> names){
+        RadacctState state = new RadacctState();
+        for(String name:names){
+            RadacctState ret = radacctDao.dateState(name);
+            if(ret!=null){
+                state.setAcctInputOctets(state.getAcctInputOctets()+ret.getAcctInputOctets());
+                state.setAcctOutputOctets(state.getAcctOutputOctets()+ret.getAcctOutputOctets());
+                state.setAcctSessionTime(state.getAcctSessionTime()+ret.getAcctSessionTime());
+            }
+        }
+        return VoBuilder.buildStateUseVo(state);
     }
 
     @Override

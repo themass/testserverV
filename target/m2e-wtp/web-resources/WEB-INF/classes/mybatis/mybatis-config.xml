@@ -18,6 +18,8 @@
 		<typeAlias alias="RadCheck" type="com.timeline.vpn.model.po.RadCheck" />
 		<typeAlias alias="RadUserGroup" type="com.timeline.vpn.model.po.RadUserGroup" />
 		<typeAlias alias="DnsResverPo" type="com.timeline.vpn.model.po.DnsResverPo" />
+		<typeAlias alias="Radacct" type="com.timeline.vpn.model.po.Radacct" />
+		<typeAlias alias="RadacctState" type="com.timeline.vpn.model.po.RadacctState" />
 	</typeAliases>
 	<plugins>
 		<plugin interceptor="com.github.pagehelper.PageHelper">

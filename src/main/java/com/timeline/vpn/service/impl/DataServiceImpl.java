@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
+import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
@@ -81,7 +83,13 @@ public class DataServiceImpl implements DataService {
             String userName = baseQuery.getUser()==null?null:baseQuery.getUser().getName();
             userService.updateDevUseinfo(baseQuery.getAppInfo(),userName);
         }
-            
+        if(baseQuery.getUser()!=null){
+            StateUseVo state = userService.stateUse(Arrays.asList(baseQuery.getUser().getName(),baseQuery.getAppInfo().getDevId()));
+            vo.setStateUse(state);    
+        }else{
+            StateUseVo state = userService.stateUse(Arrays.asList(baseQuery.getAppInfo().getDevId()));
+            vo.setStateUse(state);    
+        }
         return vo;
     }
 

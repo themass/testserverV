@@ -18,6 +18,7 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.DnsResverPo;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.model.po.IWannaPo;
+import com.timeline.vpn.model.po.RadacctState;
 import com.timeline.vpn.util.ArrayUtil;
 
 /**
@@ -136,6 +137,23 @@ public class VoBuilder {
         }
         for (Entry<String, List<DnsResverItemVo>> item : map.entrySet()) {
             voItemList.add(new DnsResverVo(item.getKey(), item.getValue()));
+        }
+        return vo;
+    }
+    public static StateUseVo buildStateUseVo(RadacctState state){
+        StateUseVo vo = new StateUseVo();
+        if(state!=null){
+            long time = state.getAcctSessionTime()/1000;
+            long h = time/(60*60);
+            long m = (time%h)/60;
+            long s = (time%h)%60;
+            vo.setTimeUse(String.format(Constant.STATE_TIME_USE, h,m,s));
+            double traffic = state.getAcctInputOctets()+state.getAcctInputOctets();
+            String result = String.format(Constant.STATE_TRAFFIC_USE,traffic);
+            vo.setTrafficUse(result);
+        }else{
+            vo.setTimeUse("0H");
+            vo.setTrafficUse("0G");
         }
         return vo;
     }
