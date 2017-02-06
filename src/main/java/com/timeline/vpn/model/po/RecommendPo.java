@@ -53,7 +53,8 @@ public class RecommendPo {
         }
         if(!StringUtils.isEmpty(img)){
             url = url+img;
-            
+        }else{
+            return null;
         }
         if(StringUtils.isEmpty(url)){
             return null;

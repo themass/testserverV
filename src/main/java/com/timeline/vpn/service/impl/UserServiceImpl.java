@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
                 po.setScore(tmp.getScore());
                 po.setLevel(tmp.getLevel());
             }
-            UserVo vo = VoBuilder.buildVo(po, UserVo.class);
+            UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
             vo.setToken(token);
             return vo;
         } else {
@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
             checkService.updateRadUserGroup(po.getName(), Constant.UserGroup.RAD_GROUP_VIP);
         }
         cacheService.updateUser(baseQuery.getToken(),po);
-        UserVo vo = VoBuilder.buildVo(po, UserVo.class);
+        UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
         vo.setToken(baseQuery.getToken());
         return vo;
     }
@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVo info(BaseQuery baseQuery) {
         UserPo po = userDao.exist(baseQuery.getUser().getName());
-        UserVo vo = VoBuilder.buildVo(po, UserVo.class);
+        UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
         cacheService.del(baseQuery.getToken());
         String token = cacheService.putUser(po);
         vo.setToken(token);

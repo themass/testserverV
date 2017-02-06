@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -21,6 +22,7 @@ import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.model.vo.VoBuilder;
+import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.UserService;
 
@@ -46,22 +48,33 @@ public class DataServiceImpl implements DataService {
             (baseQuery.getUser().getLevel()==Constant.UserLevel.LEVEL_VIP?Constant.RecommendType.TYPE_REG:Constant.RecommendType.TYPE_VIP);
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getPage(type);
-        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class);
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
     }
 
     @Override
-    public InfoListVo<RecommendVo> getRecommendVipPage(BaseQuery baseQuery, PageBaseParam param) {
+    public InfoListVo<RecommendVo> getRecommendVipPage( final BaseQuery baseQuery, PageBaseParam param) {
 //        if(baseQuery.getUser()==null||baseQuery.getUser().getLevel()!=Constant.UserLevel.LEVEL_VIP){
 //            throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
 //        }
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getVipPage();
-        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class);
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
+
+            @Override
+            public void action(RecommendPo i, RecommendVo t) {
+                if(baseQuery.getAppInfo().getVersion().compareTo("001000002000")<=0){
+                    if(!StringUtils.isEmpty(t.getImg()) &&t.getImg().contains("pigu")){
+                        t.setImg(null);
+                    }
+                }
+            }
+            
+        });
     }
 
     @Override
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform) {
-        VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform), VersionInfoVo.class);
+        VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform), VersionInfoVo.class,null);
         vo.setAdsShow(false);
         vo.setLogUp(true);
         if(baseQuery!=null){

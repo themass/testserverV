@@ -63,7 +63,7 @@ public class HostServerImpl implements HostService {
 
     @Override
     public InfoListVo<LocationVo> getAllLocation() {
-        return VoBuilder.buildListInfoVo(cityDao.getAll(), LocationVo.class);
+        return VoBuilder.buildListInfoVo(cityDao.getAll(), LocationVo.class,null);
     }
 
     @Override
