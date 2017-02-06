@@ -1,5 +1,7 @@
 package com.timeline.vpn.model.po;
 
+import org.springframework.util.StringUtils;
+
 /**
  * @author gqli
  * @date 2016年4月19日 下午3:25:40
@@ -44,7 +46,19 @@ public class RecommendPo {
     }
 
     public String getImg() {
-        return imgPath+img;
+        String url = null;
+        if(!StringUtils.isEmpty(imgPath)){
+            url = imgPath;
+            
+        }
+        if(!StringUtils.isEmpty(img)){
+            url = url+img;
+            
+        }
+        if(StringUtils.isEmpty(url)){
+            return null;
+        }
+        return url;
     }
 
     public void setImg(String img) {
