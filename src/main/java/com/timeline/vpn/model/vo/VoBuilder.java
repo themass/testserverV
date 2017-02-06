@@ -152,11 +152,11 @@ public class VoBuilder {
             double traffic = (state.getAcctInputOctets()+state.getAcctInputOctets());
             double mb = traffic/1024/1024;
             if(mb>0){
-                result = String.format(Constant.STATE_TRAFFIC_USE,mb);
+                result = String.format(Constant.STATE_TRAFFIC_USE,mb)+"Gb";
             }else{
                 double kb = traffic/1024;
                 if(kb>0){
-                    result = String.format(Constant.STATE_TRAFFIC_USE,kb);
+                    result = String.format(Constant.STATE_TRAFFIC_USE,kb)+"Kb";
                 }else{
                     result = traffic+"B";
                 }
