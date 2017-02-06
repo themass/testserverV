@@ -144,9 +144,9 @@ public class VoBuilder {
         StateUseVo vo = new StateUseVo();
         if(state!=null){
             long time = state.getAcctSessionTime()/1000;
-            long h = time/(60*60);
-            long m = (time%h)/60;
-            long s = (time%h)%60;
+            long h = time/(3600);
+            long m = (time%(3600))/60;
+            long s = (time%(3600))%60;
             vo.setTimeUse(String.format(Constant.STATE_TIME_USE, h,m,s));
             double traffic = state.getAcctInputOctets()+state.getAcctInputOctets();
             String result = String.format(Constant.STATE_TRAFFIC_USE,traffic);
