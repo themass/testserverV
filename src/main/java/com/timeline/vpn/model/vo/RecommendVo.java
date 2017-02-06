@@ -14,6 +14,8 @@ public class RecommendVo {
     private float rate;
     private Boolean adsShow;
     private Boolean adsPopShow;
+    // 0  正常显示，1 图片模糊+文字，2只有文字没有图片， 3 只有文字 北京色随机
+    private int showType;
     public String getTitle() {
         return title;
     }
@@ -76,6 +78,14 @@ public class RecommendVo {
 
     public void setAdsPopShow(Boolean adsPopShow) {
         this.adsPopShow = adsPopShow;
+    }
+
+    public int getShowType() {
+        return showType;
+    }
+
+    public void setShowType(int showType) {
+        this.showType = showType;
     }
 
     

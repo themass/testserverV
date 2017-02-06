@@ -17,6 +17,7 @@ public class RecommendPo {
     private int type;
     private Boolean adsShow;
     private Boolean adsPopShow;
+    private int showType;
 
     public int getId() {
         return id;
@@ -104,6 +105,14 @@ public class RecommendPo {
 
     public void setAdsPopShow(Boolean adsPopShow) {
         this.adsPopShow = adsPopShow;
+    }
+
+    public int getShowType() {
+        return showType;
+    }
+
+    public void setShowType(int showType) {
+        this.showType = showType;
     }
 
 
