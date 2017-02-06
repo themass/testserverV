@@ -12,6 +12,7 @@
 		<result column="imgPath" property="imgPath" />
 		<result column="type" property="type" />
 		<result column="adsShow" property="adsShow" />
+		<result column="popAdsShow" property="popAdsShow" />
 	</resultMap>
 
 	<select id="getAll" resultMap="RecommendMap">

@@ -16,6 +16,7 @@ public class RecommendPo {
     private String imgPath;
     private int type;
     private Boolean adsShow;
+    private Boolean popAdsShow;
 
     public int getId() {
         return id;
@@ -95,6 +96,14 @@ public class RecommendPo {
 
     public void setAdsShow(Boolean adsShow) {
         this.adsShow = adsShow;
+    }
+
+    public Boolean getPopAdsShow() {
+        return popAdsShow;
+    }
+
+    public void setPopAdsShow(Boolean popAdsShow) {
+        this.popAdsShow = popAdsShow;
     }
 
 

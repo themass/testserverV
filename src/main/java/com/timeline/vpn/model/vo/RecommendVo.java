@@ -13,6 +13,7 @@ public class RecommendVo {
     private String color;
     private float rate;
     private Boolean adsShow;
+    private Boolean popAdsShow;
     public String getTitle() {
         return title;
     }
@@ -67,6 +68,14 @@ public class RecommendVo {
 
     public void setAdsShow(Boolean adsShow) {
         this.adsShow = adsShow;
+    }
+
+    public Boolean getPopAdsShow() {
+        return popAdsShow;
+    }
+
+    public void setPopAdsShow(Boolean popAdsShow) {
+        this.popAdsShow = popAdsShow;
     }
 
 
