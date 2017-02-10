@@ -76,12 +76,12 @@ public class VoBuilder {
 
 
     public static ServerVo buildServerVo(String name, String pwd, Integer type,
-            List<HostPo> hostList) {
+            List<HostPo> hostList,BuildAction<HostPo, HostVo> action) {
         ServerVo vo = new ServerVo();
         vo.setName(name);
         vo.setPwd(pwd);
         vo.setType(type);
-        List<HostVo> list = buildListVo(hostList, HostVo.class, null);
+        List<HostVo> list = buildListVo(hostList, HostVo.class, action);
         vo.setHostList(list);
         return vo;
     }

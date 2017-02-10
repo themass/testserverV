@@ -16,10 +16,12 @@ import com.timeline.vpn.model.po.DnsResverPo;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.model.po.RadCheck;
 import com.timeline.vpn.model.vo.DnsResverVo;
+import com.timeline.vpn.model.vo.HostVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.LocationVo;
 import com.timeline.vpn.model.vo.ServerVo;
 import com.timeline.vpn.model.vo.VoBuilder;
+import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.HostService;
 import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.util.AES2;
@@ -49,6 +51,7 @@ public class HostServerImpl implements HostService {
             check = checkService.addRadUser(baseQuery.getAppInfo().getDevId(), AES2.getRandom(), Constant.UserGroup.RAD_GROUP_FREE);
         }
 //        UserPass pass = UserAuthData.getOne();
+        BuildAction<HostPo, HostVo> action = null;
         List<HostPo> hostList = null;
         if (location == Constant.LOCATION_ALL) {
             hostList = hostDao.getAll();
@@ -58,7 +61,7 @@ public class HostServerImpl implements HostService {
         if (CollectionUtils.isEmpty(hostList)) {
             throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
         }
-        return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.SERVER_TYPE_FREE, hostList);
+        return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.SERVER_TYPE_FREE, hostList,action);
     }
 
     @Override
