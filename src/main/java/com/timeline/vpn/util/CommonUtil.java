@@ -12,12 +12,15 @@ import org.apache.commons.lang3.RandomUtils;
 public class CommonUtil {
     private static final int CODE_START = 1000;
     private static final int CODE_END = 9999;
-    private static final Pattern pattern = Pattern.compile("[0-9A-Za-z]");
+    private static final Pattern pattern = Pattern.compile("[0-9A-Za-z]*");
     public static String generateCode() {
         return String.valueOf(RandomUtils.nextInt(CODE_START, CODE_END));
     }
     public static boolean isNumAndEnglish(String str){
         return pattern.matcher(str).matches();
+    }
+    public static void main(String[] args){
+        System.out.println(isNumAndEnglish("themass我w122"));
     }
 }
 
