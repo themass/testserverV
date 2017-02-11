@@ -14,6 +14,8 @@ public class VersionInfoVo {
     private Boolean adsShow;
     private Boolean logUp;
     private StateUseVo stateUse;
+    public String dnspodIp;
+    public Boolean needDnspod=false;
 
     public String getVersion() {
         return version;
@@ -76,6 +78,22 @@ public class VersionInfoVo {
 
     public void setStateUse(StateUseVo stateUse) {
         this.stateUse = stateUse;
+    }
+
+    public String getDnspodIp() {
+        return dnspodIp;
+    }
+
+    public void setDnspodIp(String dnspodIp) {
+        this.dnspodIp = dnspodIp;
+    }
+
+    public Boolean getNeedDnspod() {
+        return needDnspod;
+    }
+
+    public void setNeedDnspod(Boolean needDnspod) {
+        this.needDnspod = needDnspod;
     }
 
     @Override
