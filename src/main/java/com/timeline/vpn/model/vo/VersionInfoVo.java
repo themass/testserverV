@@ -15,7 +15,7 @@ public class VersionInfoVo {
     private Boolean logUp;
     private StateUseVo stateUse;
     public String dnspodIp;
-    public Boolean needDnspod=false;
+    public Boolean needDnspod=true;
 
     public String getVersion() {
         return version;
