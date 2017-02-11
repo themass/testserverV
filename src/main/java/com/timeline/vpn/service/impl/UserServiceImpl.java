@@ -28,6 +28,7 @@ import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.RegAuthService;
 import com.timeline.vpn.service.UserService;
+import com.timeline.vpn.util.CommonUtil;
 
 /**
  * @author gqli
@@ -77,6 +78,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVo login(BaseQuery baseQuery, String name, String pwd,Integer score) {
+        if(!CommonUtil.isNumAndEnglish(name)||!CommonUtil.isNumAndEnglish(pwd)){
+            throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
+        }
         UserPo po = userDao.get(name, pwd);
         baseQuery.setUser(po);
         if (po != null) {
@@ -106,6 +110,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void reg(UserRegForm form, DevApp appInfo) {
+        if(!CommonUtil.isNumAndEnglish(form.getName())||!CommonUtil.isNumAndEnglish(form.getPwd())){
+            throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
+        }
         if (form.getPwd().equals(form.getRePwd())) {
 //            String code = cacheService.get(form.getChannel());
 //            if(!form.getCode().equals(code)){

@@ -11,6 +11,7 @@ public class Constant {
         public static final String RESULT_NO_LOGIN = "RESULT.ERROR.NO.LOGIN";
         public static final String RESULT_LOGIN_ERROR = "RESULT.ERROR.LOGIN";
         public static final String RESULT_PWD_ERROR = "RESULT.ERROR.PWD";
+        public static final String RESULT_LOGIN_PATTER = "RESULT.LOGIN.PATTER";
         public static final String RESULT_TOKEN_EXPIRE = "RESULT.ERROR.TOKEN.EXPIRE";
         public static final String RESULT_PARAM_ERROR = "RESULT.ERROR.PARAM";
         public static final String RESULT_DATA_ERROR = "RESULT.ERROR.DATA";
