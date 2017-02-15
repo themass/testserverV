@@ -29,7 +29,7 @@ public class DeviceUtil {
     public static final String ANDROID = "android";
     public static final String IOS = "ios";
     private static final String FORMAT = "000";
-    private static final String VPNVERSION = "(VPN/|LIFE/)(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
+    private static final String VPNVERSION = "(VPN|LIFE)/(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
     private static final String DEVID = "devid";
     private static final int VERSION_COUNT = 4;
     private static final String HTTP_UA = "user-agent";
@@ -75,6 +75,8 @@ public class DeviceUtil {
         if (ua != null) {
             Matcher matcher = pattern.matcher(ua);
             if (matcher.find()) {
+                LOGGER.info("matcher.group(1)="+matcher.group(1));
+                LOGGER.info("matcher.group(2)="+matcher.group(2));
                 String versionName = matcher.group(2);
                 DevApp app = new DevApp(devId, webRequest.getRemoteAddr(), versionName,
                         getAppVersion(versionName), getPlatForm(webRequest));
@@ -120,5 +122,13 @@ public class DeviceUtil {
     public static Locale getLocale(HttpServletRequest webRequest) {
         String language = webRequest.getHeader(Constant.LANG);
         return new Locale(language);
+    }
+    public static void main(String[]args){
+        String str = "VPN/1.0.2.1";
+        Matcher matcher = pattern.matcher(str);
+        System.out.println(matcher.find());
+        System.out.println(matcher.group(0));
+        System.out.println(matcher.group(1));
+        System.out.println(matcher.group(2));
     }
 }
