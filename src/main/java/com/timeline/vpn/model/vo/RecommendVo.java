@@ -1,5 +1,7 @@
 package com.timeline.vpn.model.vo;
 
+import java.util.Date;
+
 /**
  * @author gqli
  * @date 2016年3月10日 下午4:41:23
@@ -16,6 +18,7 @@ public class RecommendVo {
     private Boolean adsPopShow;
     // 0  正常显示，1 图片模糊+文字，2只有文字没有图片
     private int showType;
+    private Date createTime;
     public String getTitle() {
         return title;
     }
@@ -88,8 +91,12 @@ public class RecommendVo {
         this.showType = showType;
     }
 
-    
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }
 

@@ -1,5 +1,7 @@
 package com.timeline.vpn.model.po;
 
+import java.util.Date;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -8,7 +10,7 @@ import org.springframework.util.StringUtils;
  * @version V1.0
  */
 public class RecommendPo {
-    private int id;
+    private Integer id;
     private String title;
     private String actionUrl;
     private String img;
@@ -20,12 +22,15 @@ public class RecommendPo {
     private Boolean adsShow;
     private Boolean adsPopShow;
     private int showType;
+    //自定义使用
+    private String name;
+    private Date createTime;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -130,7 +135,21 @@ public class RecommendPo {
         this.showType = showType;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
 }
 

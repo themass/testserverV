@@ -15,5 +15,8 @@ import com.timeline.vpn.model.po.RecommendPo;
 public interface RecommendDao extends BaseDBDao<RecommendPo> {
     public List<RecommendPo> getPage(@Param("type")int type);
     public List<RecommendPo> getVipPage();
+    public List<RecommendPo> getCustomePage(@Param("name")String name);
+    public void delCustome(@Param("id")Integer id);
+    public void replaceCustome(RecommendPo po);
 }
 

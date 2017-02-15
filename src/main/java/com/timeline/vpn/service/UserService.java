@@ -2,10 +2,14 @@ package com.timeline.vpn.service;
 
 import java.util.List;
 
+import com.timeline.vpn.model.form.CustomeAddForm;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
+import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.DevUseinfoPo;
+import com.timeline.vpn.model.vo.InfoListVo;
+import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.RegCodeVo;
 import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.UserVo;
@@ -29,5 +33,10 @@ public interface UserService {
     public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName);
 
     public StateUseVo stateUse(List<String> name);
+
+    public void addOrUpdateCustome(BaseQuery baseQuery, CustomeAddForm form);
+
+    public void delCustome(BaseQuery baseQuery, int id);
+    public InfoListVo<RecommendVo> getRecommendCustomePage(BaseQuery baseQuery, PageBaseParam param);
 }
 

@@ -45,9 +45,9 @@ public class DataController extends BaseController {
         return new JsonResult(dataService.getRecommendVipPage(baseQuery,form.toParam()));
     }
     @RequestMapping(value = "/recommend/custome.json", method = RequestMethod.GET)
-    public JsonResult customeList(@UserInfo BaseQuery baseQuery,
+    public JsonResult customeList(@UserInfo(required=true) BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getRecommendVipPage(baseQuery,form.toParam()));
+        return new JsonResult(userService.getRecommendCustomePage(baseQuery,form.toParam()));
     }
     @RequestMapping(value = "/recommend/reco.json", method = RequestMethod.GET)
     public JsonResult recoList(@UserInfo BaseQuery baseQuery,

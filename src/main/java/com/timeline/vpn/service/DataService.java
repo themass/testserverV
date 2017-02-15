@@ -23,5 +23,6 @@ public interface DataService {
     public void addIwannaLike(BaseQuery baseQuery, long id);
 
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform);
+    
 }
 

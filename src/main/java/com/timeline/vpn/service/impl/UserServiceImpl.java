@@ -8,18 +8,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.DevUseinfoDao;
 import com.timeline.vpn.dao.db.RadacctDao;
+import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.exception.LoginException;
+import com.timeline.vpn.model.form.CustomeAddForm;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
+import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.DevUseinfoPo;
 import com.timeline.vpn.model.po.RadacctState;
+import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.po.UserPo;
+import com.timeline.vpn.model.vo.InfoListVo;
+import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.RegCodeVo;
 import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.UserVo;
@@ -49,6 +57,8 @@ public class UserServiceImpl implements UserService {
     private RegAuthService regAuthService;
     @Autowired
     private RadacctDao radacctDao;
+    @Autowired
+    private RecommendDao recommendDao;
 
     public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName) {
         DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
@@ -180,6 +190,30 @@ public class UserServiceImpl implements UserService {
         RegCodeVo vo = new RegCodeVo();
         vo.setCode(code);
         return vo;
+    }
+
+    @Override
+    public void addOrUpdateCustome(BaseQuery baseQuery, CustomeAddForm form) {
+        RecommendPo po = new RecommendPo();
+        po.setTitle(form.getTitle());
+        po.setActionUrl(form.getUrl());
+        po.setId(form.getId());
+        po.setName(baseQuery.getUser().getName());
+        po.setCreateTime(new Date());
+        recommendDao.replaceCustome(po);
+    }
+
+    @Override
+    public void delCustome(BaseQuery baseQuery, int id) {
+        recommendDao.delCustome(id);
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getRecommendCustomePage(BaseQuery baseQuery, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<RecommendPo> poList = recommendDao.getCustomePage(baseQuery.getUser().getName());
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
+
     }
 
 }

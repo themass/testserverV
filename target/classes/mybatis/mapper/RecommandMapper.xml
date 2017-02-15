@@ -3,8 +3,8 @@
 <mapper namespace="com.timeline.vpn.dao.db.RecommendDao">
 	<resultMap id="RecommendMap" type="RecommendPo">
 		<id column="id" property="id" />
-		<id column="title" property="title" />
-		<id column="actionUrl" property="actionUrl" />
+		<result column="title" property="title" />
+		<result column="actionUrl" property="actionUrl" />
 		<result column="img" property="img" />
 		<result column="desc" property="desc" />
 		<result column="color" property="color" />
@@ -15,7 +15,13 @@
 		<result column="adsPopShow" property="adsPopShow" />
 		<result column="showType" property="showType" />
 	</resultMap>
-
+	<resultMap id="RecommendCustomeMap" type="RecommendPo">
+		<id column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="actionUrl" property="actionUrl" />
+		<result column="name" property="name" />
+		<result column="createTime" property="createTime" />
+	</resultMap>
 	<select id="getAll" resultMap="RecommendMap">
 		select * from vpn.recommend where enable=1 order by sort asc
 	</select>
@@ -28,4 +34,16 @@
 	<select id="get" resultMap="RecommendMap">
 		select * from vpn.recommend where enable=1
 	</select>
+	<select id="getCustomePage" resultMap="RecommendCustomeMap">
+		select * from vpn.recommendCustome where name=#{name} and enable=1 
+	</select>
+	<insert id="replaceCustome">
+	    replace into
+		vpn.recommendCustome(title,actionUrl,name,createTime)
+		values
+		(#{title},#{actionUrl},#{name},#{createTime})
+	</insert>
+	<delete id="delCustome">
+	    delete from recommendCustome where id=#{id}
+	</delete>
 </mapper>

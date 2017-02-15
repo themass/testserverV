@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.form.CustomeAddForm;
 import com.timeline.vpn.model.form.LoginForm;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -51,7 +52,16 @@ public class UserController extends BaseController {
         userService.logout(baseQuery);
         return Constant.RESULT_SUCCESS;
     }
-
+    @RequestMapping(value = "/custome/update.json", method = RequestMethod.POST)
+    public JsonResult customeUpdate(@UserInfo(required = true) BaseQuery baseQuery,@Valid @ModelAttribute CustomeAddForm form) {
+        userService.addOrUpdateCustome(baseQuery,form);
+        return Constant.RESULT_SUCCESS;
+    }
+    @RequestMapping(value = "/custome/del.json", method = RequestMethod.POST)
+    public JsonResult customeDel(@UserInfo(required = true) BaseQuery baseQuery,@RequestParam int id) {
+        userService.delCustome(baseQuery,id);
+        return Constant.RESULT_SUCCESS;
+    }
     @RequestMapping(value = "/ads/score.json", method = RequestMethod.GET)
     public JsonResult adsFabCLick(@UserInfo(required = true) BaseQuery baseQuery,
             @RequestParam int score) {
