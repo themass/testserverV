@@ -19,6 +19,15 @@
 		<id column="id" property="id" />
 		<result column="title" property="title" />
 		<result column="actionUrl" property="actionUrl" />
+		<result column="img" property="img" />
+		<result column="desc" property="desc" />
+		<result column="color" property="color" />
+		<result column="rate" property="rate" />
+		<result column="imgPath" property="imgPath" />
+		<result column="type" property="type" />
+		<result column="adsShow" property="adsShow" />
+		<result column="adsPopShow" property="adsPopShow" />
+		<result column="showType" property="showType" />
 		<result column="name" property="name" />
 		<result column="createTime" property="createTime" />
 	</resultMap>
