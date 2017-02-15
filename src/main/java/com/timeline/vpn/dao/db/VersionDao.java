@@ -1,5 +1,7 @@
 package com.timeline.vpn.dao.db;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.timeline.vpn.dao.BaseDBDao;
 import com.timeline.vpn.model.po.AppVersion;
 
@@ -9,6 +11,6 @@ import com.timeline.vpn.model.po.AppVersion;
  * @version V1.0
  */
 public interface VersionDao extends BaseDBDao<AppVersion> {
-    public AppVersion getLast(String platform,String channel);
+    public AppVersion getLast(@Param("platform")String platform,@Param("channel")String channel);
 
 }
