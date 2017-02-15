@@ -19,6 +19,7 @@ public class RecommendVo {
     // 0  正常显示，1 图片模糊+文字，2只有文字没有图片
     private int showType;
     private Date createTime;
+    private Integer id;
     public String getTitle() {
         return title;
     }
@@ -98,5 +99,14 @@ public class RecommendVo {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
 }
 
