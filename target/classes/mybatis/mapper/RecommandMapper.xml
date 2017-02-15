@@ -53,6 +53,6 @@
 		(#{title},#{actionUrl},#{name},#{createTime})
 	</insert>
 	<delete id="delCustome">
-	    delete from recommendCustome where id=#{id}
+	    delete from vpn.recommendCustome where id=#{id}
 	</delete>
 </mapper>
