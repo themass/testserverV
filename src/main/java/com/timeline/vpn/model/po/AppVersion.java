@@ -16,6 +16,7 @@ public class AppVersion {
     private String url;
     private String minBuild;
     private String maxBuild;
+    private String channel;
 
     public int getId() {
         return id;
@@ -79,6 +80,14 @@ public class AppVersion {
 
     public void setMaxBuild(String maxBuild) {
         this.maxBuild = maxBuild;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
 

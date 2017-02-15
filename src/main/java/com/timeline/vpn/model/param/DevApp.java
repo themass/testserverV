@@ -19,6 +19,8 @@ public class DevApp {
     private String host;
     private String lon;
     private String lat;
+    private String tokenHeader;
+    private String channel;
     public DevApp(){}
     public DevApp(String devId, String userIp, String versionName, String version,
             String platform) {
@@ -140,6 +142,20 @@ public class DevApp {
     }
     public void setLat(String lat) {
         this.lat = lat;
+    }
+    
+    public String getTokenHeader() {
+        return tokenHeader;
+    }
+    public void setTokenHeader(String tokenHeader) {
+        this.tokenHeader = tokenHeader;
+    }
+    
+    public String getChannel() {
+        return channel;
+    }
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
     @Override
     public String toString() {

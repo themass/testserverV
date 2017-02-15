@@ -75,8 +75,8 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public VersionInfoVo getVersion(BaseQuery baseQuery,String platform) {
-        VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform), VersionInfoVo.class,null);
+    public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel) {
+        VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
         vo.setAdsShow(false);
         vo.setLogUp(true);
         if(baseQuery!=null){

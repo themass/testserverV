@@ -12,6 +12,7 @@ import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.CacheService;
+import com.timeline.vpn.web.common.DevAppContext;
 
 /**
  * 
@@ -28,7 +29,7 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
-        String token = request.getHeader(Constant.HTTP_TOKEN_KEY);
+        String token = request.getHeader(DevAppContext.get().getTokenHeader());
         if (StringUtils.isEmpty(token)) {
             return true;
         }

@@ -9,6 +9,6 @@ import com.timeline.vpn.model.po.AppVersion;
  * @version V1.0
  */
 public interface VersionDao extends BaseDBDao<AppVersion> {
-    public AppVersion getLast(String platform);
+    public AppVersion getLast(String platform,String channel);
 
 }

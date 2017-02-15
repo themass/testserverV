@@ -29,7 +29,7 @@ public class DeviceUtil {
     public static final String ANDROID = "android";
     public static final String IOS = "ios";
     private static final String FORMAT = "000";
-    private static final String VPNVERSION = "(VPN/)(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
+    private static final String VPNVERSION = "(VPN/|LIFE/)(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
     private static final String DEVID = "devid";
     private static final int VERSION_COUNT = 4;
     private static final String HTTP_UA = "user-agent";
@@ -87,6 +87,15 @@ public class DeviceUtil {
                 app.setSign(timeSign.substring(len, timeSign.length()));
                 app.setTime(Long.parseLong(timeSign.substring(0, len)));
                 app.setHost(webRequest.getHeader(HTTP_HOST));
+                if(Constant.VPN.equals((matcher.group(1)))){
+                    app.setTokenHeader(Constant.HTTP_TOKEN_KEY);
+                    app.setChannel(Constant.VPN);
+                }else if(Constant.LIFE.equals(matcher.group(1))){
+                    app.setTokenHeader(Constant.HTTP_TOKEN_LIFE_KEY);
+                    app.setChannel(Constant.LIFE);
+                }else{
+                    return null;
+                }
                 parsLoc(webRequest,app);
                 return app;
             }

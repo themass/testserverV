@@ -56,7 +56,7 @@ public class DataController extends BaseController {
     }
     @RequestMapping(value = "/version.json", method = RequestMethod.GET)
     public JsonResult version(@UserInfo BaseQuery baseQuery) {
-        return new JsonResult(dataService.getVersion(baseQuery,baseQuery.getAppInfo().getPlatform()));
+        return new JsonResult(dataService.getVersion(baseQuery,baseQuery.getAppInfo().getPlatform(),baseQuery.getAppInfo().getChannel()));
     }
 
     @RequestMapping(value = "/feed/wanna.json", method = RequestMethod.GET)

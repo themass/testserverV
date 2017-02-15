@@ -10,6 +10,7 @@
 		<result column="content" property="content" />
 		<result column="time" property="time" />
 		<result column="url" property="url" />
+		<result column="channel" property="channel" />
 	</resultMap>
 
 	<select id="getAll" resultMap="VersionMap">
@@ -17,7 +18,7 @@
 	</select>
 	<select id="getLast" resultMap="VersionMap">
 		select * from vpn.version where
-		platform=#{platform} order by maxBuild desc limit 1
+		platform=#{platform} and channel=#{channel}order by maxBuild desc limit 1
 	</select>
 	
 </mapper>
