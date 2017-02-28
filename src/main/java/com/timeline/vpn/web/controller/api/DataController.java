@@ -37,7 +37,7 @@ public class DataController extends BaseController {
     @RequestMapping(value = "/recommend/world.json", method = RequestMethod.GET)
     public JsonResult worldList(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getRecommendVipPage(baseQuery,form.toParam()));
+        return new JsonResult(dataService.getRecommendPage(baseQuery,form.toParam()));
     }
     @RequestMapping(value = "/recommend/hot.json", method = RequestMethod.GET)
     public JsonResult hotList(@UserInfo BaseQuery baseQuery,
