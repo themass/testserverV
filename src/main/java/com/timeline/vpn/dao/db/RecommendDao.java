@@ -18,5 +18,6 @@ public interface RecommendDao extends BaseDBDao<RecommendPo> {
     public List<RecommendPo> getCustomePage(@Param("name")String name);
     public void delCustome(@Param("id")Integer id);
     public void replaceCustome(RecommendPo po);
+    public List<RecommendPo> getRecoPage();
 }
 

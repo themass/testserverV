@@ -16,6 +16,7 @@ import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.VersionDao;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
+import com.timeline.vpn.model.po.AppVersion;
 import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.vo.IWannaVo;
@@ -79,6 +80,10 @@ public class DataServiceImpl implements DataService {
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
         vo.setAdsShow(false);
         vo.setLogUp(true);
+        if(!channel.equals("VPN")){
+            AppVersion vpnVer = versionDao.getLast(platform,"VPN");
+            vo.setVpnUrl(vpnVer.getUrl());
+        }
         if(baseQuery!=null){
             String userName = baseQuery.getUser()==null?null:baseQuery.getUser().getName();
             userService.updateDevUseinfo(baseQuery.getAppInfo(),userName);
@@ -122,6 +127,13 @@ public class DataServiceImpl implements DataService {
         }
         iWannaDao.like(po);
 
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getRecommendRecPage(BaseQuery baseQuery, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<RecommendPo> poList = recommendDao.getRecoPage();
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
     }
 
 }

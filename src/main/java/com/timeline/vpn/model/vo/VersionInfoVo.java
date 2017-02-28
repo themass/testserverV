@@ -14,8 +14,9 @@ public class VersionInfoVo {
     private Boolean adsShow;
     private Boolean logUp;
     private StateUseVo stateUse;
-    public String dnspodIp;
-    public Boolean needDnspod=true;
+    private String dnspodIp;
+    private Boolean needDnspod=true;
+    private String vpnUrl;
 
     public String getVersion() {
         return version;
@@ -94,6 +95,14 @@ public class VersionInfoVo {
 
     public void setNeedDnspod(Boolean needDnspod) {
         this.needDnspod = needDnspod;
+    }
+
+    public String getVpnUrl() {
+        return vpnUrl;
+    }
+
+    public void setVpnUrl(String vpnUrl) {
+        this.vpnUrl = vpnUrl;
     }
 
     @Override
