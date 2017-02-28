@@ -52,7 +52,7 @@ public class DataController extends BaseController {
     @RequestMapping(value = "/recommend/reco.json", method = RequestMethod.GET)
     public JsonResult recoList(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getRecommendVipPage(baseQuery,form.toParam()));
+        return new JsonResult(dataService.getRecommendRecPage(baseQuery,form.toParam()));
     }
     @RequestMapping(value = "/version.json", method = RequestMethod.GET)
     public JsonResult version(@UserInfo BaseQuery baseQuery) {
