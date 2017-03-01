@@ -2,10 +2,15 @@ package com.timeline.vpn.model.param;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.util.Md5;
 
 public class DevApp {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(DevApp.class);
     private String devId;
     private String versionName;
     private String version;
@@ -34,13 +39,17 @@ public class DevApp {
     public boolean check() {
         long now = new Date().getTime();
         if(platform==null||version==null||devId==null){
+            LOGGER.error("check fail :platform="+platform+",version="+version+",devId="+devId);
             return false;
         }
         if (now - time > Constant.MIN_TIME) {
+            LOGGER.error("check fail :now="+now+",time="+time);
             return false;
         }
-        if (!Md5.encode(devId + "|" + time).equals(sign))
+        if (!Md5.encode(devId + "|" + time).equals(sign)){
+            LOGGER.error("check fail :sign="+sign+",devId="+devId+",time+"+time);
             return false;
+        }
         return true;
     }
 

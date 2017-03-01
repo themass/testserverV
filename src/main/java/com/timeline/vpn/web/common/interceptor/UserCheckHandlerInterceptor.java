@@ -4,8 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -14,7 +12,6 @@ import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.CacheService;
-import com.timeline.vpn.util.DeviceUtil;
 import com.timeline.vpn.web.common.DevAppContext;
 
 /**
@@ -28,8 +25,6 @@ import com.timeline.vpn.web.common.DevAppContext;
 public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private CacheService cacheService;
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(UserCheckHandlerInterceptor.class);
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
