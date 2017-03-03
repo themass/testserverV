@@ -47,7 +47,7 @@ public class DevApp {
             return false;
         }
         if (!Md5.encode(devId + "|" + time).equals(sign)){
-            LOGGER.error("check fail :sign="+sign+",devId="+devId+",time+"+time);
+            LOGGER.error("check fail :sign="+sign+",devId="+devId+",time="+time);
             return false;
         }
         return true;

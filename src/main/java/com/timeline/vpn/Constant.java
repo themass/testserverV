@@ -65,7 +65,7 @@ public class Constant {
     public static final long FREE_TIME = 20 * 24 * 60 * 60;
     public static final long ADS_FAB_SCORE = 10;
     public static final long ADS_CLICK_SCORE = 20;
-    public static final long MIN_TIME = 30 * 60 * 1000;
+    public static final long MIN_TIME = 9 * 60 * 60 * 1000;
     public static final int MIN_PAGESIZE = 30;
     public static final String RAD_PASS = "Cleartext-Password";
     public static final String RAD_EQ = ":=";
