@@ -171,11 +171,10 @@ public class DevApp {
     public String toString() {
         return "DevApp [devId=" + devId + ", versionName=" + versionName + ", version=" + version
                 + ", platform=" + platform + ", userIp=" + userIp + ", lang=" + lang + ", sign="
-                + sign + ", time=" + time + ", authKey=" + authKey + "]";
+                + sign + ", time=" + time + ", authKey=" + authKey + ", isTest=" + isTest
+                + ", host=" + host + ", lon=" + lon + ", lat=" + lat + ", tokenHeader="
+                + tokenHeader + ", channel=" + channel + "]";
     }
-    public static void main(String[]args){
-        System.out.println(DateTimeUtils.formatDate(new Date(1488520114546l)));
-        System.out.println(DateTimeUtils.formatDate(new Date(1439417002503l)));
-    }
+    
 
 }

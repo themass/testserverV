@@ -4,11 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.CacheService;
@@ -23,12 +26,16 @@ import com.timeline.vpn.web.common.DevAppContext;
  *
  */
 public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserCheckHandlerInterceptor.class);
+
     @Autowired
     private CacheService cacheService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
-        String token = request.getHeader(DevAppContext.get().getTokenHeader());
+        DevApp app = DevAppContext.get();
+        LOGGER.info(app.toString());
+        String token = request.getHeader(app.getTokenHeader());
         if (StringUtils.isEmpty(token)) {
             return true;
         }
