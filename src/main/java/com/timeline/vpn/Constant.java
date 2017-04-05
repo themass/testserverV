@@ -52,8 +52,8 @@ public class Constant {
     public static final String VPN = "VPN";
     public static final String LIFE = "LIFE";
     
-    public static final String HTTP_TOKEN_KEY = "vpn-token";
-    public static final String HTTP_TOKEN_LIFE_KEY = "life-token";
+    public static final String HTTP_TOKEN_KEY = "Vpn-Token";
+    public static final String HTTP_TOKEN_LIFE_KEY = "Life-Token";
     public static final String HTTP_ATTR_TOKEN = "token_key";
     public static final String HTTP_ATTR_RET = "ret_key";
     public static final String LANG = "Accept-Language";
