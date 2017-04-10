@@ -8,6 +8,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -215,7 +216,8 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getCustomePage(baseQuery.getUser().getName());
         for(int index=0;index<poList.size();index++){
-            poList.get(index).setColor(Constant.colorBg.get(index % Constant.colorBg.size()));
+            if(StringUtils.isEmpty(poList.get(index).getColor()))
+                poList.get(index).setColor(Constant.colorBg.get(index % Constant.colorBg.size()));
         }
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
 
