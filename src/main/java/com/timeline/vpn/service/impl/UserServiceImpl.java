@@ -212,6 +212,9 @@ public class UserServiceImpl implements UserService {
     public InfoListVo<RecommendVo> getRecommendCustomePage(BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getCustomePage(baseQuery.getUser().getName());
+        for(int index=0;index<poList.size();index++){
+            poList.get(index).setColor(Constant.colorBg.get(index % Constant.colorBg.size()));
+        }
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
 
     }
