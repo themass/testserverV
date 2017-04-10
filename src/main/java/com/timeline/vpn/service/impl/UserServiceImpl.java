@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -200,6 +201,7 @@ public class UserServiceImpl implements UserService {
         po.setId(form.getId());
         po.setName(baseQuery.getUser().getName());
         po.setCreateTime(new Date());
+        po.setColor(Constant.colorBg.get(RandomUtils.nextInt() % Constant.colorBg.size()));
         recommendDao.replaceCustome(po);
     }
 
