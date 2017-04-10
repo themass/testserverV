@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.timeline.vpn.dao.db.HostDao;
 import com.timeline.vpn.model.po.HostPo;
-import com.timeline.vpn.service.impl.MailRegAuthServiceImpl;
 import com.timeline.vpn.service.job.AbstractJob;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.MailUtil;
@@ -34,6 +33,7 @@ public class HostCheck extends AbstractJob {
                 if(!ret){
                     if(count==2){
                         String title = "服务器 ping 失败："+po.getGateway();
+                        LOGGER.error(title);
                         MailUtil.sendMail(title, title);
                     }
                 }else{
