@@ -12,7 +12,7 @@ public class IWannaVo {
     private int likes;
     private long time;
     private boolean isLike;
-
+    private boolean finished;
     public long getId() {
         return id;
     }
@@ -59,6 +59,14 @@ public class IWannaVo {
 
     public void setLike(boolean isLike) {
         this.isLike = isLike;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 
 
