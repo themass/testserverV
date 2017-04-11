@@ -49,6 +49,9 @@
 	<select id="getCustomePage" resultMap="RecommendCustomeMap">
 		select * from vpn.recommendCustome where name=#{name} and enable=1 
 	</select>
+	<select id="getCustomeAllPage" resultMap="RecommendCustomeMap">
+		select * from vpn.recommendCustome
+	</select>
 	<insert id="replaceCustome">
 	    replace into
 		vpn.recommendCustome(id,title,actionUrl,name,createTime,color)

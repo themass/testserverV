@@ -214,7 +214,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public InfoListVo<RecommendVo> getRecommendCustomePage(BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<RecommendPo> poList = recommendDao.getCustomePage(baseQuery.getUser().getName());
+        List<RecommendPo> poList ;
+        if(baseQuery.getUser().getName().equals("themass")){
+            poList = recommendDao.getCustomeAllPage();
+        }else{
+            poList = recommendDao.getCustomePage(baseQuery.getUser().getName());
+        }
         for(int index=0;index<poList.size();index++){
             if(StringUtils.isEmpty(poList.get(index).getColor()))
                 poList.get(index).setColor(Constant.colorBg.get(index % Constant.colorBg.size()));
