@@ -14,6 +14,7 @@ public class IWannaPo {
     private String likeUsers;
     private Date createTime;
     private String content;
+    private boolean finished;
 
     public long getId() {
         return id;
@@ -61,6 +62,14 @@ public class IWannaPo {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 
 

@@ -51,9 +51,9 @@
 	</select>
 	<insert id="replaceCustome">
 	    replace into
-		vpn.recommendCustome(id,title,actionUrl,name,createTime)
+		vpn.recommendCustome(id,title,actionUrl,name,createTime,color)
 		values
-		(#{id},#{title},#{actionUrl},#{name},#{createTime})
+		(#{id},#{title},#{actionUrl},#{name},#{createTime},#{color})
 	</insert>
 	<delete id="delCustome">
 	    delete from vpn.recommendCustome where id=#{id}

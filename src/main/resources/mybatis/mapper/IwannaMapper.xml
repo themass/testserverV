@@ -8,12 +8,13 @@
 		<result column="like_users" property="likeUsers" />
 		<result column="create_time" property="createTime" />
 		<result column="content" property="content" />
+		<result column="finished" property="finished" />
 	</resultMap>
 	<insert id="insert">
 		insert into
-		vpn.iwanna(name,likes,like_users,create_time,content)
+		vpn.iwanna(name,likes,like_users,create_time,content,finished)
 		values
-		(#{name},#{likes},#{likeUsers},#{createTime},#{content})
+		(#{name},#{likes},#{likeUsers},#{createTime},#{content},#{finished})
 	</insert>
 	<select id="getAll" resultMap="IWannaMap">
 		select * from vpn.iwanna order by create_time desc
