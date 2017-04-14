@@ -8,7 +8,7 @@
 	</resultMap>
 	<resultMap id="RadacctMap" type="Radacct">
 	    <id column="radacctid" property="radacctid"/>
-		<result column="from" property="from" />
+		<result column="from" property="fromIp" />
 		<result column="to" property="to" />
 		<result column="nasipaddress" property="nasipaddress" />
 		<result column="callingstationid" property="callingstationid" />
@@ -19,7 +19,7 @@
 		from radius.radacct where username=#{userName}
 	</select>
 	<select id="selectIpLocal" resultMap="RadacctMap">
-		select radacctid,nasipaddress,callingstationid,from,to,status
+		select radacctid,nasipaddress,callingstationid,fromIp,to,status
 		from radius.radacct where status=0 LIMIT 100
 	</select>
 	<update id="updateIpLocal">
