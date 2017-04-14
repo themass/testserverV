@@ -8,8 +8,8 @@
 	</resultMap>
 	<resultMap id="RadacctMap" type="Radacct">
 	    <id column="radacctid" property="radacctid"/>
-		<result column="from" property="fromIp" />
-		<result column="to" property="to" />
+		<result column="from" property="fromAddr" />
+		<result column="to" property="toAddr" />
 		<result column="nasipaddress" property="nasipaddress" />
 		<result column="callingstationid" property="callingstationid" />
 		<result column="status" property="status" />
@@ -19,14 +19,14 @@
 		from radius.radacct where username=#{userName}
 	</select>
 	<select id="selectIpLocal" resultMap="RadacctMap">
-		select radacctid,nasipaddress,callingstationid,fromIp,to,status
+		select radacctid,nasipaddress,callingstationid,fromAddr,toAddr,status
 		from radius.radacct where status=0 LIMIT 100
 	</select>
 	<update id="updateIpLocal">
 	    <foreach collection="list" item="item" index="index" open="" close="" separator=";">  
                 update radius.radacct    
                 <set>  
-                  from=#{item.from},to=#{item.from},status=1
+                  fromAddr=#{item.from},toAddr=#{item.from},status=1
                 </set>  
                 where radacctid =#{item.radacctid}  
          </foreach>  
