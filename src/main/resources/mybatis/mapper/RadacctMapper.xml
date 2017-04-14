@@ -6,9 +6,30 @@
 		<result column="acctInputOctets" property="acctInputOctets" />
 		<result column="acctOutputOctets" property="acctOutputOctets" />
 	</resultMap>
-	
+	<resultMap id="RadacctMap" type="Radacct">
+	    <id column="radacctid" property="radacctid"/>
+		<result column="from" property="from" />
+		<result column="to" property="to" />
+		<result column="nasipaddress" property="nasipaddress" />
+		<result column="callingstationid" property="callingstationid" />
+		<result column="status" property="status" />
+	</resultMap>
 	<select id="dateState" resultMap="RadacctStateMap">
 		select sum(acctsessiontime) acctSessionTime,sum(acctinputoctets)acctInputOctets, sum(acctoutputoctets) acctOutputOctets
 		from radius.radacct where username=#{userName}
 	</select>
+	<select id="selectIpLocal" resultMap="RadacctMap">
+		select radacctid,nasipaddress,callingstationid,from,to,status
+		from radius.radacct where status=0 LIMIT 100
+	</select>
+	<update id="updateIpLocal">
+	    <foreach collection="list" item="item" index="index" open="" close="" separator=";">  
+                update radius.radacct    
+                <set>  
+                  from=#{item.from},to=#{item.from},status=1
+                </set>  
+                where radacctid =#{item.radacctid}  
+         </foreach>  
+            
+	</update>
 </mapper>

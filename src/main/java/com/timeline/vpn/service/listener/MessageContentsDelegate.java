@@ -5,7 +5,6 @@ package com.timeline.vpn.service.listener;
  * @version V1.0
  */
 public interface MessageContentsDelegate {
-    void handleMessage(String text);
     void handleMessage(Object text);
 }
 

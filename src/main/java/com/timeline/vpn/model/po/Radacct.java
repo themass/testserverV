@@ -5,33 +5,47 @@ package com.timeline.vpn.model.po;
  * @version V1.0
  */
 public class Radacct {
-    private int acctSessionTime;
-    private long acctInputOctets;
-    private long acctOutputOctets;
-    private String connectInfoStart;
-    public int getAcctSessionTime() {
-        return acctSessionTime;
+    private long radacctid;
+    private String from;
+    private String to;
+    private String nasipaddress;
+    private String callingstationid;
+    private int status;
+    public String getFrom() {
+        return from;
     }
-    public void setAcctSessionTime(int acctSessionTime) {
-        this.acctSessionTime = acctSessionTime;
+    public void setFrom(String from) {
+        this.from = from;
     }
-    public long getAcctInputOctets() {
-        return acctInputOctets;
+    public String getTo() {
+        return to;
     }
-    public void setAcctInputOctets(long acctInputOctets) {
-        this.acctInputOctets = acctInputOctets;
+    public void setTo(String to) {
+        this.to = to;
     }
-    public long getAcctOutputOctets() {
-        return acctOutputOctets;
+    public String getNasipaddress() {
+        return nasipaddress;
     }
-    public void setAcctOutputOctets(long acctOutputOctets) {
-        this.acctOutputOctets = acctOutputOctets;
+    public void setNasipaddress(String nasipaddress) {
+        this.nasipaddress = nasipaddress;
     }
-    public String getConnectInfoStart() {
-        return connectInfoStart;
+    public String getCallingstationid() {
+        return callingstationid;
     }
-    public void setConnectInfoStart(String connectInfoStart) {
-        this.connectInfoStart = connectInfoStart;
+    public void setCallingstationid(String callingstationid) {
+        this.callingstationid = callingstationid;
+    }
+    public int getStatus() {
+        return status;
+    }
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    public long getRadacctid() {
+        return radacctid;
+    }
+    public void setRadacctid(long radacctid) {
+        this.radacctid = radacctid;
     }
     
     

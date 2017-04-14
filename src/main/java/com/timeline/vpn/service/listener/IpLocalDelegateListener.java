@@ -13,10 +13,6 @@ import org.springframework.stereotype.Component;
 public class IpLocalDelegateListener implements MessageContentsDelegate{
     private static final Logger LOGGER = LoggerFactory.getLogger(IpLocalDelegateListener.class);
     @Override
-    public void handleMessage(String text) {
-        LOGGER.info(text);
-    }
-    @Override
     public void handleMessage(Object text) {
         LOGGER.info(text.toString());
     }
