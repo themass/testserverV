@@ -32,6 +32,6 @@
                 </set>  
                 where radacctid =${item.radacctid}  
          </foreach>  
-            
+         ;   
 	</update>
 </mapper>
