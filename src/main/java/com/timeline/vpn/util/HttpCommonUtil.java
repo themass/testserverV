@@ -108,10 +108,13 @@ public class HttpCommonUtil {
 
     public static void printHeader(HttpServletRequest request) {
         Enumeration<String> e = request.getHeaderNames();
+        StringBuilder sb = new StringBuilder();
+        sb.append("head = ");
         while (e.hasMoreElements()) {
             String name = e.nextElement();
-            LOGGER.info("head = " + name + "--" + request.getHeader(name));
+            sb.append(name).append("=").append(request.getHeader(name)).append(" ;");
         }
+        LOGGER.info(sb.toString());
     }
 
 

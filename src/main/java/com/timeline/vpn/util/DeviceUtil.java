@@ -75,8 +75,6 @@ public class DeviceUtil {
         if (ua != null) {
             Matcher matcher = pattern.matcher(ua);
             if (matcher.find()) {
-                LOGGER.info("matcher.group(1)="+matcher.group(1));
-                LOGGER.info("matcher.group(2)="+matcher.group(2));
                 String versionName = matcher.group(2);
                 DevApp app = new DevApp(devId, webRequest.getRemoteAddr(), versionName,
                         getAppVersion(versionName), getPlatForm(webRequest));
