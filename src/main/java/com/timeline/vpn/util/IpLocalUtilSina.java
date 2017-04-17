@@ -20,9 +20,9 @@ public class IpLocalUtilSina {
             StringBuilder sb = new StringBuilder();
             sb.append(po.getCountry());
             if(StringUtils.hasText(po.getProvince()))
-                sb.append("-").append(po.getProvince());
+                sb.append(":").append(po.getProvince());
             if(StringUtils.hasText(po.getCity()))
-                sb.append("-").append(po.getCity());
+                sb.append(":").append(po.getCity());
             return sb.toString();
         }
         return null;
