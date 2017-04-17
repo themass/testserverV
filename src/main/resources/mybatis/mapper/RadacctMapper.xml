@@ -8,8 +8,8 @@
 	</resultMap>
 	<resultMap id="RadacctMap" type="Radacct">
 	    <id column="radacctid" property="radacctid"/>
-		<result column="from" property="fromAddr" />
-		<result column="to" property="toAddr" />
+		<result column="fromAddr" property="from" />
+		<result column="toAddr" property="to" />
 		<result column="nasipaddress" property="nasipaddress" />
 		<result column="callingstationid" property="callingstationid" />
 		<result column="status" property="status" />
