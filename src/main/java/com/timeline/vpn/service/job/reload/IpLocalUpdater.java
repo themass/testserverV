@@ -1,9 +1,11 @@
 package com.timeline.vpn.service.job.reload;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -30,6 +32,7 @@ public class IpLocalUpdater extends AbstractJob {
             int count =0;
             while(count<2){
                 List<Radacct>list = radacctDao.selectIpLocal();
+                List<Radacct>forUp = new ArrayList<>();
                 for(Radacct item:list){
                     String to = IpLocalUtilSina.getLocal(item.getNasipaddress());
                     String from = null;
@@ -40,9 +43,14 @@ public class IpLocalUpdater extends AbstractJob {
                     item.setFrom(from);
                     item.setTo(to);
                     item.setStatus(1);
+                    if(StringUtils.hasText(from)&&StringUtils.hasText(to)){
+                        forUp.add(item);
+                    }
+                   
                 }
-                radacctDao.updateIpLocal(list);
-                LOGGER.info("IpLocalUpdater ok size = "+list.size());
+                if(forUp.size()>0)
+                    radacctDao.updateIpLocal(forUp);
+                LOGGER.info("IpLocalUpdater ok size = "+forUp.size());
                 if(list.size()==100){
                     count++;
                 }else{
