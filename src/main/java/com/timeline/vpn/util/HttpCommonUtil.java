@@ -399,7 +399,7 @@ public class HttpCommonUtil {
             while ((content = in.readLine()) != null) {
                 stringBuffer.append(content);
             }
-            LOGGER.info("ping", ip+" - result content : " + stringBuffer.toString());
+            LOGGER.info("ping:  "+ip+" - result content : " + stringBuffer.toString());
             int status = p.waitFor();
             if (status == 0) {
                 result = "successful~";
@@ -411,9 +411,8 @@ public class HttpCommonUtil {
             result = "failed~ IOException";
         } catch (InterruptedException e) {
             result = "failed~ InterruptedException";
-        } finally {
-            LOGGER.error("ping", ip+" - result = " + result);
-        }
+        } 
+        LOGGER.error("ping: "+ip+" - result = " + result);
         return false;
     }
 
