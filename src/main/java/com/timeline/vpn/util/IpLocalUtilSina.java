@@ -21,7 +21,7 @@ public class IpLocalUtilSina {
             sb.append(po.getCountry());
             if(po.getProvince()!=null)
                 sb.append("-").append(po.getProvince());
-            if(po.getProvince()!=null)
+            if(po.getCity()!=null)
                 sb.append("-").append(po.getCity());
             return sb.toString();
         }
