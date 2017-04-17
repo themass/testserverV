@@ -26,9 +26,11 @@
 	    <foreach collection="list" item="item" index="index" open="" close="" separator=";">  
                 update radius.radacct    
                 <set>  
-                  fromAddr=#{item.from},toAddr=#{item.to},status=1
+                  fromAddr=${item.from},
+                  toAddr=${item.to},
+                  status=1
                 </set>  
-                where radacctid =#{item.radacctid}  
+                where radacctid =${item.radacctid}  
          </foreach>  
             
 	</update>
