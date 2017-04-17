@@ -41,10 +41,7 @@ public class IpLocalUpdater extends AbstractJob {
                     item.setFrom(from);
                     item.setTo(to);
                     item.setStatus(1);
-                    if(StringUtils.hasText(from)&&StringUtils.hasText(to)){
-                        forUp.add(item);
-                    }
-                   
+                    forUp.add(item);
                 }
                 if(forUp.size()>0)
                     radacctDao.updateIpLocal(forUp);
