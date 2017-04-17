@@ -79,7 +79,7 @@ public class IpLocalUtilSina {
         }
     }
     public static void main(String[]args){
-        System.out.println(getLocal("45.32.250.169"));
+        System.out.println(getLocal("45.77.35.56"));
     }
 }
 

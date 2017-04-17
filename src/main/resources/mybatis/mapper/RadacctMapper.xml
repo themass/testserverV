@@ -25,7 +25,7 @@
 		select
 		radacctid,nasipaddress,callingstationid,fromAddr,toAddr,status
 		from
-		radius.radacct where status=0 LIMIT 20
+		radius.radacct where status=0 LIMIT 50
 	</select>
 	<update id="updateIpLocal" parameterType="java.util.List">
 		update radius.radacct set
