@@ -20,7 +20,7 @@
 	</select>
 	<select id="selectIpLocal" resultMap="RadacctMap">
 		select radacctid,nasipaddress,callingstationid,fromAddr,toAddr,status
-		from radius.radacct where status=0 LIMIT 100
+		from radius.radacct where status=0 LIMIT 20
 	</select>
 	<update id="updateIpLocal">
 	    <foreach collection="list" item="item" index="index" open="" close="" separator=";">  
