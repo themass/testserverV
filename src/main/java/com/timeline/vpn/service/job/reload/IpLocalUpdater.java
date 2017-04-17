@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -13,7 +12,6 @@ import org.springframework.util.StringUtils;
 import com.timeline.vpn.dao.db.RadacctDao;
 import com.timeline.vpn.model.po.Radacct;
 import com.timeline.vpn.service.job.AbstractJob;
-import com.timeline.vpn.util.IpLocalUtil;
 import com.timeline.vpn.util.IpLocalUtilSina;
 
 /**
