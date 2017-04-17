@@ -12,6 +12,7 @@ import com.timeline.vpn.dao.db.RadacctDao;
 import com.timeline.vpn.model.po.Radacct;
 import com.timeline.vpn.service.job.AbstractJob;
 import com.timeline.vpn.util.IpLocalUtil;
+import com.timeline.vpn.util.IpLocalUtilSina;
 
 /**
  * @author gqli
@@ -30,11 +31,11 @@ public class IpLocalUpdater extends AbstractJob {
             while(count<2){
                 List<Radacct>list = radacctDao.selectIpLocal();
                 for(Radacct item:list){
-                    String to = IpLocalUtil.getLocal(item.getNasipaddress());
+                    String to = IpLocalUtilSina.getLocal(item.getNasipaddress());
                     String from = null;
                     if(StringUtils.hasText(item.getCallingstationid())){
                         String ip = item.getCallingstationid().split("=")[0];
-                        from = IpLocalUtil.getLocal(ip);
+                        from = IpLocalUtilSina.getLocal(ip);
                     }
                     item.setFrom(from);
                     item.setTo(to);
