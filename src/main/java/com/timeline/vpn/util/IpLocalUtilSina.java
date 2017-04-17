@@ -17,7 +17,13 @@ public class IpLocalUtilSina {
         }
         IpLocalPo po = JsonUtil.readValue(json, IpLocalPo.class);
         if(po.getRet()==1){
-            return po.getCountry()+"-"+po.getProvince()+"-"+po.getCity();
+            StringBuilder sb = new StringBuilder();
+            sb.append(po.getCountry());
+            if(po.getProvince()!=null)
+                sb.append("-").append(po.getProvince());
+            if(po.getProvince()!=null)
+                sb.append("-").append(po.getCity());
+            return sb.toString();
         }
         return null;
     }
