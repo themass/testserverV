@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.timeline.vpn.Constant;
-import com.timeline.vpn.util.DateTimeUtils;
 import com.timeline.vpn.util.Md5;
 
 public class DevApp {
@@ -174,6 +173,9 @@ public class DevApp {
                 + sign + ", time=" + time + ", authKey=" + authKey + ", isTest=" + isTest
                 + ", host=" + host + ", lon=" + lon + ", lat=" + lat + ", tokenHeader="
                 + tokenHeader + ", channel=" + channel + "]";
+    }
+    public static void main(String[]args){
+     System.out.println(new Date(1490492113603l));   
     }
     
 

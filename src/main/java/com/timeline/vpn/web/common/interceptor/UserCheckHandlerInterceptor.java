@@ -34,7 +34,6 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
         DevApp app = DevAppContext.get();
-        LOGGER.info(app.toString());
         String token = request.getHeader(app.getTokenHeader());
         if (StringUtils.isEmpty(token)) {
             return true;
@@ -43,6 +42,7 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
         if (po != null) {
             request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
         } else {
+            LOGGER.error("没找到user信息："+app.toString());
             request.setAttribute(Constant.HTTP_ATTR_RET, Constant.ResultErrno.ERRNO_CLEAR_LOGIN);
         }
         return true;
