@@ -114,7 +114,7 @@ public class HttpCommonUtil {
             String name = e.nextElement();
             sb.append(name).append("=").append(request.getHeader(name)).append(" ;");
         }
-        LOGGER.info(sb.toString());
+        LOGGER.debug(sb.toString());
     }
 
 

@@ -1,5 +1,6 @@
 package com.timeline.vpn.dao.db;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -16,6 +17,8 @@ public interface RadacctDao {
     public RadacctState dateState(@Param("userName")String name);
     public List<Radacct> selectIpLocal();
     public void updateIpLocal(@Param("list")List<Radacct>list);
+    public int deleteHistoryAcce(@Param("time")Date time);
+    public int deleteHistoryAuth(@Param("time")Date time);
    
 }
 
