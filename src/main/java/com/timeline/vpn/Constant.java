@@ -35,19 +35,27 @@ public class Constant {
         public static final int ERRNO_PARAM = 11002; // 参数错误
         public static final int ERRNO_DATA = 21000; // 参数错误
     }
+    //用户分类 免费用户和VIP用户
     public static class UserLevel {
         public static final int LEVEL_FREE = 0;
         public static final int LEVEL_VIP = 1;
     }
+    //用户组分类 未注册，注册，VIP 其中 未注册+注册=免费
     public static class UserGroup {
         public static final String RAD_GROUP_FREE = "VPN_FREE";
         public static final String RAD_GROUP_REG = "VPN_REG";
         public static final String RAD_GROUP_VIP = "VPN_VIP";
     }
+    //福利级别 未注册，注册，vip
     public static class RecommendType {
         public static final int TYPE_OTHER = 0;
         public static final int TYPE_REG = 1;
         public static final int TYPE_VIP= 2;
+    }
+    public static class ServeType{
+     // 0：免费，1vip，2高级vip
+        public static final int SERVER_TYPE_FREE = 0;
+        public static final int SERVER_TYPE_VIP = 1;
     }
     public static final JsonResult RESULT_SUCCESS =
             new JsonResult(new RetInfoVo(true), Constant.ResultErrno.ERRNO_SUCCESS, null);
@@ -60,10 +68,7 @@ public class Constant {
     public static final String HTTP_ATTR_TOKEN = "token_key";
     public static final String HTTP_ATTR_RET = "ret_key";
     public static final String LANG = "Accept-Language";
-    // 0：免费地区，1vip，2高级vip
-    public static final int SERVER_TYPE_FREE = 0;
-    public static final int SERVER_TYPE_VIP = 1;
-    public static final int SERVER_TYPE_HVIP = 2;
+    
     public static final int LOCATION_ALL = 0;
     public static final long FREE_TIME = 20 * 24 * 60 * 60;
     public static final long ADS_FAB_SCORE = 10;

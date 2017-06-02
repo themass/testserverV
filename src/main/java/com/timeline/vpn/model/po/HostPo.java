@@ -11,6 +11,7 @@ public class HostPo {
     private int port;
     private int location;
     private String cert;
+    private int level;
 
     public int getId() {
         return id;
@@ -50,6 +51,14 @@ public class HostPo {
 
     public void setCert(String cert) {
         this.cert = cert;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
 }

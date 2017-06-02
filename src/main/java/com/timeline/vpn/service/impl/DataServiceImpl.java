@@ -47,8 +47,9 @@ public class DataServiceImpl implements DataService {
     private UserService userService;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
+        //未登录   ， 登录，  VIP
         int type = baseQuery.getUser()==null?Constant.RecommendType.TYPE_OTHER:
-            (baseQuery.getUser().getLevel()==Constant.UserLevel.LEVEL_VIP?Constant.RecommendType.TYPE_REG:Constant.RecommendType.TYPE_VIP);
+            (baseQuery.getUser().getLevel()==Constant.UserLevel.LEVEL_FREE?Constant.RecommendType.TYPE_REG:Constant.RecommendType.TYPE_VIP);
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getPage(type);
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);

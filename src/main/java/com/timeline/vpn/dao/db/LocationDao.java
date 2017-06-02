@@ -1,5 +1,7 @@
 package com.timeline.vpn.dao.db;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.timeline.vpn.dao.BaseDBDao;
 import com.timeline.vpn.model.po.LocationPo;
 
@@ -9,6 +11,7 @@ import com.timeline.vpn.model.po.LocationPo;
  * @version V1.0
  */
 public interface LocationDao extends BaseDBDao<LocationPo> {
+    public LocationPo get(@Param("id")int id);
 
 }
 

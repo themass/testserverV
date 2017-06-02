@@ -15,4 +15,7 @@
 	<select id="getAll" resultMap="LocationMap">
 		select * from vpn.location where enable=1
 	</select>
+	<select id="get" resultMap="LocationMap">
+		select * from vpn.location where id = #{id} and enable=1
+	</select>
 </mapper>
