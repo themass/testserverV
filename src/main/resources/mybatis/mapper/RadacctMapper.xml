@@ -27,12 +27,15 @@
 		from
 		radius.radacct where status=0 LIMIT 50
 	</select>
+	
 	<delete id="deleteHistoryAcce">
-	    delete from radius.radacct where acctstoptime<#{time}
+	    delete from radius.radacct where acctstoptime &lt; #{time}
 	</delete>
+	
 	<delete id="deleteHistoryAuth">
-	    delete from radius.radpostauth where authdate<#{time}
+	    delete from radius.radpostauth where authdate &lt; #{time}
 	</delete>
+	
 	<update id="updateIpLocal" parameterType="java.util.List">
 		update radius.radacct set
 		fromAddr=
