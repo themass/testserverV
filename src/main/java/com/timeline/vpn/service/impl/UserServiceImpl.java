@@ -126,17 +126,12 @@ public class UserServiceImpl implements UserService {
             throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
         }
         if (form.getPwd().equals(form.getRePwd())) {
-//            String code = cacheService.get(form.getChannel());
-//            if(!form.getCode().equals(code)){
-//                throw new RegCodeException(Constant.ResultMsg.RESULT_REG_REGCODE);
-//            }
             UserPo po = userDao.exist(form.getName());
             if (po == null) {
                 po = new UserPo();
                 po.setTime(new Date())
                         .setLevel(Constant.UserLevel.LEVEL_FREE).setName(form.getName())
                         .setPwd(form.getPwd()).setSex(form.getSex());
-                po.setScore(350);
                 userDao.insert(po);
                 checkService.addRadUser(form.getName(), form.getPwd(), Constant.UserGroup.RAD_GROUP_REG);
                 
@@ -152,7 +147,7 @@ public class UserServiceImpl implements UserService {
     public UserVo score(BaseQuery baseQuery, int score) {
         userDao.score(score, baseQuery.getUser().getName());
         UserPo po = userDao.exist(baseQuery.getUser().getName());
-        if(po.getScore()>=Constant.SCORE_TO_VIP && po.getLevel()==Constant.UserLevel.LEVEL_FREE){
+        if(po.getScore()>=Constant.SCORE_TO_VIP){
             po.setLevel(Constant.UserLevel.LEVEL_VIP);
             userDao.updateLevel(po);
             checkService.updateRadUserGroup(po.getName(), Constant.UserGroup.RAD_GROUP_VIP);
