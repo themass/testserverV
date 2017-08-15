@@ -109,11 +109,7 @@ public class UrlUtil {
     }
 
     public static String getIpAddr(HttpServletRequest request) {
-        String ip = request.getHeader("X-Real-IP");
-        if (!StringUtils.isEmpty(ip) && !"unknown".equalsIgnoreCase(ip)) {
-            return ip;
-        }
-        ip = request.getHeader("X-Forwarded-For");
+        String ip = request.getHeader("HTTP_X_FORWARDED_FOR");
         if (!StringUtils.isEmpty(ip) && !"unknown".equalsIgnoreCase(ip)) {
             // 多次反向代理后会有多个IP值，第一个为真实IP。
             int index = ip.indexOf(',');
