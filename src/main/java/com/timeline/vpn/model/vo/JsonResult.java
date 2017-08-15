@@ -23,6 +23,7 @@ public class JsonResult {
     private String error;
     private long cost;
     private String ip;
+    private String userIp;
 
     /**
      * 根据结果和消息生成返回json
@@ -112,6 +113,15 @@ public class JsonResult {
     public void setIp(String ip) {
         this.ip = ip;
     }
+
+    public String getUserIp() {
+        return userIp;
+    }
+
+    public void setUserIp(String userIp) {
+        this.userIp = userIp;
+    }
+    
 
 
 
