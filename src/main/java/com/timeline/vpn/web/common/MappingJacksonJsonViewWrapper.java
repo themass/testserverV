@@ -48,7 +48,7 @@ public class MappingJacksonJsonViewWrapper extends MappingJackson2JsonView {
         if(model!=null && model.get(modelKey)!=null){
             JsonResult result = (JsonResult)model.get(modelKey);
             DevApp app = DevAppContext.get();
-            result.setIp(dnsCache.getByDomain(app.getHost()));
+            result.setIp(dnsCache.getByDomain(app.getUserIp()));
         }
         super.renderMergedOutputModel(model, request, response);
     }
