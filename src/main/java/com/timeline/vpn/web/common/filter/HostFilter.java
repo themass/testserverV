@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.util.DeviceUtil;
+import com.timeline.vpn.util.UrlUtil;
 import com.timeline.vpn.web.common.DevAppContext;
 
 /**
@@ -30,11 +31,13 @@ public class HostFilter implements Filter{
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String uri = request.getRequestURI();
-        if(uri.contains("test")){
+        if(uri.contains("test") || uri.contains("noapp")){
             DevApp app = new DevApp();
             app.setTest(true);
             app.setAuthKey("ssssssdddeee4eee");
             app.setHost(request.getHeader("Host"));
+            app.setTokenHeader("1111");
+            app.setUserIp(UrlUtil.getIpAddr(request));
             DevAppContext.set(app);
         }else{
             DevApp app = DeviceUtil.getAPPInfo(request);

@@ -20,6 +20,7 @@
 		<typeAlias alias="DnsResverPo" type="com.timeline.vpn.model.po.DnsResverPo" />
 		<typeAlias alias="Radacct" type="com.timeline.vpn.model.po.Radacct" />
 		<typeAlias alias="RadacctState" type="com.timeline.vpn.model.po.RadacctState" />
+		<typeAlias alias="CollectPo" type="com.timeline.vpn.model.po.CollectPo" />
 	</typeAliases>
 	<plugins>
 		<plugin interceptor="com.github.pagehelper.PageHelper">

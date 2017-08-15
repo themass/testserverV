@@ -13,5 +13,6 @@ import com.timeline.vpn.model.param.BaseQuery;
  */
 public interface ReportService {
     public void reportBug(BaseQuery baseQuery,List<MultipartFile> fileList);
+    public void collect(BaseQuery baseQuery, Integer count);
 }
 

@@ -87,6 +87,7 @@ public class DeviceUtil {
                 app.setSign(timeSign.substring(len, timeSign.length()));
                 app.setTime(Long.parseLong(timeSign.substring(0, len)));
                 app.setHost(webRequest.getHeader(HTTP_HOST));
+                app.setUserIp(UrlUtil.getIpAddr(webRequest));
                 if(Constant.VPN.equals((matcher.group(1)))){
                     app.setTokenHeader(Constant.HTTP_TOKEN_KEY);
                     app.setChannel(Constant.VPN);

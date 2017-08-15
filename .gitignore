@@ -10,8 +10,8 @@ maven-eclipse.xml
 /target
 */target
 
-*/ci
-
+*.pyc
+ci/log
 **/rebel.xml
 
 # idea
@@ -26,9 +26,7 @@ gradle
 classes
 .gradle
 .gradletasknamecache
-/ci/bin
-/ci/lib
-/ci/conf
+/bin
 
 pom.xml.versionsBackup
 

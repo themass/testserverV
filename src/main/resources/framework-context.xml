@@ -21,12 +21,13 @@
        http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 
     <aop:aspectj-autoproxy />
-	<context:component-scan base-package="com.timeline.vpn">
+	<context:component-scan base-package="com.timeline.vpn.service,com.timeline.vpn.util,com.timeline.vpn.web.common">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 	<context:property-placeholder location="classpath*:conf/*.properties" />
 	<beans>
+	    <import resource="classpath:framework-doc.xml" />
 		<import resource="classpath:framework-dao.xml" />
 		<import resource="classpath:quartz.xml" />
 		<import resource="classpath:framework-redis.xml" />

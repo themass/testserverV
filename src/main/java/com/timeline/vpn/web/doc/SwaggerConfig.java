@@ -1,4 +1,4 @@
-package com.timeline.vpn.web.controller.doc;
+package com.timeline.vpn.web.doc;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

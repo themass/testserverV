@@ -6,11 +6,14 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.timeline.vpn.ConstantProfile;
+import com.timeline.vpn.dao.db.CollectDao;
 import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.po.CollectPo;
 import com.timeline.vpn.service.ReportService;
 import com.timeline.vpn.util.DateTimeUtils;
 
@@ -22,6 +25,8 @@ import com.timeline.vpn.util.DateTimeUtils;
 @Component
 public class ReportServiceImpl implements ReportService{
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportServiceImpl.class);
+    @Autowired
+    private CollectDao collectDao;
     @Override
     public void reportBug(BaseQuery baseQuery, List<MultipartFile> fileList) {
         String dir = DateTimeUtils.formatDate(DateTimeUtils.DATEFORMAT,new Date());
@@ -38,6 +43,18 @@ public class ReportServiceImpl implements ReportService{
                 LOGGER.error("",e);
             }
         }
+    }
+    @Override
+    public void collect(BaseQuery baseQuery, Integer count) {
+        CollectPo po = new CollectPo();
+        po.setCount(count);
+        po.setIp(baseQuery.getAppInfo().getUserIp());
+        Date date = new Date();
+        po.setDay(DateTimeUtils.formatDate(DateTimeUtils.DATEFORMAT,date));
+        po.setHour(DateTimeUtils.formatDate("HH",date));
+        po.setMinute(DateTimeUtils.formatDate("ss",date));
+        collectDao.add(po);
+        
     }
 
 }
