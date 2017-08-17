@@ -13,15 +13,20 @@ import com.github.pagehelper.PageHelper;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.RecommendDao;
+import com.timeline.vpn.dao.db.SoundChannelDao;
 import com.timeline.vpn.dao.db.VersionDao;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.AppVersion;
 import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.RecommendPo;
+import com.timeline.vpn.model.po.SoundChannel;
+import com.timeline.vpn.model.po.SoundItems;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
+import com.timeline.vpn.model.vo.SoundChannelVo;
+import com.timeline.vpn.model.vo.SoundItemsVo;
 import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.model.vo.VoBuilder;
@@ -45,6 +50,8 @@ public class DataServiceImpl implements DataService {
     private IWannaDao iWannaDao;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SoundChannelDao soundChannelDao;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -137,6 +144,20 @@ public class DataServiceImpl implements DataService {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getRecoPage();
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
+    }
+
+    @Override
+    public InfoListVo<SoundChannelVo> getAllSoundChannel(BaseQuery baseQuery, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<SoundChannel> poList = soundChannelDao.getAll();
+        return VoBuilder.buildPageInfoVo((Page<SoundChannel>) poList, SoundChannelVo.class,null);
+    }
+
+    @Override
+    public InfoListVo<SoundItemsVo> getSoundItems(BaseQuery baseQuery,PageBaseParam param,String channel) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<SoundItems> poList = soundChannelDao.getByChannel(channel);
+        return VoBuilder.buildPageInfoVo((Page<SoundItems>) poList, SoundItemsVo.class,null);
     }
 
 }
