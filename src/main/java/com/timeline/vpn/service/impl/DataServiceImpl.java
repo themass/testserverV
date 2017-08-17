@@ -25,7 +25,6 @@ import com.timeline.vpn.model.po.SoundItems;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
-import com.timeline.vpn.model.vo.SoundChannelVo;
 import com.timeline.vpn.model.vo.SoundItemsVo;
 import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
@@ -147,10 +146,21 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public InfoListVo<SoundChannelVo> getAllSoundChannel(BaseQuery baseQuery, PageBaseParam param) {
+    public InfoListVo<RecommendVo> getAllSoundChannel(BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<SoundChannel> poList = soundChannelDao.getAll();
-        return VoBuilder.buildPageInfoVo((Page<SoundChannel>) poList, SoundChannelVo.class,null);
+        return VoBuilder.buildPageInfoVo((Page<SoundChannel>) poList, RecommendVo.class,new VoBuilder.BuildAction<SoundChannel,RecommendVo>(){
+            @Override
+            public void action(SoundChannel i, RecommendVo t) {
+                t.setActionUrl(i.getActionUrl());
+                t.setTitle(i.getName());
+                t.setImg(i.getPic());
+                t.setAdsPopShow(true);
+                t.setAdsShow(true);
+                t.setShowType(0);
+                t.setParam(i.getUrl());
+            }
+        });
     }
 
     @Override

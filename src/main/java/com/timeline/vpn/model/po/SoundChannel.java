@@ -15,6 +15,7 @@ public class SoundChannel {
     private String pic;
     private String myPic;
     private Date updateTime;
+    private String actionUrl;
     public Integer getId() {
         return id;
     }
@@ -56,6 +57,12 @@ public class SoundChannel {
     }
     public void setMyPic(String myPic) {
         this.myPic = myPic;
+    }
+    public String getActionUrl() {
+        return actionUrl;
+    }
+    public void setActionUrl(String actionUrl) {
+        this.actionUrl = actionUrl;
     }
     
 }

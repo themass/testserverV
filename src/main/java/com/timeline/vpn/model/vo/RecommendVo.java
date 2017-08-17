@@ -20,6 +20,7 @@ public class RecommendVo {
     private int showType;
     private Date createTime;
     private Integer id;
+    private String param;
     public String getTitle() {
         return title;
     }
@@ -106,6 +107,14 @@ public class RecommendVo {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getParam() {
+        return param;
+    }
+
+    public void setParam(String param) {
+        this.param = param;
     }
     
 }

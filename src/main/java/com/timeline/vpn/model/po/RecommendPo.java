@@ -25,7 +25,7 @@ public class RecommendPo {
     //自定义使用
     private String name;
     private Date createTime;
-
+    private String param;
     public Integer getId() {
         return id;
     }
@@ -149,6 +149,14 @@ public class RecommendPo {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getParam() {
+        return param;
+    }
+
+    public void setParam(String param) {
+        this.param = param;
     }
 
 }
