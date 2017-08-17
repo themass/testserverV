@@ -16,6 +16,7 @@ public class SoundChannel {
     private String myPic;
     private Date updateTime;
     private String actionUrl;
+    private Float rate;
     public Integer getId() {
         return id;
     }
@@ -63,6 +64,12 @@ public class SoundChannel {
     }
     public void setActionUrl(String actionUrl) {
         this.actionUrl = actionUrl;
+    }
+    public Float getRate() {
+        return rate;
+    }
+    public void setRate(Float rate) {
+        this.rate = rate;
     }
     
 }
