@@ -32,7 +32,7 @@ public class HostFilter implements Filter{
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String uri = request.getRequestURI();
         String test = request.getHeader("testtesttest");
-        if(uri.contains("test") || uri.contains("noapp")|| test.equals("hahaha")){
+        if(uri.contains("test") || uri.contains("noapp")|| "hahaha".equals(test)){
             DevApp app = new DevApp();
             app.setTest(true);
             app.setAuthKey("ssssssdddeee4eee");
