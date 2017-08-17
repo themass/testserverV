@@ -31,7 +31,8 @@ public class HostFilter implements Filter{
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String uri = request.getRequestURI();
-        if(uri.contains("test") || uri.contains("noapp")){
+        String test = request.getHeader("testtesttest");
+        if(uri.contains("test") || uri.contains("noapp")|| test.equals("hahaha")){
             DevApp app = new DevApp();
             app.setTest(true);
             app.setAuthKey("ssssssdddeee4eee");

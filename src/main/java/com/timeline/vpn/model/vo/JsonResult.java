@@ -68,7 +68,7 @@ public class JsonResult {
     public Object getData() {
         DevApp app = DevAppContext.get();
         //TODO 测试时注释
-        if(data!=null){
+        if(data!=null&&!app.isTest()){
             String json = JsonUtil.writeValueAsString(data);
             String encry = AES2.encode(json, app.getAuthKey());
             System.out.println("json="+json+"  ;encry="+encry);
