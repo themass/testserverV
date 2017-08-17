@@ -159,7 +159,11 @@ public class DataServiceImpl implements DataService {
                 t.setAdsShow(true);
                 t.setShowType(0);
                 t.setParam(i.getUrl());
-                t.setRate(1.4f);
+                if(i.getRate()==null){
+                    t.setRate(1.1f);
+                }else{
+                    t.setRate(i.getRate());
+                }
             }
         });
     }
