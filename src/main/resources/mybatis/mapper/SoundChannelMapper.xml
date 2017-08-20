@@ -9,6 +9,6 @@
 	    select * from vpn.soundchannel
 	</select>
 	<select id="getByChannel" resultMap="SoundItemsMap">
-	    select * from vpn.sounditems where channel=#{channel} order by fileDate asc
+	    select * from vpn.sounditems where channel=#{channel} order by fileDate asc name asc
 	</select>
 </mapper>
