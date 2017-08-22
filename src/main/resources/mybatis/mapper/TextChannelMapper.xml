@@ -5,15 +5,15 @@
 	</resultMap>
 	<resultMap id="TextItemsMap" type="TextItemsPo">
 	</resultMap>
-	<resultMap id="TextItemPoMap" type="TextItemPo">
+	<resultMap id="TextItemMap" type="TextItemPo">
 	</resultMap>
 	<select id="getAll" resultMap="TextChannelMap">
 	    select * from vpn.textchannel
 	</select>
-	<select id="getByChannel" resultMap="TextItemsPo">
+	<select id="getByChannel" resultMap="TextItemsMap">
 	    select id,name,channel,url,updateTime,fileDate from vpn.textitems where channel=#{channel} order by fileDate desc ,name desc
 	</select>
-	<select id="getFile" resultMap="TextItemPo">
+	<select id="getFile" resultMap="TextItemMap">
 	    select name,channel,file from vpn.textitems where id=#{id}
 	</select>
 </mapper>
