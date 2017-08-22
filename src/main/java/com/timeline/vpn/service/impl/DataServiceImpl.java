@@ -14,7 +14,9 @@ import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.SoundChannelDao;
+import com.timeline.vpn.dao.db.TextChannelDao;
 import com.timeline.vpn.dao.db.VersionDao;
+import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.AppVersion;
@@ -22,11 +24,17 @@ import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.po.SoundChannel;
 import com.timeline.vpn.model.po.SoundItems;
+import com.timeline.vpn.model.po.TextChannelPo;
+import com.timeline.vpn.model.po.TextItemPo;
+import com.timeline.vpn.model.po.TextItemsPo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.SoundItemsVo;
 import com.timeline.vpn.model.vo.StateUseVo;
+import com.timeline.vpn.model.vo.TextChannelVo;
+import com.timeline.vpn.model.vo.TextItemVo;
+import com.timeline.vpn.model.vo.TextItemsVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
@@ -51,6 +59,8 @@ public class DataServiceImpl implements DataService {
     private UserService userService;
     @Autowired
     private SoundChannelDao soundChannelDao;
+    @Autowired
+    private TextChannelDao textChannelDao;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -173,6 +183,29 @@ public class DataServiceImpl implements DataService {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<SoundItems> poList = soundChannelDao.getByChannel(channel);
         return VoBuilder.buildPageInfoVo((Page<SoundItems>) poList, SoundItemsVo.class,null);
+    }
+
+    @Override
+    public InfoListVo<TextChannelVo> getAllTextChannel(BaseQuery baseQuery, PageBaseParam param) {
+        List<TextChannelPo> list = textChannelDao.getAll();
+        return VoBuilder.buildListInfoVo(list, TextChannelVo.class,null);
+    }
+
+    @Override
+    public InfoListVo<TextItemsVo> getTextItems(BaseQuery baseQuery, PageBaseParam param,
+            String channel) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<TextItemsPo> poList = textChannelDao.getByChannel(channel);
+        return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,null);
+    }
+
+    @Override
+    public TextItemVo getTextItem(BaseQuery baseQuery, Integer id) {
+        TextItemPo po = textChannelDao.getFile(id);
+        if(po==null){
+            throw new DataException();
+        }
+        return VoBuilder.buildVo(po, TextItemVo.class, null);
     }
 
 }

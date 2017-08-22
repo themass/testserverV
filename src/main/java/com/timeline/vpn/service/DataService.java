@@ -6,6 +6,9 @@ import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.SoundItemsVo;
+import com.timeline.vpn.model.vo.TextChannelVo;
+import com.timeline.vpn.model.vo.TextItemVo;
+import com.timeline.vpn.model.vo.TextItemsVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 
 /**
@@ -28,6 +31,10 @@ public interface DataService {
     
     public InfoListVo<RecommendVo> getAllSoundChannel(BaseQuery baseQuery, PageBaseParam param);
     public InfoListVo<SoundItemsVo> getSoundItems(BaseQuery baseQuery, PageBaseParam param,String channel);
+    
+    public InfoListVo<TextChannelVo> getAllTextChannel(BaseQuery baseQuery, PageBaseParam param);
+    public InfoListVo<TextItemsVo> getTextItems(BaseQuery baseQuery, PageBaseParam param,String channel);
+    public TextItemVo getTextItem(BaseQuery baseQuery, Integer id);
     
 }
 

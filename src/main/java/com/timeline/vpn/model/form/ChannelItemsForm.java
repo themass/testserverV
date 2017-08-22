@@ -4,7 +4,7 @@ package com.timeline.vpn.model.form;
  * @date 2017年8月17日 下午8:01:14
  * @version V1.0
  */
-public class SoundItemsForm extends PageBaseForm{
+public class ChannelItemsForm extends PageBaseForm{
     private String channel;
 
     public String getChannel() {

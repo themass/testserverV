@@ -20,6 +20,13 @@
 		<typeAlias alias="DnsResverPo" type="com.timeline.vpn.model.po.DnsResverPo" />
 		<typeAlias alias="Radacct" type="com.timeline.vpn.model.po.Radacct" />
 		<typeAlias alias="RadacctState" type="com.timeline.vpn.model.po.RadacctState" />
+		<typeAlias alias="CollectPo" type="com.timeline.vpn.model.po.CollectPo" />
+		<typeAlias alias="SoundChannel" type="com.timeline.vpn.model.po.SoundChannel" />
+		<typeAlias alias="SoundItems" type="com.timeline.vpn.model.po.SoundItems" />
+		
+		<typeAlias alias="TextChannelPo" type="com.timeline.vpn.model.po.TextChannelPo" />
+		<typeAlias alias="TextItemsPo" type="com.timeline.vpn.model.po.TextItemsPo" />
+		<typeAlias alias="TextItemPo" type="com.timeline.vpn.model.po.TextItemPo" />
 	</typeAliases>
 	<plugins>
 		<plugin interceptor="com.github.pagehelper.PageHelper">

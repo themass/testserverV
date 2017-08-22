@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.timeline.vpn.model.form.PageBaseForm;
-import com.timeline.vpn.model.form.SoundItemsForm;
+import com.timeline.vpn.model.form.ChannelItemsForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.web.common.resolver.UserInfo;
@@ -29,7 +29,7 @@ public class SoundController extends BaseController {
     }
     @RequestMapping(value = "/items.json", method = RequestMethod.GET)
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery,
-            @ModelAttribute @Valid SoundItemsForm form) {
+            @ModelAttribute @Valid ChannelItemsForm form) {
         return new JsonResult(dataService.getSoundItems(baseQuery, form.toParam(),form.getChannel()));
     }
 }
