@@ -32,7 +32,6 @@ import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.SoundItemsVo;
 import com.timeline.vpn.model.vo.StateUseVo;
-import com.timeline.vpn.model.vo.TextChannelVo;
 import com.timeline.vpn.model.vo.TextItemVo;
 import com.timeline.vpn.model.vo.TextItemsVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
@@ -186,9 +185,20 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public InfoListVo<TextChannelVo> getAllTextChannel(BaseQuery baseQuery, PageBaseParam param) {
+    public InfoListVo<RecommendVo> getAllTextChannel(BaseQuery baseQuery, PageBaseParam param) {
         List<TextChannelPo> list = textChannelDao.getAll();
-        return VoBuilder.buildListInfoVo(list, TextChannelVo.class,null);
+        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<TextChannelPo,RecommendVo>(){
+            @Override
+            public void action(TextChannelPo i, RecommendVo t) {
+                t.setActionUrl(i.getUrl());
+                t.setTitle(i.getName());
+                t.setAdsPopShow(true);
+                t.setAdsShow(true);
+                t.setShowType(0);
+                t.setParam(i.getUrl());
+                t.setRate(1.1f);
+            }
+        });
     }
 
     @Override
