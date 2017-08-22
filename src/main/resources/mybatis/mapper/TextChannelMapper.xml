@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.TextChannelDao">
+	<resultMap id="TextChannelMap" type="TextChannelPo">
+	</resultMap>
+	<resultMap id="TextItemsMap" type="TextItemsPo">
+	</resultMap>
+	<resultMap id="TextItemPoMap" type="TextItemPo">
+	</resultMap>
+	<select id="getAll" resultMap="TextChannelMap">
+	    select * from vpn.textchannel
+	</select>
+	<select id="getByChannel" resultMap="TextItemsPo">
+	    select id,name,channel,url,updateTime,fileDate from vpn.textitems where channel=#{channel} order by fileDate desc ,name desc
+	</select>
+	<select id="getFile" resultMap="TextItemPo">
+	    select name,channel,file from vpn.textitems where id=#{id}
+	</select>
+</mapper>
