@@ -4,7 +4,7 @@
 	<resultMap id="FileIpMap" type="FileIpPo">
 		<id column="id" property="id" />
 	</resultMap>
-	<select id="getAll">
-	    select * from fileip
+	<select id="getAll" resultMap="FileIpMap">
+	    select * from vpn.fileip
 	</select>
 </mapper>
