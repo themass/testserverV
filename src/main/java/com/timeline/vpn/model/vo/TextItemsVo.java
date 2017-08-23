@@ -10,6 +10,7 @@ public class TextItemsVo {
     private String name;
     private String channel;
     private String fileDate;
+    private String fileUrl;
     public Integer getId() {
         return id;
     }
@@ -34,6 +35,13 @@ public class TextItemsVo {
     public void setFileDate(String fileDate) {
         this.fileDate = fileDate;
     }
+    public String getFileUrl() {
+        return fileUrl;
+    }
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+    
    
 }
 

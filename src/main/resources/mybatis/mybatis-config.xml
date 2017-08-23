@@ -27,6 +27,7 @@
 		<typeAlias alias="TextChannelPo" type="com.timeline.vpn.model.po.TextChannelPo" />
 		<typeAlias alias="TextItemsPo" type="com.timeline.vpn.model.po.TextItemsPo" />
 		<typeAlias alias="TextItemPo" type="com.timeline.vpn.model.po.TextItemPo" />
+		<typeAlias alias="FileIpPo" type="com.timeline.vpn.model.po.FileIpPo" />
 	</typeAliases>
 	<typeHandlers>
         <typeHandler javaType="String" jdbcType="BLOB"

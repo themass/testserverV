@@ -37,5 +37,6 @@ public class TextController extends BaseController {
     public JsonResult items(@UserInfo BaseQuery baseQuery,@RequestParam Integer id) {
         return new JsonResult(dataService.getTextItem(baseQuery, id));
     }
+    
 }
 

@@ -1,5 +1,8 @@
 package com.timeline.vpn.util;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.springframework.web.util.HtmlUtils;
+
 /** 
  * @Package: 
  * @ClassName:TypeConversion 
@@ -121,5 +124,11 @@ public class TypeConversion {
     public static Boolean strToBoolean(String i) {
         return i == null ? null : (!"0".equals(i));
     }
-
+    public static String htmlToStr(String str){
+       return  HtmlUtils.htmlUnescape(str);
+    }
+    public static void main(String[]arg){
+        String str1 = "<br>sdasdad</br><p>&nbsp;&nbsp;dasdasdas";
+        System.out.println(htmlToStr(str1));
+    }
 }

@@ -39,6 +39,7 @@ import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.UserService;
+import com.timeline.vpn.service.job.reload.FileIpCache;
 
 /**
  * @author gqli
@@ -206,7 +207,14 @@ public class DataServiceImpl implements DataService {
             String channel) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<TextItemsPo> poList = textChannelDao.getByChannel(channel);
-        return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,null);
+        return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,new VoBuilder.BuildAction<TextItemsPo,TextItemsVo>(){
+
+            @Override
+            public void action(TextItemsPo i, TextItemsVo t) {
+                t.setFileUrl(FileIpCache.getIp(Constant.BOOK)+i.getId()+".txt");
+            }
+        }
+        );
     }
 
     @Override
