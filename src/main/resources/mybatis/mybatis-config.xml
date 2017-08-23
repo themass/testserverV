@@ -28,6 +28,10 @@
 		<typeAlias alias="TextItemsPo" type="com.timeline.vpn.model.po.TextItemsPo" />
 		<typeAlias alias="TextItemPo" type="com.timeline.vpn.model.po.TextItemPo" />
 	</typeAliases>
+	<typeHandlers>
+        <typeHandler javaType="String" jdbcType="BLOB"
+            		 handler="com.timeline.vpn.dao.BlobStringTypeHandler"/>
+    </typeHandlers>
 	<plugins>
 		<plugin interceptor="com.github.pagehelper.PageHelper">
 			<property name="dialect" value="mysql" />
