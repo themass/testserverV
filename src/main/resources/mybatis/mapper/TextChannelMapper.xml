@@ -6,6 +6,7 @@
 	<resultMap id="TextItemsMap" type="TextItemsPo">
 	</resultMap>
 	<resultMap id="TextItemMap" type="TextItemPo">
+	    <result property="file" column="file" javaType="String" jdbcType="BLOB"/>
 	</resultMap>
 	<select id="getAll" resultMap="TextChannelMap">
 	    select * from vpn.textchannel
