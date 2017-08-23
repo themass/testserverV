@@ -33,7 +33,7 @@ public class TextController extends BaseController {
             @ModelAttribute @Valid ChannelItemsForm form) {
         return new JsonResult(dataService.getTextItems(baseQuery, form.toParam(),form.getChannel()));
     }
-    @RequestMapping(value = "/file.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/item.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,@RequestParam Integer id) {
         return new JsonResult(dataService.getTextItem(baseQuery, id));
     }
