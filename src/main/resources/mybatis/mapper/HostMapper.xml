@@ -15,13 +15,13 @@
 		(#{gateway},#{port},#{location},#{cert})
 	</insert>
 	<select id="get" resultMap="HostMap">
-		select * from vpn.host where id=#{id}
+		select * from vpn.host where id=#{id} and enable=1
 	</select>
 	<select id="getAll" resultMap="HostMap">
-		select * from vpn.host where location!=1 and level=0
+		select * from vpn.host where location!=1 and level=0 and enable=1
 	</select>
 	<select id="getByLocation" resultMap="HostMap">
-		select * from vpn.host where location=#{location}
+		select * from vpn.host where location=#{location} and enable=1
 	</select>
 	
 </mapper>
