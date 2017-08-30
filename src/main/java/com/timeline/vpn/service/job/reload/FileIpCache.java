@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.sun.tools.classfile.StackMap_attribute.stack_map_frame;
 import com.timeline.vpn.dao.db.FileIpDao;
 import com.timeline.vpn.model.po.FileIpPo;
 import com.timeline.vpn.service.job.ReloadJob;
@@ -53,7 +52,9 @@ public class FileIpCache extends ReloadJob {
             lock.writeLock().unlock();
         }
     }
-    public static String  getIp(String type){
+    public static String  getIp(String type,String ip){
+        boolean zh = ZhIpCache.isChinaIp(ip);
+        LOGGER.info("ip={},isZh={}",ip,zh);
         List<String> list = configMap.get(type);
         int size = list.size();
         return list.get(RandomUtils.nextInt(0, size));

@@ -203,7 +203,7 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public InfoListVo<TextItemsVo> getTextItems(BaseQuery baseQuery, PageBaseParam param,
+    public InfoListVo<TextItemsVo> getTextItems(final BaseQuery baseQuery, PageBaseParam param,
             String channel) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<TextItemsPo> poList = textChannelDao.getByChannel(channel);
@@ -211,7 +211,7 @@ public class DataServiceImpl implements DataService {
 
             @Override
             public void action(TextItemsPo i, TextItemsVo t) {
-                t.setFileUrl(FileIpCache.getIp(Constant.BOOK)+i.getId()+".txt");
+                t.setFileUrl(FileIpCache.getIp(Constant.BOOK,baseQuery.getAppInfo().getUserIp())+i.getId()+".txt");
             }
         }
         );
