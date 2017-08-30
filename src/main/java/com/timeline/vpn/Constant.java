@@ -39,6 +39,7 @@ public class Constant {
     public static class UserLevel {
         public static final int LEVEL_FREE = 0;
         public static final int LEVEL_VIP = 1;
+        public static final int LEVEL_VIP2 = 1;
     }
     //用户组分类 未注册，注册，VIP 其中 未注册+注册=免费
     public static class UserGroup {
@@ -78,6 +79,7 @@ public class Constant {
     public static final String RAD_PASS = "Cleartext-Password";
     public static final String RAD_EQ = ":=";
     public static final int SCORE_TO_VIP = 600;
+    public static final int SCORE_TO_VIP2 = 1500;
     public static final int RAD_PRIORITY_DEF = 2;
     public static String superMan = "FREE_VPN";
     public static final String STATE_TIME_USE="%s h, %sm, %ss";

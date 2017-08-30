@@ -39,6 +39,7 @@ import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.RegAuthService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.util.CommonUtil;
+import com.timeline.vpn.util.ScoreCalculate;
 
 /**
  * @author gqli
@@ -147,11 +148,9 @@ public class UserServiceImpl implements UserService {
     public UserVo score(BaseQuery baseQuery, int score) {
         userDao.score(score, baseQuery.getUser().getName());
         UserPo po = userDao.exist(baseQuery.getUser().getName());
-        if(po.getScore()>=Constant.SCORE_TO_VIP){
-            po.setLevel(Constant.UserLevel.LEVEL_VIP);
-            userDao.updateLevel(po);
-            checkService.updateRadUserGroup(po.getName(), Constant.UserGroup.RAD_GROUP_VIP);
-        }
+        po.setLevel(ScoreCalculate.level(po.getScore()));
+        userDao.updateLevel(po);
+        checkService.updateRadUserGroup(po.getName(), ScoreCalculate.group(po.getLevel()));
         cacheService.updateUser(baseQuery.getToken(),po);
         UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
         vo.setToken(baseQuery.getToken());
