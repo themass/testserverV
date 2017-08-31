@@ -9,6 +9,7 @@ public class FileIpPo {
     private int id;
     private String type;
     private String ip;
+    private String extra;
     public int getId() {
         return id;
     }
@@ -26,6 +27,12 @@ public class FileIpPo {
     }
     public void setIp(String ip) {
         this.ip = ip;
+    }
+    public String getExtra() {
+        return extra;
+    }
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 
 

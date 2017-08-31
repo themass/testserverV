@@ -1,9 +1,9 @@
 package com.timeline.vpn.service.job.reload;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.timeline.vpn.dao.db.FileIpDao;
 import com.timeline.vpn.model.po.FileIpPo;
 import com.timeline.vpn.service.job.ReloadJob;
@@ -27,7 +26,7 @@ import com.timeline.vpn.service.job.ReloadJob;
 @Repository
 public class FileIpCache extends ReloadJob {
     private static ReadWriteLock lock = new ReentrantReadWriteLock(false);
-    private static Map<String, List<String>> configMap = new HashMap<>();
+    private static Map<String, HashMultimap<String, String>> configMap = new HashMap<>();
     @Autowired
     private FileIpDao fileIpDao;
 
@@ -38,25 +37,27 @@ public class FileIpCache extends ReloadJob {
 
     public void reload() {
         List<FileIpPo> list = fileIpDao.getAll();
-        Multimap<String, String> map = HashMultimap.create();
+        Map<String, HashMultimap<String, String>> map = new HashMap<>();
         for (FileIpPo p : list) {
-            map.put(p.getType(), p.getIp());
+            HashMultimap<String, String> item = map.get(p.getType());
+            if(item==null){
+                item = HashMultimap.create();
+                map.put(p.getType(), item);
+            }
+            item.put(p.getExtra(), p.getIp());
         }
         try {
             lock.writeLock().lock();
-            for(String key:map.keys()){
-                configMap.put(key, new ArrayList<>(map.get(key)));
-            }
+            configMap = map;
             LOGGER.info("FileIp metaMap size = {}", configMap.size());
         } finally {
             lock.writeLock().unlock();
         }
     }
-    public static String  getIp(String type,String ip){
-        boolean zh = ZhIpCache.isChinaIp(ip);
-        LOGGER.info("ip={},isZh={}",ip,zh);
-        List<String> list = configMap.get(type);
-        int size = list.size();
-        return list.get(RandomUtils.nextInt(0, size));
+    public static String  getHost(String type,String extra){
+        HashMultimap<String, String> map = configMap.get(type);
+        Set<String> set = map.get(extra);
+        return (String)set.toArray()[(RandomUtils.nextInt(0, set.size()))];
     }
+
 }

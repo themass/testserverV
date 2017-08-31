@@ -39,7 +39,6 @@ import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.UserService;
-import com.timeline.vpn.service.job.reload.FileIpCache;
 
 /**
  * @author gqli
@@ -64,11 +63,21 @@ public class DataServiceImpl implements DataService {
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
+        final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
         int type = baseQuery.getUser()==null?Constant.RecommendType.TYPE_OTHER:
             (baseQuery.getUser().getLevel()==Constant.UserLevel.LEVEL_FREE?Constant.RecommendType.TYPE_REG:Constant.RecommendType.TYPE_VIP);
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getPage(type);
-        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
+
+            @Override
+            public void action(RecommendPo i, RecommendVo t) {
+                if(!StringUtils.isEmpty(baseUrl) && !StringUtils.isEmpty(i.getImg())){
+                    t.setImg(baseUrl+i.getImg());
+                }
+            }
+            
+        });
     }
 
     @Override
@@ -76,16 +85,15 @@ public class DataServiceImpl implements DataService {
 //        if(baseQuery.getUser()==null||baseQuery.getUser().getLevel()!=Constant.UserLevel.LEVEL_VIP){
 //            throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
 //        }
+        final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getVipPage();
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
 
             @Override
             public void action(RecommendPo i, RecommendVo t) {
-                if(baseQuery.getAppInfo().getVersion().compareTo("001000002000")<=0){
-                    if(!StringUtils.isEmpty(t.getImg()) &&t.getImg().contains("pigu")){
-                        t.setImg(null);
-                    }
+                if(!StringUtils.isEmpty(baseUrl) && !StringUtils.isEmpty(i.getImg())){
+                    t.setImg(baseUrl+i.getImg());
                 }
             }
             
@@ -156,7 +164,7 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public InfoListVo<RecommendVo> getAllSoundChannel(BaseQuery baseQuery, PageBaseParam param) {
+    public InfoListVo<RecommendVo> getAllSoundChannel(final BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<SoundChannel> poList = soundChannelDao.getAll();
         return VoBuilder.buildPageInfoVo((Page<SoundChannel>) poList, RecommendVo.class,new VoBuilder.BuildAction<SoundChannel,RecommendVo>(){
@@ -164,7 +172,7 @@ public class DataServiceImpl implements DataService {
             public void action(SoundChannel i, RecommendVo t) {
                 t.setActionUrl(i.getActionUrl());
                 t.setTitle(i.getName());
-                t.setImg(i.getPic());
+                t.setImg(CdnChooseUtil.getFetchImageBaseUrl(baseQuery.getAppInfo().getUserIp(),i.getPic()));
                 t.setAdsPopShow(true);
                 t.setAdsShow(true);
                 t.setShowType(0);
@@ -211,7 +219,7 @@ public class DataServiceImpl implements DataService {
 
             @Override
             public void action(TextItemsPo i, TextItemsVo t) {
-                t.setFileUrl(FileIpCache.getIp(Constant.BOOK,baseQuery.getAppInfo().getUserIp())+i.getId()+".txt");
+                t.setFileUrl(CdnChooseUtil.getBookBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getId()+".txt");
             }
         }
         );
