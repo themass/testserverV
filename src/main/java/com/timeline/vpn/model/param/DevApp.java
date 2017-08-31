@@ -13,6 +13,7 @@ public class DevApp {
             LoggerFactory.getLogger(DevApp.class);
     private String devId;
     private String versionName;
+    //###############
     private String version;
     private String platform;
     private String userIp;

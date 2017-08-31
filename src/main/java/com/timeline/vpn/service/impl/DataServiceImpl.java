@@ -219,7 +219,12 @@ public class DataServiceImpl implements DataService {
 
             @Override
             public void action(TextItemsPo i, TextItemsVo t) {
-                t.setFileUrl(CdnChooseUtil.getBookBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getId()+".txt");
+                if("001000002008".compareTo(baseQuery.getAppInfo().getVersion())>=0){
+                    t.setFileUrl(CdnChooseUtil.getBookWebBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getId()+".txt");
+                }else{
+                    t.setFileUrl(CdnChooseUtil.getBookBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getId()+".txt");
+                }
+                
             }
         }
         );

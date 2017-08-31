@@ -38,5 +38,8 @@ public class CdnChooseUtil {
     public static String getBookBaseUrl(String ip){
         return FileIpCache.getHost(Constant.FileIpTYPE.BOOK, Constant.FileIpExtra.ALL);
     }
+    public static String getBookWebBaseUrl(String ip){
+        return FileIpCache.getHost(Constant.FileIpTYPE.BOOKWEB, Constant.FileIpExtra.ALL);
+    }
 }
 

@@ -26,6 +26,7 @@ public class Constant {
         public static final String RESULT_REG_REGCODE = "RESULT.ERROR.REGCODE";
     }
     public static class FileIpTYPE{
+        public static final String BOOKWEB = "BOOK_WEB";
         public static final String BOOK = "BOOK";
         public static final String IMG = "IMG";
     }
