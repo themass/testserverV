@@ -96,6 +96,13 @@ public class Constant {
     public static final String fen = ";";
     public static final String mao = ":";
     
-    public static List<String> colorBg = Arrays.asList("#552d5d82","#55135689","#552292e9","#5583878b","#7f8d8f45","#ffc49924","#ff83713f","#ff569b2b","#ff882b9b");
+    public static List<String> colorBg = Arrays.asList(
+            "#887267","#dbcce7","#eddeb9",
+            "#8b28dc","#b27edc","#f7dee1",
+            "#887267","#e3c295", "#e98349",
+            "#e3c295","#e0e8ef", "#f20c60",
+            "#ea92b2","#ea1bdc", "#78b5ea",
+            "#75ef67","#d0f744","#f7c744",
+            "#f55220");
 
 }
