@@ -12,6 +12,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.IWannaDao;
+import com.timeline.vpn.dao.db.ImgChannelDao;
 import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.SoundChannelDao;
 import com.timeline.vpn.dao.db.TextChannelDao;
@@ -21,6 +22,9 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.AppVersion;
 import com.timeline.vpn.model.po.IWannaPo;
+import com.timeline.vpn.model.po.ImgChannelPo;
+import com.timeline.vpn.model.po.ImgItemsItemPo;
+import com.timeline.vpn.model.po.ImgItemsPo;
 import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.po.SoundChannel;
 import com.timeline.vpn.model.po.SoundItems;
@@ -28,6 +32,8 @@ import com.timeline.vpn.model.po.TextChannelPo;
 import com.timeline.vpn.model.po.TextItemPo;
 import com.timeline.vpn.model.po.TextItemsPo;
 import com.timeline.vpn.model.vo.IWannaVo;
+import com.timeline.vpn.model.vo.ImgItemVo;
+import com.timeline.vpn.model.vo.ImgItemsVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.SoundItemsVo;
@@ -60,6 +66,8 @@ public class DataServiceImpl implements DataService {
     private SoundChannelDao soundChannelDao;
     @Autowired
     private TextChannelDao textChannelDao;
+    @Autowired
+    private ImgChannelDao imgChannelDao;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -237,6 +245,36 @@ public class DataServiceImpl implements DataService {
             throw new DataException();
         }
         return VoBuilder.buildVo(po, TextItemVo.class, null);
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getAllImgChannel(BaseQuery baseQuery, PageBaseParam param) {
+        List<ImgChannelPo> list = imgChannelDao.getAll();
+        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<ImgChannelPo,RecommendVo>(){
+            @Override
+            public void action(ImgChannelPo i, RecommendVo t) {
+                t.setActionUrl(i.getUrl());
+                t.setTitle(i.getName());
+                t.setAdsPopShow(true);
+                t.setAdsShow(true);
+                t.setShowType(0);
+                t.setParam(i.getUrl());
+            }
+        });
+    }
+
+    @Override
+    public InfoListVo<ImgItemsVo> getImgItems(BaseQuery baseQuery, PageBaseParam param,
+            String channel) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel);
+        return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>) poList, ImgItemsVo.class,null);
+    }
+
+    @Override
+    public InfoListVo<ImgItemVo> getImgItem(BaseQuery baseQuery, String url) {
+        List<ImgItemsItemPo> list = imgChannelDao.getItem(url);
+        return VoBuilder.buildListInfoVo(list, ImgItemVo.class,null);
     }
 
 }

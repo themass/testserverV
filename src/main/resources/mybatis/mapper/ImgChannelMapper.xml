@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.ImgChannelDao">
+	<resultMap id="ImgChannelMap" type="ImgChannelPo">
+	</resultMap>
+	<resultMap id="ImgItemsMap" type="ImgItemsPo">
+	</resultMap>
+	<resultMap id="ImgItemsItemMap" type="ImgItemsItemPo">
+	</resultMap>
+	<select id="getAll" resultMap="ImgChannelMap">
+	    select * from vpn.imgchannel
+	</select>
+	<select id="getByChannel" resultMap="ImgItemsMap">
+	    select * from vpn.imgitems where channel=#{channel}
+	</select>
+	<select id="getItem" resultMap="ImgItemsItemMap">
+	    select * from vpn.imgitems_item where itemUrl=#{itemUrl}
+	</select>
+</mapper>
