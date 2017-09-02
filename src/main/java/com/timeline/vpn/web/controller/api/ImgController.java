@@ -23,7 +23,7 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/img")
 public class ImgController extends BaseController {
-    @RequestMapping(value = "/channle.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/channel.json", method = RequestMethod.GET)
     public JsonResult channle(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getAllImgChannel(baseQuery, form.toParam()));
