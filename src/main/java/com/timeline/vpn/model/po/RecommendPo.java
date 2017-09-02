@@ -24,6 +24,7 @@ public class RecommendPo {
     private String name;
     private Date createTime;
     private String param;
+    private String minVersion;
     public Integer getId() {
         return id;
     }
@@ -155,6 +156,14 @@ public class RecommendPo {
 
     public void setParam(String param) {
         this.param = param;
+    }
+
+    public String getMinVersion() {
+        return minVersion;
+    }
+
+    public void setMinVersion(String minVersion) {
+        this.minVersion = minVersion;
     }
 
 }

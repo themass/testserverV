@@ -21,6 +21,7 @@ public class RecommendVo {
     private Date createTime;
     private Integer id;
     private String param;
+    private String minVersion;
     public String getTitle() {
         return title;
     }
@@ -115,6 +116,14 @@ public class RecommendVo {
 
     public void setParam(String param) {
         this.param = param;
+    }
+
+    public String getMinVersion() {
+        return minVersion;
+    }
+
+    public void setMinVersion(String minVersion) {
+        this.minVersion = minVersion;
     }
     
 }
