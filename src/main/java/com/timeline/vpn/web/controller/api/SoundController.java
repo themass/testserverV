@@ -22,7 +22,7 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/sound")
 public class SoundController extends BaseController {
-    @RequestMapping(value = "/channle.json", method = RequestMethod.GET)
+    @RequestMapping(value = {"/channle.json","/channel.json"}, method = RequestMethod.GET)
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getAllSoundChannel(baseQuery, form.toParam()));
