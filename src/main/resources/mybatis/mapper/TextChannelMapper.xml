@@ -12,7 +12,11 @@
 	    select * from vpn.textchannel
 	</select>
 	<select id="getByChannel" resultMap="TextItemsMap">
-	    select id,name,channel,url,updateTime,fileDate from vpn.textitems where channel=#{channel} order by id asc ,name desc
+	    select id,name,channel,url,updateTime,fileDate from vpn.textitems where channel=#{channel} 
+	    <if test="keyword!=null">
+	        and name like CONCAT('%',#{keyword},'%')
+	    </if>
+	    order by id asc ,name desc
 	</select>
 	<select id="getFile" resultMap="TextItemMap">
 	    select name,channel,file from vpn.textitems where id=#{id}

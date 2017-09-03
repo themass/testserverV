@@ -15,7 +15,7 @@ import com.timeline.vpn.model.po.TextItemsPo;
  * @version V1.0
  */
 public interface TextChannelDao extends BaseDBDao<TextChannelPo> {
-    public List<TextItemsPo> getByChannel(@Param("channel")String channel);
+    public List<TextItemsPo> getByChannel(@Param("channel")String channel, @Param("keyword")String keyword);
     public TextItemPo getFile(@Param("id")Integer id);
 }
 

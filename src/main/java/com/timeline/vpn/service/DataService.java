@@ -34,7 +34,7 @@ public interface DataService {
     public InfoListVo<SoundItemsVo> getSoundItems(BaseQuery baseQuery, PageBaseParam param,String channel);
     
     public InfoListVo<RecommendVo> getAllTextChannel(BaseQuery baseQuery, PageBaseParam param);
-    public InfoListVo<TextItemsVo> getTextItems(BaseQuery baseQuery, PageBaseParam param,String channel);
+    public InfoListVo<TextItemsVo> getTextItems(BaseQuery baseQuery, PageBaseParam param,String channel,String keyword);
     public TextItemVo getTextItem(BaseQuery baseQuery, Integer id);
     
     public InfoListVo<RecommendVo> getAllImgChannel(BaseQuery baseQuery, PageBaseParam param);

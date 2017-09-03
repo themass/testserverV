@@ -220,9 +220,12 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public InfoListVo<TextItemsVo> getTextItems(final BaseQuery baseQuery, PageBaseParam param,
-            String channel) {
+            String channel,String keyword) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<TextItemsPo> poList = textChannelDao.getByChannel(channel);
+        if(StringUtils.isEmpty(keyword)){
+            keyword = null;
+        }
+        List<TextItemsPo> poList = textChannelDao.getByChannel(channel,keyword);
         return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,new VoBuilder.BuildAction<TextItemsPo,TextItemsVo>(){
 
             @Override
