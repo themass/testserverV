@@ -47,7 +47,7 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
                 long costTime = endTime - startTimeThreadLocal.get();
                 JsonResult result = (JsonResult) map.get(JsonResult.MODEL_KEY);
                 result.setCost(costTime);
-                LOGGER.info(String.format(request.getServletPath()+"["+request.getQueryString()+"]" + ",cost:%s", costTime));
+                LOGGER.info(String.format(request.getServletPath()+"[%s],cost:%s", request.getQueryString(),costTime));
             }
 
         }
