@@ -22,6 +22,7 @@ public class RecommendVo {
     private Integer id;
     private String param;
     private String minVersion;
+    private Boolean newShow;
     public String getTitle() {
         return title;
     }
@@ -125,6 +126,15 @@ public class RecommendVo {
     public void setMinVersion(String minVersion) {
         this.minVersion = minVersion;
     }
+
+    public Boolean getNewShow() {
+        return newShow;
+    }
+
+    public void setNewShow(Boolean newShow) {
+        this.newShow = newShow;
+    }
+    
     
 }
 

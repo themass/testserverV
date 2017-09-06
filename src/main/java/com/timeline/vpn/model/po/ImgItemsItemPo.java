@@ -9,6 +9,7 @@ public class ImgItemsItemPo {
     private Integer id;
     private String picUrl;
     private String itemUrl;
+    private String origUrl;
     public Integer getId() {
         return id;
     }
@@ -26,6 +27,12 @@ public class ImgItemsItemPo {
     }
     public void setItemUrl(String itemUrl) {
         this.itemUrl = itemUrl;
+    }
+    public String getOrigUrl() {
+        return origUrl;
+    }
+    public void setOrigUrl(String origUrl) {
+        this.origUrl = origUrl;
     }
    
    

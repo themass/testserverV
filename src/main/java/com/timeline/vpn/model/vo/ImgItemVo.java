@@ -6,6 +6,7 @@ package com.timeline.vpn.model.vo;
  */
 public class ImgItemVo {
     private String picUrl;
+    private String origUrl;
 
     public String getPicUrl() {
         return picUrl;
@@ -13,6 +14,14 @@ public class ImgItemVo {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public String getOrigUrl() {
+        return origUrl;
+    }
+
+    public void setOrigUrl(String origUrl) {
+        this.origUrl = origUrl;
     }
     
 }
