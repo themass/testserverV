@@ -11,7 +11,7 @@
 	    select * from vpn.imgchannel
 	</select>
 	<select id="getByChannel" resultMap="ImgItemsMap">
-	    select * from vpn.imgitems where channel=#{channel}
+	    select * from vpn.imgitems where channel=#{channel} order by sortType desc,id asc
 	</select>
 	<select id="getItem" resultMap="ImgItemsItemMap">
 	    select * from vpn.imgitems_item where itemUrl=#{itemUrl}
