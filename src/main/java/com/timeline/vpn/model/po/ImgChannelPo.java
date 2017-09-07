@@ -15,6 +15,7 @@ public class ImgChannelPo {
     private String pic;
     private Date updateTime;
     private Float rate;
+    private Integer showType;
     public Integer getId() {
         return id;
     }
@@ -56,6 +57,12 @@ public class ImgChannelPo {
     }
     public void setRate(Float rate) {
         this.rate = rate;
+    }
+    public Integer getShowType() {
+        return showType;
+    }
+    public void setShowType(Integer showType) {
+        this.showType = showType;
     }
     
 }

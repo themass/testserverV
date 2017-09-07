@@ -258,9 +258,11 @@ public class DataServiceImpl implements DataService {
             public void action(ImgChannelPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl());
                 t.setTitle(i.getName());
+                t.setImg(i.getPic());
                 t.setAdsPopShow(true);
                 t.setAdsShow(true);
-                t.setShowType(0);
+                if(i.getShowType()==null)
+                    t.setShowType(0);
                 t.setParam(i.getUrl());
             }
         });
