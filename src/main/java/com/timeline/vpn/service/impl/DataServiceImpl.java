@@ -284,7 +284,7 @@ public class DataServiceImpl implements DataService {
                     t.setOrigUrl(i.getPicUrl());
                 }
                 if(StringUtils.isEmpty(t.getPicUrl())){
-                    t.setOrigUrl(i.getOrigUrl());
+                    t.setPicUrl(i.getOrigUrl());
                 }
             }
         });
