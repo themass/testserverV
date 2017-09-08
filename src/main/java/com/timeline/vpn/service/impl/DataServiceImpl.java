@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +46,7 @@ import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.UserService;
+import com.timeline.vpn.util.ArrayUtil;
 
 /**
  * @author gqli
@@ -93,6 +95,9 @@ public class DataServiceImpl implements DataService {
 //        if(baseQuery.getUser()==null||baseQuery.getUser().getLevel()!=Constant.UserLevel.LEVEL_VIP){
 //            throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
 //        }
+        if("001000002009".compareTo(baseQuery.getAppInfo().getVersion())==0){
+            return new InfoListVo(new ArrayList<>());
+        }
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getVipPage();
@@ -230,7 +235,7 @@ public class DataServiceImpl implements DataService {
 
             @Override
             public void action(TextItemsPo i, TextItemsVo t) {
-                if("001000002008".compareTo(baseQuery.getAppInfo().getVersion())>=0){
+                if("001000002008".compareTo(baseQuery.getAppInfo().getVersion())<=0){
                     t.setFileUrl(CdnChooseUtil.getBookWebBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getId()+".html");
                 }else{
                     t.setFileUrl(CdnChooseUtil.getBookBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getId()+".txt");
