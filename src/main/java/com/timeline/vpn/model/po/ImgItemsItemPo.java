@@ -10,6 +10,7 @@ public class ImgItemsItemPo {
     private String picUrl;
     private String itemUrl;
     private String origUrl;
+    private String compressUrl;
     public Integer getId() {
         return id;
     }
@@ -33,6 +34,12 @@ public class ImgItemsItemPo {
     }
     public void setOrigUrl(String origUrl) {
         this.origUrl = origUrl;
+    }
+    public String getCompressUrl() {
+        return compressUrl;
+    }
+    public void setCompressUrl(String compressUrl) {
+        this.compressUrl = compressUrl;
     }
    
    

@@ -29,6 +29,8 @@ public class Constant {
         public static final String BOOKWEB = "BOOK_WEB";
         public static final String BOOK = "BOOK";
         public static final String IMG = "IMG";
+        public static final String IMG_FETCH_ORIGE = "IMG_FETCH_ORIGE";
+        public static final String IMG_FETCH_COPM = "IMG_FETCH_COPM";
     }
     public static class FileIpExtra{
         public static final String ALL = "ALL";

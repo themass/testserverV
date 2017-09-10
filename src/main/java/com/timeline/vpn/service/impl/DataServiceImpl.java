@@ -282,17 +282,20 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public InfoListVo<ImgItemVo> getImgItem(BaseQuery baseQuery, String url) {
+    public InfoListVo<ImgItemVo> getImgItem(final BaseQuery baseQuery, String url) {
         List<ImgItemsItemPo> list = imgChannelDao.getItem(url);
         return VoBuilder.buildListInfoVo(list, ImgItemVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,ImgItemVo>(){
             @Override
             public void action(ImgItemsItemPo i, ImgItemVo t) {
+                if(!StringUtils.isEmpty(i.getCompressUrl())){
+                    t.setPicUrl(CdnChooseUtil.getImageFetchCompBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getCompressUrl());
+                }
+                if(!StringUtils.isEmpty(i.getOrigUrl())){
+                    t.setOrigUrl(CdnChooseUtil.getImageFetchBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getOrigUrl());
+                }
                 if(StringUtils.isEmpty(t.getOrigUrl())){
-                    t.setOrigUrl(i.getPicUrl());
-                }
-                if(StringUtils.isEmpty(t.getPicUrl())){
-                    t.setPicUrl(i.getOrigUrl());
-                }
+                  t.setOrigUrl(i.getPicUrl());
+              }
             }
         });
     }

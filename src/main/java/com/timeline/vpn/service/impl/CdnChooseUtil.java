@@ -41,5 +41,22 @@ public class CdnChooseUtil {
     public static String getBookWebBaseUrl(String ip){
         return FileIpCache.getHost(Constant.FileIpTYPE.BOOKWEB, Constant.FileIpExtra.ALL);
     }
+    
+    public static String getImageFetchBaseUrl(String ip){
+        if(ZhIpCache.isChinaIp(ip)){
+            LOGGER.info("cdn : ip={},中国ip",ip);
+            return FileIpCache.getHost(Constant.FileIpTYPE.IMG_FETCH_ORIGE, Constant.FileIpExtra.ZH);
+        }
+        LOGGER.info("cdn : ip={},国外ip",ip);
+        return FileIpCache.getHost(Constant.FileIpTYPE.IMG_FETCH_ORIGE, Constant.FileIpExtra.OTHER);
+    }
+    public static String getImageFetchCompBaseUrl(String ip){
+        if(ZhIpCache.isChinaIp(ip)){
+            LOGGER.info("cdn : ip={},中国ip",ip);
+            return FileIpCache.getHost(Constant.FileIpTYPE.IMG_FETCH_COPM, Constant.FileIpExtra.ZH);
+        }
+        LOGGER.info("cdn : ip={},国外ip",ip);
+        return FileIpCache.getHost(Constant.FileIpTYPE.IMG_FETCH_COPM, Constant.FileIpExtra.OTHER);
+    }
 }
 
