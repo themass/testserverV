@@ -46,6 +46,8 @@ import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.UserService;
+import com.timeline.vpn.service.job.reload.HostCheck;
+import com.timeline.vpn.service.job.reload.ZhIpCache;
 import com.timeline.vpn.util.ArrayUtil;
 
 /**
@@ -295,7 +297,12 @@ public class DataServiceImpl implements DataService {
                 }
                 if(StringUtils.isEmpty(t.getOrigUrl())){
                   t.setOrigUrl(i.getPicUrl());
-              }
+                }
+                if(HostCheck.isMyHost(baseQuery.getAppInfo().getUserIp())){
+                    t.setRemoteUrl(CdnChooseUtil.getImageFetchBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getOrigUrl());
+                }else{
+                    t.setRemoteUrl(i.getPicUrl());
+                }
             }
         });
     }
