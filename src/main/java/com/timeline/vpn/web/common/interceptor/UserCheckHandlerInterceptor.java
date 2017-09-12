@@ -15,6 +15,7 @@ import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.CacheService;
+import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.web.common.DevAppContext;
 
 /**
@@ -42,8 +43,8 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
         if (po != null) {
             request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
         } else {
-            LOGGER.error("没找到user信息："+app.toString());
-            request.setAttribute(Constant.HTTP_ATTR_RET, Constant.ResultErrno.ERRNO_CLEAR_LOGIN);
+            LOGGER.error("没找到user信息：app={}, header={}",app.toString(),HttpCommonUtil.getHeaderStr(request));
+//            request.setAttribute(Constant.HTTP_ATTR_RET, Constant.ResultErrno.ERRNO_CLEAR_LOGIN);
         }
         return true;
     }

@@ -116,7 +116,16 @@ public class HttpCommonUtil {
         }
         LOGGER.debug(sb.toString());
     }
-
+    public static String getHeaderStr(HttpServletRequest request) {
+        Enumeration<String> e = request.getHeaderNames();
+        StringBuilder sb = new StringBuilder();
+        sb.append("head = ");
+        while (e.hasMoreElements()) {
+            String name = e.nextElement();
+            sb.append(name).append("=").append(request.getHeader(name)).append(" ;");
+        }
+        return sb.toString();
+    }
 
     /**
      * Send post to URL with parameters by given encoding.
