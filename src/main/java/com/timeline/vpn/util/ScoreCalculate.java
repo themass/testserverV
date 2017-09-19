@@ -9,9 +9,9 @@ import com.timeline.vpn.Constant;
  */
 public class ScoreCalculate {
     public static int level(long score){
-        if(score>=Constant.SCORE_TO_VIP&&score<Constant.SCORE_TO_VIP){
+        if(score>=Constant.SCORE_TO_VIP&&score<Constant.SCORE_TO_VIP2){
             return Constant.UserLevel.LEVEL_VIP;
-        }else if(score>Constant.SCORE_TO_VIP){
+        }else if(score>Constant.SCORE_TO_VIP2){
             return Constant.UserLevel.LEVEL_VIP2;
         }
         return Constant.UserLevel.LEVEL_FREE;
