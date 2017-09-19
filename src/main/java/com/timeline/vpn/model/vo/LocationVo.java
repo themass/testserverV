@@ -13,6 +13,9 @@ public class LocationVo {
     private int type;
     private String cityName;
     private int level;
+    private Integer hostId;
+    private String gateway;
+    private Integer port;
 
     public String getImg() {
         return img;
@@ -69,5 +72,30 @@ public class LocationVo {
     public void setLevel(int level) {
         this.level = level;
     }
+
+    public Integer getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(Integer hostId) {
+        this.hostId = hostId;
+    }
+
+    public String getGateway() {
+        return gateway;
+    }
+
+    public void setGateway(String gateway) {
+        this.gateway = gateway;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+    
 }
 

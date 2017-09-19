@@ -11,7 +11,8 @@ public class HostPo {
     private int port;
     private int location;
     private String cert;
-    private int level;
+    private int type;
+    private float weight;
 
     public int getId() {
         return id;
@@ -53,13 +54,24 @@ public class HostPo {
         this.cert = cert;
     }
 
-    public int getLevel() {
-        return level;
+   
+
+    public int getType() {
+        return type;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public void setType(int type) {
+        this.type = type;
     }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+    
 
 }
 

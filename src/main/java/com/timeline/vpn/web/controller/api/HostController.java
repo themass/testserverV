@@ -27,10 +27,18 @@ public class HostController extends BaseController {
             @RequestParam(defaultValue = "0") int location) {
         return new JsonResult(hostService.getHostInfo(baseQuery, location));
     }
-
+    @RequestMapping(value = "/server/cache.json", method = RequestMethod.GET)
+    public JsonResult serverListCache(@UserInfo BaseQuery baseQuery,
+            @RequestParam(defaultValue = "0") int id) {
+        return new JsonResult(hostService.getHostInfoById(baseQuery, id));
+    }
     @RequestMapping(value = "/server/location.json", method = RequestMethod.GET)
     public JsonResult locationList(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(hostService.getAllLocation());
+    }
+    @RequestMapping(value = "/server/location/cache.json", method = RequestMethod.GET)
+    public JsonResult locationListCache(@UserInfo BaseQuery baseQuery) {
+        return new JsonResult(hostService.getAllLocationCache());
     }
     @RequestMapping(value = "/server/dns.json", method = RequestMethod.GET)
     public JsonResult dns(@UserInfo BaseQuery baseQuery,@RequestParam String d) {

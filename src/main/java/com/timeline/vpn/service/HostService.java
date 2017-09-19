@@ -17,5 +17,7 @@ public interface HostService {
     public ServerVo getHostInfo(BaseQuery baseQuery, int location);
     public InfoListVo<LocationVo> getAllLocation();
     public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains);
+    public InfoListVo<LocationVo> getAllLocationCache();
+    public ServerVo getHostInfoById(BaseQuery baseQuery, int id);
 }
 

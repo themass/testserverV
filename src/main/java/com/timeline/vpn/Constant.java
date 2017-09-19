@@ -68,6 +68,7 @@ public class Constant {
      // 0：免费，1vip，2高级vip
         public static final int SERVER_TYPE_FREE = 0;
         public static final int SERVER_TYPE_VIP = 1;
+        public static final int SERVER_TYPE_VIP2 = 2;
     }
     public static final JsonResult RESULT_SUCCESS =
             new JsonResult(new RetInfoVo(true), Constant.ResultErrno.ERRNO_SUCCESS, null);
@@ -81,6 +82,7 @@ public class Constant {
     public static final String HTTP_ATTR_RET = "ret_key";
     public static final String LANG = "Accept-Language";
     
+    public static final String YOUMI_OFFADS="29abff90a29bc419";
     public static final int LOCATION_ALL = 0;
     public static final long FREE_TIME = 20 * 24 * 60 * 60;
     public static final long ADS_FAB_SCORE = 10;

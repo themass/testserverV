@@ -1,7 +1,9 @@
 package com.timeline.vpn.service.job.reload;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -25,6 +27,7 @@ import com.timeline.vpn.util.MailUtil;
 public class HostCheck extends ReloadJob {
     private static final Logger LOGGER = LoggerFactory.getLogger(HostCheck.class);
     private static List<String> myIpList = new ArrayList<>();
+    private static Set<String> errorIp = new HashSet<>();
     @Autowired
     private HostDao hostDao;
     @PostConstruct
@@ -44,21 +47,28 @@ public class HostCheck extends ReloadJob {
             while(count<3){
                 boolean ret = HttpCommonUtil.ping(ip);
                 if(!ret){
+                    count++;
                     if(count==2){
                         String title = "服务器 ping 失败："+ip;
                         LOGGER.error(title);
                         MailUtil.sendMail(title, title);
+                        errorIp.add(ip);
                     }
                 }else{
+                    errorIp.remove(ip);
                     break;
                 }
             }
             LOGGER.info("check {} finish",ip);
         }
+        LOGGER.error("异常的服务器:"+errorIp);
         
     }
   public static boolean isMyHost(String ip){
       return myIpList.contains(ip);
+  }
+  public static boolean isErrorIp(String ip){
+      return errorIp.contains(ip);
   }
   
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.form.YoumiOffadsForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.ReportService;
@@ -26,6 +27,11 @@ public class NoappController extends BaseController {
     @RequestMapping(value = "/collect.json", method = RequestMethod.POST)
     public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count) {
         reportService.collect(baseQuery, count);
+        return Constant.RESULT_SUCCESS;
+    }
+    @RequestMapping(value = "/offerads/youmi.json", method = RequestMethod.GET)
+    public JsonResult youmiOfferads(@UserInfo BaseQuery baseQuery,@RequestParam YoumiOffadsForm form) {
+        LOGGER.info(form.toString()+"; check"+form.isRightReq());
         return Constant.RESULT_SUCCESS;
     }
 }
