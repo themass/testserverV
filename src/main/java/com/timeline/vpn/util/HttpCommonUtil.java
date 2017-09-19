@@ -400,7 +400,7 @@ public class HttpCommonUtil {
     public static boolean ping(String ip) {
         String result = null;
         try {
-            Process p = Runtime.getRuntime().exec("ping -w 800 " + ip);
+            Process p = Runtime.getRuntime().exec("ping -c 2 -w 800 " + ip);
             InputStream input = p.getInputStream();
             BufferedReader in = new BufferedReader(new InputStreamReader(input));
             StringBuilder stringBuffer = new StringBuilder();

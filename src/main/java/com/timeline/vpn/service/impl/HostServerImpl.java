@@ -57,9 +57,12 @@ public class HostServerImpl implements HostService {
         }
         
         BuildAction<HostPo, HostVo> action = null;
-        List<HostPo> hostList = null;
+        List<HostPo> hostList = new ArrayList<>();
         if (location == Constant.LOCATION_ALL) {
-            hostList = hostDao.getAll();
+            List<HostPo> list = hostDao.getRandom();
+            //优化成连接数最少或者网络带宽最好的一个
+            hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
+            hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
         } else {
             LocationPo loc = cityDao.get(location);
             if(loc==null){
@@ -87,7 +90,7 @@ public class HostServerImpl implements HostService {
         BuildAction<HostPo, HostVo> action = null;
         List<HostPo> hostList = new ArrayList<>();
         if (id == Constant.LOCATION_ALL) {
-            List<HostPo> list = hostDao.getAll();
+            List<HostPo> list = hostDao.getRandom();
             //优化成连接数最少或者网络带宽最好的一个
             hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
             hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
