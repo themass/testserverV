@@ -32,7 +32,7 @@ public class HostIpCache extends ReloadJob {
     private static ReadWriteLock lock = new ReentrantReadWriteLock(false);
     @Autowired
     private LocationDao locationDao;
-    @PostConstruct
+    
     public void init() {
         List<LocationPo> list = locationDao.getAllInfo();
         List<LocationPo> locationOk = new ArrayList<>();
@@ -50,7 +50,7 @@ public class HostIpCache extends ReloadJob {
             lock.writeLock().unlock();
         }
     }
-
+    @PostConstruct
     public void reload() {
         init();
         try {
