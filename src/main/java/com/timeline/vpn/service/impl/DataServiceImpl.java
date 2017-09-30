@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl;
 
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -47,6 +49,7 @@ import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.job.reload.HostCheck;
+import com.timeline.vpn.service.job.reload.ZhIpCache;
 
 /**
  * @author gqli
@@ -200,10 +203,16 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public InfoListVo<SoundItemsVo> getSoundItems(BaseQuery baseQuery,PageBaseParam param,String channel) {
+    public InfoListVo<SoundItemsVo> getSoundItems(final BaseQuery baseQuery,PageBaseParam param,String channel) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<SoundItems> poList = soundChannelDao.getByChannel(channel);
-        return VoBuilder.buildPageInfoVo((Page<SoundItems>) poList, SoundItemsVo.class,null);
+        return VoBuilder.buildPageInfoVo((Page<SoundItems>) poList, SoundItemsVo.class,new BuildAction<SoundItems,SoundItemsVo>(){
+            public void action(SoundItems i, SoundItemsVo t){
+                if(!StringUtils.isEmpty(i.getMyFile()) && ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){
+                    t.setUrl(i.getMyFile());
+                }
+            }
+        });
     }
 
     @Override
