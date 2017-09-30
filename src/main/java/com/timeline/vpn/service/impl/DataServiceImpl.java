@@ -47,8 +47,6 @@ import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.job.reload.HostCheck;
-import com.timeline.vpn.service.job.reload.ZhIpCache;
-import com.timeline.vpn.util.ArrayUtil;
 
 /**
  * @author gqli

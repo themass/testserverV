@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
     public UserVo score(BaseQuery baseQuery, int score) {
         userDao.score(score, baseQuery.getUser().getName());
         UserPo po = userDao.exist(baseQuery.getUser().getName());
-        po.setLevel(ScoreCalculate.level(po.getScore()));
+        po.setLevel(ScoreCalculate.level(baseQuery,po.getScore()));
         if("themass".equals(baseQuery.getUser().getName())){
             po.setLevel(2);
         }

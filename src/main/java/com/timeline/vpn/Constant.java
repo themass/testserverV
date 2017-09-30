@@ -50,7 +50,7 @@ public class Constant {
     public static class UserLevel {
         public static final int LEVEL_FREE = 0;
         public static final int LEVEL_VIP = 1;
-        public static final int LEVEL_VIP2 = 1;
+        public static final int LEVEL_VIP2 = 2;
     }
     //用户组分类 未注册，注册，VIP 其中 未注册+注册=免费
     public static class UserGroup {

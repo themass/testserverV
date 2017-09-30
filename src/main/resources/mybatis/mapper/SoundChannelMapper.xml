@@ -6,7 +6,7 @@
 	<resultMap id="SoundItemsMap" type="SoundItems">
 	</resultMap>
 	<select id="getAll" resultMap="SoundChannelMap">
-	    select * from vpn.soundchannel
+	    select * from vpn.soundchannel  where enable=1
 	</select>
 	<select id="getByChannel" resultMap="SoundItemsMap">
 	    select * from vpn.sounditems where channel=#{channel} order by sortType desc,id asc

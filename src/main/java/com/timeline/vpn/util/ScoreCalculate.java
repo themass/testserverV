@@ -1,6 +1,7 @@
 package com.timeline.vpn.util;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.param.BaseQuery;
 
 /**
  * @author gqli
@@ -8,14 +9,19 @@ import com.timeline.vpn.Constant;
  * @version V1.0
  */
 public class ScoreCalculate {
-    public static int level(long score){
+    public static int level(BaseQuery baseQuery,long score){
         if(score>=Constant.SCORE_TO_VIP&&score<Constant.SCORE_TO_VIP2){
             return Constant.UserLevel.LEVEL_VIP;
         }else if(score>Constant.SCORE_TO_VIP2){
-            return Constant.UserLevel.LEVEL_VIP2;
+            if("001000002008".compareTo(baseQuery.getAppInfo().getVersion())<0)
+                return Constant.UserLevel.LEVEL_VIP2;
+            else
+                return Constant.UserLevel.LEVEL_VIP; 
         }
         return Constant.UserLevel.LEVEL_FREE;
     }
+ 
+    
     public static String group(long level){
         if(level==Constant.UserLevel.LEVEL_FREE){
             return Constant.UserGroup.RAD_GROUP_REG;
