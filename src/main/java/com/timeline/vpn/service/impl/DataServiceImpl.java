@@ -296,19 +296,15 @@ public class DataServiceImpl implements DataService {
         return VoBuilder.buildListInfoVo(list, ImgItemVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,ImgItemVo>(){
             @Override
             public void action(ImgItemsItemPo i, ImgItemVo t) {
-                if(!StringUtils.isEmpty(i.getCompressUrl())){
-                    t.setPicUrl(CdnChooseUtil.getImageFetchCompBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getCompressUrl());
+                if(StringUtils.isEmpty(i.getOrigUrl())){
+                    t.setOrigUrl(i.getPicUrl());
+                    return;
                 }
-                if(!StringUtils.isEmpty(i.getOrigUrl())){
-                    t.setOrigUrl(CdnChooseUtil.getImageFetchBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getOrigUrl());
-                }
-                if(StringUtils.isEmpty(t.getOrigUrl())){
-                  t.setOrigUrl(i.getPicUrl());
-                }
+                
                 if(HostCheck.isMyHost(baseQuery.getAppInfo().getUserIp())){
-                    t.setRemoteUrl(CdnChooseUtil.getImageFetchBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getOrigUrl());
-                }else{
-                    t.setRemoteUrl(i.getPicUrl());
+                    t.setOrigUrl(i.getOrigUrl());
+                }else if(ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){
+                    t.setOrigUrl(i.getCdnUrl());
                 }
             }
         });

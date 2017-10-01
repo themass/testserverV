@@ -10,7 +10,7 @@ public class ImgItemsItemPo {
     private String picUrl;
     private String itemUrl;
     private String origUrl;
-    private String compressUrl;
+    private String cdnUrl;
     public Integer getId() {
         return id;
     }
@@ -35,11 +35,11 @@ public class ImgItemsItemPo {
     public void setOrigUrl(String origUrl) {
         this.origUrl = origUrl;
     }
-    public String getCompressUrl() {
-        return compressUrl;
+    public String getCdnUrl() {
+        return cdnUrl;
     }
-    public void setCompressUrl(String compressUrl) {
-        this.compressUrl = compressUrl;
+    public void setCdnUrl(String cdnUrl) {
+        this.cdnUrl = cdnUrl;
     }
    
    
