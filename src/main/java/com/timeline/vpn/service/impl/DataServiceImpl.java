@@ -300,12 +300,12 @@ public class DataServiceImpl implements DataService {
                     t.setOrigUrl(i.getPicUrl());
                     return;
                 }
-                
-                if(HostCheck.isMyHost(baseQuery.getAppInfo().getUserIp())){
-                    t.setOrigUrl(i.getOrigUrl());
-                }else if(ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){
-                    t.setOrigUrl(i.getCdnUrl());
-                }
+//                
+//                if(HostCheck.isMyHost(baseQuery.getAppInfo().getUserIp())){
+//                    t.setOrigUrl(i.getOrigUrl());
+//                }else if(ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){
+//                    t.setOrigUrl(i.getCdnUrl());
+//                }
             }
         });
     }
