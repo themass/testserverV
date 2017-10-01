@@ -296,10 +296,11 @@ public class DataServiceImpl implements DataService {
         return VoBuilder.buildListInfoVo(list, ImgItemVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,ImgItemVo>(){
             @Override
             public void action(ImgItemsItemPo i, ImgItemVo t) {
-                if(StringUtils.isEmpty(i.getOrigUrl())){
-                    t.setOrigUrl(i.getPicUrl());
-                    return;
-                }
+                t.setOrigUrl(i.getPicUrl());
+//                if(StringUtils.isEmpty(i.getOrigUrl())){
+//                    t.setOrigUrl(i.getPicUrl());
+//                    return;
+//                }
 //                
 //                if(HostCheck.isMyHost(baseQuery.getAppInfo().getUserIp())){
 //                    t.setOrigUrl(i.getOrigUrl());
