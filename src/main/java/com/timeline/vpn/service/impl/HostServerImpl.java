@@ -116,13 +116,11 @@ public class HostServerImpl implements HostService {
         }else{//VIP服务器
             if(user==null){
                 return false;
-            }else if(user.getLevel()==Constant.UserLevel.LEVEL_VIP2){
+            }else if(user.getLevel()>=type){
                 return true;
-            }else if(user.getLevel()==Constant.UserLevel.LEVEL_VIP && type ==Constant.ServeType.SERVER_TYPE_VIP2){
-                return false;
             }
         }
-        return true;
+        return false;
     }
     @Override
     public InfoListVo<LocationVo> getAllLocation() {
