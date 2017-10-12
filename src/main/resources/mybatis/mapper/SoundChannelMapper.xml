@@ -9,6 +9,6 @@
 	    select * from vpn.soundchannel  where enable=1
 	</select>
 	<select id="getByChannel" resultMap="SoundItemsMap">
-	    select * from vpn.sounditems where channel=#{channel} order by sortType desc,id asc
+	    select * from vpn.sounditems where channel=#{channel} order by name asc,id asc
 	</select>
 </mapper>
