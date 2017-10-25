@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.timeline.vpn.ConstantProfile;
 import com.timeline.vpn.dao.db.CollectDao;
+import com.timeline.vpn.metric.Measure;
+import com.timeline.vpn.metric.Metrics;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.CollectPo;
 import com.timeline.vpn.service.ReportService;
@@ -46,6 +48,7 @@ public class ReportServiceImpl implements ReportService{
     }
     @Override
     public void collect(BaseQuery baseQuery, Integer count) {
+        Metrics.count(Measure.vpn_connect.name(),count);
         CollectPo po = new CollectPo();
         po.setCount(count);
         po.setIp(baseQuery.getAppInfo().getUserIp());
