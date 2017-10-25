@@ -20,8 +20,8 @@ public class Metrics {
      *计数
      * @param name
      */
-    public static void count(String name,Integer count) {
-        metrics.count( name, count);
+    public static void count(String name,Integer count,String hostName) {
+        metrics.count( name, count,hostName);
     }
 
     /**
@@ -29,8 +29,8 @@ public class Metrics {
      *计数
      * @param name
      */
-    public static void count(String name) {
-        count(name,1);
+    public static void count(String name,String hostName) {
+        count(name,1,hostName);
     }
     /**
      * 执行时间

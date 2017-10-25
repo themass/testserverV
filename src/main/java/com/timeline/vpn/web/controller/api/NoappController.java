@@ -25,8 +25,8 @@ public class NoappController extends BaseController {
     @Autowired
     private ReportService reportService;
     @RequestMapping(value = "/collect.json", method = RequestMethod.POST)
-    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count) {
-        reportService.collect(baseQuery, count);
+    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost) {
+        reportService.collect(baseQuery, count,localhost);
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/offerads/youmi.json", method = RequestMethod.GET)

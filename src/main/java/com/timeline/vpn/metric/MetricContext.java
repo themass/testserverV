@@ -62,12 +62,12 @@ public class MetricContext {
     }
 
 
-    public void count(String name, Integer count) {
+    public void count(String name, Integer count, String hostName) {
         try {
             if (influxDB != null) {
                 Point point = Point
                         .measurement(measurementName(name))
-                        .tag("host", getHostName())
+                        .tag("host", hostName)
                         .tag("monitor_name", name)
                         .field("count", count)
                         .build();
@@ -163,9 +163,9 @@ public class MetricContext {
 //    }
 
     public static void main(String[] args) {
-        InfluxDB influxDB = org.influxdb.InfluxDBFactory.connect("http://172.30.19.94:8086", "folio", "qazxsw");
+        InfluxDB influxDB = org.influxdb.InfluxDBFactory.connect("http://112.74.58.248:8086", "admin", "themass529696");
 
-        BatchPoints batchPoints = BatchPoints.database("folio").build();
+        BatchPoints batchPoints = BatchPoints.database("vpn_monitor").build();
 
         for (int i = 20000; i < 30000; i++) {
             Point point = Point
