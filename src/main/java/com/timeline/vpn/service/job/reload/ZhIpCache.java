@@ -28,10 +28,10 @@ public class ZhIpCache extends ReloadJob {
             "http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest";
     private static final Logger LOGGER = LoggerFactory.getLogger(ZhIpCache.class);
 
-    @PostConstruct
-    public void init() {
-        reload();
-    }
+//    @PostConstruct
+//    public void init() {
+//        reload();
+//    }
 
     @SuppressWarnings("unchecked")
     public void reload() {
