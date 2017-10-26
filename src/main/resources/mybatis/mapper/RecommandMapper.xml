@@ -47,10 +47,10 @@
 		select * from vpn.recommend where enable=1
 	</select>
 	<select id="getCustomePage" resultMap="RecommendCustomeMap">
-		select * from vpn.recommendCustome where name=#{name} and enable=1 
+		select * from vpn.recommendCustome where name=#{name} and enable=1 order by createTime desc
 	</select>
 	<select id="getCustomeAllPage" resultMap="RecommendCustomeMap">
-		select * from vpn.recommendCustome
+		select * from vpn.recommendCustome order by createTime desc
 	</select>
 	<insert id="replaceCustome">
 	    replace into
