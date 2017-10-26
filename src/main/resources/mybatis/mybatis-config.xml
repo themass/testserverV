@@ -32,7 +32,7 @@
 		<typeAlias alias="ImgChannelPo" type="com.timeline.vpn.model.po.ImgChannelPo" />
 		<typeAlias alias="ImgItemsPo" type="com.timeline.vpn.model.po.ImgItemsPo" />
 		<typeAlias alias="ImgItemsItemPo" type="com.timeline.vpn.model.po.ImgItemsItemPo" />
-		
+		<typeAlias alias="BlackDevPo" type="com.timeline.vpn.model.po.BlackDevPo" />
 		
 	</typeAliases>
 	<typeHandlers>
