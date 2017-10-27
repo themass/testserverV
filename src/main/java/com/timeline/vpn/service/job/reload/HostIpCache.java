@@ -45,6 +45,7 @@ public class HostIpCache extends ReloadJob {
             }
         }
         try {
+            LOGGER.info("locationOk = "+locationOk);
             lock.writeLock().lock();
             locationList = locationOk;
         } finally {
