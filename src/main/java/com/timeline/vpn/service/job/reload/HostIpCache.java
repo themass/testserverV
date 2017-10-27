@@ -1,6 +1,7 @@
 package com.timeline.vpn.service.job.reload;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +80,7 @@ public class HostIpCache extends ReloadJob {
                   ret.add(entry.getValue().get(RandomUtils.nextInt(0, entry.getValue().size())));
               }
           }
+          Collections.sort(ret);
           return ret;
       } finally {
           lock.readLock().unlock();

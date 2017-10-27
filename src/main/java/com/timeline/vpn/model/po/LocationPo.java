@@ -5,7 +5,7 @@ package com.timeline.vpn.model.po;
  * @date 2016年8月9日 下午12:20:59
  * @version V1.0
  */
-public class LocationPo {
+public class LocationPo implements Comparable<LocationPo>{
     private int id;
     private String img;
     private String name;
@@ -121,6 +121,12 @@ public class LocationPo {
                 + ", type=" + type + ", enable=" + enable + ", cityName=" + cityName + ", level="
                 + level + ", hostId=" + hostId + ", gateway=" + gateway + ", port=" + port
                 + ", weight=" + weight + "]";
+    }
+
+    @Override
+    public int compareTo(LocationPo o) {
+        
+        return id-o.getId();
     }
     
 
