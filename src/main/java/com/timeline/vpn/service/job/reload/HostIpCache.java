@@ -64,8 +64,12 @@ public class HostIpCache extends ReloadJob {
                     list = new ArrayList<>();
                     locationMap.put(po.getId(), list);
                 }
-                for(int i=0;i<po.getWeight();i++)
+                if(po.getWeight()==null){
                     list.add(po);
+                }else{
+                    for(int i=0;i<po.getWeight();i++)
+                        list.add(po);
+                }
             }
         } finally {
             lock.writeLock().unlock();
