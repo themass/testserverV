@@ -11,6 +11,8 @@ import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.timeline.vpn.metric.Metrics;
+import com.timeline.vpn.metric.MetricsName;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.util.HttpCommonUtil;
 
@@ -40,6 +42,8 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
+//        Metrics.count(Measure.http.name(),);
+       
         if (modelAndView != null && modelAndView.getModel() != null) {
             Map<String, Object> map = modelAndView.getModel();
             if (map.get(JsonResult.MODEL_KEY) != null) {
@@ -48,6 +52,9 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
                 JsonResult result = (JsonResult) map.get(JsonResult.MODEL_KEY);
                 result.setCost(costTime);
                 LOGGER.info(String.format(request.getServletPath()+"[%s],cost:%s", request.getQueryString(),costTime));
+                String uri=request.getRequestURI();
+                Metrics.time(MetricsName.http(uri),
+                        costTime);
             }
 
         }

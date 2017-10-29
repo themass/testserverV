@@ -6,8 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -424,7 +426,20 @@ public class HttpCommonUtil {
         LOGGER.error("ping: "+ip+" - result = " + result);
         return false;
     }
-
+    public static String getHostName(){
+        try {  
+            return (InetAddress.getLocalHost()).getHostName();  
+        } catch (UnknownHostException uhe) {  
+            String host = uhe.getMessage(); // host = "hostname: hostname"  
+            if (host != null) {  
+                int colon = host.indexOf(':');  
+                if (colon > 0) {  
+                    return host.substring(0, colon);  
+                }  
+            }  
+            return "UnknownHost";  
+        }  
+    }
     public static void main(String[] args) {
         sendGet("https://collection.lianjia.com/homelink/inner/sleep");
     }

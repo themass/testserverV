@@ -1,8 +1,6 @@
 package com.timeline.vpn.metric;
 
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +10,8 @@ import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.timeline.vpn.util.HttpCommonUtil;
 
 /**
  * @author: yong.lin
@@ -84,7 +84,7 @@ public class MetricContext {
             if (influxDB != null) {
                 Point point = Point
                         .measurement(measurementName(name))
-                        .tag("host", getHostName())
+                        .tag("host", HttpCommonUtil.getHostName())
                         .tag("monitor_name", name)
                         .field("used_time", time)
                         .field("count", 1)
@@ -102,7 +102,7 @@ public class MetricContext {
             if (influxDB != null) {
                 Point point = Point
                     .measurement(measurementName(name))
-                    .tag("host", getHostName())
+                    .tag("host", HttpCommonUtil.getHostName())
                     .tag("monitor_name", name)
                     .field("used_time", time)
                     .field("status", status)
@@ -128,20 +128,7 @@ public class MetricContext {
         return MONITOR;
 
     }
-    public String getHostName(){
-        try {  
-            return (InetAddress.getLocalHost()).getHostName();  
-        } catch (UnknownHostException uhe) {  
-            String host = uhe.getMessage(); // host = "hostname: hostname"  
-            if (host != null) {  
-                int colon = host.indexOf(':');  
-                if (colon > 0) {  
-                    return host.substring(0, colon);  
-                }  
-            }  
-            return "UnknownHost";  
-        }  
-    }
+   
 //    public String getHostAddress() throws SocketException {
 //        if (StringUtils.isNotBlank(ip)) {
 //            return ip;
