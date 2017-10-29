@@ -55,6 +55,8 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
                 String uri=request.getRequestURI();
                 Metrics.time(MetricsName.http(uri),
                         costTime);
+                Metrics.time(MetricsName.http("ALL"),
+                        0l);
             }
 
         }
