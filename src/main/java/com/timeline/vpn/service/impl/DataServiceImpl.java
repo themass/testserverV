@@ -316,7 +316,7 @@ public class DataServiceImpl implements DataService {
     public InfoListVo<RecommendVo> getVideoPage(BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<VideoPo> list = videoDao.getPage();
-        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
             public void action(VideoPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl());
