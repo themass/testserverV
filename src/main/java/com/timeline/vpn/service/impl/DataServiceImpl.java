@@ -18,6 +18,7 @@ import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.SoundChannelDao;
 import com.timeline.vpn.dao.db.TextChannelDao;
 import com.timeline.vpn.dao.db.VersionDao;
+import com.timeline.vpn.dao.db.VideoDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
@@ -32,6 +33,7 @@ import com.timeline.vpn.model.po.SoundItems;
 import com.timeline.vpn.model.po.TextChannelPo;
 import com.timeline.vpn.model.po.TextItemPo;
 import com.timeline.vpn.model.po.TextItemsPo;
+import com.timeline.vpn.model.po.VideoPo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.ImgItemVo;
 import com.timeline.vpn.model.vo.ImgItemsVo;
@@ -70,6 +72,8 @@ public class DataServiceImpl implements DataService {
     private TextChannelDao textChannelDao;
     @Autowired
     private ImgChannelDao imgChannelDao;
+    @Autowired
+    private VideoDao videoDao;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -304,6 +308,24 @@ public class DataServiceImpl implements DataService {
 //                }else if(ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){
 //                    t.setOrigUrl(i.getCdnUrl());
 //                }
+            }
+        });
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getVideoPage(BaseQuery baseQuery, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<VideoPo> list = videoDao.getPage();
+        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
+            @Override
+            public void action(VideoPo i, RecommendVo t) {
+                t.setActionUrl(i.getUrl());
+                t.setTitle(i.getName());
+                t.setImg(i.getPic());
+                t.setAdsPopShow(true);
+                t.setAdsShow(true);
+                t.setShowType(0);
+                t.setParam(i.getUrl());
             }
         });
     }
