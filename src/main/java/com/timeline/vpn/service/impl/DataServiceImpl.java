@@ -322,7 +322,7 @@ public class DataServiceImpl implements DataService {
                 t.setActionUrl(i.getUrl());
                 t.setTitle(i.getName());
                 t.setImg(i.getPic());
-                t.setAdsPopShow(true);
+                t.setAdsPopShow(false);
                 t.setAdsShow(true);
                 t.setParam(i.getUrl());
             }
