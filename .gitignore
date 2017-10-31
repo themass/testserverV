@@ -9,6 +9,7 @@ maven-eclipse.xml
 # maven target folder
 /target
 */target
+target
 
 *.pyc
 ci/log
