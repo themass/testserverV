@@ -5,6 +5,6 @@
 		<id column="id" property="id" />
 	</resultMap>
 	<select id="getPage" resultMap="VideoMap">
-	    select * from videoitems
+	    select * from vpn.videoitems
 	</select>
 </mapper>
