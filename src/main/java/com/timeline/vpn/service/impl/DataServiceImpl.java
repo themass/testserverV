@@ -298,6 +298,7 @@ public class DataServiceImpl implements DataService {
             @Override
             public void action(ImgItemsItemPo i, ImgItemVo t) {
                 t.setOrigUrl(i.getPicUrl());
+                t.setRemoteUrl(i.getPicUrl());
 //                if(StringUtils.isEmpty(i.getOrigUrl())){
 //                    t.setOrigUrl(i.getPicUrl());
 //                    return;
