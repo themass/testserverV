@@ -116,7 +116,7 @@ public class HttpCommonUtil {
             String name = e.nextElement();
             sb.append(name).append("=").append(request.getHeader(name)).append(" ;");
         }
-        LOGGER.debug(sb.toString());
+        LOGGER.info(sb.toString());
     }
     public static String getHeaderStr(HttpServletRequest request) {
         Enumeration<String> e = request.getHeaderNames();
