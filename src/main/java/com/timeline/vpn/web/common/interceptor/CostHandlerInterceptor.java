@@ -34,7 +34,7 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
             Object handler) throws Exception {
         long startTime = System.currentTimeMillis();
         startTimeThreadLocal.set(startTime);
-        LOGGER.info(request.getServletPath() + "--start; "+HttpCommonUtil.getHeaderStr(request));
+        LOGGER.info(request.getServletPath() + "--start; ");
         return true;
     }
 
