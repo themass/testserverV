@@ -96,9 +96,6 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public InfoListVo<RecommendVo> getRecommendVipPage( final BaseQuery baseQuery, PageBaseParam param) {
-//        if(baseQuery.getUser()==null||baseQuery.getUser().getLevel()!=Constant.UserLevel.LEVEL_VIP){
-//            throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
-//        }
         if("001000002009".compareTo(baseQuery.getAppInfo().getVersion())==0){
             return new InfoListVo(new ArrayList<>());
         }
@@ -122,10 +119,6 @@ public class DataServiceImpl implements DataService {
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
         vo.setAdsShow(false);
         vo.setLogUp(true);
-//        if(baseQuery.getAppInfo().getVersion().equals("001000002009")){
-//            vo.setMaxBuild("001000002009");
-//            return vo;
-//        }
         if(!channel.equals("VPN")){
             AppVersion vpnVer = versionDao.getLast(platform,"VPN");
             vo.setVpnUrl(vpnVer.getUrl());
