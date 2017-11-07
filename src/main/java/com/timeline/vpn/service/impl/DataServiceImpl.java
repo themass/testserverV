@@ -123,6 +123,7 @@ public class DataServiceImpl implements DataService {
         vo.setAdsShow(false);
         vo.setLogUp(true);
         if(baseQuery.getAppInfo().getVersion().equals("001000002009")){
+            vo.setMaxBuild("001000002009");
             return vo;
         }
         if(!channel.equals("VPN")){
