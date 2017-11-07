@@ -122,6 +122,9 @@ public class DataServiceImpl implements DataService {
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
         vo.setAdsShow(false);
         vo.setLogUp(true);
+        if(baseQuery.getAppInfo().getVersion().equals("001000002009")){
+            return vo;
+        }
         if(!channel.equals("VPN")){
             AppVersion vpnVer = versionDao.getLast(platform,"VPN");
             vo.setVpnUrl(vpnVer.getUrl());
