@@ -15,7 +15,7 @@ public class VersionInfoVo {
     private Boolean logUp;
     private StateUseVo stateUse;
     private String dnspodIp;
-    private Boolean needDnspod=false;
+    private Boolean needDnspod=true;
     private String vpnUrl;
 
     public String getVersion() {
