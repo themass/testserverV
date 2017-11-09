@@ -29,7 +29,7 @@
 	</select>
 	
 	<delete id="deleteHistoryAcce">
-	    delete from radius.radacct where acctstoptime &lt; #{time}
+	    delete from radius.radacct where acctstarttime &lt; #{time} and acctstoptime is null
 	</delete>
 	
 	<delete id="deleteHistoryAuth">

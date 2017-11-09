@@ -43,11 +43,11 @@
                     </property>
                 </bean>
                  <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 1 * ? * *"/>
+                    <property name="cronExpression" value="0 6,12,24 * ? * *"/>
                     <property name="jobDetail">
                         <bean
                                 class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-                            <property name="targetObject" ref="clearData"/>
+                            <property name="targetObject" ref="deleInvalidAcc"/>
                             <property name="targetMethod" value="execute"/>
                             <property name="concurrent" value="false"/>
                         </bean>
