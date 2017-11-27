@@ -126,7 +126,7 @@ public class LocationPo implements Comparable<LocationPo>{
     @Override
     public int compareTo(LocationPo o) {
         int ret = type-o.getType();
-        ret = ename.compareTo(o.getEname());
+        ret = (ret==0?ename.compareTo(o.getEname()):ret);
         return ret ==0?id-o.getId():ret;
     }
     
