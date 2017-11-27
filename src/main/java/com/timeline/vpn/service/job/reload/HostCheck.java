@@ -42,6 +42,7 @@ public class HostCheck extends ReloadJob {
 
     public void reload() {
         init();
+        List<String> errorList = new ArrayList<>();
         for(String ip :myIpList){
             int count = 0;
             while(count<3){
@@ -52,16 +53,15 @@ public class HostCheck extends ReloadJob {
                         String title = "服务器 ping 失败："+ip;
                         LOGGER.error(title);
                         MailUtil.sendMail(title, title);
-                        errorIp.add(ip);
+                        errorList.add(ip);
                     }
-                }else{
-                    errorIp.remove(ip);
-                    break;
                 }
             }
             LOGGER.info("check {} finish",ip);
         }
-        LOGGER.error("异常的服务器:"+errorIp);
+        LOGGER.error("异常的服务器:"+errorList);
+        errorIp.clear();
+        errorIp.addAll(errorList);
         
     }
   public static boolean isMyHost(String ip){
