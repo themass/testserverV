@@ -29,7 +29,7 @@ public class DeviceUtil {
     public static final String ANDROID = "android";
     public static final String IOS = "ios";
     private static final String FORMAT = "000";
-    private static final String VPNVERSION = "(VPN|LIFE)/(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
+    private static final String VPNVERSION = "(VPN|LIFE|SEX|SEX_TEMP)/(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
     private static final String DEVID = "devid";
     private static final int VERSION_COUNT = 4;
     private static final String HTTP_UA = "user-agent";
@@ -123,7 +123,7 @@ public class DeviceUtil {
         return new Locale(language);
     }
     public static void main(String[]args){
-        String str = "VPN/1.0.2.1";
+        String str = "SEX/1.0.2.1";
         Matcher matcher = pattern.matcher(str);
         System.out.println(matcher.find());
         System.out.println(matcher.group(0));

@@ -56,6 +56,9 @@ public class FileIpCache extends ReloadJob {
     }
     public static String  getHost(String type,String extra){
         HashMultimap<String, String> map = configMap.get(type);
+        if(map==null){
+               return null;
+        }
         Set<String> set = map.get(extra);
         return (String)set.toArray()[(RandomUtils.nextInt(0, set.size()))];
     }

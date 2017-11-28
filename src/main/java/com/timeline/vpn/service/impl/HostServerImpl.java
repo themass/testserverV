@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.VoBuilder;
+import com.timeline.vpn.VoBuilder.BuildAction;
 import com.timeline.vpn.dao.db.DnsResverDao;
 import com.timeline.vpn.dao.db.HostDao;
 import com.timeline.vpn.dao.db.LocationDao;
@@ -24,8 +26,6 @@ import com.timeline.vpn.model.vo.HostVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.LocationVo;
 import com.timeline.vpn.model.vo.ServerVo;
-import com.timeline.vpn.model.vo.VoBuilder;
-import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.HostService;
 import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.job.reload.HostIpCache;

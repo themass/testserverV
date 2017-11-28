@@ -11,10 +11,11 @@ import org.springframework.util.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.VoBuilder;
+import com.timeline.vpn.VoBuilder.BuildAction;
 import com.timeline.vpn.dao.db.AppInfoDao;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.ImgChannelDao;
-import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.SoundChannelDao;
 import com.timeline.vpn.dao.db.TextChannelDao;
 import com.timeline.vpn.dao.db.VersionDao;
@@ -46,10 +47,9 @@ import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.TextItemVo;
 import com.timeline.vpn.model.vo.TextItemsVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
-import com.timeline.vpn.model.vo.VoBuilder;
-import com.timeline.vpn.model.vo.VoBuilder.BuildAction;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.UserService;
+import com.timeline.vpn.service.impl.recommend.RecommendServiceProxy;
 import com.timeline.vpn.service.job.reload.ZhIpCache;
 
 /**
@@ -63,7 +63,7 @@ public class DataServiceImpl implements DataService {
     @Autowired
     private VersionDao versionDao;
     @Autowired
-    private RecommendDao recommendDao;
+    private RecommendServiceProxy recommendServiceProxy;
     @Autowired
     private IWannaDao iWannaDao;
     @Autowired
@@ -85,7 +85,7 @@ public class DataServiceImpl implements DataService {
         int type = baseQuery.getUser()==null?Constant.RecommendType.TYPE_OTHER:
             (baseQuery.getUser().getLevel()==Constant.UserLevel.LEVEL_FREE?Constant.RecommendType.TYPE_REG:Constant.RecommendType.TYPE_VIP);
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<RecommendPo> poList = recommendDao.getPage(type);
+        List<RecommendPo> poList = recommendServiceProxy.getPage(type);
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
 
             @Override
@@ -102,7 +102,7 @@ public class DataServiceImpl implements DataService {
     public InfoListVo<RecommendVo> getRecommendVipPage( final BaseQuery baseQuery, PageBaseParam param) {
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<RecommendPo> poList = recommendDao.getVipPage();
+        List<RecommendPo> poList = recommendServiceProxy.getVipPage();
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
 
             @Override
@@ -174,7 +174,7 @@ public class DataServiceImpl implements DataService {
     @Override
     public InfoListVo<RecommendVo> getRecommendRecPage(BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<RecommendPo> poList = recommendDao.getRecoPage();
+        List<RecommendPo> poList = recommendServiceProxy.getRecoPage();
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
     }
 

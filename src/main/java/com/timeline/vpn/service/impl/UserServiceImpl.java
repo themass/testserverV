@@ -13,9 +13,9 @@ import org.springframework.util.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.dao.db.DevUseinfoDao;
 import com.timeline.vpn.dao.db.RadacctDao;
-import com.timeline.vpn.dao.db.RecommendDao;
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.exception.LoginException;
@@ -33,11 +33,11 @@ import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.RegCodeVo;
 import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.UserVo;
-import com.timeline.vpn.model.vo.VoBuilder;
 import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.RegAuthService;
 import com.timeline.vpn.service.UserService;
+import com.timeline.vpn.service.impl.recommend.RecommendServiceProxy;
 import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.ScoreCalculate;
 
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RadacctDao radacctDao;
     @Autowired
-    private RecommendDao recommendDao;
+    private RecommendServiceProxy recommendServiceProxy;
 
     public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName) {
         DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
@@ -197,12 +197,12 @@ public class UserServiceImpl implements UserService {
         po.setName(baseQuery.getUser().getName());
         po.setCreateTime(new Date());
         po.setColor(Constant.colorBg.get(RandomUtils.nextInt() % Constant.colorBg.size()));
-        recommendDao.replaceCustome(po);
+        recommendServiceProxy.replaceCustome(po);
     }
 
     @Override
     public void delCustome(BaseQuery baseQuery, int id) {
-        recommendDao.delCustome(id);
+        recommendServiceProxy.delCustome(id);
     }
 
     @Override
@@ -210,9 +210,9 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList ;
         if(baseQuery.getUser().getName().equals("themass")){
-            poList = recommendDao.getCustomeAllPage();
+            poList = recommendServiceProxy.getCustomeAllPage();
         }else{
-            poList = recommendDao.getCustomePage(baseQuery.getUser().getName());
+            poList = recommendServiceProxy.getCustomePage(baseQuery.getUser().getName());
         }
         for(int index=0;index<poList.size();index++){
             if(StringUtils.isEmpty(poList.get(index).getColor()))
