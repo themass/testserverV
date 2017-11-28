@@ -2,6 +2,7 @@ package com.timeline.vpn.service;
 
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
+import com.timeline.vpn.model.vo.AppInfoVo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.ImgItemVo;
 import com.timeline.vpn.model.vo.ImgItemsVo;
@@ -41,6 +42,7 @@ public interface DataService {
     public InfoListVo<ImgItemsVo> getImgItems(BaseQuery baseQuery, PageBaseParam param,String channel);
     public InfoListVo<ImgItemVo> getImgItem(BaseQuery baseQuery, String url);
     public InfoListVo<RecommendVo> getVideoPage(BaseQuery baseQuery,PageBaseParam param);
+    public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery);
     
 }
 

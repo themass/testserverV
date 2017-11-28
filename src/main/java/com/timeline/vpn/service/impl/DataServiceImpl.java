@@ -1,6 +1,5 @@
 package com.timeline.vpn.service.impl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +11,7 @@ import org.springframework.util.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.dao.db.AppInfoDao;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.ImgChannelDao;
 import com.timeline.vpn.dao.db.RecommendDao;
@@ -22,6 +22,7 @@ import com.timeline.vpn.dao.db.VideoDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
+import com.timeline.vpn.model.po.AppInfoPo;
 import com.timeline.vpn.model.po.AppVersion;
 import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.ImgChannelPo;
@@ -34,6 +35,7 @@ import com.timeline.vpn.model.po.TextChannelPo;
 import com.timeline.vpn.model.po.TextItemPo;
 import com.timeline.vpn.model.po.TextItemsPo;
 import com.timeline.vpn.model.po.VideoPo;
+import com.timeline.vpn.model.vo.AppInfoVo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.ImgItemVo;
 import com.timeline.vpn.model.vo.ImgItemsVo;
@@ -74,6 +76,8 @@ public class DataServiceImpl implements DataService {
     private ImgChannelDao imgChannelDao;
     @Autowired
     private VideoDao videoDao;
+    @Autowired
+    private AppInfoDao appInfoDao;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -96,9 +100,6 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public InfoListVo<RecommendVo> getRecommendVipPage( final BaseQuery baseQuery, PageBaseParam param) {
-        if("001000002009".compareTo(baseQuery.getAppInfo().getVersion())==0){
-            return new InfoListVo(new ArrayList<>());
-        }
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendDao.getVipPage();
@@ -325,6 +326,12 @@ public class DataServiceImpl implements DataService {
                 t.setParam(i.getUrl());
             }
         });
+    }
+
+    @Override
+    public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery) {
+        List<AppInfoPo> list = appInfoDao.getAll();
+        return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
     }
 
 }

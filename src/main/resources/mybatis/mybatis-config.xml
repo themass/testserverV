@@ -34,6 +34,8 @@
 		<typeAlias alias="ImgItemsItemPo" type="com.timeline.vpn.model.po.ImgItemsItemPo" />
 		<typeAlias alias="BlackDevPo" type="com.timeline.vpn.model.po.BlackDevPo" />
 		<typeAlias alias="VideoPo" type="com.timeline.vpn.model.po.VideoPo" />
+		<typeAlias alias="AppInfoPo" type="com.timeline.vpn.model.po.AppInfoPo" />
+		
 	</typeAliases>
 	<typeHandlers>
         <typeHandler javaType="String" jdbcType="BLOB"
