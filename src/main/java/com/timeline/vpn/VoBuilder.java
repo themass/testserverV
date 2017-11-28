@@ -1,4 +1,4 @@
-package com.timeline.vpn.model.vo;
+package com.timeline.vpn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,12 +13,19 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.Page;
-import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.DnsResverPo;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.RadacctState;
+import com.timeline.vpn.model.vo.DnsResverItemVo;
+import com.timeline.vpn.model.vo.DnsResverVo;
+import com.timeline.vpn.model.vo.HostVo;
+import com.timeline.vpn.model.vo.IWannaVo;
+import com.timeline.vpn.model.vo.InfoListVo;
+import com.timeline.vpn.model.vo.ServerVo;
+import com.timeline.vpn.model.vo.StateUseVo;
+import com.timeline.vpn.service.strategy.IAppAgent;
 import com.timeline.vpn.util.ArrayUtil;
 
 /**
@@ -171,6 +178,14 @@ public class VoBuilder {
 
     public static interface BuildAction<I, T> {
         public void action(I i, T t);
+    }
+
+    public static <T extends IAppAgent> void buildServiceProxy(Map<String, T> serviceMap,
+            Map<String, T> map) {
+        for (Map.Entry<String, T> item : serviceMap.entrySet()) {
+            map.put(item.getValue().getAgent(), item.getValue());
+        }
+        LOGGER.info("buildServiceProxy:" + map);  
     }
 }
 

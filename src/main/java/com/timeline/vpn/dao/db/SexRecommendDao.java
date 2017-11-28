@@ -12,7 +12,7 @@ import com.timeline.vpn.model.po.RecommendPo;
  * @date 2015年12月14日 下午7:13:46
  * @version V1.0
  */
-public interface RecommendDao extends BaseDBDao<RecommendPo> {
+public interface SexRecommendDao extends BaseDBDao<RecommendPo> {
     public List<RecommendPo> getPage(@Param("type")int type);
     public List<RecommendPo> getVipPage();
     public List<RecommendPo> getCustomePage(@Param("name")String name);

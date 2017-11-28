@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.timeline.vpn.dao.db.RecommendDao">
+<mapper namespace="com.timeline.vpn.dao.db.SexRecommendDao">
 	<resultMap id="RecommendMap" type="RecommendPo">
 		<id column="id" property="id" />
 		<result column="title" property="title" />
@@ -32,19 +32,19 @@
 		<result column="createTime" property="createTime" />
 	</resultMap>
 	<select id="getAll" resultMap="RecommendMap">
-		select * from vpn.recommend where enable=1 order by sort asc
+		select * from vpn.recommend_sex where enable=1 order by sort asc
 	</select>
 	<select id="getPage" resultMap="RecommendMap">
-		select * from vpn.recommend where enable=1 and type &lt;= #{type} order by sort asc
+		select * from vpn.recommend_sex where enable=1 and type &lt;= #{type} order by sort asc
 	</select>
 	<select id="getRecoPage" resultMap="RecommendMap">
-		select * from vpn.recommendReco where enable=1 order by sort asc
+		select * from vpn.recommendReco_sex where enable=1 order by sort asc
 	</select>
 	<select id="getVipPage" resultMap="RecommendMap">
-		select * from vpn.recommendVip where enable=1 order by sort asc
+		select * from vpn.recommendVip_sex where enable=1 order by sort asc
 	</select>
 	<select id="get" resultMap="RecommendMap">
-		select * from vpn.recommend where enable=1
+		select * from vpn.recommend_sex where enable=1
 	</select>
 	<select id="getCustomePage" resultMap="RecommendCustomeMap">
 		select * from vpn.recommendCustome where name=#{name} and enable=1 order by createTime desc
