@@ -75,9 +75,15 @@ public class Constant {
     public static final String HTTP_UA = "user-agent";
     public static final String VPN = "VPN";
     public static final String LIFE = "LIFE";
+    public static final String SEX = "SEX";
+    public static final String SEX_TEMP = "SEX_TEMP";
     
     public static final String HTTP_TOKEN_KEY = "Vpn-Token";
     public static final String HTTP_TOKEN_LIFE_KEY = "Life-Token";
+    public static final String HTTP_TOKEN_SEX_KEY = "Sex-Token";
+    public static final String HTTP_TOKEN_SEX_TEMP_KEY = "Sex-Token";
+    
+    
     public static final String HTTP_ATTR_TOKEN = "token_key";
     public static final String HTTP_ATTR_RET = "ret_key";
     public static final String LANG = "Accept-Language";

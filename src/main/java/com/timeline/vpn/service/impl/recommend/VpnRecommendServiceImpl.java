@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.VpnRecommendDao;
 import com.timeline.vpn.model.po.RecommendPo;
 
@@ -54,7 +55,7 @@ public class VpnRecommendServiceImpl implements BaseRecommendServie{
 
     @Override
     public String getAgent() {
-        return "VPN";
+        return Constant.VPN;
     }
 
 }

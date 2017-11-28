@@ -40,8 +40,8 @@ public class HostFilter implements Filter{
             app.setTokenHeader("1111");
             app.setUserIp(UrlUtil.getIpAddr(request));
             app.setDevId("11111111111111111111");
-            DevAppContext.set(app);
             app.setChannel("VPN");
+            DevAppContext.set(app);
         }else{
             DevApp app = DeviceUtil.getAPPInfo(request);
             //TODO 暂时注释;
