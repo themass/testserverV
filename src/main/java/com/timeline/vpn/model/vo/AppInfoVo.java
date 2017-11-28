@@ -10,7 +10,7 @@ public class AppInfoVo {
     private String desc;
     private String date;
     private String img;
-
+    private String url;
     public String getName() {
         return name;
     }
@@ -41,6 +41,14 @@ public class AppInfoVo {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 

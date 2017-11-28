@@ -11,6 +11,7 @@ public class AppInfoPo {
     private String desc;
     private String date;
     private String img;
+    private String url;
     public int getId() {
         return id;
     }
@@ -49,6 +50,14 @@ public class AppInfoPo {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 
