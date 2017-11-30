@@ -18,16 +18,16 @@
 	    select * from vpn.videoitems
 	</select>
 	<select id="getChannel" resultMap="VideoChannelMap">
-	    select * from vpn.videochannel
+	    select * from vpn.videochannel 
 	</select>
 	<select id="getChannelItems" resultMap="VideoMap">
-	    select * from vpn.videoitems
+	    select * from vpn.videoitems where channel=#{channel}
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
 	    select * from vpn.video_user
 	</select>
 	<select id="getUserItems" resultMap="VideoUserItemMap">
-	    select * from vpn.video_user_item
+	    select * from vpn.video_user_item where userId=#{userId}
 	</select>
 	
 </mapper>
