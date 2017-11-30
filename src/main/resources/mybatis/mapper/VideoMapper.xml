@@ -24,7 +24,7 @@
 	    select * from vpn.videoitems where channel=#{channel}
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
-	    select * from vpn.video_user
+	    select * from vpn.video_user order by count desc
 	</select>
 	<select id="getUserItems" resultMap="VideoUserItemMap">
 	    select * from vpn.video_user_item where userId=#{userId}
