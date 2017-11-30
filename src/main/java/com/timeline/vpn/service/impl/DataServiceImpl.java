@@ -383,7 +383,7 @@ public class DataServiceImpl implements DataService {
                 t.setImg(i.getPic());
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
-                t.setParam(i.getCount()+"");
+                t.setParam(i.getCount()+"部");
             }
         });
     }
