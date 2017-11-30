@@ -35,7 +35,10 @@ import com.timeline.vpn.model.po.SoundItems;
 import com.timeline.vpn.model.po.TextChannelPo;
 import com.timeline.vpn.model.po.TextItemPo;
 import com.timeline.vpn.model.po.TextItemsPo;
+import com.timeline.vpn.model.po.VideoChannelPo;
 import com.timeline.vpn.model.po.VideoPo;
+import com.timeline.vpn.model.po.VideoUserItemPo;
+import com.timeline.vpn.model.po.VideoUserPo;
 import com.timeline.vpn.model.vo.AppInfoVo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.ImgItemVo;
@@ -332,6 +335,75 @@ public class DataServiceImpl implements DataService {
     public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery) {
         List<AppInfoPo> list = appInfoDao.getAll();
         return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getVideoChannel(BaseQuery baseQuery) {
+        List<VideoChannelPo> list = videoDao.getChannel();
+        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoChannelPo,RecommendVo>(){
+            @Override
+            public void action(VideoChannelPo i, RecommendVo t) {
+                t.setActionUrl(i.getUrl());
+                t.setTitle(i.getName());
+                t.setImg(i.getPic());
+                t.setAdsPopShow(false);
+                t.setAdsShow(true);
+                t.setParam(i.getChannel());
+            }
+        });
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getVideoChannelItemsPage(BaseQuery baseQuery,
+            PageBaseParam param, String channel) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<VideoPo> list = videoDao.getChannelItems(channel);
+        return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
+            @Override
+            public void action(VideoPo i, RecommendVo t) {
+                t.setActionUrl(i.getUrl());
+                t.setTitle(i.getName());
+                t.setImg(i.getPic());
+                t.setAdsPopShow(false);
+                t.setAdsShow(true);
+//                t.setParam(i.getUrl());
+            }
+        });
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getVideoUserPage(BaseQuery baseQuery, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<VideoUserPo> list = videoDao.getUsers();
+        return VoBuilder.buildPageInfoVo((Page<VideoUserPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserPo,RecommendVo>(){
+            @Override
+            public void action(VideoUserPo i, RecommendVo t) {
+                t.setActionUrl(i.getUserId());
+                t.setTitle(i.getName());
+                t.setImg(i.getPic());
+                t.setAdsPopShow(false);
+                t.setAdsShow(true);
+                t.setParam(i.getUserId());
+            }
+        });
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getVideoUserItemsPage(BaseQuery baseQuery, PageBaseParam param,
+            String userId) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<VideoUserItemPo> list = videoDao.getUserItems(userId);
+        return VoBuilder.buildPageInfoVo((Page<VideoUserItemPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserItemPo,RecommendVo>(){
+            @Override
+            public void action(VideoUserItemPo i, RecommendVo t) {
+                t.setActionUrl(i.getUrl());
+                t.setTitle(i.getName());
+                t.setImg(i.getPic());
+                t.setAdsPopShow(false);
+                t.setAdsShow(true);
+                t.setParam(i.getUserId());
+            }
+        });
     }
 
 }

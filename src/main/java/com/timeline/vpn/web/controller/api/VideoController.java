@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.timeline.vpn.model.form.PageBaseForm;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -26,6 +27,22 @@ public class VideoController extends BaseController {
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getVideoPage(baseQuery, form.toParam()));
     }
-    
+    @RequestMapping(value = "/channel.json", method = RequestMethod.GET)
+    public JsonResult channel(@UserInfo BaseQuery baseQuery) {
+        return new JsonResult(dataService.getVideoChannel(baseQuery));
+    }
+    @RequestMapping(value = "/channel/items.json", method = RequestMethod.GET)
+    public JsonResult channelItems(@UserInfo BaseQuery baseQuery,
+            @ModelAttribute @Valid PageBaseForm form,@RequestParam String channel) {
+        return new JsonResult(dataService.getVideoChannelItemsPage(baseQuery, form.toParam(),channel));
+    } @RequestMapping(value = "/user.json", method = RequestMethod.GET)
+    public JsonResult user(@UserInfo BaseQuery baseQuery,
+            @ModelAttribute @Valid PageBaseForm form) {
+        return new JsonResult(dataService.getVideoUserPage(baseQuery, form.toParam()));
+    } @RequestMapping(value = "/user/items.json", method = RequestMethod.GET)
+    public JsonResult userItems(@UserInfo BaseQuery baseQuery,
+            @ModelAttribute @Valid PageBaseForm form,@RequestParam String userId) {
+        return new JsonResult(dataService.getVideoUserItemsPage(baseQuery, form.toParam(),userId));
+    }
 }
 

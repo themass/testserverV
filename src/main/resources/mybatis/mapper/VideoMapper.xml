@@ -4,7 +4,30 @@
 	<resultMap id="VideoMap" type="VideoPo">
 		<id column="id" property="id" />
 	</resultMap>
+	<resultMap id="VideoChannelMap" type="VideoChannelPo">
+		<id column="id" property="id" />
+	</resultMap>
+	<resultMap id="VideoUserItemMap" type="VideoUserItemPo">
+		<id column="id" property="id" />
+	</resultMap>
+	<resultMap id="VideoUserMap" type="VideoUserPo">
+		<id column="id" property="id" />
+	</resultMap>
+	
 	<select id="getPage" resultMap="VideoMap">
 	    select * from vpn.videoitems
 	</select>
+	<select id="getChannel" resultMap="VideoChannelMap">
+	    select * from vpn.videochannel
+	</select>
+	<select id="getChannelItems" resultMap="VideoMap">
+	    select * from vpn.videoitems
+	</select>
+	<select id="getUsers" resultMap="VideoUserMap">
+	    select * from vpn.video_user
+	</select>
+	<select id="getUserItems" resultMap="VideoUserItemMap">
+	    select * from vpn.video_user_item
+	</select>
+	
 </mapper>
