@@ -349,6 +349,7 @@ public class DataServiceImpl implements DataService {
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
                 t.setParam(i.getChannel());
+                t.setShowLogo(i.getCount()+"部");
             }
         });
     }
@@ -383,7 +384,8 @@ public class DataServiceImpl implements DataService {
                 t.setImg(i.getPic());
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
-                t.setParam(i.getCount()+"部");
+                t.setParam(i.getUserId());
+                t.setShowLogo(i.getCount()+"部");
             }
         });
     }

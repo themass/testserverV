@@ -23,6 +23,7 @@ public class RecommendVo {
     private String param;
     private String minVersion;
     private Boolean newShow;
+    private String showLogo;
     public String getTitle() {
         return title;
     }
@@ -133,6 +134,14 @@ public class RecommendVo {
 
     public void setNewShow(Boolean newShow) {
         this.newShow = newShow;
+    }
+
+    public String getShowLogo() {
+        return showLogo;
+    }
+
+    public void setShowLogo(String showLogo) {
+        this.showLogo = showLogo;
     }
     
     
