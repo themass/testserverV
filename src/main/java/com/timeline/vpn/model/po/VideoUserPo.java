@@ -15,6 +15,7 @@ public class VideoUserPo {
     private Float rate;
     private Integer showType; 
     private String userId;
+    private Integer count;
     public Integer getId() {
         return id;
     }
@@ -58,6 +59,13 @@ public class VideoUserPo {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+    public Integer getCount() {
+        return count;
+    }
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+    
     
     
 }
