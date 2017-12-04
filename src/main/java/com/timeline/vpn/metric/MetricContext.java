@@ -70,6 +70,7 @@ public class MetricContext {
                         .tag("host", hostName)
                         .tag("monitor_name", name)
                         .field("count", count)
+                        .field("keep", 1)
                         .build();
                 influxDB.write(database, null, point);
             }
