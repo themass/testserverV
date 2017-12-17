@@ -55,6 +55,8 @@ public class HostCheck extends ReloadJob {
                         MailUtil.sendMail(title, title);
                         errorList.add(ip);
                     }
+                }else{
+                    break;
                 }
             }
             LOGGER.info("check {} finish",ip);
