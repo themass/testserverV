@@ -113,6 +113,9 @@ public class VoBuilder {
     public static IWannaVo buildIWannaVo(IWannaPo po, String name) {
         IWannaVo vo = new IWannaVo();
         BeanUtils.copyProperties(po, vo);
+        if(!StringUtils.isEmpty(po.getIpLocal())){
+            vo.setName(vo.getName()+" - "+po.getIpLocal());
+        }
         vo.setLike(StringUtils.isNotBlank(po.getLikeUsers()) && po.getLikeUsers().contains(name));
         vo.setTime(po.getCreateTime() != null ? po.getCreateTime().getTime() : 0);
         return vo;

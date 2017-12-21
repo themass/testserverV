@@ -3,17 +3,13 @@
 <mapper namespace="com.timeline.vpn.dao.db.LocationDao">
 	<resultMap id="LocationMap" type="LocationPo">
 		<id column="id" property="id" />
-		<result column="imag" property="imag" />
-		<result column="name" property="name" />
-		<result column="ename" property="ename" />
-		<result column="type" property="type" />
-		<result column="enable" property="enable" />
-		<result column="cityName" property="cityName" />
-		<result column="level" property="level" />
 	</resultMap>
 
 	<select id="getAll" resultMap="LocationMap">
-		select * from vpn.location where enable=1
+		select * from vpn.location  where enable=1
+	</select>
+	<select id="getAllInfo" resultMap="LocationMap">
+		select l.*,h.id hostId,h.gateway,h.port ,h.weight from vpn.location l left join vpn.host h  on l.id=h.location  and h.enable=1 where l.enable=1 ;
 	</select>
 	<select id="get" resultMap="LocationMap">
 		select * from vpn.location where id = #{id} and enable=1

@@ -30,6 +30,10 @@
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/**/*.json" />
+			<bean class="com.timeline.vpn.web.common.interceptor.BlackdevHandlerInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.json" />
 			<mvc:exclude-mapping path="/**/version.json"/>
 			<mvc:exclude-mapping path="/**/login.json"/>
 			<mvc:exclude-mapping path="/**/logout.json"/>

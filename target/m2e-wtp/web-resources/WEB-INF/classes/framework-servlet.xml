@@ -11,7 +11,7 @@
 		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
 	<context:component-scan base-package="com.timeline.vpn.web.controller" use-default-filters="false">
-	    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  
+	    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
 
 	<!-- json接口性能监控拦截器 -->
@@ -30,9 +30,14 @@
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/**/*.json" />
+			<bean class="com.timeline.vpn.web.common.interceptor.BlackdevHandlerInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.json" />
 			<mvc:exclude-mapping path="/**/version.json"/>
 			<mvc:exclude-mapping path="/**/login.json"/>
 			<mvc:exclude-mapping path="/**/logout.json"/>
+			<mvc:exclude-mapping path="/api/monitor/collect.json"/>
 			<bean class="com.timeline.vpn.web.common.interceptor.VersionHandlerInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
@@ -112,7 +117,6 @@
 			</bean>
 		</property>
 	</bean>
-
 	<bean id="handlerExceptionResolver"
 		class="com.timeline.vpn.web.common.CommonHandlerExceptionResolver" />
  	<!-- 上传文件 -->

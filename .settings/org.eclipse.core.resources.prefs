@@ -5,4 +5,5 @@ encoding//src/main/resources/conf/pro/message_zh.properties=UTF-8
 encoding//src/main/resources/conf/test=UTF-8
 encoding//src/main/resources/conf/test/message_en.properties=UTF-8
 encoding//src/main/resources/conf/test/message_zh.properties=UTF-8
+encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8

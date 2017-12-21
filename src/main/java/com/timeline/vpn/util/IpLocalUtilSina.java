@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
  * @version V1.0
  */
 public class IpLocalUtilSina {
+//    public static final String IP_HOST="http://ip.taobao.com/service/getIpInfo.php?ip=%s";
     public static final String IP_HOST="http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=%s";
     public static String getLocal(String ip){
         String url = String.format(IP_HOST, ip);
@@ -35,6 +36,7 @@ public class IpLocalUtilSina {
         private String district;
         private String isp;
         private String desc;
+        private String area;
         public int getRet() {
             return ret;
         }
@@ -78,6 +80,11 @@ public class IpLocalUtilSina {
             this.desc = desc;
         }
     }
+    
+    public static String getIpHost() {
+        return IP_HOST;
+    }
+
     public static void main(String[]args){
         System.out.println(getLocal("45.77.35.56"));
     }

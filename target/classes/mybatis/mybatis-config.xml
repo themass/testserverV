@@ -20,7 +20,33 @@
 		<typeAlias alias="DnsResverPo" type="com.timeline.vpn.model.po.DnsResverPo" />
 		<typeAlias alias="Radacct" type="com.timeline.vpn.model.po.Radacct" />
 		<typeAlias alias="RadacctState" type="com.timeline.vpn.model.po.RadacctState" />
+		<typeAlias alias="CollectPo" type="com.timeline.vpn.model.po.CollectPo" />
+		<typeAlias alias="SoundChannel" type="com.timeline.vpn.model.po.SoundChannel" />
+		<typeAlias alias="SoundItems" type="com.timeline.vpn.model.po.SoundItems" />
+		
+		<typeAlias alias="TextChannelPo" type="com.timeline.vpn.model.po.TextChannelPo" />
+		<typeAlias alias="TextItemsPo" type="com.timeline.vpn.model.po.TextItemsPo" />
+		<typeAlias alias="TextItemPo" type="com.timeline.vpn.model.po.TextItemPo" />
+		<typeAlias alias="FileIpPo" type="com.timeline.vpn.model.po.FileIpPo" />
+		
+		<typeAlias alias="ImgChannelPo" type="com.timeline.vpn.model.po.ImgChannelPo" />
+		<typeAlias alias="ImgItemsPo" type="com.timeline.vpn.model.po.ImgItemsPo" />
+		<typeAlias alias="ImgItemsItemPo" type="com.timeline.vpn.model.po.ImgItemsItemPo" />
+		<typeAlias alias="BlackDevPo" type="com.timeline.vpn.model.po.BlackDevPo" />
+		
+		<typeAlias alias="VideoPo" type="com.timeline.vpn.model.po.VideoPo" />
+		<typeAlias alias="VideoChannelPo" type="com.timeline.vpn.model.po.VideoChannelPo" />
+		<typeAlias alias="VideoUserItemPo" type="com.timeline.vpn.model.po.VideoUserItemPo" />
+		<typeAlias alias="VideoUserPo" type="com.timeline.vpn.model.po.VideoUserPo" />
+		
+		
+		<typeAlias alias="AppInfoPo" type="com.timeline.vpn.model.po.AppInfoPo" />
+		
 	</typeAliases>
+	<typeHandlers>
+        <typeHandler javaType="String" jdbcType="BLOB"
+            		 handler="com.timeline.vpn.dao.BlobStringTypeHandler"/>
+    </typeHandlers>
 	<plugins>
 		<plugin interceptor="com.github.pagehelper.PageHelper">
 			<property name="dialect" value="mysql" />

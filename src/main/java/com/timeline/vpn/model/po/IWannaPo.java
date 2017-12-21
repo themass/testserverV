@@ -15,6 +15,8 @@ public class IWannaPo {
     private Date createTime;
     private String content;
     private boolean finished;
+    private String ipLocal;
+    private String ip;
 
     public long getId() {
         return id;
@@ -70,6 +72,22 @@ public class IWannaPo {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    public String getIpLocal() {
+        return ipLocal;
+    }
+
+    public void setIpLocal(String ipLocal) {
+        this.ipLocal = ipLocal;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
 

@@ -9,6 +9,8 @@
 		<result column="create_time" property="createTime" />
 		<result column="content" property="content" />
 		<result column="finished" property="finished" />
+		<result column="ip" property="ip" />
+		<result column="ip_local" property="ipLocal" />
 	</resultMap>
 	<insert id="insert">
 		insert into

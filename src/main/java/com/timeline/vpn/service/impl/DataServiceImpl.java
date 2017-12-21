@@ -159,6 +159,7 @@ public class DataServiceImpl implements DataService {
         po.setLikes(0);
         po.setLikeUsers(Constant.superMan);
         po.setName(baseQuery.getUser().getName());
+        po.setIp(baseQuery.getAppInfo().getUserIp());
         iWannaDao.insert(po);
         return VoBuilder.buildIWannaVo(po, baseQuery.getUser().getName());
     }
