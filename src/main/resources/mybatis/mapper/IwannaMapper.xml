@@ -14,9 +14,9 @@
 	</resultMap>
 	<insert id="insert">
 		insert into
-		vpn.iwanna(name,likes,like_users,create_time,content,finished)
+		vpn.iwanna(name,likes,like_users,create_time,content,finished,ip)
 		values
-		(#{name},#{likes},#{likeUsers},#{createTime},#{content},#{finished})
+		(#{name},#{likes},#{likeUsers},#{createTime},#{content},#{finished},#{ip})
 	</insert>
 	<select id="getAll" resultMap="IWannaMap">
 		select * from vpn.iwanna order by create_time desc
