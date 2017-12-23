@@ -307,7 +307,7 @@ public class DataServiceImpl implements DataService {
                 t.setAdsShow(true);
                 t.setShowType(0);
                 t.setRate(1.2f);
-                t.setParam(i.getPics()+"张");
+                t.setShowLogo(i.getPics()+"张");
             }
         });
     }
