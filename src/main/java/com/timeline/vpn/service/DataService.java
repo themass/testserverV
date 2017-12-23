@@ -49,6 +49,8 @@ public interface DataService {
     public InfoListVo<RecommendVo> getVideoChannelItemsPage(BaseQuery baseQuery,PageBaseParam param,String channel);
     public InfoListVo<RecommendVo> getVideoUserPage(BaseQuery baseQuery,PageBaseParam param);
     public InfoListVo<RecommendVo> getVideoUserItemsPage(BaseQuery baseQuery,PageBaseParam param,String userId);
+    public InfoListVo<RecommendVo> getImgItemImgs(BaseQuery baseQuery, PageBaseParam param,
+            String channel);
     
 }
 

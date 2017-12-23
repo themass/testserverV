@@ -292,7 +292,24 @@ public class DataServiceImpl implements DataService {
         List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel);
         return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>) poList, ImgItemsVo.class,null);
     }
-
+    @Override
+    public InfoListVo<RecommendVo> getImgItemImgs(BaseQuery baseQuery, PageBaseParam param,
+            String channel) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel);
+        return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>)poList, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsPo,RecommendVo>(){
+            @Override
+            public void action(ImgItemsPo i, RecommendVo t) {
+                t.setActionUrl(i.getUrl());
+                t.setTitle(i.getName());
+                t.setImg(i.getPic());
+                t.setAdsPopShow(false);
+                t.setAdsShow(true);
+                t.setShowType(0);
+                t.setParam(i.getPics()+"张");
+            }
+        });
+    }
     @Override
     public InfoListVo<ImgItemVo> getImgItem(final BaseQuery baseQuery, String url) {
         List<ImgItemsItemPo> list = imgChannelDao.getItem(url);

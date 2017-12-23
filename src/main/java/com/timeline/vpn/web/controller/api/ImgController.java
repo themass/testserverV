@@ -33,6 +33,11 @@ public class ImgController extends BaseController {
             @ModelAttribute @Valid ChannelItemsForm form) {
         return new JsonResult(dataService.getImgItems(baseQuery, form.toParam(),form.getChannel()));
     }
+    @RequestMapping(value = "/items/img.json", method = RequestMethod.GET)
+    public JsonResult itemsImg(@UserInfo BaseQuery baseQuery,
+            @ModelAttribute @Valid ChannelItemsForm form) {
+        return new JsonResult(dataService.getImgItemImgs(baseQuery, form.toParam(),form.getChannel()));
+    }
     @RequestMapping(value = "/item.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,@RequestParam String itemUrl) {
         return new JsonResult(dataService.getImgItem(baseQuery, itemUrl));
