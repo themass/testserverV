@@ -36,6 +36,7 @@ public class NoappController extends BaseController {
     @RequestMapping(value = "/ping.json", method = RequestMethod.POST)
     public JsonResult ping(@UserInfo BaseQuery baseQuery,@RequestParam String pingCheck) {
         List<PingCheck> list = parse(pingCheck);
+        LOGGER.info(" ping check count="+list.size());
         for(PingCheck item:list)
             reportService.pingCheck(baseQuery, item.getType(),item.getIp());
         return Constant.RESULT_SUCCESS;
