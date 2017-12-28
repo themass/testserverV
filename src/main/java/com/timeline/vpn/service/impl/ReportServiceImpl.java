@@ -59,6 +59,10 @@ public class ReportServiceImpl implements ReportService{
         collectDao.add(po);
         
     }
-
+    @Override
+    public void pingCheck(BaseQuery baseQuery, Integer type, String ip) {
+        Metrics.count(Measure.ping_check.name(),type,ip);
+        
+    }
 }
 

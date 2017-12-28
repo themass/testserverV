@@ -7,6 +7,7 @@ package com.timeline.vpn.metric;
 public enum Measure {
     http,
     monitor,
+    ping_check,
     vpn_connect;
     public static Measure value(String value) {
         Measure[] measures = Measure.values();
