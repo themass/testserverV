@@ -303,12 +303,12 @@ public class DataServiceImpl implements DataService {
                 t.setActionUrl(i.getUrl());
                 t.setTitle(i.getName());
                 t.setImg(i.getPic());
-                if(!StringUtils.isEmpty(i.getPic()))
-                    if(i.getPic().contains("eroti-cart")){
-                        t.setImg("http://173.212.239.199/file/eroti/"+i.getId()+".jpg");
-                    }else if(i.getPic().contains("singlove.com")){
-                        t.setImg("http://173.212.239.199/file/hhh/"+i.getId()+".jpg");
-                    }
+//                if(!StringUtils.isEmpty(i.getPic()))
+//                    if(i.getPic().contains("eroti-cart")){
+//                        t.setImg("http://173.212.239.199/file/eroti/"+i.getId()+".jpg");
+//                    }else if(i.getPic().contains("singlove.com")){
+//                        t.setImg("http://173.212.239.199/file/hhh/"+i.getId()+".jpg");
+//                    }
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
                 t.setShowType(0);
@@ -327,8 +327,10 @@ public class DataServiceImpl implements DataService {
                 t.setRemoteUrl(i.getPicUrl());
                 if(!StringUtils.isEmpty(i.getPicUrl()))
                     if(i.getPicUrl().contains("eroti-cart")){
+                        t.setPicUrl("http://173.212.239.199/file/eroti/"+i.getId()+".jpg");
                         t.setOrigUrl("http://173.212.239.199/file/eroti/"+i.getId()+".jpg");
                     }else if(i.getPicUrl().contains("singlove.com")){
+                        t.setPicUrl("http://173.212.239.199/file/hhh/"+i.getId()+".jpg"));
                         t.setOrigUrl("http://173.212.239.199/file/hhh/"+i.getId()+".jpg");
                     }
                 if(!StringUtils.isEmpty(i.getPicUrl()))
