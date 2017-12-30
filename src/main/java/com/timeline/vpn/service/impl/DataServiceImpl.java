@@ -303,6 +303,11 @@ public class DataServiceImpl implements DataService {
                 t.setActionUrl(i.getUrl());
                 t.setTitle(i.getName());
                 t.setImg(i.getPic());
+                if(i.getPic().contains("eroti-cart")){
+                    t.setImg("http://173.212.239.199/file/eroti/"+i.getId()+".jpg");
+                }else if(i.getPic().contains("singlove.com")){
+                    t.setImg("http://173.212.239.199/file/hhh/"+i.getId()+".jpg");
+                }
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
                 t.setShowType(0);
