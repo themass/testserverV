@@ -330,7 +330,7 @@ public class DataServiceImpl implements DataService {
                         t.setPicUrl("http://173.212.239.199/file/eroti/"+i.getId()+".jpg");
                         t.setOrigUrl("http://173.212.239.199/file/eroti/"+i.getId()+".jpg");
                     }else if(i.getPicUrl().contains("singlove.com")){
-                        t.setPicUrl("http://173.212.239.199/file/hhh/"+i.getId()+".jpg"));
+                        t.setPicUrl("http://173.212.239.199/file/hhh/"+i.getId()+".jpg");
                         t.setOrigUrl("http://173.212.239.199/file/hhh/"+i.getId()+".jpg");
                     }
                 if(!StringUtils.isEmpty(i.getPicUrl()))
