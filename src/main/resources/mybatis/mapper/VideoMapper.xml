@@ -18,7 +18,7 @@
 	    select * from vpn.videoitems
 	</select>
 	<select id="getChannel" resultMap="VideoChannelMap">
-	    select * from vpn.videochannel where enable=1
+	    select * from vpn.videochannel where enable=1 and channelType=#{channelType}
 	</select>
 	<select id="getChannelItems" resultMap="VideoMap">
 	    select * from vpn.videoitems where channel=#{channel}

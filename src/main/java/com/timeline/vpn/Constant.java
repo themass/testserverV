@@ -74,7 +74,7 @@ public class Constant {
         // normal：原生，webview：webview打开
            public static final String NORMAL = "normal";
            public static final String WEBVIEW = "webview";
-       }
+    }
     public static final String VIDEO_CHANNEL_WEB_PRF = "web_";
 
     public static final JsonResult RESULT_SUCCESS =

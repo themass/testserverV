@@ -11,7 +11,6 @@ import org.springframework.util.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.timeline.vpn.Constant;
-import com.timeline.vpn.Constant.VideoShowType;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.VoBuilder.BuildAction;
 import com.timeline.vpn.dao.db.AppInfoDao;
@@ -378,8 +377,8 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public InfoListVo<RecommendVo> getVideoChannel(BaseQuery baseQuery) {
-        List<VideoChannelPo> list = videoDao.getChannel();
+    public InfoListVo<RecommendVo> getVideoChannel(BaseQuery baseQuery,String channelType) {
+        List<VideoChannelPo> list = videoDao.getChannel(channelType);
         return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoChannelPo,RecommendVo>(){
             @Override
             public void action(VideoChannelPo i, RecommendVo t) {
