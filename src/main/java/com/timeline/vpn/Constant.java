@@ -70,6 +70,13 @@ public class Constant {
         public static final int SERVER_TYPE_VIP = 1;
         public static final int SERVER_TYPE_VIP2 = 2;
     }
+    public static class VideoShowType{
+        // normal：原生，webview：webview打开
+           public static final String NORMAL = "normal";
+           public static final String WEBVIEW = "webview";
+       }
+    public static final String VIDEO_CHANNEL_WEB_PRF = "web_";
+
     public static final JsonResult RESULT_SUCCESS =
             new JsonResult(new RetInfoVo(true), Constant.ResultErrno.ERRNO_SUCCESS, null);
     public static final String HTTP_UA = "user-agent";

@@ -16,6 +16,7 @@ public class VideoPo {
     private Date updateTime;
     private Float rate;
     private Integer showType; 
+    private String videoType;
     public Integer getId() {
         return id;
     }
@@ -63,6 +64,12 @@ public class VideoPo {
     }
     public void setShowType(Integer showType) {
         this.showType = showType;
+    }
+    public String getVideoType() {
+        return videoType;
+    }
+    public void setVideoType(String videoType) {
+        this.videoType = videoType;
     }
     
     

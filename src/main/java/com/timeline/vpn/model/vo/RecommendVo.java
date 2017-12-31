@@ -24,6 +24,7 @@ public class RecommendVo {
     private String minVersion;
     private Boolean newShow;
     private String showLogo;
+    public Object extra;
     public String getTitle() {
         return title;
     }
@@ -142,6 +143,14 @@ public class RecommendVo {
 
     public void setShowLogo(String showLogo) {
         this.showLogo = showLogo;
+    }
+
+    public Object getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Object extra) {
+        this.extra = extra;
     }
     
     

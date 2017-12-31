@@ -23,6 +23,9 @@
 	<select id="getChannelItems" resultMap="VideoMap">
 	    select * from vpn.videoitems where channel=#{channel}
 	</select>
+	<select id="getWebChannelItems" resultMap="VideoMap">
+	    select * from vpn.videoitems_webview where channel=#{channel}
+	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
 	    select * from vpn.video_user order by count desc
 	</select>

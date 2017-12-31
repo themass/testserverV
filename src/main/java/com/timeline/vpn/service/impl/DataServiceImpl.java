@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.Constant.VideoShowType;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.VoBuilder.BuildAction;
 import com.timeline.vpn.dao.db.AppInfoDao;
@@ -397,7 +398,13 @@ public class DataServiceImpl implements DataService {
     public InfoListVo<RecommendVo> getVideoChannelItemsPage(BaseQuery baseQuery,
             PageBaseParam param, String channel) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<VideoPo> list = videoDao.getChannelItems(channel);
+        List<VideoPo> list = null;
+        if(channel.startsWith(Constant.VIDEO_CHANNEL_WEB_PRF)){
+            list = videoDao.getWebChannelItems(channel);
+        }else{
+            list = videoDao.getChannelItems(channel); 
+        }
+        
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
             public void action(VideoPo i, RecommendVo t) {
@@ -407,6 +414,7 @@ public class DataServiceImpl implements DataService {
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
 //                t.setParam(i.getUrl());
+                t.setExtra(i.getVideoType());
             }
         });
     }
