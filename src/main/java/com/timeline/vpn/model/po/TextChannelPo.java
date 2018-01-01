@@ -12,6 +12,8 @@ public class TextChannelPo {
     private String name;
     private String url;
     private Date updateTime;
+    private Float rate;
+    private Integer showType;
     public Integer getId() {
         return id;
     }
@@ -35,6 +37,18 @@ public class TextChannelPo {
     }
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+    public Float getRate() {
+        return rate;
+    }
+    public void setRate(Float rate) {
+        this.rate = rate;
+    }
+    public Integer getShowType() {
+        return showType;
+    }
+    public void setShowType(Integer showType) {
+        this.showType = showType;
     }
     
 }
