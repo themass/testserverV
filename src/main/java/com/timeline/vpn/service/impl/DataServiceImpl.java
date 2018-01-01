@@ -230,7 +230,7 @@ public class DataServiceImpl implements DataService {
                 t.setAdsShow(true);
 //                t.setShowType(0);
                 t.setParam(i.getUrl());
-                t.setRate(1.1f);
+//                t.setRate(1.1f);
             }
         });
     }
