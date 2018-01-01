@@ -194,7 +194,7 @@ public class DataServiceImpl implements DataService {
                 t.setImg(CdnChooseUtil.getFetchImageBaseUrl(baseQuery.getAppInfo().getUserIp(),i.getPic()));
                 t.setAdsPopShow(true);
                 t.setAdsShow(true);
-                t.setShowType(0);
+//                t.setShowType(0);
                 t.setParam(i.getUrl());
                 if(i.getRate()==null){
                     t.setRate(1.1f);
@@ -228,7 +228,7 @@ public class DataServiceImpl implements DataService {
                 t.setTitle(i.getName());
                 t.setAdsPopShow(true);
                 t.setAdsShow(true);
-                t.setShowType(0);
+//                t.setShowType(0);
                 t.setParam(i.getUrl());
                 t.setRate(1.1f);
             }
