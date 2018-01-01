@@ -8,7 +8,7 @@
 	<resultMap id="ImgItemsItemMap" type="ImgItemsItemPo">
 	</resultMap>
 	<select id="getAll" resultMap="ImgChannelMap">
-	    select * from vpn.imgchannel
+	    select * from vpn.imgchannel where enable=1
 	</select>
 	<select id="getByChannel" resultMap="ImgItemsMap">
 	    select * from vpn.imgitems where channel=#{channel} order by sortType desc,id asc
