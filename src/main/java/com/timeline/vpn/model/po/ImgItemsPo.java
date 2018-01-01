@@ -17,6 +17,8 @@ public class ImgItemsPo {
     private String baseUrl;
     private int pics;
     private String pic;
+    private Float rate;
+    private Integer showType;
     public Integer getId() {
         return id;
     }
@@ -70,6 +72,18 @@ public class ImgItemsPo {
     }
     public void setPic(String pic) {
         this.pic = pic;
+    }
+    public Float getRate() {
+        return rate;
+    }
+    public void setRate(Float rate) {
+        this.rate = rate;
+    }
+    public Integer getShowType() {
+        return showType;
+    }
+    public void setShowType(Integer showType) {
+        this.showType = showType;
     }
     
    
