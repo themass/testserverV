@@ -15,6 +15,7 @@ import com.timeline.vpn.model.po.ImgItemsPo;
  * @version V1.0
  */
 public interface ImgChannelDao extends BaseDBDao<ImgChannelPo> {
+    public List<ImgChannelPo> getChannel(@Param("channel")String channel);
     public List<ImgItemsPo> getByChannel(@Param("channel")String channel);
     public List<ImgItemsItemPo> getItem(@Param("itemUrl")String itemUrl);
 }

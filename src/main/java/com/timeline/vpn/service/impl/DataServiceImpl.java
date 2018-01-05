@@ -15,45 +15,22 @@ import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.VoBuilder.BuildAction;
 import com.timeline.vpn.dao.db.AppInfoDao;
 import com.timeline.vpn.dao.db.IWannaDao;
-import com.timeline.vpn.dao.db.ImgChannelDao;
-import com.timeline.vpn.dao.db.SoundChannelDao;
-import com.timeline.vpn.dao.db.TextChannelDao;
 import com.timeline.vpn.dao.db.VersionDao;
-import com.timeline.vpn.dao.db.VideoDao;
-import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.AppInfoPo;
 import com.timeline.vpn.model.po.AppVersion;
 import com.timeline.vpn.model.po.IWannaPo;
-import com.timeline.vpn.model.po.ImgChannelPo;
-import com.timeline.vpn.model.po.ImgItemsItemPo;
-import com.timeline.vpn.model.po.ImgItemsPo;
 import com.timeline.vpn.model.po.RecommendPo;
-import com.timeline.vpn.model.po.SoundChannel;
-import com.timeline.vpn.model.po.SoundItems;
-import com.timeline.vpn.model.po.TextChannelPo;
-import com.timeline.vpn.model.po.TextItemPo;
-import com.timeline.vpn.model.po.TextItemsPo;
-import com.timeline.vpn.model.po.VideoChannelPo;
-import com.timeline.vpn.model.po.VideoPo;
-import com.timeline.vpn.model.po.VideoUserItemPo;
-import com.timeline.vpn.model.po.VideoUserPo;
 import com.timeline.vpn.model.vo.AppInfoVo;
 import com.timeline.vpn.model.vo.IWannaVo;
-import com.timeline.vpn.model.vo.ImgItemVo;
-import com.timeline.vpn.model.vo.ImgItemsVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
-import com.timeline.vpn.model.vo.SoundItemsVo;
 import com.timeline.vpn.model.vo.StateUseVo;
-import com.timeline.vpn.model.vo.TextItemVo;
-import com.timeline.vpn.model.vo.TextItemsVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.impl.recommend.RecommendServiceProxy;
-import com.timeline.vpn.service.job.reload.ZhIpCache;
 
 /**
  * @author gqli
@@ -71,14 +48,6 @@ public class DataServiceImpl implements DataService {
     private IWannaDao iWannaDao;
     @Autowired
     private UserService userService;
-    @Autowired
-    private SoundChannelDao soundChannelDao;
-    @Autowired
-    private TextChannelDao textChannelDao;
-    @Autowired
-    private ImgChannelDao imgChannelDao;
-    @Autowired
-    private VideoDao videoDao;
     @Autowired
     private AppInfoDao appInfoDao;
     @Override
@@ -183,270 +152,9 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public InfoListVo<RecommendVo> getAllSoundChannel(final BaseQuery baseQuery, PageBaseParam param) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        List<SoundChannel> poList = soundChannelDao.getAll();
-        return VoBuilder.buildPageInfoVo((Page<SoundChannel>) poList, RecommendVo.class,new VoBuilder.BuildAction<SoundChannel,RecommendVo>(){
-            @Override
-            public void action(SoundChannel i, RecommendVo t) {
-                t.setActionUrl(i.getActionUrl());
-                t.setTitle(i.getName());
-                t.setImg(CdnChooseUtil.getFetchImageBaseUrl(baseQuery.getAppInfo().getUserIp(),i.getPic()));
-                t.setAdsPopShow(true);
-                t.setAdsShow(true);
-//                t.setShowType(0);
-                t.setParam(i.getUrl());
-                if(i.getRate()==null){
-                    t.setRate(1.1f);
-                }else{
-                    t.setRate(i.getRate());
-                }
-            }
-        });
-    }
-
-    @Override
-    public InfoListVo<SoundItemsVo> getSoundItems(final BaseQuery baseQuery,PageBaseParam param,String channel) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        List<SoundItems> poList = soundChannelDao.getByChannel(channel);
-        return VoBuilder.buildPageInfoVo((Page<SoundItems>) poList, SoundItemsVo.class,new BuildAction<SoundItems,SoundItemsVo>(){
-            public void action(SoundItems i, SoundItemsVo t){
-                if(!StringUtils.isEmpty(i.getMyFile()) && ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){
-                    t.setUrl(i.getMyFile());
-                }
-            }
-        });
-    }
-
-    @Override
-    public InfoListVo<RecommendVo> getAllTextChannel(BaseQuery baseQuery, PageBaseParam param) {
-        List<TextChannelPo> list = textChannelDao.getAll();
-        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<TextChannelPo,RecommendVo>(){
-            @Override
-            public void action(TextChannelPo i, RecommendVo t) {
-                t.setActionUrl(i.getUrl());
-                t.setTitle(i.getName());
-                t.setAdsPopShow(true);
-                t.setAdsShow(true);
-//                t.setShowType(0);
-                t.setParam(i.getUrl());
-//                t.setRate(1.1f);
-            }
-        });
-    }
-
-    @Override
-    public InfoListVo<TextItemsVo> getTextItems(final BaseQuery baseQuery, PageBaseParam param,
-            String channel,String keyword) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        if(StringUtils.isEmpty(keyword)){
-            keyword = null;
-        }
-        List<TextItemsPo> poList = textChannelDao.getByChannel(channel,keyword);
-        return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,new VoBuilder.BuildAction<TextItemsPo,TextItemsVo>(){
-
-            @Override
-            public void action(TextItemsPo i, TextItemsVo t) {
-              t.setFileUrl(CdnChooseUtil.getBookWebBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getId()+".html");
-            }
-        }
-        );
-    }
-
-    @Override
-    public TextItemVo getTextItem(BaseQuery baseQuery, Integer id) {
-        TextItemPo po = textChannelDao.getFile(id);
-        if(po==null){
-            throw new DataException();
-        }
-        return VoBuilder.buildVo(po, TextItemVo.class, null);
-    }
-
-    @Override
-    public InfoListVo<RecommendVo> getAllImgChannel(BaseQuery baseQuery, PageBaseParam param) {
-        List<ImgChannelPo> list = imgChannelDao.getAll();
-        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<ImgChannelPo,RecommendVo>(){
-            @Override
-            public void action(ImgChannelPo i, RecommendVo t) {
-                t.setActionUrl(i.getUrl());
-                t.setTitle(i.getName());
-                t.setImg(i.getPic());
-                t.setAdsPopShow(true);
-                t.setAdsShow(true);
-                if(i.getShowType()==null)
-                    t.setShowType(0);
-                t.setParam(i.getUrl());
-            }
-        });
-    }
-
-    @Override
-    public InfoListVo<ImgItemsVo> getImgItems(BaseQuery baseQuery, PageBaseParam param,
-            String channel) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel);
-        return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>) poList, ImgItemsVo.class,null);
-    }
-    @Override
-    public InfoListVo<RecommendVo> getImgItemImgs(BaseQuery baseQuery, PageBaseParam param,
-            String channel) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel);
-        return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>)poList, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsPo,RecommendVo>(){
-            @Override
-            public void action(ImgItemsPo i, RecommendVo t) {
-                t.setActionUrl(i.getUrl());
-                t.setTitle(i.getName());
-                t.setImg(i.getPic());
-//                if(!StringUtils.isEmpty(i.getPic()))
-//                    if(i.getPic().contains("eroti-cart")){
-//                        t.setImg("http://173.212.239.199/file/eroti/"+i.getId()+".jpg");
-//                    }else if(i.getPic().contains("singlove.com")){
-//                        t.setImg("http://173.212.239.199/file/hhh/"+i.getId()+".jpg");
-//                    }
-                t.setAdsPopShow(false);
-                t.setAdsShow(true);
-//                t.setShowType(0);
-//                t.setRate(1.2f);
-                t.setShowLogo(i.getPics()+"张");
-            }
-        });
-    }
-    @Override
-    public InfoListVo<ImgItemVo> getImgItem(final BaseQuery baseQuery, String url) {
-        List<ImgItemsItemPo> list = imgChannelDao.getItem(url);
-        return VoBuilder.buildListInfoVo(list, ImgItemVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,ImgItemVo>(){
-            @Override
-            public void action(ImgItemsItemPo i, ImgItemVo t) {
-                t.setOrigUrl(i.getPicUrl());
-                t.setRemoteUrl(i.getPicUrl());
-                if(!StringUtils.isEmpty(i.getPicUrl()))
-                    if(i.getPicUrl().contains("eroti-cart")){
-                        t.setPicUrl("http://imghhh.secondary.space/file/eroti/"+i.getId()+".jpg");
-                        t.setOrigUrl("http://imghhh.secondary.space/file/eroti/"+i.getId()+".jpg");
-                    }else if(i.getPicUrl().contains("singlove.com")){
-                        t.setPicUrl("http://imghhh.secondary.space/file/hhh/"+i.getId()+".jpg");
-                        t.setOrigUrl("http://imghhh.secondary.space/file/hhh/"+i.getId()+".jpg");
-                    }
-                if(!StringUtils.isEmpty(i.getPicUrl()))
-                    if(i.getPicUrl().contains("eroti-cart")){
-                        t.setRemoteUrl("http://imghhh.secondary.space/file/eroti/"+i.getId()+".jpg");
-                    }else if(i.getPicUrl().contains("singlove.com")){
-                        t.setRemoteUrl("http://imghhh.secondary.space/file/hhh/"+i.getId()+".jpg");
-                    }
-//                if(StringUtils.isEmpty(i.getOrigUrl())){
-//                    t.setOrigUrl(i.getPicUrl());
-//                    return;
-//                }
-//                
-//                if(HostCheck.isMyHost(baseQuery.getAppInfo().getUserIp())){
-//                    t.setOrigUrl(i.getOrigUrl());
-//                }else if(ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){
-//                    t.setOrigUrl(i.getCdnUrl());
-//                }
-            }
-        });
-    }
-
-    @Override
-    public InfoListVo<RecommendVo> getVideoPage(BaseQuery baseQuery, PageBaseParam param) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        List<VideoPo> list = videoDao.getPage();
-        return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
-            @Override
-            public void action(VideoPo i, RecommendVo t) {
-                t.setActionUrl(i.getUrl());
-                t.setTitle(i.getName());
-                t.setImg(i.getPic());
-                t.setAdsPopShow(false);
-                t.setAdsShow(true);
-                t.setParam(i.getUrl());
-            }
-        });
-    }
-
-    @Override
     public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery) {
         List<AppInfoPo> list = appInfoDao.getAll();
         return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
-    }
-
-    @Override
-    public InfoListVo<RecommendVo> getVideoChannel(BaseQuery baseQuery,String channelType) {
-        List<VideoChannelPo> list = videoDao.getChannel(channelType);
-        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoChannelPo,RecommendVo>(){
-            @Override
-            public void action(VideoChannelPo i, RecommendVo t) {
-                t.setActionUrl(i.getUrl());
-                t.setTitle(i.getName());
-                t.setImg(i.getPic());
-                t.setAdsPopShow(false);
-                t.setAdsShow(true);
-                t.setParam(i.getChannel());
-                t.setShowLogo(i.getCount()+"部");
-            }
-        });
-    }
-
-    @Override
-    public InfoListVo<RecommendVo> getVideoChannelItemsPage(BaseQuery baseQuery,
-            PageBaseParam param, String channel) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        List<VideoPo> list = null;
-        if(channel.startsWith(Constant.VIDEO_CHANNEL_WEB_PRF)){
-            list = videoDao.getWebChannelItems(channel);
-        }else{
-            list = videoDao.getChannelItems(channel); 
-        }
-        
-        return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
-            @Override
-            public void action(VideoPo i, RecommendVo t) {
-                t.setActionUrl(i.getUrl());
-                t.setTitle(i.getName());
-                t.setImg(i.getPic());
-                t.setAdsPopShow(false);
-                t.setAdsShow(true);
-//                t.setParam(i.getUrl());
-                t.setExtra(i.getVideoType());
-            }
-        });
-    }
-
-    @Override
-    public InfoListVo<RecommendVo> getVideoUserPage(BaseQuery baseQuery, PageBaseParam param) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        List<VideoUserPo> list = videoDao.getUsers();
-        return VoBuilder.buildPageInfoVo((Page<VideoUserPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserPo,RecommendVo>(){
-            @Override
-            public void action(VideoUserPo i, RecommendVo t) {
-                t.setActionUrl(i.getUserId());
-                t.setTitle(i.getName());
-                t.setImg(i.getPic());
-                t.setAdsPopShow(false);
-                t.setAdsShow(true);
-                t.setParam(i.getUserId());
-                t.setShowLogo(i.getCount()+"部");
-            }
-        });
-    }
-
-    @Override
-    public InfoListVo<RecommendVo> getVideoUserItemsPage(BaseQuery baseQuery, PageBaseParam param,
-            String userId) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        List<VideoUserItemPo> list = videoDao.getUserItems(userId);
-        return VoBuilder.buildPageInfoVo((Page<VideoUserItemPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserItemPo,RecommendVo>(){
-            @Override
-            public void action(VideoUserItemPo i, RecommendVo t) {
-                t.setActionUrl(i.getUrl());
-                t.setTitle(i.getName());
-                t.setImg(i.getPic());
-                t.setAdsPopShow(false);
-                t.setAdsShow(true);
-                t.setParam(i.getUserId());
-            }
-        });
     }
 
 }

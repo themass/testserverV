@@ -4,13 +4,8 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.vo.AppInfoVo;
 import com.timeline.vpn.model.vo.IWannaVo;
-import com.timeline.vpn.model.vo.ImgItemVo;
-import com.timeline.vpn.model.vo.ImgItemsVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
-import com.timeline.vpn.model.vo.SoundItemsVo;
-import com.timeline.vpn.model.vo.TextItemVo;
-import com.timeline.vpn.model.vo.TextItemsVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 
 /**
@@ -31,26 +26,7 @@ public interface DataService {
 
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel);
     
-    public InfoListVo<RecommendVo> getAllSoundChannel(BaseQuery baseQuery, PageBaseParam param);
-    public InfoListVo<SoundItemsVo> getSoundItems(BaseQuery baseQuery, PageBaseParam param,String channel);
-    
-    public InfoListVo<RecommendVo> getAllTextChannel(BaseQuery baseQuery, PageBaseParam param);
-    public InfoListVo<TextItemsVo> getTextItems(BaseQuery baseQuery, PageBaseParam param,String channel,String keyword);
-    public TextItemVo getTextItem(BaseQuery baseQuery, Integer id);
-    
-    public InfoListVo<RecommendVo> getAllImgChannel(BaseQuery baseQuery, PageBaseParam param);
-    public InfoListVo<ImgItemsVo> getImgItems(BaseQuery baseQuery, PageBaseParam param,String channel);
-    public InfoListVo<ImgItemVo> getImgItem(BaseQuery baseQuery, String url);
     public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery);
-    
-    
-    public InfoListVo<RecommendVo> getVideoPage(BaseQuery baseQuery,PageBaseParam param);
-    public InfoListVo<RecommendVo> getVideoChannel(BaseQuery baseQuery,String channel);
-    public InfoListVo<RecommendVo> getVideoChannelItemsPage(BaseQuery baseQuery,PageBaseParam param,String channel);
-    public InfoListVo<RecommendVo> getVideoUserPage(BaseQuery baseQuery,PageBaseParam param);
-    public InfoListVo<RecommendVo> getVideoUserItemsPage(BaseQuery baseQuery,PageBaseParam param,String userId);
-    public InfoListVo<RecommendVo> getImgItemImgs(BaseQuery baseQuery, PageBaseParam param,
-            String channel);
     
 }
 

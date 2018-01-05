@@ -26,16 +26,16 @@ public class TextController extends BaseController {
     @RequestMapping(value = {"/channle.json","/channel.json"}, method = RequestMethod.GET)
     public JsonResult channle(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getAllTextChannel(baseQuery, form.toParam()));
+        return new JsonResult(dataTextService.getAllTextChannel(baseQuery, form.toParam()));
     }
     @RequestMapping(value = "/items.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid ChannelItemsForm form) {
-        return new JsonResult(dataService.getTextItems(baseQuery, form.toParam(),form.getChannel(),form.getKeyword()));
+        return new JsonResult(dataTextService.getTextItems(baseQuery, form.toParam(),form.getChannel(),form.getKeyword()));
     }
     @RequestMapping(value = "/item.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,@RequestParam Integer id) {
-        return new JsonResult(dataService.getTextItem(baseQuery, id));
+        return new JsonResult(dataTextService.getTextItem(baseQuery, id));
     }
     
 }

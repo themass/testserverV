@@ -25,22 +25,22 @@ import com.timeline.vpn.web.controller.BaseController;
 public class ImgController extends BaseController {
     @RequestMapping(value = "/channel.json", method = RequestMethod.GET)
     public JsonResult channle(@UserInfo BaseQuery baseQuery,
-            @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getAllImgChannel(baseQuery, form.toParam()));
+            @ModelAttribute @Valid PageBaseForm form,@RequestParam(required=false) String channel) {
+        return new JsonResult(dataImgService.getAllImgChannel(baseQuery, form.toParam(),channel));
     }
     @RequestMapping(value = "/items.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid ChannelItemsForm form) {
-        return new JsonResult(dataService.getImgItems(baseQuery, form.toParam(),form.getChannel()));
+        return new JsonResult(dataImgService.getImgItems(baseQuery, form.toParam(),form.getChannel()));
     }
     @RequestMapping(value = "/items/img.json", method = RequestMethod.GET)
     public JsonResult itemsImg(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid ChannelItemsForm form) {
-        return new JsonResult(dataService.getImgItemImgs(baseQuery, form.toParam(),form.getChannel()));
+        return new JsonResult(dataImgService.getImgItemImgs(baseQuery, form.toParam(),form.getChannel()));
     }
     @RequestMapping(value = "/item.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,@RequestParam String itemUrl) {
-        return new JsonResult(dataService.getImgItem(baseQuery, itemUrl));
+        return new JsonResult(dataImgService.getImgItem(baseQuery, itemUrl));
     }
     
 }

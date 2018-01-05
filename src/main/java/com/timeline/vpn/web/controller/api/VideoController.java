@@ -26,24 +26,24 @@ public class VideoController extends BaseController {
     @RequestMapping(value = "/items.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getVideoPage(baseQuery, form.toParam()));
+        return new JsonResult(dataVideoService.getVideoPage(baseQuery, form.toParam()));
     }
     @RequestMapping(value = "/channel.json", method = RequestMethod.GET)
     public JsonResult channel(@UserInfo BaseQuery baseQuery,@RequestParam(defaultValue=Constant.VideoShowType.NORMAL) String channel) {
-        return new JsonResult(dataService.getVideoChannel(baseQuery,channel));
+        return new JsonResult(dataVideoService.getVideoChannel(baseQuery,channel));
     }
     @RequestMapping(value = "/channel/items.json", method = RequestMethod.GET)
     public JsonResult channelItems(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form,@RequestParam String channel) {
-        return new JsonResult(dataService.getVideoChannelItemsPage(baseQuery, form.toParam(),channel));
+        return new JsonResult(dataVideoService.getVideoChannelItemsPage(baseQuery, form.toParam(),channel));
     } @RequestMapping(value = "/user.json", method = RequestMethod.GET)
     public JsonResult user(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getVideoUserPage(baseQuery, form.toParam()));
+        return new JsonResult(dataVideoService.getVideoUserPage(baseQuery, form.toParam()));
     } @RequestMapping(value = "/user/items.json", method = RequestMethod.GET)
     public JsonResult userItems(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form,@RequestParam String userId) {
-        return new JsonResult(dataService.getVideoUserItemsPage(baseQuery, form.toParam(),userId));
+        return new JsonResult(dataVideoService.getVideoUserItemsPage(baseQuery, form.toParam(),userId));
     }
 }
 

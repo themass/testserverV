@@ -25,12 +25,12 @@ public class SoundController extends BaseController {
     @RequestMapping(value = {"/channle.json","/channel.json"}, method = RequestMethod.GET)
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getAllSoundChannel(baseQuery, form.toParam()));
+        return new JsonResult(dataSoundService.getAllSoundChannel(baseQuery, form.toParam()));
     }
     @RequestMapping(value = "/items.json", method = RequestMethod.GET)
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid ChannelItemsForm form) {
-        return new JsonResult(dataService.getSoundItems(baseQuery, form.toParam(),form.getChannel()));
+        return new JsonResult(dataSoundService.getSoundItems(baseQuery, form.toParam(),form.getChannel()));
     }
 }
 
