@@ -56,6 +56,8 @@ public class DataTextServiceImpl implements DataTextService {
         PageHelper.startPage(param.getStart(), param.getLimit());
         if(StringUtils.isEmpty(keyword)){
             keyword = null;
+        }else {
+            channel=null;
         }
         List<TextItemsPo> poList = textChannelDao.getByChannel(channel,keyword);
         return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,new VoBuilder.BuildAction<TextItemsPo,TextItemsVo>(){
