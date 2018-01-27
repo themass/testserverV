@@ -2,10 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.timeline.vpn.dao.db.ImgChannelDao">
 	<resultMap id="ImgChannelMap" type="ImgChannelPo">
+	<result column="pic" property="pic" typeHandler="imgHandle"/>
 	</resultMap>
 	<resultMap id="ImgItemsMap" type="ImgItemsPo">
+	<result column="pic" property="pic" typeHandler="imgHandle"/>
 	</resultMap>
 	<resultMap id="ImgItemsItemMap" type="ImgItemsItemPo">
+	<result column="picUrl" property="picUrl" typeHandler="imgHandle"/>
 	</resultMap>
 	<select id="getAll" resultMap="ImgChannelMap">
 	    select * from vpn.imgchannel where enable=1
