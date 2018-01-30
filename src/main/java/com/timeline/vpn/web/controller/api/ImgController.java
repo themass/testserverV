@@ -31,12 +31,12 @@ public class ImgController extends BaseController {
     @RequestMapping(value = "/items.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid ChannelItemsForm form) {
-        return new JsonResult(dataImgService.getImgItems(baseQuery, form.toParam(),form.getChannel()));
+        return new JsonResult(dataImgService.getImgItems(baseQuery, form.toParam(),form.getChannel(),form.getKeyword()));
     }
     @RequestMapping(value = "/items/img.json", method = RequestMethod.GET)
     public JsonResult itemsImg(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid ChannelItemsForm form) {
-        return new JsonResult(dataImgService.getImgItemImgs(baseQuery, form.toParam(),form.getChannel()));
+        return new JsonResult(dataImgService.getImgItemImgs(baseQuery, form.toParam(),form.getChannel(),form.getKeyword()));
     }
     @RequestMapping(value = "/item.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,@RequestParam String itemUrl) {

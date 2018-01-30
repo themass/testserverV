@@ -55,9 +55,9 @@ public class DataSoundServiceImpl implements DataSoundService {
     }
 
     @Override
-    public InfoListVo<SoundItemsVo> getSoundItems(final BaseQuery baseQuery,PageBaseParam param,String channel) {
+    public InfoListVo<SoundItemsVo> getSoundItems(final BaseQuery baseQuery,PageBaseParam param,String channel,String keywork) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<SoundItems> poList = soundChannelDao.getByChannel(channel);
+        List<SoundItems> poList = soundChannelDao.getByChannel(channel,keywork);
         return VoBuilder.buildPageInfoVo((Page<SoundItems>) poList, SoundItemsVo.class,new BuildAction<SoundItems,SoundItemsVo>(){
             public void action(SoundItems i, SoundItemsVo t){
                 if(!StringUtils.isEmpty(i.getMyFile()) && ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){

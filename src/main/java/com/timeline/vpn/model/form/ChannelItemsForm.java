@@ -1,4 +1,7 @@
 package com.timeline.vpn.model.form;
+
+import org.springframework.util.StringUtils;
+
 /**
  * @author gqli
  * @date 2017年8月17日 下午8:01:14
@@ -8,7 +11,7 @@ public class ChannelItemsForm extends PageBaseForm{
     private String channel;
     private String keyword;
     public String getChannel() {
-        return channel;
+        return StringUtils.isEmpty(keyword)?channel:null;
     }
 
     public void setChannel(String channel) {
@@ -16,7 +19,7 @@ public class ChannelItemsForm extends PageBaseForm{
     }
 
     public String getKeyword() {
-        return keyword;
+        return StringUtils.isEmpty(keyword)?null:keyword;
     }
 
     public void setKeyword(String keyword) {

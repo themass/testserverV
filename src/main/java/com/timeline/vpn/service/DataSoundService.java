@@ -14,7 +14,7 @@ import com.timeline.vpn.model.vo.SoundItemsVo;
 public interface DataSoundService {
     
     public InfoListVo<RecommendVo> getAllSoundChannel(BaseQuery baseQuery, PageBaseParam param);
-    public InfoListVo<SoundItemsVo> getSoundItems(BaseQuery baseQuery, PageBaseParam param,String channel);
+    public InfoListVo<SoundItemsVo> getSoundItems(BaseQuery baseQuery, PageBaseParam param,String channel,String keywork);
     
 }
 

@@ -21,10 +21,22 @@
 	    select * from vpn.videochannel where enable=1 and channelType=#{channelType}
 	</select>
 	<select id="getChannelItems" resultMap="VideoMap">
-	    select * from vpn.videoitems where channel=#{channel}
+	    select * from vpn.videoitems where 1=1
+	    <if test="channel!=null">
+	        and channel=#{channel}
+	    </if> 
+	    <if test="keyword!=null">
+	        and name like CONCAT('%',#{keyword},'%')
+	    </if>
 	</select>
 	<select id="getWebChannelItems" resultMap="VideoMap">
-	    select * from vpn.videoitems_webview where channel=#{channel}
+	    select * from vpn.videoitems_webview where 1=1
+	    <if test="channel!=null">
+	        and channel=#{channel}
+	    </if> 
+	    <if test="keyword!=null">
+	        and name like CONCAT('%',#{keyword},'%')
+	    </if>
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
 	    select * from vpn.video_user order by count desc

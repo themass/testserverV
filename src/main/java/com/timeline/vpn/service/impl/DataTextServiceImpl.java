@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -54,11 +53,6 @@ public class DataTextServiceImpl implements DataTextService {
     public InfoListVo<TextItemsVo> getTextItems(final BaseQuery baseQuery, PageBaseParam param,
             String channel,String keyword) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        if(StringUtils.isEmpty(keyword)){
-            keyword = null;
-        }else {
-            channel=null;
-        }
         List<TextItemsPo> poList = textChannelDao.getByChannel(channel,keyword);
         return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,new VoBuilder.BuildAction<TextItemsPo,TextItemsVo>(){
 

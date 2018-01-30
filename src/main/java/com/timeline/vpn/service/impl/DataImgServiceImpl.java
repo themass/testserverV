@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -52,16 +51,16 @@ public class DataImgServiceImpl implements DataImgService {
 
     @Override
     public InfoListVo<ImgItemsVo> getImgItems(BaseQuery baseQuery, PageBaseParam param,
-            String channel) {
+            String channel,String keywork) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel);
+        List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel,keywork);
         return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>) poList, ImgItemsVo.class,null);
     }
     @Override
     public InfoListVo<RecommendVo> getImgItemImgs(BaseQuery baseQuery, PageBaseParam param,
-            String channel) {
+            String channel,String keywork) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel);
+        List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel,keywork);
         return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>)poList, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsPo,RecommendVo>(){
             @Override
             public void action(ImgItemsPo i, RecommendVo t) {

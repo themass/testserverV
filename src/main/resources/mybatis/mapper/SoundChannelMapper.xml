@@ -9,6 +9,13 @@
 	    select * from vpn.soundchannel  where enable=1
 	</select>
 	<select id="getByChannel" resultMap="SoundItemsMap">
-	    select * from vpn.sounditems where channel=#{channel} order by name asc,id asc
+	    select * from vpn.sounditems where 1=1
+	    <if test="channel!=null">
+	        and channel=#{channel}
+	    </if> 
+	    <if test="keyword!=null">
+	        and name like CONCAT('%',#{keyword},'%')
+	    </if>
+	    order by name asc,id asc
 	</select>
 </mapper>

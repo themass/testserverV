@@ -20,7 +20,14 @@
 		</if>
 	</select>
 	<select id="getByChannel" resultMap="ImgItemsMap">
-	    select * from vpn.imgitems where channel=#{channel} order by sortType desc,id asc
+	    select * from vpn.imgitems where 1=1
+	    <if test="channel!=null">
+	        and channel=#{channel}
+	    </if> 
+	    <if test="keyword!=null">
+	        and name like CONCAT('%',#{keyword},'%')
+	    </if> 
+	    order by sortType desc,id asc
 	</select>
 	<select id="getItem" resultMap="ImgItemsItemMap">
 	    select * from vpn.imgitems_item where itemUrl=#{itemUrl}

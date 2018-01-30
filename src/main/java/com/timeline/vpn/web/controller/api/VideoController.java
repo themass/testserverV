@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.form.ChannelItemsForm;
 import com.timeline.vpn.model.form.PageBaseForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
@@ -33,9 +34,8 @@ public class VideoController extends BaseController {
         return new JsonResult(dataVideoService.getVideoChannel(baseQuery,channel));
     }
     @RequestMapping(value = "/channel/items.json", method = RequestMethod.GET)
-    public JsonResult channelItems(@UserInfo BaseQuery baseQuery,
-            @ModelAttribute @Valid PageBaseForm form,@RequestParam String channel) {
-        return new JsonResult(dataVideoService.getVideoChannelItemsPage(baseQuery, form.toParam(),channel));
+    public JsonResult channelItems(@UserInfo BaseQuery baseQuery,@ModelAttribute @Valid ChannelItemsForm form) {
+        return new JsonResult(dataVideoService.getVideoChannelItemsPage(baseQuery, form.toParam(),form.getChannel(),form.getKeyword()));
     } @RequestMapping(value = "/user.json", method = RequestMethod.GET)
     public JsonResult user(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {

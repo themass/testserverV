@@ -49,11 +49,11 @@ public class ImgSourceHandler extends BaseTypeHandler<String> {
         try {
             if(name.contains("www.singlove.com")) {
                 int start = name.lastIndexOf("/");
-                return HHH+name.substring(start);
+                return HHH+name.substring(start+1);
             }
             if(name.contains("www.eroti-cart.com")) {
                 int start = name.lastIndexOf("/");
-                return EROTI+name.substring(start);
+                return EROTI+name.substring(start+1);
             }
         }catch(Exception e) {
             
