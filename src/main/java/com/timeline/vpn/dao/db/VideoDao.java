@@ -18,8 +18,8 @@ import com.timeline.vpn.model.po.VideoUserPo;
 public interface VideoDao extends BaseDBDao<VideoPo> {
     public List<VideoPo> getPage();
     public List<VideoChannelPo> getChannel(@Param("channelType")String channelType);
-    public List<VideoPo> getChannelItems(@Param("channel")String channel,@Param("keywork")String keywork);
-    public List<VideoPo> getWebChannelItems(@Param("channel")String channel,@Param("keywork")String keywork);
+    public List<VideoPo> getChannelItems(@Param("channel")String channel,@Param("keyword")String keyword);
+    public List<VideoPo> getWebChannelItems(@Param("channel")String channel,@Param("keyword")String keyword);
     public List<VideoUserPo> getUsers();
     public List<VideoUserItemPo> getUserItems(@Param("userId")String userId);
 }
