@@ -58,5 +58,10 @@ public class SexRecommendServiceImpl implements BaseRecommendServie{
         return Constant.SEX;
     }
 
+    @Override
+    public List<RecommendPo> getAreaPage() {
+        return recommendDao.getAreaPage();
+    }
+
 }
 

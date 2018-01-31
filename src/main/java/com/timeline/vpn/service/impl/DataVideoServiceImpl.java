@@ -82,7 +82,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setImg(i.getPic());
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
-//                t.setParam(i.getUrl());
+                t.setParam(i.getBaseUrl());
                 t.setExtra(i.getVideoType());
             }
         });

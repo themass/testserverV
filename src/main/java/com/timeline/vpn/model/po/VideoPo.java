@@ -17,6 +17,7 @@ public class VideoPo {
     private Float rate;
     private Integer showType; 
     private String videoType;
+    private String baseUrl;
     public Integer getId() {
         return id;
     }
@@ -70,6 +71,12 @@ public class VideoPo {
     }
     public void setVideoType(String videoType) {
         this.videoType = videoType;
+    }
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
     
     

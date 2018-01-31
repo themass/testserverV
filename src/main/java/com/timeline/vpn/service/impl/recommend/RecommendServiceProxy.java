@@ -55,5 +55,10 @@ public class RecommendServiceProxy extends BaseMapServiceProxy<BaseRecommendServ
         return null;
     }
 
+    @Override
+    public List<RecommendPo> getAreaPage() {
+        return getService().getAreaPage();
+    }
+
 }
 

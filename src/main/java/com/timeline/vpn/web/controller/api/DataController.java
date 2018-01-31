@@ -29,31 +29,38 @@ public class DataController extends BaseController {
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getRecommendPage(baseQuery,form.toParam()));
     }
-    @RequestMapping(value = "/recommend/vip.json", method = RequestMethod.GET)
-    public JsonResult vipList(@UserInfo BaseQuery baseQuery,
-            @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getRecommendVipPage(baseQuery,form.toParam()));
+    
+    
+    
+    @RequestMapping(value = "/recommend/movie.json", method = RequestMethod.GET)
+    public JsonResult movie(@UserInfo BaseQuery baseQuery) {
+        return new JsonResult(dataService.getRecommendMoviePage(baseQuery));
     }
-    @RequestMapping(value = "/recommend/world.json", method = RequestMethod.GET)
-    public JsonResult worldList(@UserInfo BaseQuery baseQuery,
+    @RequestMapping(value = "/recommend/night.json", method = RequestMethod.GET)
+    public JsonResult night(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getRecommendPage(baseQuery,form.toParam()));
+        return new JsonResult(dataService.getRecommendNightPage(baseQuery,form.toParam()));
     }
-    @RequestMapping(value = "/recommend/hot.json", method = RequestMethod.GET)
-    public JsonResult hotList(@UserInfo BaseQuery baseQuery,
+    @RequestMapping(value = "/recommend/area.json", method = RequestMethod.GET)
+    public JsonResult area(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getRecommendVipPage(baseQuery,form.toParam()));
+        return new JsonResult(dataService.getRecommendAreaPage(baseQuery,form.toParam()));
     }
     @RequestMapping(value = "/recommend/custome.json", method = RequestMethod.GET)
     public JsonResult customeList(@UserInfo(required=true) BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(userService.getRecommendCustomePage(baseQuery,form.toParam()));
     }
-    @RequestMapping(value = "/recommend/reco.json", method = RequestMethod.GET)
-    public JsonResult recoList(@UserInfo BaseQuery baseQuery,
+    
+    
+    
+    
+    @RequestMapping(value = "/recommend/vip.json", method = RequestMethod.GET)
+    public JsonResult vipList(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getRecommendRecPage(baseQuery,form.toParam()));
+        return new JsonResult(dataService.getRecommendVipPage(baseQuery,form.toParam()));
     }
+    
     @RequestMapping(value = "/version.json", method = RequestMethod.GET)
     public JsonResult version(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getVersion(baseQuery,baseQuery.getAppInfo().getPlatform(),baseQuery.getAppInfo().getChannel()));

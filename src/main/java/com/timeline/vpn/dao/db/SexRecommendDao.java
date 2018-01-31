@@ -20,5 +20,6 @@ public interface SexRecommendDao extends BaseDBDao<RecommendPo> {
     public void delCustome(@Param("id")Integer id);
     public void replaceCustome(RecommendPo po);
     public List<RecommendPo> getRecoPage();
+    public List<RecommendPo> getAreaPage();
 }
 

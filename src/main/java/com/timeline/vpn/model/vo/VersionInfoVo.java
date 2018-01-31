@@ -17,6 +17,7 @@ public class VersionInfoVo {
     private String dnspodIp;
     private Boolean needDnspod=true;
     private String vpnUrl;
+    private String vitamioExt;
 
     public String getVersion() {
         return version;
@@ -103,6 +104,14 @@ public class VersionInfoVo {
 
     public void setVpnUrl(String vpnUrl) {
         this.vpnUrl = vpnUrl;
+    }
+
+    public String getVitamioExt() {
+        return vitamioExt;
+    }
+
+    public void setVitamioExt(String vitamioExt) {
+        this.vitamioExt = vitamioExt;
     }
 
     @Override

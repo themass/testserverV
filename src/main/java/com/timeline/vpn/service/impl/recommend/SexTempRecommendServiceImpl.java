@@ -58,5 +58,10 @@ public class SexTempRecommendServiceImpl implements BaseRecommendServie{
         return Constant.SEX_TEMP;
     }
 
+    @Override
+    public List<RecommendPo> getAreaPage() {
+        return null;
+    }
+
 }
 

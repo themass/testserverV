@@ -15,6 +15,11 @@ import com.timeline.vpn.model.vo.VersionInfoVo;
  */
 public interface DataService {
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery,PageBaseParam param);
+    
+    public InfoListVo<RecommendVo> getRecommendMoviePage(BaseQuery baseQuery);
+    public InfoListVo<RecommendVo> getRecommendNightPage(BaseQuery baseQuery, PageBaseParam param);
+    public InfoListVo<RecommendVo> getRecommendAreaPage(BaseQuery baseQuery, PageBaseParam param);
+    
     public InfoListVo<RecommendVo> getRecommendVipPage(BaseQuery baseQuery,PageBaseParam param);
     public InfoListVo<RecommendVo> getRecommendRecPage(BaseQuery baseQuery,PageBaseParam param);
 
@@ -27,6 +32,9 @@ public interface DataService {
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel);
     
     public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery);
+
+    
+   
     
 }
 

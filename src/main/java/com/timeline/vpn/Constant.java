@@ -83,6 +83,9 @@ public class Constant {
     public static final String SEX = "SEX";
     public static final String SEX_TEMP = "SEX_TEMP";
     
+    public static final String VIDEO_EXT="avi,rmvb,3gp,wmv";
+    public static final String MOVIE_TYPE="movie";
+    
     public static final String HTTP_TOKEN_KEY = "Vpn-Token";
     public static final String HTTP_TOKEN_LIFE_KEY = "Life-Token";
     public static final String HTTP_TOKEN_SEX_KEY = "Sex-Token";

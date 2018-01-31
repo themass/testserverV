@@ -58,5 +58,10 @@ public class VpnRecommendServiceImpl implements BaseRecommendServie{
         return Constant.VPN;
     }
 
+    @Override
+    public List<RecommendPo> getAreaPage() {
+        return null;
+    }
+
 }
 

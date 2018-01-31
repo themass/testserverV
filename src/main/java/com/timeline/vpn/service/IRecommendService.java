@@ -11,11 +11,13 @@ import com.timeline.vpn.model.po.RecommendPo;
  */
 public interface IRecommendService {
     public List<RecommendPo> getPage(int type);
+    public List<RecommendPo> getAreaPage();
     public List<RecommendPo> getVipPage();
     public List<RecommendPo> getCustomePage(String name);
     public List<RecommendPo> getCustomeAllPage();
     public void delCustome(Integer id);
     public void replaceCustome(RecommendPo po);
     public List<RecommendPo> getRecoPage();
+    
 }
 

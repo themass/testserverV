@@ -43,6 +43,9 @@
 	<select id="getVipPage" resultMap="RecommendMap">
 		select * from vpn.recommendVip_sex where enable=1 order by sort asc
 	</select>
+	<select id="getAreaPage" resultMap="RecommendMap">
+		select * from vpn.recommendArea_sex where enable=1
+	</select>
 	<select id="get" resultMap="RecommendMap">
 		select * from vpn.recommend_sex where enable=1
 	</select>

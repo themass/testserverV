@@ -29,6 +29,7 @@ import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.service.DataService;
+import com.timeline.vpn.service.DataVideoService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.impl.recommend.RecommendServiceProxy;
 
@@ -50,6 +51,8 @@ public class DataServiceImpl implements DataService {
     private UserService userService;
     @Autowired
     private AppInfoDao appInfoDao;
+    @Autowired
+    private DataVideoService dataVideoService;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -69,7 +72,32 @@ public class DataServiceImpl implements DataService {
             
         });
     }
+    @Override
+    public InfoListVo<RecommendVo> getRecommendMoviePage(BaseQuery baseQuery) {
+        return dataVideoService.getVideoChannel(baseQuery,Constant.MOVIE_TYPE);
+    }
 
+    @Override
+    public InfoListVo<RecommendVo> getRecommendNightPage(BaseQuery baseQuery, PageBaseParam param) {
+        return getRecommendVipPage(baseQuery,param);
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getRecommendAreaPage(BaseQuery baseQuery, PageBaseParam param) {
+        final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<RecommendPo> poList = recommendServiceProxy.getAreaPage();
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
+
+            @Override
+            public void action(RecommendPo i, RecommendVo t) {
+                if(!StringUtils.isEmpty(baseUrl) && !StringUtils.isEmpty(i.getImg())){
+                    t.setImg(baseUrl+i.getImg());
+                }
+            }
+            
+        });
+    }
     @Override
     public InfoListVo<RecommendVo> getRecommendVipPage( final BaseQuery baseQuery, PageBaseParam param) {
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
@@ -92,14 +120,14 @@ public class DataServiceImpl implements DataService {
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
         vo.setAdsShow(false);
         vo.setLogUp(true);
-        if(!channel.equals("VPN")){
-            AppVersion vpnVer = versionDao.getLast(platform,"VPN");
+        if(!Constant.VPN.equals(channel)){
+            AppVersion vpnVer = versionDao.getLast(platform,Constant.VPN);
             vo.setVpnUrl(vpnVer.getUrl());
         }
         if(baseQuery!=null){
             String userName = baseQuery.getUser()==null?null:baseQuery.getUser().getName();
             userService.updateDevUseinfo(baseQuery.getAppInfo(),userName);
-            if(channel.equals("VPN")){
+            if(Constant.VPN.equals(channel)){
                 if(baseQuery.getUser()!=null){
                     StateUseVo state = userService.stateUse(Arrays.asList(baseQuery.getUser().getName(),baseQuery.getAppInfo().getDevId()));
                     vo.setStateUse(state);    
@@ -109,7 +137,7 @@ public class DataServiceImpl implements DataService {
                 }
             }
         }
-       
+        vo.setVitamioExt(Constant.VIDEO_EXT);
         return vo;
     }
 
@@ -156,6 +184,8 @@ public class DataServiceImpl implements DataService {
         List<AppInfoPo> list = appInfoDao.getAll();
         return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
     }
+
+    
 
 }
 
