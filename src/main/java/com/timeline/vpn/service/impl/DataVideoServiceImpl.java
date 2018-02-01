@@ -2,6 +2,7 @@ package com.timeline.vpn.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,9 +66,12 @@ public class DataVideoServiceImpl implements DataVideoService {
 
     @Override
     public InfoListVo<RecommendVo> getVideoChannelItemsPage(BaseQuery baseQuery,
-            PageBaseParam param, String channel,String keywork) {
+            PageBaseParam param, String channel,String keywork,String channelOrg) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<VideoPo> list = null;
+        if(!StringUtils.isEmpty(channelOrg) && channelOrg.startsWith("one_")) {
+            channel = channelOrg;
+        }
         list = videoDao.getChannelItems(channel,keywork); 
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override

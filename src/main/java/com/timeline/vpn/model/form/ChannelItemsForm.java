@@ -10,12 +10,14 @@ import org.springframework.util.StringUtils;
 public class ChannelItemsForm extends PageBaseForm{
     private String channel;
     private String keyword;
+    private String channelOrg;
     public String getChannel() {
         return StringUtils.isEmpty(keyword)?channel:null;
     }
 
     public void setChannel(String channel) {
         this.channel = channel;
+        channelOrg = channel;
     }
 
     public String getKeyword() {
@@ -24,6 +26,14 @@ public class ChannelItemsForm extends PageBaseForm{
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getChannelOrg() {
+        return channelOrg;
+    }
+
+    public void setChannelOrg(String channelOrg) {
+        this.channelOrg = channelOrg;
     }
     
 }
