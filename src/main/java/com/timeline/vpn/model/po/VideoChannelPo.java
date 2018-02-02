@@ -17,6 +17,7 @@ public class VideoChannelPo {
     private Float rate;
     private Integer showType; 
     private Integer count;
+    private String channelType;
     public Integer getId() {
         return id;
     }
@@ -70,6 +71,12 @@ public class VideoChannelPo {
     }
     public void setCount(Integer count) {
         this.count = count;
+    }
+    public String getChannelType() {
+        return channelType;
+    }
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
     }
     
     

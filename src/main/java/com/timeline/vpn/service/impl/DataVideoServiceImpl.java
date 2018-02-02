@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.timeline.vpn.Constant;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.dao.db.VideoDao;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -72,7 +71,8 @@ public class DataVideoServiceImpl implements DataVideoService {
         if(!StringUtils.isEmpty(channelOrg) && channelOrg.startsWith("one_")) {
             channel = channelOrg;
         }
-        list = videoDao.getChannelItems(channel,keywork); 
+        VideoChannelPo po = videoDao.getOneChannel(channelOrg);
+        list = videoDao.getChannelItems(channel,keywork,po.getChannelType()); 
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
             public void action(VideoPo i, RecommendVo t) {
