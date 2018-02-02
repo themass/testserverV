@@ -21,12 +21,12 @@
 	    select * from vpn.videochannel where enable=1 and channelType=#{channelType}
 	</select>
 	<select id="getChannelItems" resultMap="VideoMap">
-	    select * from vpn.videoitems where 1=1
+	    select i.* from vpn.videoitems i ,vpn.videochannel c where i.channel=c.channel and c.enable=1 
 	    <if test="channel!=null">
-	        and channel=#{channel}
+	        and i.channel=#{channel}
 	    </if> 
 	    <if test="keyword!=null">
-	        and name like CONCAT('%',#{keyword},'%')
+	        and i.name like CONCAT('%',#{keyword},'%')
 	    </if>
 	</select>
 	<select id="getWebChannelItems" resultMap="VideoMap">
