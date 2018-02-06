@@ -14,6 +14,7 @@ public class TextChannelPo {
     private Date updateTime;
     private Float rate;
     private Integer showType;
+    private Integer count;
     public Integer getId() {
         return id;
     }
@@ -49,6 +50,12 @@ public class TextChannelPo {
     }
     public void setShowType(Integer showType) {
         this.showType = showType;
+    }
+    public Integer getCount() {
+        return count;
+    }
+    public void setCount(Integer count) {
+        this.count = count;
     }
     
 }

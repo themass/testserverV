@@ -38,13 +38,12 @@ public class DataTextServiceImpl implements DataTextService {
         return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<TextChannelPo,RecommendVo>(){
             @Override
             public void action(TextChannelPo i, RecommendVo t) {
-                t.setActionUrl(i.getUrl());
+                t.setActionUrl(i.getName());
                 t.setTitle(i.getName());
                 t.setAdsPopShow(true);
                 t.setAdsShow(true);
-//                t.setShowType(0);
                 t.setParam(i.getUrl());
-//                t.setRate(1.1f);
+                t.setShowLogo(i.getCount()+"篇文章");
             }
         });
     }

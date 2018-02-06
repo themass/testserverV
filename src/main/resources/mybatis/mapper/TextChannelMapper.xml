@@ -9,12 +9,12 @@
 	    <result property="file" column="file" javaType="String" jdbcType="BLOB"/>
 	</resultMap>
 	<select id="getAll" resultMap="TextChannelMap">
-	    select * from vpn.textchannel
+	    select * from vpn.textchannel group by name
 	</select>
 	<select id="getByChannel" resultMap="TextItemsMap">
 	    select id,name,channel,url,updateTime,fileDate from vpn.textitems where 1=1
 	    <if test="channel!=null">
-	        and channel=#{channel}
+	        and channelName=#{channel}
 	    </if> 
 	    <if test="keyword!=null">
 	        and name like CONCAT('%',#{keyword},'%')

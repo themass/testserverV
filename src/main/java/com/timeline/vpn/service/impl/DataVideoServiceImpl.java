@@ -67,11 +67,11 @@ public class DataVideoServiceImpl implements DataVideoService {
     public InfoListVo<RecommendVo> getVideoChannelItemsPage(BaseQuery baseQuery,
             PageBaseParam param, String channel,String keywork,String channelOrg) {
         VideoChannelPo po = videoDao.getOneChannel(channelOrg);
-        PageHelper.startPage(param.getStart(), param.getLimit());
         List<VideoPo> list = null;
         if(!StringUtils.isEmpty(channelOrg) && channelOrg.startsWith("one_")) {
             channel = channelOrg;
         }
+        PageHelper.startPage(param.getStart(), param.getLimit());
         list = videoDao.getChannelItems(channel,keywork,po.getChannelType()); 
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
