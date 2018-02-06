@@ -42,7 +42,7 @@ public class DataTextServiceImpl implements DataTextService {
                 t.setTitle(i.getName());
                 t.setAdsPopShow(true);
                 t.setAdsShow(true);
-                t.setParam(i.getUrl());
+                t.setParam(i.getName());
                 t.setShowLogo(i.getCount()+"篇文章");
             }
         });
