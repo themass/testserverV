@@ -24,7 +24,7 @@
 	    select * from vpn.videochannel where enable=1 and channel=#{channel} limit 1
 	</select>
 	<select id="getChannelItems" resultMap="VideoMap">
-	    select i.* from vpn.videoitems i where 1=1
+	    select i.* from vpn.videoitems i ,vpn.videochannel c where i.channel=c.channel and i.baseurl=c.baseurl and c.enable=1 and c.channelType=#{channelType} 
 	    <if test="channel!=null">
 	        and i.channel=#{channel}
 	    </if> 
