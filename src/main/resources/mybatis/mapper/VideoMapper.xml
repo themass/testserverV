@@ -31,7 +31,7 @@
 	    <if test="keyword!=null">
 	        and i.name like CONCAT('%',#{keyword},'%')
 	    </if>
-	    group by i.path
+	    group by i.path order by updateTime asc
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
 	    select * from vpn.video_user order by count desc
