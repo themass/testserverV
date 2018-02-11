@@ -2,6 +2,7 @@ package com.timeline.vpn.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -119,7 +120,13 @@ public class DataImgServiceImpl implements DataImgService {
             @Override
             public void action(ImgItemsItemPo i, RecommendVo t) {
                 t.setActionUrl(i.getPicUrl());
-                t.setParam(i.getPicUrl());
+                t.setAdsPopShow(false);
+                t.setAdsShow(false);
+                t.setImg(i.getPicUrl());
+                float r =(float)RandomUtils.nextInt(5);
+                float l = 1+(r/10l);
+                t.setRate(l);
+                t.setTitle("");
             }
         });
     }
