@@ -111,6 +111,19 @@ public class DataImgServiceImpl implements DataImgService {
         });
     }
 
+    @Override
+    public InfoListVo<RecommendVo> getImgItem(BaseQuery baseQuery, String url, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<ImgItemsItemPo> list = imgChannelDao.getItem(url);
+        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,RecommendVo>(){
+            @Override
+            public void action(ImgItemsItemPo i, RecommendVo t) {
+                t.setActionUrl(i.getPicUrl());
+                t.setParam(i.getPicUrl());
+            }
+        });
+    }
+
 
 }
 

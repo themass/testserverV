@@ -17,6 +17,7 @@ public interface DataImgService {
     public InfoListVo<RecommendVo> getAllImgChannel(BaseQuery baseQuery, PageBaseParam param,String channel);
     public InfoListVo<ImgItemsVo> getImgItems(BaseQuery baseQuery, PageBaseParam param,String channel,String keywork);
     public InfoListVo<ImgItemVo> getImgItem(BaseQuery baseQuery, String url);
+    public InfoListVo<RecommendVo> getImgItem(BaseQuery baseQuery, String url,PageBaseParam param);
     public InfoListVo<RecommendVo> getImgItemImgs(BaseQuery baseQuery, PageBaseParam param,
             String channel,String keywork);
     

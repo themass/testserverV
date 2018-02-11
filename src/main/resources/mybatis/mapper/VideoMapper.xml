@@ -24,14 +24,14 @@
 	    select * from vpn.videochannel where enable=1 and channel=#{channel} limit 1
 	</select>
 	<select id="getChannelItems" resultMap="VideoMap">
-	    select i.* from vpn.videoitems i ,vpn.videochannel c where i.channel=c.channel and c.enable=1 and c.channelType=#{channelType} 
+	    select i.* from vpn.videoitems i ,vpn.videochannel c where i.channel=c.channel and c.enable=1 and c.channelType=#{channelType} and i.enable=1 
 	    <if test="channel!=null">
 	        and i.channel=#{channel}
 	    </if> 
 	    <if test="keyword!=null">
 	        and i.name like CONCAT('%',#{keyword},'%')
 	    </if>
-	    group by i.path order by updateTime asc
+	    group by i.path order by sortType desc,updateTime asc
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
 	    select * from vpn.video_user order by count desc
