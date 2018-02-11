@@ -116,7 +116,7 @@ public class DataImgServiceImpl implements DataImgService {
     public InfoListVo<RecommendVo> getImgItem(BaseQuery baseQuery, String url, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<ImgItemsItemPo> list = imgChannelDao.getItem(url);
-        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo((Page<ImgItemsItemPo>)list, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,RecommendVo>(){
             @Override
             public void action(ImgItemsItemPo i, RecommendVo t) {
                 t.setActionUrl(i.getPicUrl());
