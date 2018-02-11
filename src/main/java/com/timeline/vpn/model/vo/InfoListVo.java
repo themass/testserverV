@@ -13,7 +13,7 @@ public class InfoListVo<T> implements Serializable {
     /**
      * @Fields serialVersionUID :
      */
-    private int total;
+    private long total;
     private boolean hasMore;
     private int pageNum;
     private static final long serialVersionUID = 1L;
@@ -33,11 +33,11 @@ public class InfoListVo<T> implements Serializable {
         this.voList = voList;
     }
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(long total) {
         this.total = total;
     }
 

@@ -126,6 +126,7 @@ public class VoBuilder {
         InfoListVo<M> page = buildListInfoVo(data, clasz, action);
         page.setHasMore(data.getPageNum() < data.getPages());
         page.setPageNum(data.getPageNum() + 1);
+        page.setTotal(data.getTotal());
         return page;
     }
 
