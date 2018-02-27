@@ -47,8 +47,8 @@ public class DataVideoServiceImpl implements DataVideoService {
     }
 
     @Override
-    public InfoListVo<RecommendVo> getVideoChannel(BaseQuery baseQuery,String channelType) {
-        List<VideoChannelPo> list = videoDao.getChannel(channelType);
+    public InfoListVo<RecommendVo> getVideoChannel(BaseQuery baseQuery,String channel) {
+        List<VideoChannelPo> list = videoDao.getChannel(channel);
         return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoChannelPo,RecommendVo>(){
             @Override
             public void action(VideoChannelPo i, RecommendVo t) {
@@ -119,6 +119,44 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
                 t.setParam(i.getUserId());
+            }
+        });
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getVideoTvItemPage(BaseQuery baseQuery, PageBaseParam param,
+            String channel) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        Page<VideoPo>list = (Page<VideoPo>)videoDao.getTvItem(channel);
+        return VoBuilder.buildPageInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
+            @Override
+            public void action(VideoPo i, RecommendVo t) {
+                t.setActionUrl(i.getUrl());
+                t.setTitle(i.getName());
+                t.setImg(i.getPic());
+                t.setAdsPopShow(false);
+                t.setAdsShow(true);
+                t.setParam(i.getBaseUrl());
+                t.setExtra(i.getVideoType());
+            }
+        });
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getVideoTvChannelPage(BaseQuery baseQuery,  PageBaseParam param,String channelType,
+            String keyword) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<VideoChannelPo> list = videoDao.getTvChannel(channelType, keyword);
+        return VoBuilder.buildPageInfoVo((Page<VideoChannelPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoChannelPo,RecommendVo>(){
+            @Override
+            public void action(VideoChannelPo i, RecommendVo t) {
+                t.setActionUrl(i.getUrl());
+                t.setTitle(i.getName());
+                t.setImg(i.getPic());
+                t.setAdsPopShow(false);
+                t.setAdsShow(true);
+                t.setParam(i.getChannel());
+                t.setShowLogo(i.getCount()+"集");
             }
         });
     }

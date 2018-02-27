@@ -11,6 +11,7 @@ public class ChannelItemsForm extends PageBaseForm{
     private String channel;
     private String keyword;
     private String channelOrg;
+    private String channelType;
     public String getChannel() {
         return StringUtils.isEmpty(keyword)?channel:null;
     }
@@ -35,6 +36,15 @@ public class ChannelItemsForm extends PageBaseForm{
     public void setChannelOrg(String channelOrg) {
         this.channelOrg = channelOrg;
     }
+
+    public String getChannelType() {
+        return channelType;
+    }
+
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
+    }
+    
     
 }
 

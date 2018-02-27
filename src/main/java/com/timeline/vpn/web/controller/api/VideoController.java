@@ -41,10 +41,21 @@ public class VideoController extends BaseController {
     public JsonResult user(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataVideoService.getVideoUserPage(baseQuery, form.toParam()));
-    } @RequestMapping(value = "/user/items.json", method = RequestMethod.GET)
+    } 
+    @RequestMapping(value = "/user/items.json", method = RequestMethod.GET)
     public JsonResult userItems(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form,@RequestParam String userId) {
         return new JsonResult(dataVideoService.getVideoUserItemsPage(baseQuery, form.toParam(),userId));
     }
+    @RequestMapping(value = "/tv/channel.json", method = RequestMethod.GET)
+    public JsonResult tvChannel(@UserInfo BaseQuery baseQuery,@ModelAttribute @Valid ChannelItemsForm form) {
+        return new JsonResult(dataVideoService.getVideoTvChannelPage(baseQuery, form.toParam(), form.getChannelOrg(),form.getKeyword()));
+    }
+    @RequestMapping(value = "/tv/item.json", method = RequestMethod.GET)
+    public JsonResult tvItem(@UserInfo BaseQuery baseQuery,
+            @ModelAttribute @Valid PageBaseForm form,@RequestParam String channel) {
+        return new JsonResult(dataVideoService.getVideoTvItemPage(baseQuery, form.toParam(), channel));
+    }
+    
 }
 
