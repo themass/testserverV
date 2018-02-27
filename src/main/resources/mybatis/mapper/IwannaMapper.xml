@@ -11,6 +11,7 @@
 		<result column="finished" property="finished" />
 		<result column="ip" property="ip" />
 		<result column="ip_local" property="ipLocal" />
+		<result column="app_name" property="appName" />
 	</resultMap>
 	<insert id="insert">
 		insert into

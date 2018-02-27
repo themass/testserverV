@@ -17,7 +17,7 @@ public class IWannaPo {
     private boolean finished;
     private String ipLocal;
     private String ip;
-
+    private String  appName;
     public long getId() {
         return id;
     }
@@ -88,6 +88,14 @@ public class IWannaPo {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
 

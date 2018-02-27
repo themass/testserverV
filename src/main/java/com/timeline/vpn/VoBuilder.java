@@ -118,6 +118,12 @@ public class VoBuilder {
         }
         vo.setLike(StringUtils.isNotBlank(po.getLikeUsers()) && po.getLikeUsers().contains(name));
         vo.setTime(po.getCreateTime() != null ? po.getCreateTime().getTime() : 0);
+        if(org.apache.commons.lang3.StringUtils.isEmpty(po.getIpLocal())) {
+            vo.setWhere("来自火星");
+        }else {
+            vo.setWhere(po.getIpLocal());
+        }
+        
         return vo;
     }
 

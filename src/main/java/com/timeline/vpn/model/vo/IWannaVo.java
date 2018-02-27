@@ -13,6 +13,8 @@ public class IWannaVo {
     private long time;
     private boolean isLike;
     private boolean finished;
+    private String  appName;
+    private String  where;
     public long getId() {
         return id;
     }
@@ -67,6 +69,22 @@ public class IWannaVo {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public String getWhere() {
+        return where;
+    }
+
+    public void setWhere(String where) {
+        this.where = where;
     }
 
 
