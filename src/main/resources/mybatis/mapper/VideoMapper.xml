@@ -42,7 +42,7 @@
 	
 	<select id="getTvChannel" resultMap="VideoChannelMap">
 	    select * from vpn.video_tv_channel where enable=1 
-	    <if test="channelType!=null">
+	    <if test="channel!=null">
 	        and channel=#{channel}
 	    </if> 
 	    <if test="keyword!=null">
