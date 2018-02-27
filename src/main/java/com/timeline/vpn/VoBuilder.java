@@ -123,7 +123,7 @@ public class VoBuilder {
         }else {
             vo.setWhere(po.getIpLocal());
         }
-        
+        vo.setAppName(po.getAppName()+"用户");
         return vo;
     }
 
