@@ -69,7 +69,10 @@ public class DataController extends BaseController {
     public JsonResult appinfo(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getAllApp(baseQuery));
     }
-
+    @RequestMapping(value = "/donation.json", method = RequestMethod.GET)
+    public JsonResult donation(@UserInfo BaseQuery baseQuery) {
+        return new JsonResult(dataService.getAllDon(baseQuery));
+    }
     @RequestMapping(value = "/feed/wanna.json", method = RequestMethod.GET)
     public JsonResult wanna(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {

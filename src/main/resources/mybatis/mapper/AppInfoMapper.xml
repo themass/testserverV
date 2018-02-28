@@ -6,6 +6,9 @@
 	</resultMap>
 	
 	<select id="getAll" resultMap="AppInfoPoMap">
-		select * from vpn.appinfo
+		select * from vpn.appinfo where type="APP"
+	</select>
+	<select id="getAllDon" resultMap="AppInfoPoMap">
+		select * from vpn.appinfo where type="DON"
 	</select>
 </mapper>

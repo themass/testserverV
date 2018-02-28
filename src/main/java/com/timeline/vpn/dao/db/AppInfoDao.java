@@ -1,6 +1,8 @@
 package com.timeline.vpn.dao.db;
 
 
+import java.util.List;
+
 import com.timeline.vpn.dao.BaseDBDao;
 import com.timeline.vpn.model.po.AppInfoPo;
 
@@ -10,5 +12,6 @@ import com.timeline.vpn.model.po.AppInfoPo;
  * @version V1.0
  */
 public interface AppInfoDao extends BaseDBDao<AppInfoPo> {
+    List<AppInfoPo> getAllDon();
 }
 

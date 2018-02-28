@@ -157,6 +157,7 @@ public class DataServiceImpl implements DataService {
         po.setLikeUsers(Constant.superMan);
         po.setName(baseQuery.getUser().getName());
         po.setIp(baseQuery.getAppInfo().getUserIp());
+        po.setAppName(baseQuery.getAppInfo().getChannel());
         iWannaDao.insert(po);
         return VoBuilder.buildIWannaVo(po, baseQuery.getUser().getName());
     }
@@ -182,6 +183,11 @@ public class DataServiceImpl implements DataService {
     @Override
     public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery) {
         List<AppInfoPo> list = appInfoDao.getAll();
+        return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
+    }
+    @Override
+    public InfoListVo<AppInfoVo> getAllDon(BaseQuery baseQuery) {
+        List<AppInfoPo> list = appInfoDao.getAllDon();
         return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
     }
 
