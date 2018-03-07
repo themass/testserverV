@@ -18,7 +18,7 @@
 	    select * from vpn.videoitems
 	</select>
 	<select id="getChannel" resultMap="VideoChannelMap">
-	    select * from vpn.videochannel where enable=1 and channelType=#{channelType} group by channel
+	    select * from vpn.videochannel where enable=1 and channelType=#{channelType} group by channel order by id 
 	</select>
 	<select id="getOneChannel" resultMap="VideoChannelMap">
 	    select * from vpn.videochannel where enable=1 and channel=#{channel} limit 1
