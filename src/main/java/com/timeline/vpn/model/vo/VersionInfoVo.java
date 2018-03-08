@@ -18,6 +18,7 @@ public class VersionInfoVo {
     private Boolean needDnspod=true;
     private String vpnUrl;
     private String vitamioExt;
+    private VipDescVo vipDesc;
 
     public String getVersion() {
         return version;
@@ -112,6 +113,14 @@ public class VersionInfoVo {
 
     public void setVitamioExt(String vitamioExt) {
         this.vitamioExt = vitamioExt;
+    }
+
+    public VipDescVo getVipDesc() {
+        return vipDesc;
+    }
+
+    public void setVipDesc(VipDescVo vipDesc) {
+        this.vipDesc = vipDesc;
     }
 
     @Override

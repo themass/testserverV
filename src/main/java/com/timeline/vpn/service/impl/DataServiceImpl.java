@@ -28,6 +28,7 @@ import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
+import com.timeline.vpn.model.vo.VipDescVo;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.DataVideoService;
 import com.timeline.vpn.service.UserService;
@@ -137,7 +138,11 @@ public class DataServiceImpl implements DataService {
                 }
             }
         }
+        VipDescVo desc = new VipDescVo();
+        desc.setDesc("每周扣除50积分，VIP状态随积分变动");
+        desc.setDesc1("600积分=VIP1；2000积分=VIP2；点击广告赚积分");
         vo.setVitamioExt(Constant.VIDEO_EXT);
+        vo.setVipDesc(desc);
         return vo;
     }
 
