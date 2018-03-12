@@ -17,6 +17,11 @@ public interface UserDao extends BaseDBDao<UserPo> {
 
     public void score(@Param(value = "score") long score, @Param(value = "name") String name);
     
+    public void minusScore();
+    public void initUserVip();
+    public void initUserVip1();
+    public void initUserVip2();
+    
     public void updateLevel(UserPo po);
 }
 
