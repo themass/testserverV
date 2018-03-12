@@ -87,7 +87,7 @@
                     </property>
                 </bean>
                  <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 0 0 4 * *"/>
+                    <property name="cronExpression" value="0 0 4 ? * *"/>
                     <property name="jobDetail">
                         <bean
                                 class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
