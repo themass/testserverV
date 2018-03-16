@@ -23,6 +23,7 @@ public class ScoreCalculation extends ReloadJob{
     @Override
     @Transactional
     public void reload() {
+        LOGGER.info("ScoreCalculation start");
         userDao.minusScore();
         userDao.initUserVip();
         userDao.initUserVip1();
