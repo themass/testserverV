@@ -10,7 +10,7 @@
 		<property name="triggers">
 			<list>
                 <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 * * ? * *"/>
+                    <property name="cronExpression" value="0 0 * ? * *"/>
                     <property name="jobDetail">
                         <bean
                                 class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -21,7 +21,7 @@
                     </property>
                 </bean>
                 <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 */1 * ? * *"/>
+                    <property name="cronExpression" value="0 0 * ? * *"/>
                     <property name="jobDetail">
                         <bean
                                 class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -43,7 +43,7 @@
                     </property>
                 </bean>
                  <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 6,12,24 * ? * *"/>
+                    <property name="cronExpression" value="0 0 * ? * *"/>
                     <property name="jobDetail">
                         <bean
                                 class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -65,7 +65,7 @@
                     </property>
                 </bean>
                 <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 0/10 * ? * *"/>
+                    <property name="cronExpression" value="0 0 * ? * *"/>
                     <property name="jobDetail">
                         <bean
                                 class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -86,9 +86,9 @@
                         </bean>
                     </property>
                 </bean>
-                <!-- 
+                
                  <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 0 4 ? * *"/>
+                    <property name="cronExpression" value="0 0 0 WED * *"/>
                     <property name="jobDetail">
                         <bean
                                 class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -98,7 +98,7 @@
                         </bean>
                     </property>
                 </bean>
-                 -->
+                 
 			</list>
 		</property>
 	</bean>
