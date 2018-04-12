@@ -37,6 +37,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
                 + "[" + ua + "]";
         JsonResult result = new JsonResult();
         LOGGER.error("error url=" + requestUrl, ex);
+        LOGGER.error("", ex);
         if (ex instanceof MissingServletRequestParameterException) { // 缺少请求参数
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
             result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR, request)
