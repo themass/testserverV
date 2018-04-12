@@ -7,6 +7,7 @@ package com.timeline.vpn.model.vo;
 public class VipDescVo {
     public String desc;
     public String desc1;
+    public long score;
     public String getDesc() {
         return desc;
     }
@@ -19,5 +20,12 @@ public class VipDescVo {
     public void setDesc1(String desc1) {
         this.desc1 = desc1;
     }
+    public long getScore() {
+        return score;
+    }
+    public void setScore(long score) {
+        this.score = score;
+    }
+    
     
 }

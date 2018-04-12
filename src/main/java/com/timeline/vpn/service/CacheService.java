@@ -18,5 +18,9 @@ public interface CacheService {
     public void del(String token);
     public void put(String key,String val, long timeout);
     public String get(String key);
+
+    public Long lock(String lockKey);
+
+    public void unlock(String lockKey);
 }
 

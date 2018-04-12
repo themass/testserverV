@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.timeline.vpn.dao.db.UserDao;
+import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.job.ReloadJob;
 
 /**
@@ -19,15 +20,19 @@ public class ScoreCalculation extends ReloadJob{
     private static final Logger LOGGER = LoggerFactory.getLogger(ScoreCalculation.class);
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private CacheService cacheService;
 
     @Override
     @Transactional
     public void reload() {
-        LOGGER.info("ScoreCalculation start");
-        userDao.minusScore();
-        userDao.initUserVip();
-        userDao.initUserVip1();
-        userDao.initUserVip2();
+        if(cacheService.lock("ScoreCalculation")>0) {
+            LOGGER.info("ScoreCalculation start");
+            userDao.minusScore();
+            userDao.initUserVip();
+            userDao.initUserVip1();
+            userDao.initUserVip2();
+        }
     }
 }
 
