@@ -141,7 +141,7 @@ public class DataServiceImpl implements DataService {
         VipDescVo desc = new VipDescVo();
         desc.setDesc("每周扣除50积分，VIP状态随积分变动");
         desc.setDesc1("600积分=VIP1；2000积分=VIP2；点击广告赚积分");
-        if(baseQuery.getUser()!=null)
+        if(baseQuery!=null&&baseQuery.getUser()!=null)
             desc.setScore(baseQuery.getUser().getScore());
         vo.setVitamioExt(Constant.VIDEO_EXT);
         vo.setVipDesc(desc);
