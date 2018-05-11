@@ -34,6 +34,7 @@ public class PageBaseForm {
     }
 
     public void setLimit(int limit) {
+        limit = limit<Constant.MIN_PAGESIZE?Constant.MIN_PAGESIZE:limit;
         this.limit = limit;
     }
 
