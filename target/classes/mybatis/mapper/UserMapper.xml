@@ -31,15 +31,15 @@
 	</update>
 	
 	<update id="minusScore">
-	    update vpn.user set score=score-50 where score>50
+	    update vpn.user set score=score-50 where score &gt; 50
 	</update>
 	<update id="initUserVip">
 	    update vpn.user set level=0
 	</update>
 	<update id="initUserVip1">
-	    update vpn.user set level=1 where score>599
+	    update vpn.user set level=1 where score &gt; 599 and score &lt; 2000
 	</update>
 	<update id="initUserVip2">
-	    update vpn.user set level=2 where score>1999
+	    update vpn.user set level=2 where score &gt; 1999
 	</update>
 </mapper>
