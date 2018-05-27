@@ -17,6 +17,7 @@ public class VideoUserItemPo {
     private Integer showType; 
     private String userId;
     private String baseUrl;
+    private String videoType;
     public Integer getId() {
         return id;
     }
@@ -71,6 +72,12 @@ public class VideoUserItemPo {
     }
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+    public String getVideoType() {
+        return videoType;
+    }
+    public void setVideoType(String videoType) {
+        this.videoType = videoType;
     }
     
     

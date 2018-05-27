@@ -119,6 +119,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
                 t.setParam(i.getUserId());
+                t.setExtra(i.getVideoType());
             }
         });
     }
