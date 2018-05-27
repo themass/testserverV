@@ -16,6 +16,7 @@ public class VideoUserPo {
     private Integer showType; 
     private String userId;
     private Integer count;
+    private String channel;
     public Integer getId() {
         return id;
     }
@@ -64,6 +65,12 @@ public class VideoUserPo {
     }
     public void setCount(Integer count) {
         this.count = count;
+    }
+    public String getChannel() {
+        return channel;
+    }
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
     
     

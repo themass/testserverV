@@ -88,9 +88,9 @@ public class DataVideoServiceImpl implements DataVideoService {
     }
 
     @Override
-    public InfoListVo<RecommendVo> getVideoUserPage(BaseQuery baseQuery, PageBaseParam param) {
+    public InfoListVo<RecommendVo> getVideoUserPage(BaseQuery baseQuery, PageBaseParam param,String channel) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<VideoUserPo> list = videoDao.getUsers();
+        List<VideoUserPo> list = videoDao.getUsers(channel);
         return VoBuilder.buildPageInfoVo((Page<VideoUserPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserPo,RecommendVo>(){
             @Override
             public void action(VideoUserPo i, RecommendVo t) {
@@ -99,7 +99,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setImg(i.getPic());
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
-                t.setParam(i.getUserId());
+                t.setParam(i.getChannel());
                 t.setShowLogo(i.getCount()+"部");
             }
         });

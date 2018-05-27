@@ -2,6 +2,7 @@ package com.timeline.vpn.web.controller.api;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +40,10 @@ public class VideoController extends BaseController {
     } 
     @RequestMapping(value = "/user.json", method = RequestMethod.GET)
     public JsonResult user(@UserInfo BaseQuery baseQuery,
-            @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataVideoService.getVideoUserPage(baseQuery, form.toParam()));
+            @ModelAttribute @Valid PageBaseForm form,@RequestParam(required=false) String channel) {
+        if(StringUtils.isEmpty(channel))
+            channel = "人气女优";
+        return new JsonResult(dataVideoService.getVideoUserPage(baseQuery, form.toParam(),channel));
     } 
     @RequestMapping(value = "/user/items.json", method = RequestMethod.GET)
     public JsonResult userItems(@UserInfo BaseQuery baseQuery,

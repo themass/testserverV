@@ -34,7 +34,7 @@
 	    group by i.path order by sortType desc,updateTime asc
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
-	    select * from vpn.video_user order by count desc
+	    select * from vpn.video_user where channel=#{channel} order by count desc
 	</select>
 	<select id="getUserItems" resultMap="VideoUserItemMap">
 	    select * from vpn.video_user_item where userId=#{userId}
