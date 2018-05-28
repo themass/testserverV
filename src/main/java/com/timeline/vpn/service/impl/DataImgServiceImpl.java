@@ -45,7 +45,7 @@ public class DataImgServiceImpl implements DataImgService {
                 t.setAdsShow(true);
                 if(i.getShowType()==null)
                     t.setShowType(0);
-                t.setParam(i.getUrl());
+                t.setParam(i.getName());
             }
         });
     }
