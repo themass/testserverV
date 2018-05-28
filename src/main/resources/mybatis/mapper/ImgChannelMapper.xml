@@ -16,8 +16,9 @@
 	<select id="getChannel" resultMap="ImgChannelMap">
 	    select * from vpn.imgchannel where enable=1
 	    <if test="channel != null">
-			and channelName = #{channel}
+			and channel = #{channel}
 		</if>
+		group by name
 	</select>
 	<select id="getByChannel" resultMap="ImgItemsMap">
 	    select * from vpn.imgitems where 1=1
