@@ -146,7 +146,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVo score(BaseQuery baseQuery, int score) {
-        userDao.score(score, baseQuery.getUser().getName());
+        if(cacheService.updateCount(baseQuery.getUser())<18) {
+            userDao.score(score, baseQuery.getUser().getName());
+        }
         UserPo po = userDao.exist(baseQuery.getUser().getName());
         po.setLevel(ScoreCalculate.level(baseQuery,po.getScore()));
         userDao.updateLevel(po);

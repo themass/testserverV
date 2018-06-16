@@ -25,7 +25,10 @@ import com.timeline.vpn.util.JsonUtil;
 @Service
 public class CacheServiceImpl implements CacheService {
     private static final String TOKEN_ITEM_KEY = "token_%s";
+    private static final String SCORE_ITEM_KEY = "score_%s";
+
     private static final long LOCK_TIMEOUT = 60 * 1000; //加锁超时时间 单位毫秒
+    private static final long SCORE_TIMEOUT = 600 * 1000; //加锁超时时间 单位毫秒
     @Autowired
     private RedisTemplate<String, String> jedisTemplate;
     private static final Logger LOGGER = LoggerFactory.getLogger(CacheServiceImpl.class);
@@ -89,6 +92,19 @@ public class CacheServiceImpl implements CacheService {
     public void unlock(String lockKey) {
         LOGGER.info("执行解锁==========");//正常直接删除 如果异常关闭判断加锁会判断过期时间
         jedisTemplate.delete(lockKey); //删除键
+    }
+
+    @Override
+    public int updateCount(UserPo user) {
+        String count = jedisTemplate.opsForValue().get(String.format(SCORE_ITEM_KEY, user.getName()));
+        if(StringUtils.isEmpty(count)) {
+            jedisTemplate.opsForValue().set(String.format(SCORE_ITEM_KEY, user.getName()),"1",SCORE_TIMEOUT,TimeUnit.MILLISECONDS);
+            return 0;
+        }
+        int countInt = Integer.parseInt(count);
+        jedisTemplate.opsForValue().set(String.format(SCORE_ITEM_KEY, user.getName()),(countInt+1)+"",SCORE_TIMEOUT,TimeUnit.MILLISECONDS);
+
+        return countInt;
     }
  
 

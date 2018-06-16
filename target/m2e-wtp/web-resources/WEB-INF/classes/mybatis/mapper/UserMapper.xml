@@ -37,9 +37,9 @@
 	    update vpn.user set level=0
 	</update>
 	<update id="initUserVip1">
-	    update vpn.user set level=1 where score &gt; 599 and score &lt; 2000
+	    update vpn.user set level=1 where score &gt; 1500 and score &lt; 3000
 	</update>
 	<update id="initUserVip2">
-	    update vpn.user set level=2 where score &gt; 1999
+	    update vpn.user set level=2 where score &gt; 2999
 	</update>
 </mapper>
