@@ -31,7 +31,7 @@
 	</update>
 	
 	<update id="minusScore">
-	    update vpn.user set score=score-50 where score &gt; 50
+	    update vpn.user set score=score-100 where score &gt; 100
 	</update>
 	<update id="initUserVip">
 	    update vpn.user set level=0
