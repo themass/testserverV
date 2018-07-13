@@ -21,7 +21,7 @@ public interface VideoDao extends BaseDBDao<VideoPo> {
     public List<VideoChannelPo> getChannel(@Param("channelType")String channelType);
     public List<VideoPo> getChannelItems(@Param("channel")String channel,@Param("keyword")String keyword,@Param("channelType")String channelType);
     public List<VideoUserPo> getUsers(@Param("channel")String channel);
-    public List<VideoUserItemPo> getUserItems(@Param("userId")String userId,String keyword);
+    public List<VideoUserItemPo> getUserItems(@Param("userId")String userId,@Param("keyword")String keyword);
     
     public List<VideoChannelPo> getTvChannel(@Param("channel")String channel,@Param("keyword")String keyword);
     public List<VideoPo> getTvItem(@Param("channel")String channel);
