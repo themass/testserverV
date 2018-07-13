@@ -38,6 +38,9 @@
 	</select>
 	<select id="getUserItems" resultMap="VideoUserItemMap">
 	    select * from vpn.video_user_item where userId=#{userId}
+	    <if test="keyword!=null">
+	        and name like CONCAT('%',#{keyword},'%')
+	    </if>
 	</select>
 	
 	<select id="getTvChannel" resultMap="VideoChannelMap">
