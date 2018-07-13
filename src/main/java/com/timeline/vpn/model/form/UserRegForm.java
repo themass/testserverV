@@ -20,7 +20,7 @@ public class UserRegForm {
     private String sex;
     private String code;
     private String channel;
-
+    private String email;
     public String getName() {
         return name;
     }
@@ -69,5 +69,13 @@ public class UserRegForm {
         this.channel = channel;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
 }
 

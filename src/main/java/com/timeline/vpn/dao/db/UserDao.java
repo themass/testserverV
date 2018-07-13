@@ -16,7 +16,7 @@ public interface UserDao extends BaseDBDao<UserPo> {
     public UserPo exist(String name);
 
     public void score(@Param(value = "score") long score, @Param(value = "name") String name);
-    
+    public void updateEmail(@Param(value = "email") String email, @Param(value = "name") String name);
     public void minusScore();
     public void initUserVip();
     public void initUserVip1();

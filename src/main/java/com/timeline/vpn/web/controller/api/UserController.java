@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.form.CustomeAddForm;
 import com.timeline.vpn.model.form.LoginForm;
+import com.timeline.vpn.model.form.UserEmailForm;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
@@ -36,7 +37,17 @@ public class UserController extends BaseController {
         userService.reg(form, baseQuery.getAppInfo());
         return Constant.RESULT_SUCCESS;
     }
-
+    @RequestMapping(value = "/findpass.json", method = RequestMethod.POST)
+    public JsonResult findpass(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserEmailForm form) {
+//        userService.reg(form, baseQuery.getAppInfo());
+        //TODO 找回密码 发送邮件
+        return Constant.RESULT_SUCCESS;
+    }
+    @RequestMapping(value = "/setemail.json", method = RequestMethod.POST)
+    public JsonResult setemail(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserEmailForm form) {
+        userService.updateEmail(form, baseQuery);
+        return Constant.RESULT_SUCCESS;
+    }
     @RequestMapping(value = "/info.json", method = RequestMethod.GET)
     public JsonResult info(@UserInfo(required = true) BaseQuery baseQuery) {
         return new JsonResult(userService.info(baseQuery));

@@ -20,6 +20,7 @@ import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.exception.LoginException;
 import com.timeline.vpn.model.form.CustomeAddForm;
+import com.timeline.vpn.model.form.UserEmailForm;
 import com.timeline.vpn.model.form.UserRegForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
@@ -222,6 +223,11 @@ public class UserServiceImpl implements UserService {
         }
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
 
+    }
+
+    @Override
+    public void updateEmail(UserEmailForm form, BaseQuery baseQuery) {
+        userDao.updateEmail(form.getEmail(), baseQuery.getUser().getName());
     }
 
 }

@@ -9,13 +9,14 @@
 		<result column="level" property="level" />
 		<result column="time" property="time" />
 		<result column="score" property="score" />
+		<result column="email" property="email" />
 		
 	</resultMap>
 	<insert id="insert">
 		insert into
-		vpn.user(name,pwd,sex,level,time)
+		vpn.user(name,pwd,sex,level,time,email)
 		values
-		(#{name},#{pwd},#{sex},#{level},#{time})
+		(#{name},#{pwd},#{sex},#{level},#{time},#{email})
 	</insert>
 	<select id="exist" resultMap="UserMap">
 		select * from vpn.user where name=#{name}
@@ -29,7 +30,9 @@
 	<update id="updateLevel">
 	    update vpn.user set level=#{level} where name=#{name}
 	</update>
-	
+	<update id="updateEmail">
+	    update vpn.user set email=#{email} where name=#{name}
+	</update>
 	<update id="minusScore">
 	    update vpn.user set score=score-100 where score &gt; 100
 	</update>
