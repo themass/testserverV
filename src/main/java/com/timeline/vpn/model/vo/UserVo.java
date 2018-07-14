@@ -13,7 +13,7 @@ public class UserVo {
     private String token;
     private long score;
     private StateUseVo stateUse;
-
+    private String email;
     public String getName() {
         return name;
     }
@@ -68,6 +68,14 @@ public class UserVo {
 
     public void setStateUse(StateUseVo stateUse) {
         this.stateUse = stateUse;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 

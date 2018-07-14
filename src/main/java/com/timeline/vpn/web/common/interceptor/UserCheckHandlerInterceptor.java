@@ -35,6 +35,9 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
         DevApp app = DevAppContext.get();
+        if(app==null) {
+            throw new RuntimeException("滚你妈逼");
+        }
         String token = request.getHeader(app.getTokenHeader());
         if (StringUtils.isEmpty(token)) {
             return true;

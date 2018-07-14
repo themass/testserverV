@@ -16,6 +16,7 @@ public class UserPo {
     private int level;
     private String photo;
     private long score;
+    private String email; 
 
     public long getId() {
         return id;
@@ -86,6 +87,13 @@ public class UserPo {
         this.score = score;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 
 }
