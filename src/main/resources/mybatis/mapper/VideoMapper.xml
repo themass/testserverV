@@ -39,7 +39,7 @@
 	<select id="getUserItems" resultMap="VideoUserItemMap">
 	    select * from vpn.video_user_item where 1=1
 	    <if test="userId!=null">
-	        userId=#{userId}
+	        and userId=#{userId}
 	    </if>
 	    
 	    <if test="keyword!=null">
