@@ -25,6 +25,7 @@ public class RecommendVo {
     private Boolean newShow;
     private String showLogo;
     public Object extra;
+    public int type;
     public String getTitle() {
         return title;
     }
@@ -151,6 +152,14 @@ public class RecommendVo {
 
     public void setExtra(Object extra) {
         this.extra = extra;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
     
     

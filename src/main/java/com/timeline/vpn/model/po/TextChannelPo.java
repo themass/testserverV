@@ -15,6 +15,14 @@ public class TextChannelPo {
     private Float rate;
     private Integer showType;
     private Integer count;
+    private Integer type;
+    
+    public Integer getType() {
+        return type;
+    }
+    public void setType(Integer type) {
+        this.type = type;
+    }   
     public Integer getId() {
         return id;
     }

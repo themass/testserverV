@@ -18,6 +18,14 @@ public class VideoUserItemPo {
     private String userId;
     private String baseUrl;
     private String videoType;
+    private Integer type;
+    
+    public Integer getType() {
+        return type;
+    }
+    public void setType(Integer type) {
+        this.type = type;
+    }   
     public Integer getId() {
         return id;
     }

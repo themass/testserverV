@@ -18,6 +18,14 @@ public class VideoPo {
     private Integer showType; 
     private String videoType;
     private String baseUrl;
+    private Integer type;
+    
+    public Integer getType() {
+        return type;
+    }
+    public void setType(Integer type) {
+        this.type = type;
+    }   
     public Integer getId() {
         return id;
     }

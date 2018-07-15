@@ -10,6 +10,14 @@ public class ImgItemsVo {
     private String name;
     private String fileDate;
     private int pics;
+    private Integer type;
+    
+    public Integer getType() {
+        return type;
+    }
+    public void setType(Integer type) {
+        this.type = type;
+    }   
     public String getUrl() {
         return url;
     }
