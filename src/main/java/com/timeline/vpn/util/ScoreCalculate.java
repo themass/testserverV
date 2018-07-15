@@ -13,10 +13,7 @@ public class ScoreCalculate {
         if(score>=Constant.SCORE_TO_VIP&&score<Constant.SCORE_TO_VIP2){
             return Constant.UserLevel.LEVEL_VIP;
         }else if(score>Constant.SCORE_TO_VIP2){
-            if("001000002008".compareTo(baseQuery.getAppInfo().getVersion())<0)
                 return Constant.UserLevel.LEVEL_VIP2;
-            else
-                return Constant.UserLevel.LEVEL_VIP; 
         }
         return Constant.UserLevel.LEVEL_FREE;
     }

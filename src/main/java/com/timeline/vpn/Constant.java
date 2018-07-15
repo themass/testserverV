@@ -105,8 +105,8 @@ public class Constant {
     public static final int MIN_PAGESIZE = 30;
     public static final String RAD_PASS = "Cleartext-Password";
     public static final String RAD_EQ = ":=";
-    public static final int SCORE_TO_VIP = 600;
-    public static final int SCORE_TO_VIP2 = 2000;
+    public static final int SCORE_TO_VIP = 2000;
+    public static final int SCORE_TO_VIP2 = 4000;
     public static final int RAD_PRIORITY_DEF = 2;
     public static String superMan = "FREE_VPN";
     public static final String STATE_TIME_USE="%s h, %sm, %ss";
