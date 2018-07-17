@@ -130,7 +130,7 @@ public class DataImgServiceImpl implements DataImgService {
                 float l = 1+(r/10l);
                 t.setRate(l);
                 t.setTitle("");
-                t.setDataType(Constant.dataType_IMG_CHANNEL);
+//                t.setDataType(Constant.dataType_IMG_CHANNEL);
 
             }
         });
