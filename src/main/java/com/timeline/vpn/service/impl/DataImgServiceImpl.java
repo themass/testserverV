@@ -75,7 +75,7 @@ public class DataImgServiceImpl implements DataImgService {
 //                t.setShowType(0);
 //                t.setRate(1.2f);
                 t.setShowLogo(i.getPics()+"张");
-                t.setDataType(Constant.dataType_IMG_CHANNEL);
+//                t.setDataType(Constant.dataType_IMG_CHANNEL);
             }
         });
     }
