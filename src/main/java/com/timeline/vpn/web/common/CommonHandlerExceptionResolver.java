@@ -59,6 +59,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
             result.setError(getMessage(Constant.ResultMsg.RESULT_SYSTEMERROR, request));
             LOGGER.error(requestUrl, ex);
         }
+        result.setError("系统正在进行升级，请稍等再用");
         // result.setData(new Object());
         return new ModelAndView("", JsonResult.MODEL_KEY, result);
     }
