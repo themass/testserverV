@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.dao.db.ImgChannelDao;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -46,6 +47,7 @@ public class DataImgServiceImpl implements DataImgService {
                 if(i.getShowType()==null)
                     t.setShowType(0);
                 t.setParam(i.getName());
+                t.setDataType(Constant.dataType_IMG_CHANNEL);
             }
         });
     }
@@ -73,6 +75,7 @@ public class DataImgServiceImpl implements DataImgService {
 //                t.setShowType(0);
 //                t.setRate(1.2f);
                 t.setShowLogo(i.getPics()+"张");
+                t.setDataType(Constant.dataType_IMG_CHANNEL);
             }
         });
     }
@@ -127,6 +130,8 @@ public class DataImgServiceImpl implements DataImgService {
                 float l = 1+(r/10l);
                 t.setRate(l);
                 t.setTitle("");
+                t.setDataType(Constant.dataType_IMG_CHANNEL);
+
             }
         });
     }

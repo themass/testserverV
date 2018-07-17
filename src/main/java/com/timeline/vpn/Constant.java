@@ -114,7 +114,11 @@ public class Constant {
     public static final String comma = ",";
     public static final String fen = ";";
     public static final String mao = ":";
-    
+    public static final int dataType_RECOMMENT = 2;
+    public static final int dataType_TEXT_CHANNEL = 3;
+    public static final int dataType_SOUND_CHANNEL = 4;
+    public static final int dataType_VIDEO_CHANNEL = 5;
+    public static final int dataType_IMG_CHANNEL = 6;
     public static List<String> colorBg = Arrays.asList(
             "#887267","#dbcce7","#eddeb9",
             "#8b28dc","#b27edc","#f7dee1",

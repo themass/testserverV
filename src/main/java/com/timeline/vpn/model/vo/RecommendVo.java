@@ -2,6 +2,8 @@ package com.timeline.vpn.model.vo;
 
 import java.util.Date;
 
+import com.timeline.vpn.Constant;
+
 /**
  * @author gqli
  * @date 2016年3月10日 下午4:41:23
@@ -24,8 +26,9 @@ public class RecommendVo {
     private String minVersion;
     private Boolean newShow;
     private String showLogo;
-    public Object extra;
-    public int type;
+    private Object extra;
+    private int type;
+    private int dataType = Constant.dataType_RECOMMENT;
     public String getTitle() {
         return title;
     }
@@ -160,6 +163,14 @@ public class RecommendVo {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
     }
     
     

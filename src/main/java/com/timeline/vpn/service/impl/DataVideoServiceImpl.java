@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.dao.db.VideoDao;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -42,6 +43,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
                 t.setParam(i.getUrl());
+                t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
         });
     }
@@ -59,6 +61,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsShow(true);
                 t.setParam(i.getChannel());
                 t.setShowLogo(i.getCount()+"部");
+                t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
         });
     }
@@ -83,6 +86,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsShow(true);
                 t.setParam(i.getBaseUrl());
                 t.setExtra(i.getVideoType());
+                t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
         });
     }
@@ -101,6 +105,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsShow(true);
                 t.setParam(i.getChannel());
                 t.setShowLogo(i.getCount()+"部");
+                t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
         });
     }
@@ -125,6 +130,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsShow(true);
                 t.setParam(i.getUserId());
                 t.setExtra(i.getVideoType());
+                t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
         });
     }
@@ -144,6 +150,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsShow(true);
                 t.setParam(i.getBaseUrl());
                 t.setExtra(i.getVideoType());
+                t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
         });
     }
@@ -163,6 +170,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsShow(true);
                 t.setParam(i.getUrl());
                 t.setShowLogo(i.getCount()+"集");
+                t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
         });
     }
