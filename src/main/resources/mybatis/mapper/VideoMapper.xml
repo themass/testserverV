@@ -36,14 +36,17 @@
 	<select id="getUsers" resultMap="VideoUserMap">
 	    select * from vpn.video_user where channel=#{channel} order by count desc
 	</select>
+	<select id="getUserByUserId" resultMap="VideoUserMap">
+	    select * from vpn.video_user where userId=#{userId} limit 1
+	</select>
 	<select id="getUserItems" resultMap="VideoUserItemMap">
-	    select * from vpn.video_user_item where 1=1
+	    select i.* from vpn.video_user_item i ,vpn.video_user u where u.channel=#{channel} and i.userId=u.userId
 	    <if test="userId!=null">
-	        and userId=#{userId}
+	        and i.userId=#{userId}
 	    </if>
 	    
 	    <if test="keyword!=null">
-	        and name like CONCAT('%',#{keyword},'%')
+	        and i.name like CONCAT('%',#{keyword},'%')
 	    </if>
 	</select>
 	
