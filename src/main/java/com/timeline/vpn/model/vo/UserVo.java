@@ -14,6 +14,16 @@ public class UserVo {
     private long score;
     private StateUseVo stateUse;
     private String email;
+    private String areaMi;
+    
+    public String getAreaMi() {
+        return areaMi;
+    }
+
+    public void setAreaMi(String areaMi) {
+        this.areaMi = areaMi;
+    }
+
     public String getName() {
         return name;
     }

@@ -110,6 +110,7 @@ public class UserServiceImpl implements UserService {
             StateUseVo state = stateUse(Arrays.asList(vo.getName(),baseQuery.getAppInfo().getDevId()));
             vo.setStateUse(state);
             vo.setToken(token);
+            vo.setAreaMi(po.getPwd());
             return vo;
         } else {
             throw new LoginException(Constant.ResultMsg.RESULT_PWD_ERROR);
