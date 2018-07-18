@@ -37,7 +37,7 @@
 	    update vpn.user set score=score-100 where score &gt; 100
 	</update>
 	<update id="initUserVip">
-	    update vpn.user set level=0
+	    update vpn.user set level=0 where level &lt; 3
 	</update>
 	<update id="initUserVip1">
 	    update vpn.user set level=1 where score &gt; 2000 and score &lt; 4000
