@@ -19,7 +19,14 @@ public class VideoChannelPo {
     private Integer count;
     private String channelType;
     private Integer type;
-    
+    private String baseurl;
+    public String getBaseurl() {
+        return baseurl;
+    }
+    public void setBaseurl(String baseurl) {
+        this.baseurl = baseurl;
+    }
+ 
     public Integer getType() {
         return type;
     }
