@@ -30,6 +30,9 @@
 	    </if> 
 	    order by sortType desc,id asc
 	</select>
+	<select id="getByUrl" resultMap="ImgItemsMap">
+	    select * from vpn.imgitems where url=#{url} limit 1
+	</select>
 	<select id="getItem" resultMap="ImgItemsItemMap">
 	    select * from vpn.imgitems_item where itemUrl=#{itemUrl}
 	</select>

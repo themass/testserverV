@@ -8,6 +8,14 @@ public class ImgItemVo {
     private String picUrl;
     private String origUrl;
     private String remoteUrl;
+    private String baseUrl;
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
     public String getPicUrl() {
         return picUrl;

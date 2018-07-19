@@ -117,6 +117,7 @@ public class DataImgServiceImpl implements DataImgService {
 
     @Override
     public InfoListVo<RecommendVo> getImgItem(BaseQuery baseQuery, String url, PageBaseParam param) {
+        final ImgItemsPo itemsPo = imgChannelDao.getByUrl(url);
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<ImgItemsItemPo> list = imgChannelDao.getItem(url);
         return VoBuilder.buildPageInfoVo((Page<ImgItemsItemPo>)list, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,RecommendVo>(){
@@ -130,6 +131,7 @@ public class DataImgServiceImpl implements DataImgService {
                 float l = 1+(r/10l);
                 t.setRate(l);
                 t.setTitle("");
+                t.setBaseUrl(itemsPo.getBaseUrl());
 //                t.setDataType(Constant.dataType_IMG_CHANNEL);
 
             }
