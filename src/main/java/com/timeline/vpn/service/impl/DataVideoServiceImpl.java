@@ -84,7 +84,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setImg(i.getPic());
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
-                t.setParam(i.getBaseUrl());
+                t.setParam(i.getBaseurl());
                 t.setExtra(i.getVideoType());
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
@@ -147,7 +147,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setImg(i.getPic());
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
-                t.setParam(i.getBaseUrl());
+                t.setParam(i.getBaseurl());
                 t.setExtra(i.getVideoType());
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }

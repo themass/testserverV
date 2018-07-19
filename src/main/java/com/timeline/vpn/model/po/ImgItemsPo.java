@@ -14,7 +14,7 @@ public class ImgItemsPo {
     private String url;
     private Date updateTime;
     private String fileDate;
-    private String baseUrl;
+    private String baseurl;
     private int pics;
     private String pic;
     private Float rate;
@@ -63,11 +63,11 @@ public class ImgItemsPo {
     public void setFileDate(String fileDate) {
         this.fileDate = fileDate;
     }
-    public String getBaseUrl() {
-        return baseUrl;
+    public String getBaseurl() {
+        return baseurl;
     }
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public void setBaseurl(String baseurl) {
+        this.baseurl = baseurl;
     }
     public int getPics() {
         return pics;

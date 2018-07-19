@@ -16,7 +16,7 @@ public class VideoUserItemPo {
     private Float rate;
     private Integer showType; 
     private String userId;
-    private String baseUrl;
+    private String baseurl;
     private String videoType;
     private Integer type;
     
@@ -75,11 +75,11 @@ public class VideoUserItemPo {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    public String getBaseUrl() {
-        return baseUrl;
+    public String getBaseurl() {
+        return baseurl;
     }
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public void setBaseurl(String baseurl) {
+        this.baseurl = baseurl;
     }
     public String getVideoType() {
         return videoType;

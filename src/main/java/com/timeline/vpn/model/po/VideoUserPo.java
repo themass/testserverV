@@ -18,7 +18,13 @@ public class VideoUserPo {
     private Integer count;
     private String channel;
     private Integer type;
-    
+    private String baseurl;
+    public String getBaseurl() {
+        return baseurl;
+    }
+    public void setBaseurl(String baseurl) {
+        this.baseurl = baseurl;
+    }
     public Integer getType() {
         return type;
     }

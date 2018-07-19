@@ -17,7 +17,7 @@ public class VideoPo {
     private Float rate;
     private Integer showType; 
     private String videoType;
-    private String baseUrl;
+    private String baseurl;
     private Integer type;
     
     public Integer getType() {
@@ -80,13 +80,12 @@ public class VideoPo {
     public void setVideoType(String videoType) {
         this.videoType = videoType;
     }
-    public String getBaseUrl() {
-        return baseUrl;
+    public String getBaseurl() {
+        return baseurl;
     }
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public void setBaseurl(String baseurl) {
+        this.baseurl = baseurl;
     }
-    
     
 }
 

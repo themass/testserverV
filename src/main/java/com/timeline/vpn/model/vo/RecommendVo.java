@@ -28,17 +28,14 @@ public class RecommendVo {
     private String showLogo;
     private Object extra;
     private int type;
-    private String baseUrl;
+    private String baseurl;
     private int dataType = Constant.dataType_RECOMMENT;
-    
-    public String getBaseUrl() {
-        return baseUrl;
+    public String getBaseurl() {
+        return baseurl;
     }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public void setBaseurl(String baseurl) {
+        this.baseurl = baseurl;
     }
-
     public String getTitle() {
         return title;
     }
