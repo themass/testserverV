@@ -37,8 +37,8 @@ public class HostController extends BaseController {
         return new JsonResult(hostService.getAllLocation());
     }
     @RequestMapping(value = "/server/location/cache.json", method = RequestMethod.GET)
-    public JsonResult locationListCache(@UserInfo BaseQuery baseQuery) {
-        return new JsonResult(hostService.getAllLocationCache());
+    public JsonResult locationListCache(@UserInfo BaseQuery baseQuery,@RequestParam(required=false)Integer type) {
+        return new JsonResult(hostService.getAllLocationCache(type));
     }
     @RequestMapping(value = "/server/location/vip/cache.json", method = RequestMethod.GET)
     public JsonResult locationListVipCache(@UserInfo BaseQuery baseQuery) {

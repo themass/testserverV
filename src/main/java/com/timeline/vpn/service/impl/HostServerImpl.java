@@ -132,8 +132,20 @@ public class HostServerImpl implements HostService {
         return VoBuilder.buildListInfoVo(cityDao.getAll(), LocationVo.class,null);
     }
     @Override
-    public InfoListVo<LocationVo> getAllLocationCache() {
-        return VoBuilder.buildListInfoVo(HostIpCache.getLocationList(), LocationVo.class,null);
+    public InfoListVo<LocationVo> getAllLocationCache(Integer type) {
+        List<LocationPo> list ;
+        if(type==null) {
+            list = HostIpCache.getLocationList();
+        }else {
+            list = new ArrayList<>();
+            for(LocationPo po : HostIpCache.getLocationList()) {
+                if(po.getType()==type) {
+                    list.add(po);
+                }
+            }
+        }
+        HostIpCache.getLocationList();
+        return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
     }
     @Override
     public InfoListVo<VipLocationVo> getAllLocationVipCache() {
