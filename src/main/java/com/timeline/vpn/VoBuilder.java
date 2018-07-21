@@ -1,6 +1,7 @@
 package com.timeline.vpn;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.Page;
+import com.timeline.vpn.model.enums.LocationTypeNameEnum;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.DnsResverPo;
 import com.timeline.vpn.model.po.HostPo;
@@ -23,8 +25,10 @@ import com.timeline.vpn.model.vo.DnsResverVo;
 import com.timeline.vpn.model.vo.HostVo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.InfoListVo;
+import com.timeline.vpn.model.vo.LocationVo;
 import com.timeline.vpn.model.vo.ServerVo;
 import com.timeline.vpn.model.vo.StateUseVo;
+import com.timeline.vpn.model.vo.VipLocationVo;
 import com.timeline.vpn.service.strategy.IAppAgent;
 import com.timeline.vpn.util.ArrayUtil;
 
@@ -196,6 +200,31 @@ public class VoBuilder {
             map.put(item.getValue().getAgent(), item.getValue());
         }
         LOGGER.info("buildServiceProxy:" + map);  
+    }
+
+    public static InfoListVo<VipLocationVo> buildListVipLocationVo(
+            Map<Integer, Collection<LocationVo>> map) {
+        InfoListVo<VipLocationVo> vo = new InfoListVo<>();
+        vo.setHasMore(false);
+        vo.setPageNum(1);
+        List<VipLocationVo> list = new ArrayList<>();
+        for(int i=0;i<4;i++) {
+            Collection<LocationVo> itemList = map.get(i);
+            LocationTypeNameEnum nameType = LocationTypeNameEnum.getModelType(i);
+            if(nameType==null || CollectionUtils.isEmpty(itemList)) {
+                continue;
+            }
+            VipLocationVo vipLocationVo  = new VipLocationVo();
+            vipLocationVo.setType(i);
+            vipLocationVo.setCount(itemList.size());
+            vipLocationVo.setList(new ArrayList<>(itemList));
+            vipLocationVo.setName(nameType.getName());
+            vipLocationVo.setDesc(nameType.getDesc());
+            list.add(vipLocationVo);
+        }
+        vo.setVoList(list);
+        vo.setTotal(list.size());
+        return vo;
     }
 }
 

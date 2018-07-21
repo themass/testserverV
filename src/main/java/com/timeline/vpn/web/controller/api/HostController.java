@@ -40,6 +40,10 @@ public class HostController extends BaseController {
     public JsonResult locationListCache(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(hostService.getAllLocationCache());
     }
+    @RequestMapping(value = "/server/location/vip/cache.json", method = RequestMethod.GET)
+    public JsonResult locationListVipCache(@UserInfo BaseQuery baseQuery) {
+        return new JsonResult(hostService.getAllLocationVipCache());
+    }
     @RequestMapping(value = "/server/dns.json", method = RequestMethod.GET)
     public JsonResult dns(@UserInfo BaseQuery baseQuery,@RequestParam String d) {
         List<String> list = Arrays.asList(d.split(Constant.comma));

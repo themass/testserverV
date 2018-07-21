@@ -1,13 +1,17 @@
 package com.timeline.vpn.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.google.common.base.Function;
+import com.timeline.vpn.BeanBuilder;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.VoBuilder.BuildAction;
@@ -26,6 +30,7 @@ import com.timeline.vpn.model.vo.HostVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.LocationVo;
 import com.timeline.vpn.model.vo.ServerVo;
+import com.timeline.vpn.model.vo.VipLocationVo;
 import com.timeline.vpn.service.HostService;
 import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.job.reload.HostIpCache;
@@ -130,7 +135,18 @@ public class HostServerImpl implements HostService {
     public InfoListVo<LocationVo> getAllLocationCache() {
         return VoBuilder.buildListInfoVo(HostIpCache.getLocationList(), LocationVo.class,null);
     }
+    @Override
+    public InfoListVo<VipLocationVo> getAllLocationVipCache() {
+        InfoListVo<LocationVo> locationVo = VoBuilder.buildListInfoVo(HostIpCache.getLocationList(), LocationVo.class,null);
+        Map<Integer, Collection<LocationVo>> map =BeanBuilder.buildMultimap(locationVo.getVoList(), new Function<LocationVo, Integer>() {
 
+            @Override
+            public Integer apply(LocationVo input) {
+                return input.getType();
+            }
+        });
+        return VoBuilder.buildListVipLocationVo(map);
+    }
     @Override
     public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains) {
         List<DnsResverPo> list = dnsResverDao.get(domains);

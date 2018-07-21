@@ -7,6 +7,7 @@ import com.timeline.vpn.model.vo.DnsResverVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.LocationVo;
 import com.timeline.vpn.model.vo.ServerVo;
+import com.timeline.vpn.model.vo.VipLocationVo;
 
 /**
  * @author gqli
@@ -19,5 +20,6 @@ public interface HostService {
     public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains);
     public InfoListVo<LocationVo> getAllLocationCache();
     public ServerVo getHostInfoById(BaseQuery baseQuery, int id);
+    public InfoListVo<VipLocationVo> getAllLocationVipCache();
 }
 
