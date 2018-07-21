@@ -40,6 +40,7 @@ import com.timeline.vpn.service.RegAuthService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.impl.recommend.RecommendServiceProxy;
 import com.timeline.vpn.util.CommonUtil;
+import com.timeline.vpn.util.DateTimeUtils;
 import com.timeline.vpn.util.ScoreCalculate;
 
 /**
@@ -111,6 +112,8 @@ public class UserServiceImpl implements UserService {
             vo.setStateUse(state);
             vo.setToken(token);
             vo.setAreaMi(po.getPwd());
+            if(po.getPaidEndTime()!=null)
+                vo.setPaidTime(DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD, po.getPaidEndTime()));
             return vo;
         } else {
             throw new LoginException(Constant.ResultMsg.RESULT_PWD_ERROR);

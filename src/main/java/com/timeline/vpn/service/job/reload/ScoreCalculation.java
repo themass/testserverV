@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.timeline.vpn.dao.db.LockJobDao;
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.model.po.LockJobPo;
-import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.job.ReloadJob;
 import com.timeline.vpn.util.DateTimeUtils;
 
