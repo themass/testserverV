@@ -3,7 +3,7 @@ package com.timeline.vpn.model.enums;
 import java.io.Serializable;
 
 public enum LocationTypeNameEnum implements Serializable {
-    FREE(0, "免费","完全免费"), VIP1(1, "VIP1","积分2000以上升级VIP1"),VIP2(2, "VIP2","积分4000以上升级VIP2"),VIP3(3, "付费","10月30天");
+    FREE(0, "免费","完全免费"), VIP1(1, "VIP1","积分2000以上升级VIP1"),VIP2(2, "VIP2","积分4000以上升级VIP2"),VIP3(3, "付费","15元购30天VIP3");
     Integer type;
     String name;
     String desc;

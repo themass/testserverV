@@ -10,5 +10,5 @@ import java.util.List;
 public interface BaseDBDao<T> {
     public List<T> getAll();
 
-    public void insert(T t);
+    public int insert(T t);
 }

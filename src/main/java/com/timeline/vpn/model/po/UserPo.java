@@ -17,7 +17,8 @@ public class UserPo {
     private String photo;
     private long score;
     private String email; 
-
+    private Date paidStartTime;
+    private Date paidEndTime;
     public long getId() {
         return id;
     }
@@ -94,6 +95,23 @@ public class UserPo {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Date getPaidStartTime() {
+        return paidStartTime;
+    }
+
+    public void setPaidStartTime(Date paidStartTime) {
+        this.paidStartTime = paidStartTime;
+    }
+
+    public Date getPaidEndTime() {
+        return paidEndTime;
+    }
+
+    public void setPaidEndTime(Date paidEndTime) {
+        this.paidEndTime = paidEndTime;
+    }
+    
 
 
 }

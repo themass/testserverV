@@ -23,8 +23,8 @@ import com.timeline.vpn.util.DateTimeUtils;
  * @version V1.0
  */
 @Component
-public class ScoreCalculation extends ReloadJob{
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScoreCalculation.class);
+public class Score3Calculation extends ReloadJob{
+    private static final Logger LOGGER = LoggerFactory.getLogger(Score3Calculation.class);
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -34,7 +34,7 @@ public class ScoreCalculation extends ReloadJob{
     @Transactional
     public void reload() {
         LockJobPo po = new LockJobPo();
-        po.setJobName("ScoreCalculation");
+        po.setJobName("Score3Calculation");
         po.setJobTime(DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD,new Date()));
         String address;
         try {
@@ -46,10 +46,9 @@ public class ScoreCalculation extends ReloadJob{
        
         if(lockJobDao.insert(po)>0) {
             LOGGER.info("ScoreCalculation start");
-            userDao.minusScore();
-            userDao.initUserVip();
-            userDao.initUserVip1();
-            userDao.initUserVip2();
+            Date end = DateTimeUtils.getDateWithoutHms(new Date());
+            Date start = DateTimeUtils.getDateWithoutHms(DateTimeUtils.getYesterday());
+            userDao.updateLevelPaid(start, end);
         }
     }
 }

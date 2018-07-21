@@ -1,5 +1,7 @@
 package com.timeline.vpn.model.vo;
 
+import java.util.Date;
+
 /**
  * @author gqli
  * @date 2016年3月10日 上午10:30:47
@@ -15,7 +17,8 @@ public class UserVo {
     private StateUseVo stateUse;
     private String email;
     private String areaMi;
-    
+    private Date paidStartTime;
+    private Date paidEndTime;
     public String getAreaMi() {
         return areaMi;
     }
@@ -86,6 +89,22 @@ public class UserVo {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Date getPaidStartTime() {
+        return paidStartTime;
+    }
+
+    public void setPaidStartTime(Date paidStartTime) {
+        this.paidStartTime = paidStartTime;
+    }
+
+    public Date getPaidEndTime() {
+        return paidEndTime;
+    }
+
+    public void setPaidEndTime(Date paidEndTime) {
+        this.paidEndTime = paidEndTime;
     }
 
 

@@ -88,7 +88,7 @@
                 </bean>
                 
                  <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 0 0 ? * WED"/>
+                    <property name="cronExpression" value="0 0 4 ? * WED"/>
                     <property name="jobDetail">
                         <bean
                                 class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -98,7 +98,17 @@
                         </bean>
                     </property>
                 </bean>
-                 
+                 <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+                    <property name="cronExpression" value="0 0 3 ? * *"/>
+                    <property name="jobDetail">
+                        <bean
+                                class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+                            <property name="targetObject" ref="score3Calculation"/>
+                            <property name="targetMethod" value="execute"/>
+                            <property name="concurrent" value="false"/>
+                        </bean>
+                    </property>
+                </bean>
 			</list>
 		</property>
 	</bean>

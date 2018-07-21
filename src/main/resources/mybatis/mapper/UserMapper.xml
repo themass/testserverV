@@ -10,6 +10,8 @@
 		<result column="time" property="time" />
 		<result column="score" property="score" />
 		<result column="email" property="email" />
+		<result column="paidStartTime" property="paidStartTime" />
+		<result column="paidEndTime" property="paidEndTime" />
 		
 	</resultMap>
 	<insert id="insert">
@@ -28,21 +30,24 @@
 	    update vpn.user set score=score+#{score} where name=#{name}
 	</update>
 	<update id="updateLevel">
-	    update vpn.user set level=#{level} where name=#{name}
+	    update vpn.user set level=#{level} where name=#{name} and level &lt; 3
+	</update>
+	<update id="updateLevelPaid">
+	    update vpn.user set level=0 where level=3 and paidStartTime &gt;= #{start} and paidEndime &lt;= #{end}
 	</update>
 	<update id="updateEmail">
 	    update vpn.user set email=#{email} where name=#{name}
 	</update>
 	<update id="minusScore">
-	    update vpn.user set score=score-100 where score &gt; 100
+	    update vpn.user set score=score-150 where score &gt;= 150
 	</update>
 	<update id="initUserVip">
-	    update vpn.user set level=0 where level &lt; 3
+	    update vpn.user set level=0 where score &lt; 2100 and level &lt; 3
 	</update>
 	<update id="initUserVip1">
-	    update vpn.user set level=1 where score &gt; 2000 and score &lt; 4000
+	    update vpn.user set level=1 where score &gt;= 2100 and score &lt; 4100 and level &lt; 3
 	</update>
 	<update id="initUserVip2">
-	    update vpn.user set level=2 where score &gt; 4000
+	    update vpn.user set level=2 where score &gt;= 4100 and level &lt; 3
 	</update>
 </mapper>

@@ -1,5 +1,7 @@
 package com.timeline.vpn.dao.db;
 
+import java.util.Date;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.timeline.vpn.dao.BaseDBDao;
@@ -23,5 +25,6 @@ public interface UserDao extends BaseDBDao<UserPo> {
     public void initUserVip2();
     
     public void updateLevel(UserPo po);
+    public void updateLevelPaid(@Param(value = "start") Date start,@Param(value = "end") Date end);
 }
 
