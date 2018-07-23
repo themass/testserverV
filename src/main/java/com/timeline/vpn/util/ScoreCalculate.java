@@ -9,7 +9,10 @@ import com.timeline.vpn.model.param.BaseQuery;
  * @version V1.0
  */
 public class ScoreCalculate {
-    public static int level(BaseQuery baseQuery,long score){
+    public static int level(Integer level,BaseQuery baseQuery,long score){
+        if (level!=null && level==Constant.UserLevel.LEVEL_VIP3) {
+          return Constant.UserLevel.LEVEL_VIP3;
+        }
         if(score>=Constant.SCORE_TO_VIP&&score<Constant.SCORE_TO_VIP2){
             return Constant.UserLevel.LEVEL_VIP;
         }else if(score>=Constant.SCORE_TO_VIP2 &&score<Constant.SCORE_TO_VIP3){

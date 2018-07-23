@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
             userDao.score(score, baseQuery.getUser().getName());
         }
         UserPo po = userDao.exist(baseQuery.getUser().getName());
-        po.setLevel(ScoreCalculate.level(baseQuery,po.getScore()));
+        po.setLevel(ScoreCalculate.level(po.getLevel(),baseQuery,po.getScore()));
         userDao.updateLevel(po);
         checkService.updateRadUserGroup(po.getName(), ScoreCalculate.group(po.getLevel()));
         cacheService.updateUser(baseQuery.getToken(),po);
