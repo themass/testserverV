@@ -219,12 +219,12 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public void addIwannaScoreLike(BaseQuery baseQuery, long id) {
-        IWannaPo po = iWannaDao.get(id);
+        IWannaPo po = iWannaDao.getFeed(id);
         po.setLikes(po.getLikes() + 1);
         if (baseQuery.getUser()!=null && !po.getLikeUsers().contains(baseQuery.getUser().getName())) {
             po.setLikeUsers(po.getLikeUsers() + "," + baseQuery.getUser().getName());
         }
-        iWannaDao.like(po);
+        iWannaDao.likeFeed(po);
 
     }
 

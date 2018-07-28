@@ -9,9 +9,11 @@ import java.util.List;
  */
 public class VipLocationVo {
     private int type;
-    private String name;
     private int count;
+    private String name;
     private String desc;
+    private String ename;
+    private String edesc;
     private List<LocationVo> list;
     public int getType() {
         return type;
@@ -43,6 +45,19 @@ public class VipLocationVo {
     public void setList(List<LocationVo> list) {
         this.list = list;
     }
+    public String getEname() {
+      return ename;
+    }
+    public void setEname(String ename) {
+      this.ename = ename;
+    }
+    public String getEdesc() {
+      return edesc;
+    }
+    public void setEdesc(String edesc) {
+      this.edesc = edesc;
+    }
+    
 
     
 }

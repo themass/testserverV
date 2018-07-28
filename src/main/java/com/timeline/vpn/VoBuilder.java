@@ -220,6 +220,8 @@ public class VoBuilder {
             vipLocationVo.setList(new ArrayList<>(itemList));
             vipLocationVo.setName(nameType.getName());
             vipLocationVo.setDesc(nameType.getDesc());
+            vipLocationVo.setEname(nameType.getEname());
+            vipLocationVo.setEdesc(nameType.getEdesc());
             list.add(vipLocationVo);
         }
         vo.setVoList(list);
