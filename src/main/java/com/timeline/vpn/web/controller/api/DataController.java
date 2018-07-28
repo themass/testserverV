@@ -92,15 +92,15 @@ public class DataController extends BaseController {
     @RequestMapping(value = "/feed/score.json", method = RequestMethod.GET)
     public JsonResult wannaScore(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
-        return new JsonResult(dataService.getIwannaPage(baseQuery, form.toParam()));
+        return new JsonResult(dataService.getIwannaScorePage(baseQuery, form.toParam()));
     }
     @RequestMapping(value = "/feed/score.json", method = RequestMethod.POST)
     public JsonResult wannaScore(@UserInfo(required=true) BaseQuery baseQuery, @RequestParam String content) {
-       return new JsonResult(dataService.addIwanna(baseQuery, content));
+       return new JsonResult(dataService.addIwannaScore(baseQuery, content));
     }
     @RequestMapping(value = "/feed/score/{id}.json", method = RequestMethod.POST)
     public JsonResult wannaScoreLike(@UserInfo BaseQuery baseQuery, @PathVariable long id) {
-        dataService.addIwannaLike(baseQuery, id);
+        dataService.addIwannaScoreLike(baseQuery, id);
         return Constant.RESULT_SUCCESS;
     }
 }
