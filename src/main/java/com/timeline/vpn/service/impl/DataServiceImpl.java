@@ -149,6 +149,23 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
+    public InfoListVo<RecommendVo> getRecommendRecPage(BaseQuery baseQuery, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<RecommendPo> poList = recommendServiceProxy.getRecoPage();
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
+    }
+
+    @Override
+    public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery) {
+        List<AppInfoPo> list = appInfoDao.getAll();
+        return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
+    }
+    @Override
+    public InfoListVo<AppInfoVo> getAllDon(BaseQuery baseQuery) {
+        List<AppInfoPo> list = appInfoDao.getAllDon();
+        return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
+    }
+    @Override
     public InfoListVo<IWannaVo> getIwannaPage(BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         Page<IWannaPo> data = (Page<IWannaPo>) iWannaDao.getPage();
@@ -171,6 +188,37 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public void addIwannaLike(BaseQuery baseQuery, long id) {
+        IWannaPo po = iWannaDao.getFeed(id);
+        po.setLikes(po.getLikes() + 1);
+        if (baseQuery.getUser()!=null && !po.getLikeUsers().contains(baseQuery.getUser().getName())) {
+            po.setLikeUsers(po.getLikeUsers() + "," + baseQuery.getUser().getName());
+        }
+        iWannaDao.likeFeed(po);
+
+    }
+    @Override
+    public InfoListVo<IWannaVo> getIwannaScorePage(BaseQuery baseQuery, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        Page<IWannaPo> data = (Page<IWannaPo>) iWannaDao.getPageFeed();
+        return VoBuilder.buildIWannaPageInfoVo(data, baseQuery);
+    }
+
+    @Override
+    public IWannaVo addIwannaScore(BaseQuery baseQuery, String content) {
+        IWannaPo po = new IWannaPo();
+        po.setContent(content);
+        po.setCreateTime(new Date());
+        po.setLikes(0);
+        po.setLikeUsers(Constant.superMan);
+        po.setName(baseQuery.getUser().getName());
+        po.setIp(baseQuery.getAppInfo().getUserIp());
+        po.setAppName(baseQuery.getAppInfo().getChannel());
+        iWannaDao.insertFeed(po);
+        return VoBuilder.buildIWannaVo(po, baseQuery.getUser().getName());
+    }
+
+    @Override
+    public void addIwannaScoreLike(BaseQuery baseQuery, long id) {
         IWannaPo po = iWannaDao.get(id);
         po.setLikes(po.getLikes() + 1);
         if (baseQuery.getUser()!=null && !po.getLikeUsers().contains(baseQuery.getUser().getName())) {
@@ -178,24 +226,6 @@ public class DataServiceImpl implements DataService {
         }
         iWannaDao.like(po);
 
-    }
-
-    @Override
-    public InfoListVo<RecommendVo> getRecommendRecPage(BaseQuery baseQuery, PageBaseParam param) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        List<RecommendPo> poList = recommendServiceProxy.getRecoPage();
-        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
-    }
-
-    @Override
-    public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery) {
-        List<AppInfoPo> list = appInfoDao.getAll();
-        return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
-    }
-    @Override
-    public InfoListVo<AppInfoVo> getAllDon(BaseQuery baseQuery) {
-        List<AppInfoPo> list = appInfoDao.getAllDon();
-        return VoBuilder.buildListInfoVo(list, AppInfoVo.class,null);
     }
 
     

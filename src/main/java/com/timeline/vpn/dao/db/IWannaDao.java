@@ -16,5 +16,10 @@ public interface IWannaDao extends BaseDBDao<IWannaPo> {
     public void like(IWannaPo po);
 
     public IWannaPo get(long id);
+    
+    public int insertFeed(IWannaPo po);
+    public List<IWannaPo> getPageFeed();
+    public void likeFeed(IWannaPo po);
+    public IWannaPo getFeed(long id);
 }
 
