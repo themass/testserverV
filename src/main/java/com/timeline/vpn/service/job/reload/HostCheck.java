@@ -52,7 +52,7 @@ public class HostCheck extends ReloadJob {
                     if(count==2){
                         String title = "服务器 ping 失败："+ip;
                         LOGGER.error(title);
-                        MailUtil.sendMail(title, title);
+//                        MailUtil.sendMail(title, title);
                         errorList.add(ip);
                     }
                 }else{
