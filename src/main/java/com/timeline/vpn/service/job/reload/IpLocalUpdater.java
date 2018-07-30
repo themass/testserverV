@@ -53,7 +53,7 @@ public class IpLocalUpdater extends AbstractJob {
                 }
             }
         }catch(Throwable e){
-            LOGGER.error("",e);
+            LOGGER.error("");
         }
     }
        
