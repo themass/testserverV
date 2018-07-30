@@ -24,6 +24,7 @@ import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.vo.AppInfoVo;
 import com.timeline.vpn.model.vo.IWannaVo;
+import com.timeline.vpn.model.vo.IWannnWeixinVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.StateUseVo;
@@ -171,7 +172,12 @@ public class DataServiceImpl implements DataService {
         Page<IWannaPo> data = (Page<IWannaPo>) iWannaDao.getPage();
         return VoBuilder.buildIWannaPageInfoVo(data, baseQuery);
     }
-
+    @Override
+    public InfoListVo<IWannnWeixinVo> getIwannaWeiXin() {
+        PageHelper.startPage(1, 30);
+        Page<IWannaPo> data = (Page<IWannaPo>) iWannaDao.getPage();
+        return VoBuilder.buildListInfoVo(data, IWannnWeixinVo.class, null);
+    }
     @Override
     public IWannaVo addIwanna(BaseQuery baseQuery, String content) {
         IWannaPo po = new IWannaPo();

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.form.WeiXinForm;
 import com.timeline.vpn.model.form.YoumiOffadsForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.PingCheck;
@@ -55,6 +56,11 @@ public class NoappController extends BaseController {
             list.add(item);
         }
         return list;
+    }
+    @RequestMapping(value = "/feed/wanna.json", method = RequestMethod.GET)
+    public JsonResult wanna(WeiXinForm form) {
+        LOGGER.info("weinxin form = "+form.toString());
+        return new JsonResult(dataService.getIwannaWeiXin());
     }
 }
 

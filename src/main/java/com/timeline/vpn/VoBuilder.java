@@ -24,6 +24,7 @@ import com.timeline.vpn.model.vo.DnsResverItemVo;
 import com.timeline.vpn.model.vo.DnsResverVo;
 import com.timeline.vpn.model.vo.HostVo;
 import com.timeline.vpn.model.vo.IWannaVo;
+import com.timeline.vpn.model.vo.IWannnWeixinVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.LocationVo;
 import com.timeline.vpn.model.vo.ServerVo;
@@ -113,7 +114,11 @@ public class VoBuilder {
         page.setPageNum(data.getPageNum() + 1);
         return page;
     }
-
+    public static IWannnWeixinVo buildIWannaXinXVo(IWannaPo po, String name) {
+      IWannnWeixinVo vo = new IWannnWeixinVo();
+      BeanUtils.copyProperties(po, vo);
+      return vo;
+    }
     public static IWannaVo buildIWannaVo(IWannaPo po, String name) {
         IWannaVo vo = new IWannaVo();
         BeanUtils.copyProperties(po, vo);

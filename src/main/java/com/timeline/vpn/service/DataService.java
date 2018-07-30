@@ -4,6 +4,7 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.vo.AppInfoVo;
 import com.timeline.vpn.model.vo.IWannaVo;
+import com.timeline.vpn.model.vo.IWannnWeixinVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
@@ -24,6 +25,7 @@ public interface DataService {
     public InfoListVo<RecommendVo> getRecommendRecPage(BaseQuery baseQuery,PageBaseParam param);
 
     public InfoListVo<IWannaVo> getIwannaPage(BaseQuery baseQuery, PageBaseParam param);
+    public InfoListVo<IWannnWeixinVo> getIwannaWeiXin();
     public IWannaVo addIwanna(BaseQuery baseQuery, String content);
     public void addIwannaLike(BaseQuery baseQuery, long id);
     
