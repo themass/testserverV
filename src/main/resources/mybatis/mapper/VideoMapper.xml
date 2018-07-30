@@ -24,14 +24,14 @@
 	    select * from vpn.videochannel where enable=1 and channel=#{channel} limit 1
 	</select>
 	<select id="getChannelItems" resultMap="VideoMap">
-	    select i.* from vpn.videoitems i ,vpn.videochannel c where i.channel=c.channel and c.enable=1 and c.channelType=#{channelType} and i.enable=1 
+	    select * from vpn.videoitems channelType=#{channelType}
 	    <if test="channel!=null">
-	        and i.channel=#{channel}
+	        and channel=#{channel}
 	    </if> 
 	    <if test="keyword!=null">
-	        and i.name like CONCAT('%',#{keyword},'%')
+	        and name like CONCAT('%',#{keyword},'%')
 	    </if>
-	    group by i.path order by sortType desc,updateTime asc
+	    order by sortType desc,updateTime asc
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
 	    select * from vpn.video_user where channel=#{channel} order by count desc
@@ -40,14 +40,15 @@
 	    select * from vpn.video_user where userId=#{userId} limit 1
 	</select>
 	<select id="getUserItems" resultMap="VideoUserItemMap">
-	    select i.* from vpn.video_user_item i ,vpn.video_user u where u.channel=#{channel} and i.userId=u.userId
+	    select * from vpn.video_user_item channel=#{channel}
 	    <if test="userId!=null">
-	        and i.userId=#{userId}
+	        and userId=#{userId}
 	    </if>
 	    
 	    <if test="keyword!=null">
-	        and i.name like CONCAT('%',#{keyword},'%')
+	        and name like CONCAT('%',#{keyword},'%')
 	    </if>
+	    order by id desc
 	</select>
 	
 	<select id="getTvChannel" resultMap="VideoChannelMap">
