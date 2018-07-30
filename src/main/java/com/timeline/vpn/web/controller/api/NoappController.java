@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.exception.TokenException;
 import com.timeline.vpn.model.form.WeiXinForm;
 import com.timeline.vpn.model.form.YoumiOffadsForm;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -61,6 +62,11 @@ public class NoappController extends BaseController {
     public JsonResult wanna(WeiXinForm form) {
         LOGGER.info("weinxin form = "+form.toString());
         return new JsonResult(dataService.getIwannaWeiXin());
+    }
+    @RequestMapping(value = "/feed/token.json")
+    public JsonResult token(WeiXinForm form) {
+        LOGGER.info("weinxin form = "+form.toString());
+        throw new TokenException(form.getEchostr());
     }
 }
 

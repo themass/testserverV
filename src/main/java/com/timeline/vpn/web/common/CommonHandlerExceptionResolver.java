@@ -1,5 +1,7 @@
 package com.timeline.vpn.web.common;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,8 +19,10 @@ import org.springframework.web.util.UrlPathHelper;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.ApiException;
+import com.timeline.vpn.exception.TokenException;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.util.DeviceUtil;
+import com.timeline.vpn.util.ResponseUtil;
 
 public class CommonHandlerExceptionResolver implements HandlerExceptionResolver {
 
@@ -47,13 +51,19 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
         } else if (ex instanceof TypeMismatchException) { // 请求参数类型错误
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
             result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR, request));
+        } else if (ex instanceof TokenException) {
+            try {
+              ResponseUtil.writeResponse(response, ex.getMessage());
+            } catch (IOException e) {
+              LOGGER.error("",e);
+            }
         } else if (ex instanceof ApiException) {
             result.setErrno(((ApiException) ex).getStatus());
             result.setError(getMessage(ex.getMessage(), request));
         } else if (ex instanceof BindException) {
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
             result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR, request));
-        } else {
+        }else {
             result.setErrno(Constant.ResultErrno.ERRNO_SYSTEM);
             result.setError("系统正在进行升级，请稍等再用");
             LOGGER.error(requestUrl, ex);
