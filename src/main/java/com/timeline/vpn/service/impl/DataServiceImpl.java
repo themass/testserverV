@@ -2,8 +2,14 @@ package com.timeline.vpn.service.impl;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,6 +28,7 @@ import com.timeline.vpn.model.po.AppInfoPo;
 import com.timeline.vpn.model.po.AppVersion;
 import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.RecommendPo;
+import com.timeline.vpn.model.po.WeixinAccessPo;
 import com.timeline.vpn.model.vo.AppInfoVo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.IWannnWeixinVo;
@@ -30,10 +37,14 @@ import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.model.vo.StateUseVo;
 import com.timeline.vpn.model.vo.VersionInfoVo;
 import com.timeline.vpn.model.vo.VipDescVo;
+import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.DataVideoService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.impl.recommend.RecommendServiceProxy;
+import com.timeline.vpn.util.HttpCommonUtil;
+import com.timeline.vpn.util.HttpRequest;
+import com.timeline.vpn.util.JsonUtil;
 
 /**
  * @author gqli
@@ -42,7 +53,8 @@ import com.timeline.vpn.service.impl.recommend.RecommendServiceProxy;
  */
 @Service
 public class DataServiceImpl implements DataService {
-
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(DataServiceImpl.class);
     @Autowired
     private VersionDao versionDao;
     @Autowired
@@ -55,6 +67,8 @@ public class DataServiceImpl implements DataService {
     private AppInfoDao appInfoDao;
     @Autowired
     private DataVideoService dataVideoService;
+    @Autowired
+    private CacheService cacheService;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -189,6 +203,7 @@ public class DataServiceImpl implements DataService {
         po.setIp(baseQuery.getAppInfo().getUserIp());
         po.setAppName(baseQuery.getAppInfo().getChannel());
         iWannaDao.insert(po);
+        sendMsg(content+"--"+baseQuery.getUser().getName()+"--"+baseQuery.getAppInfo().getChannel());
         return VoBuilder.buildIWannaVo(po, baseQuery.getUser().getName());
     }
 
@@ -220,6 +235,7 @@ public class DataServiceImpl implements DataService {
         po.setIp(baseQuery.getAppInfo().getUserIp());
         po.setAppName(baseQuery.getAppInfo().getChannel());
         iWannaDao.insertFeed(po);
+        sendMsg(content+"--"+baseQuery.getUser().getName()+"--"+baseQuery.getAppInfo().getChannel());
         return VoBuilder.buildIWannaVo(po, baseQuery.getUser().getName());
     }
 
@@ -233,7 +249,75 @@ public class DataServiceImpl implements DataService {
         iWannaDao.likeFeed(po);
 
     }
-
+    /**
+     * appID
+wxe75fbe15f3e3fdff
+appsecret
+76eb1ba24fb05a193cfa2569597c432f
+     */
+    @Override
+    public String getAsstoken() {
+      String token = null;//cacheService.get("ASS_TOKEN");
+      if(StringUtils.isEmpty(token)) {
+          Map<String, String> params = new HashMap<>();
+          params.put("grant_type", "client_credential");
+          params.put("appid", "wxe75fbe15f3e3fdff");
+          params.put("secret", "76eb1ba24fb05a193cfa2569597c432f");
+          Map<String, String> headers = new HashMap<>();
+          headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+    //      headers.put("grant_type", "client_credential");
+    //      headers.put("grant_type", "client_credential");
+          String json = HttpCommonUtil.sendGet("https://api.weixin.qq.com/cgi-bin/token", "utf-8", params, headers);
+          WeixinAccessPo po = JsonUtil.readValue(json, WeixinAccessPo.class);
+          token = po.getAccess_token();
+          LOGGER.info("token="+token);
+          System.out.println(token);
+//          cacheService.put("ASS_TOKEN", token, 3);
+      }
+      return token;
+    }
+    private void getOpenId() {
+      String token = getAsstoken();
+      Map<String, String> params = new HashMap<>();
+      params.put("access_token", token);
+//      params.put("next_openid", "NEXT_OPENID");
+      String url = "https://api.weixin.qq.com/cgi-bin/user/get";
+      String json = HttpCommonUtil.sendGet(url, "utf-8", params,null);
+      System.out.println(json);
+    }
+    private void sendMsg(String msg) {
+      try {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+        headers.put("Content-type", "application/json; charset=utf-8");
+        
+        String token = getAsstoken();
+        String url = "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token="+token;
+        Map<String, String> content = new HashMap<>();
+        content.put("content", msg);
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("touser",Arrays.asList("oTzH21bdL3u19PE5UR11Mc-PLZ_Y","oTzH21TIeKfp9sE-YZZwJOyQ7zvQ"));
+        params.put("msgtype", "text");
+        params.put("text", content);
+        String pcontent = JsonUtil.writeValueAsString(params);
+       
+          String reString = HttpRequest.sendPost(url, pcontent);
+  //        StringEntity entity = new StringEntity(pcontent, ContentType.APPLICATION_JSON);
+  //        entity.setContentType("UTF-8");
+  //        String reString = HttpCommonUtil.sendPostWithEntity(url, entity, headers, true);
+          LOGGER.info("发送微信消息："+reString);
+      }catch (Exception e) {
+        LOGGER.error("发送微信消息： 失败");
+      }
+    }
+    public static void main(String[]args) {
+      DataServiceImpl impl = new DataServiceImpl();
+//      String token = impl.getAsstoken();
+//      System.out.println(token);
+      impl.sendMsg("test侧事故续爱选打算");
+//        impl.getOpenId();
+    }
     
 
 }

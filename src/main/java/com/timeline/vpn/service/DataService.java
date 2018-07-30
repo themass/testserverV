@@ -39,7 +39,7 @@ public interface DataService {
     public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery);
     public InfoListVo<AppInfoVo> getAllDon(BaseQuery baseQuery);
 
-    
+    public String getAsstoken();
    
     
 }
