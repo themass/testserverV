@@ -57,7 +57,7 @@ public class NoappController extends BaseController {
         }
         return list;
     }
-    @RequestMapping(value = "/feed/wanna.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/feed/wanna.json")
     public JsonResult wanna(WeiXinForm form) {
         LOGGER.info("weinxin form = "+form.toString());
         return new JsonResult(dataService.getIwannaWeiXin());
