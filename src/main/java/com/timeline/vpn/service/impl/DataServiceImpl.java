@@ -129,7 +129,10 @@ public class DataServiceImpl implements DataService {
             
         });
     }
-
+    @Override
+    public VersionInfoVo getMaxVersion(String platform,String channel) {
+      return VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
+    }
     @Override
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel) {
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);

@@ -34,6 +34,7 @@ public interface DataService {
     public void addIwannaScoreLike(BaseQuery baseQuery, long id);
     
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel);
+    public VersionInfoVo getMaxVersion(String platform,String channel);
     
     
     public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery);
