@@ -69,7 +69,7 @@ public class DataServiceImpl implements DataService {
     private AppInfoDao appInfoDao;
     @Autowired
     private DataVideoService dataVideoService;
-    @Autowired
+    @Autowired(required=false)
     private ResourceBundleMessageSource messagesource;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
@@ -156,9 +156,12 @@ public class DataServiceImpl implements DataService {
             }
         }
         VipDescVo desc = new VipDescVo();
-        desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
-        desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
-        desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC2, baseQuery.getAppInfo().getLang()));
+        desc.setDesc("每周扣除150积分；点广告赚积分");
+        desc.setDesc1("2100积分=VIP1；4100积分=VIP2");
+        desc.setDesc2("邀请用户40积分/人；大于5人送vip3-15天；\\n大于10人送vip3-30天；\\n大于15人 送vip3-50天+pc1个月/200G流量");
+//        desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+//        desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
+//        desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC2, baseQuery.getAppInfo().getLang()));
         if(baseQuery!=null&&baseQuery.getUser()!=null)
             desc.setScore(baseQuery.getUser().getScore());
         vo.setVitamioExt(Constant.VIDEO_EXT);
