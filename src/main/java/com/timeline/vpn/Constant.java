@@ -24,6 +24,11 @@ public class Constant {
         public static final String RESULT_PERM_ERROR = "RESULT.ERROR.PERM";
         public static final String RESULT_VERSION_ERROR = "RESULT.ERROR.VERSION";
         public static final String RESULT_REG_REGCODE = "RESULT.ERROR.REGCODE";
+        
+        public static final String RESULT_MSG_DESC= "RESULT.MSG.DESC";
+        public static final String RESULT_MSG_DESC1 = "RESULT.MSG.DESC1";
+        public static final String RESULT_MSG_DESC2 = "RESULT.MSG.DESC2";
+        
     }
     public static class FileIpTYPE{
         public static final String BOOKWEB = "BOOK_WEB";

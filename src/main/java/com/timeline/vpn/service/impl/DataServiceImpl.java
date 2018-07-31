@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -40,6 +43,7 @@ import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.DataVideoService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.impl.handle.recommend.RecommendServiceProxy;
+import com.timeline.vpn.util.DeviceUtil;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.HttpRequest;
 import com.timeline.vpn.util.JsonUtil;
@@ -65,6 +69,8 @@ public class DataServiceImpl implements DataService {
     private AppInfoDao appInfoDao;
     @Autowired
     private DataVideoService dataVideoService;
+    @Autowired
+    private ResourceBundleMessageSource messagesource;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -150,15 +156,18 @@ public class DataServiceImpl implements DataService {
             }
         }
         VipDescVo desc = new VipDescVo();
-        desc.setDesc("每周扣除150积分；点广告赚积分");
-        desc.setDesc1("2100积分=VIP1；4100积分=VIP2");
-        desc.setDesc2("邀请用户40积分/人；大于5人送vip3-15天；\n大于10人送vip3-30天；\n大于15人 送vip3-50天+pc1个月/200G流量");
+        desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+        desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
+        desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC2, baseQuery.getAppInfo().getLang()));
         if(baseQuery!=null&&baseQuery.getUser()!=null)
             desc.setScore(baseQuery.getUser().getScore());
         vo.setVitamioExt(Constant.VIDEO_EXT);
         vo.setVipDesc(desc);
         return vo;
     }
+    private String getMessage(String key, String lang) {
+      return messagesource.getMessage(key, null, DeviceUtil.getLocale(lang));
+  }
 
     @Override
     public InfoListVo<RecommendVo> getRecommendRecPage(BaseQuery baseQuery, PageBaseParam param) {

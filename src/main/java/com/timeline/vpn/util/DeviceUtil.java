@@ -135,6 +135,16 @@ public class DeviceUtil {
           return Locale.getDefault();
         }
     }
+    public static Locale getLocale(String language) {
+      if(StringUtils.isEmpty(language)) {
+        return Locale.getDefault();
+      }
+      try {
+        return new Locale(language);
+      }catch (Exception e) {
+        return Locale.getDefault();
+      }
+  }
     public static void main(String[]args){
         String str = "SEX/1.0.2.1";
         Matcher matcher = pattern.matcher(str);
