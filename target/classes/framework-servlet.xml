@@ -46,16 +46,6 @@
     <bean id="localeResolver"
 		class="com.timeline.vpn.web.common.MyHeaderLocaleResolver"/>
  -->
-	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basenames">
-			<list>
-				<!--<value>messages</value> -->
-				<value>conf.message</value>
-			</list>
-		</property>
-		<property name="defaultEncoding" value="utf-8"/>
-	</bean>
 	<bean id="handlerMapping"
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
 		<property name="order" value="0" />
@@ -103,10 +93,7 @@
             </set>
         </property>
     </bean>
-	<!--use JSR-303 validation -->
-	<bean id="validator"
-		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
+	
 	<bean id="viewResolver" class="com.timeline.vpn.web.common.CustomViewResolver">
 		<property name="jsonView">
 			<bean
@@ -118,7 +105,8 @@
 		</property>
 	</bean>
 	<bean id="handlerExceptionResolver"
-		class="com.timeline.vpn.web.common.CommonHandlerExceptionResolver" />
+		class="com.timeline.vpn.web.common.CommonHandlerExceptionResolver" >
+	</bean>
  	<!-- 上传文件 -->
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

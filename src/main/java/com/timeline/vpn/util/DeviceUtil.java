@@ -72,6 +72,7 @@ public class DeviceUtil {
     public static DevApp getAPPInfo(HttpServletRequest webRequest) {
         String ua = webRequest.getHeader(HTTP_UA);
         String devId = webRequest.getHeader(DEVID);
+        String language = webRequest.getHeader(Constant.LANG);
         if (ua != null) {
             Matcher matcher = pattern.matcher(ua);
             if (matcher.find()) {
@@ -82,6 +83,7 @@ public class DeviceUtil {
                 long now = new Date().getTime();
                 int len = String.valueOf(now).length();
                 String auth = ua.substring(ua.length()-16,ua.length());
+                app.setLang(language);
                 app.setAuthKey(auth);
               //TODO 暂时注释;
                 app.setSign(timeSign.substring(len, timeSign.length()));
@@ -125,7 +127,7 @@ public class DeviceUtil {
     }
 
     public static Locale getLocale(HttpServletRequest webRequest) {
-        String language = webRequest.getHeader(Constant.LANG);
+      String language = webRequest.getHeader(Constant.LANG);
         if(StringUtils.isEmpty(language)) {
           return Locale.getDefault();
         }

@@ -29,6 +29,7 @@
 	<beans>
 	    <import resource="classpath:framework-doc.xml" />
 		<import resource="classpath:framework-dao.xml" />
+		<import resource="classpath:framework-util.xml" />
 		<import resource="classpath:quartz.xml" />
 		<import resource="classpath:framework-redis.xml" />
 	</beans>

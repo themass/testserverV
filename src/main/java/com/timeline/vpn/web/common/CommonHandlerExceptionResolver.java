@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.context.support.DelegatingMessageSource;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -31,8 +31,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
 
     private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
     @Autowired
-    private ResourceBundleMessageSource messagesource;
-
+    private DelegatingMessageSource messagesource;
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
             Object handler, Exception ex) {
