@@ -1,5 +1,7 @@
 package com.timeline.vpn.dao.db;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.timeline.vpn.model.po.DevUseinfoPo;
 
 /**
@@ -8,8 +10,10 @@ import com.timeline.vpn.model.po.DevUseinfoPo;
  * @version V1.0
  */
 public interface DevUseinfoDao {
-    public void replace(DevUseinfoPo po);
+    public void insert(DevUseinfoPo po);
     public void update(DevUseinfoPo po);
     public DevUseinfoPo get(String devId);
+    public void updateRef(@Param("devId")String devId,@Param("ref")String ref);
+    public int getRefCount(@Param("ref")String ref);
 }
 

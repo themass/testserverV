@@ -16,6 +16,7 @@ public class DevUseinfoPo {
     private String longitude;
     private String latitude;
     private String userName;
+    private String ref;
 
     public String getDevId() {
         return devId;
@@ -79,6 +80,14 @@ public class DevUseinfoPo {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getRef() {
+      return ref;
+    }
+
+    public void setRef(String ref) {
+      this.ref = ref;
     }
     
 }

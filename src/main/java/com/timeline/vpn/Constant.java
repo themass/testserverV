@@ -102,13 +102,14 @@ public class Constant {
     public static final long FREE_TIME = 20 * 24 * 60 * 60;
     public static final long ADS_FAB_SCORE = 10;
     public static final long ADS_CLICK_SCORE = 20;
+    public static final long ADS_REF_SCORE = 40;
     public static final long MIN_TIME = 24*3 * 60 * 60 * 1000*1000;
     public static final int MIN_PAGESIZE = 30;
     public static final String RAD_PASS = "Cleartext-Password";
     public static final String RAD_EQ = ":=";
-    public static final int SCORE_TO_VIP = 2000;
-    public static final int SCORE_TO_VIP2 = 4000;
-    public static final int SCORE_TO_VIP3 = 400000;
+    public static final int SCORE_TO_VIP = 2100;
+    public static final int SCORE_TO_VIP2 = 4100;
+    public static final int SCORE_TO_VIP3 = 40000000;
     public static final int RAD_PRIORITY_DEF = 2;
     public static String superMan = "FREE_VPN";
     public static final String STATE_TIME_USE="%s h, %sm, %ss";

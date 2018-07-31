@@ -37,11 +37,12 @@ import com.timeline.vpn.model.vo.UserVo;
 import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.RegAuthService;
+import com.timeline.vpn.service.ScoreService;
 import com.timeline.vpn.service.UserService;
-import com.timeline.vpn.service.impl.recommend.RecommendServiceProxy;
+import com.timeline.vpn.service.impl.handle.recommend.RecommendServiceProxy;
+import com.timeline.vpn.service.impl.handle.reg.UserRegContext;
 import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.DateTimeUtils;
-import com.timeline.vpn.util.ScoreCalculate;
 
 /**
  * @author gqli
@@ -57,6 +58,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RadUserCheckService checkService;
     @Autowired
+    private ScoreService scoreService;
+    @Autowired
     private CacheService cacheService;
     @Autowired
     private RegAuthService regAuthService;
@@ -64,6 +67,8 @@ public class UserServiceImpl implements UserService {
     private RadacctDao radacctDao;
     @Autowired
     private RecommendServiceProxy recommendServiceProxy;
+    @Autowired
+    private UserRegContext userRegContext;
 
     public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName) {
         DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
@@ -77,7 +82,7 @@ public class UserServiceImpl implements UserService {
             po.setUserName(userName);
             po.setLongitude(appInfo.getLon());
             po.setLatitude(appInfo.getLat());
-            devInfoDao.replace(po);
+            devInfoDao.insert(po);
         }else{
             po.setDevId(appInfo.getDevId());
             po.setLastUpdate(new Date());
@@ -127,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void reg(UserRegForm form, DevApp appInfo) {
+    public void reg(UserRegForm form, BaseQuery baseQuery) {
         if(!CommonUtil.isNumAndEnglish(form.getName())||!CommonUtil.isNumAndEnglish(form.getPwd())){
             throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
         }
@@ -140,24 +145,23 @@ public class UserServiceImpl implements UserService {
                         .setPwd(form.getPwd()).setSex(form.getSex()).setEmail(form.getEmail());;
                 userDao.insert(po);
                 checkService.addRadUser(form.getName(), form.getPwd(), Constant.UserGroup.RAD_GROUP_REG);
-                
+                baseQuery.setUser(po);
+                userRegContext.handleRef(baseQuery, form.getRef());
             } else {
                 throw new DataException(Constant.ResultMsg.RESULT_EXIST_ERROR);
             }
         } else {
             throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
         }
+       
     }
 
     @Override
     public UserVo score(BaseQuery baseQuery, int score) {
-        if(cacheService.updateCount(baseQuery.getUser())<18) {
+        if(cacheService.updateCount(baseQuery.getUser())<5) {
             userDao.score(score, baseQuery.getUser().getName());
         }
-        UserPo po = userDao.exist(baseQuery.getUser().getName());
-        po.setLevel(ScoreCalculate.level(po.getLevel(),baseQuery,po.getScore()));
-        userDao.updateLevel(po);
-        checkService.updateRadUserGroup(po.getName(), ScoreCalculate.group(po.getLevel()));
+        UserPo po = scoreService.updateScore(baseQuery.getUser().getName());
         cacheService.updateUser(baseQuery.getToken(),po);
         UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
         vo.setToken(baseQuery.getToken());

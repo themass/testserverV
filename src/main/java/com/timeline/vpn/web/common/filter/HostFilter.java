@@ -39,8 +39,9 @@ public class HostFilter implements Filter{
             app.setHost(request.getHeader("Host"));
             app.setTokenHeader("1111");
             app.setUserIp(UrlUtil.getIpAddr(request));
-            app.setDevId("11111111111111111111");
+            app.setDevId("androidimei82892812384933941456");
             app.setChannel("VPN");
+            app.setLang("zh");
             DevAppContext.set(app);
         }else{
             DevApp app = DeviceUtil.getAPPInfo(request);

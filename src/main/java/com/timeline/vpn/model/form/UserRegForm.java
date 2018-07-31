@@ -21,6 +21,7 @@ public class UserRegForm {
     private String code;
     private String channel;
     private String email;
+    private String ref;
     public String getName() {
         return name;
     }
@@ -75,6 +76,14 @@ public class UserRegForm {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRef() {
+      return ref;
+    }
+
+    public void setRef(String ref) {
+      this.ref = ref;
     }
     
 }

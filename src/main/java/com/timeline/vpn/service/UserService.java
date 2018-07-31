@@ -25,7 +25,7 @@ public interface UserService {
 
     public void logout(BaseQuery baseQuery);
 
-    public void reg(UserRegForm form, DevApp appInfo);
+    public void reg(UserRegForm form, BaseQuery baseQuery);
     public void updateEmail(UserEmailForm form, BaseQuery baseQuery);
 
     public UserVo score(BaseQuery baseQuery, int score);

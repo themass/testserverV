@@ -10,9 +10,10 @@
 		<result column="userName" property="userName" />
 		<result column="longitude" property="longitude" />
 		<result column="latitude" property="latitude" />
+		<result column="ref" property="ref" />
 	</resultMap>
-	<insert id="replace">
-		replace into
+	<insert id="insert">
+		insert into
 		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate,userName,latitude,longitude)
 		values
 		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{userName},#{latitude},#{longitude})
@@ -41,4 +42,10 @@
 			</set>
 			where devId = #{devId}
 	</update>
+	<update id="updateRef">
+		update vpn.devuseinfo set ref=#{ref} where devId = #{devId}
+	</update>
+	<select id="getRefCount" resultType="java.lang.Integer">
+		select count(devId) from vpn.devuseinfo where ref=#{ref}
+	</select>
 </mapper>

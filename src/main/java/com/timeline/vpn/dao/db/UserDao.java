@@ -26,5 +26,6 @@ public interface UserDao extends BaseDBDao<UserPo> {
     
     public void updateLevel(UserPo po);
     public void updateLevelPaid(@Param(value = "start") Date start,@Param(value = "end") Date end);
+    public void updateToLevelPaid(@Param(value = "start") Date start,@Param(value = "end") Date end,@Param(value = "name") String name);
 }
 

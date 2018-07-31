@@ -22,6 +22,7 @@ import com.timeline.vpn.exception.ApiException;
 import com.timeline.vpn.exception.TokenException;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.util.DeviceUtil;
+import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.ResponseUtil;
 
 public class CommonHandlerExceptionResolver implements HandlerExceptionResolver {

@@ -41,29 +41,30 @@ public class HostCheck extends ReloadJob {
     }
 
     public void reload() {
-        init();
-        List<String> errorList = new ArrayList<>();
-        for(String ip :myIpList){
-            int count = 0;
-            while(count<3){
-                boolean ret = HttpCommonUtil.ping(ip);
-                if(!ret){
-                    count++;
-                    if(count==2){
-                        String title = "服务器 ping 失败："+ip;
-                        LOGGER.error(title);
-//                        MailUtil.sendMail(title, title);
-                        errorList.add(ip);
-                    }
-                }else{
-                    break;
-                }
-            }
-            LOGGER.info("check {} finish",ip);
-        }
-        LOGGER.error("异常的服务器:"+errorList);
-        errorIp.clear();
-        errorIp.addAll(errorList);
+        return ;
+//        init();
+//        List<String> errorList = new ArrayList<>();
+//        for(String ip :myIpList){
+//            int count = 0;
+//            while(count<3){
+//                boolean ret = HttpCommonUtil.ping(ip);
+//                if(!ret){
+//                    count++;
+//                    if(count==2){
+//                        String title = "服务器 ping 失败："+ip;
+//                        LOGGER.error(title);
+////                        MailUtil.sendMail(title, title);
+//                        errorList.add(ip);
+//                    }
+//                }else{
+//                    break;
+//                }
+//            }
+//            LOGGER.info("check {} finish",ip);
+//        }
+//        LOGGER.error("异常的服务器:"+errorList);
+//        errorIp.clear();
+//        errorIp.addAll(errorList);
         
     }
   public static boolean isMyHost(String ip){

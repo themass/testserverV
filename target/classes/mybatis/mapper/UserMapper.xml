@@ -3,16 +3,6 @@
 <mapper namespace="com.timeline.vpn.dao.db.UserDao">
 	<resultMap id="UserMap" type="UserPo">
 		<id column="id" property="id" />
-		<result column="name" property="name" />
-		<result column="pwd" property="pwd" />
-		<result column="sex" property="sex" />
-		<result column="level" property="level" />
-		<result column="time" property="time" />
-		<result column="score" property="score" />
-		<result column="email" property="email" />
-		<result column="paidStartTime" property="paidStartTime" />
-		<result column="paidEndTime" property="paidEndTime" />
-		
 	</resultMap>
 	<insert id="insert">
 		insert into
@@ -33,7 +23,10 @@
 	    update vpn.user set level=#{level} where name=#{name} and level &lt; 3
 	</update>
 	<update id="updateLevelPaid">
-	    update vpn.user set level=0 where level=3 and paidStartTime &gt;= #{start} and paidEndime &lt;= #{end}
+	    update vpn.user set level=0 where level=3 and paidStartTime &gt;= #{start} and paidEndTime &lt;= #{end}
+	</update>
+	<update id="updateToLevelPaid">
+	    update vpn.user set level=3, paidStartTime= #{start}, paidEndTime = #{end} where name=#{name}
 	</update>
 	<update id="updateEmail">
 	    update vpn.user set email=#{email} where name=#{name}

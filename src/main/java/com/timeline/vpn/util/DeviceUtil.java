@@ -126,7 +126,14 @@ public class DeviceUtil {
 
     public static Locale getLocale(HttpServletRequest webRequest) {
         String language = webRequest.getHeader(Constant.LANG);
-        return new Locale(language);
+        if(StringUtils.isEmpty(language)) {
+          return Locale.getDefault();
+        }
+        try {
+          return new Locale(language);
+        }catch (Exception e) {
+          return Locale.getDefault();
+        }
     }
     public static void main(String[]args){
         String str = "SEX/1.0.2.1";

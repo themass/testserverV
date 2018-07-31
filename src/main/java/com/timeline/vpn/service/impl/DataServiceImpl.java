@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +39,7 @@ import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.DataVideoService;
 import com.timeline.vpn.service.UserService;
-import com.timeline.vpn.service.impl.recommend.RecommendServiceProxy;
+import com.timeline.vpn.service.impl.handle.recommend.RecommendServiceProxy;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.HttpRequest;
 import com.timeline.vpn.util.JsonUtil;
@@ -67,8 +65,6 @@ public class DataServiceImpl implements DataService {
     private AppInfoDao appInfoDao;
     @Autowired
     private DataVideoService dataVideoService;
-    @Autowired
-    private CacheService cacheService;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
