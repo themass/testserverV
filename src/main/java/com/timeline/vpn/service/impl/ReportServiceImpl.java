@@ -50,6 +50,8 @@ public class ReportServiceImpl implements ReportService{
     public void collect(BaseQuery baseQuery, Integer count, String localhost,String ip) {
         Metrics.count(Measure.vpn_connect.name(),count,localhost);
         Metrics.count(Measure.vpn_connect_live.name(),ip);
+        LOGGER.info("collect  vpn_connect--"+localhost);
+        LOGGER.info("collect  vpn_connect_live--"+localhost);
         CollectPo po = new CollectPo();
         po.setCount(count);
         po.setIp(baseQuery.getAppInfo().getUserIp());
