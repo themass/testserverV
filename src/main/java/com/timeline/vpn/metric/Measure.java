@@ -1,14 +1,13 @@
 package com.timeline.vpn.metric;
 
-/**
- * @author: yong.lin
- * @date: 2016-01-29  16:44
- */
+
 public enum Measure {
     http,
     monitor,
     ping_check,
-    vpn_connect;
+    vpn_connect,
+    vpn_connect_live,
+    vpn_connect_live_all;
     public static Measure value(String value) {
         Measure[] measures = Measure.values();
         for (Measure measure : measures) {

@@ -31,8 +31,8 @@ public class NoappController extends BaseController {
     @Autowired
     private ReportService reportService;
     @RequestMapping(value = "/collect.json", method = RequestMethod.POST)
-    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost) {
-        reportService.collect(baseQuery, count,localhost);
+    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost,@RequestParam(required=false) String ip) {
+        reportService.collect(baseQuery, count,localhost,ip);
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/ping.json", method = RequestMethod.POST)

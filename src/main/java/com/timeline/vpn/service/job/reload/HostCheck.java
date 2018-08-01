@@ -71,5 +71,7 @@ public class HostCheck extends ReloadJob {
   public static boolean isErrorIp(String ip){
       return errorIp.contains(ip);
   }
-  
+  public static List<String> allIp(){
+    return myIpList;
+}
 }

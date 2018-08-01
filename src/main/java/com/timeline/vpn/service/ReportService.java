@@ -13,7 +13,7 @@ import com.timeline.vpn.model.param.BaseQuery;
  */
 public interface ReportService {
     public void reportBug(BaseQuery baseQuery,List<MultipartFile> fileList);
-    public void collect(BaseQuery baseQuery, Integer count, String localhost);
+    public void collect(BaseQuery baseQuery, Integer count, String localhost,String ip);
     public void pingCheck(BaseQuery baseQuery, Integer type, String ip);
 }
 

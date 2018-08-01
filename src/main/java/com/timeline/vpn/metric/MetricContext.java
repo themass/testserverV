@@ -71,6 +71,7 @@ public class MetricContext {
                         .tag("monitor_name", name)
                         .field("count", count)
                         .field("keep", 1)
+                        .field("counter", count!=null&&count>0?1:0)
                         .build();
                 influxDB.write(database, null, point);
             }
