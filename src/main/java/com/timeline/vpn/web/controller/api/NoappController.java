@@ -31,7 +31,7 @@ public class NoappController extends BaseController {
     @Autowired
     private ReportService reportService;
     @RequestMapping(value = "/collect.json", method = RequestMethod.POST)
-    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost,@RequestParam String ip) {
+    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost,@RequestParam(required=false) String ip) {
         reportService.collect(baseQuery, count,localhost,ip);
         return Constant.RESULT_SUCCESS;
     }
@@ -41,7 +41,7 @@ public class NoappController extends BaseController {
         LOGGER.info(" ping check count="+list.size());
         for(PingCheck item:list)
             reportService.pingCheck(baseQuery, item.getType(),item.getIp());
-        return Constant.RESULT_SUCCESS;
+        return Constant.RESULT_SUCCESS; 
     }
     @RequestMapping(value = "/offerads/youmi.json", method = RequestMethod.GET)
     public JsonResult youmiOfferads(@UserInfo BaseQuery baseQuery,@RequestParam YoumiOffadsForm form) {

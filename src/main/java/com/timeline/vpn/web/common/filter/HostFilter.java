@@ -33,7 +33,7 @@ public class HostFilter implements Filter{
         String uri = request.getRequestURI();
         String test = request.getHeader("testtesttest");
         if(uri.contains("test") || uri.contains("noapp")|| "hahaha".equals(test)){
-            DevApp app = new DevApp();
+            DevApp app = new DevApp(); 
             app.setTest(true);
             app.setAuthKey("ssssssdddeee4eee");
             app.setHost(request.getHeader("Host")); 

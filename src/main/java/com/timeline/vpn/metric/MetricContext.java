@@ -123,10 +123,12 @@ public class MetricContext {
         if (name.indexOf(WELL) != -1) {
             String measure = StringUtils.substringBefore(name, WELL);
             if (Measure.value(measure) != null) {
+              LOGGER.info("measurementName="+measure);
                 return measure;
             }
         }
-        return MONITOR;
+        LOGGER.info("measurementName="+MONITOR);
+        return MONITOR; 
 
     }
    

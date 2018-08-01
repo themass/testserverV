@@ -39,7 +39,7 @@ public class Metrics {
      */
     public static void time(String name, Long time) {
         metrics.time(name,time);
-    }
+    } 
 
     /**
      * 执行时间

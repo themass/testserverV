@@ -52,10 +52,10 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
                 result.setCost(costTime);
                 LOGGER.info(String.format(request.getServletPath()+"[%s],cost:%s", request.getQueryString(),costTime));
                 String uri=request.getRequestURI();
-                Metrics.time(MetricsName.http(uri),
-                        costTime);
-                Metrics.time(MetricsName.http("ALL"),
-                        0l);
+//                Metrics.time(MetricsName.http(uri),
+//                        costTime);
+//                Metrics.time(MetricsName.http("ALL"),
+//                        0l);
             }
 
         }

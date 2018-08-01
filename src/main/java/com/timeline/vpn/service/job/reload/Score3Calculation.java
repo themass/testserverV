@@ -31,7 +31,7 @@ public class Score3Calculation extends ReloadJob{
     @Override
     @Transactional
     public void reload() {
-        LockJobPo po = new LockJobPo();
+        LockJobPo po = new LockJobPo(); 
         po.setJobName("Score3Calculation");
         po.setJobTime(DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD,new Date()));
         po.setIp(IpLocalUtil.getHostIp());

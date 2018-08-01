@@ -58,13 +58,13 @@ public class ReportServiceImpl implements ReportService{
         po.setHour(DateTimeUtils.formatDate("HH",date));
         po.setMinute(DateTimeUtils.formatDate("ss",date));
         collectDao.add(po);
-        Metrics.count(Measure.vpn_connect_live.name(),count,"IP-"+ip);
+        Metrics.count(Measure.vpn_connect_live.name(),count,"IP-"+baseQuery.getAppInfo().getUserIp());
         
     }
     @Override
     public void pingCheck(BaseQuery baseQuery, Integer type, String ip) {
         Metrics.count(Measure.ping_check.name(),type,ip);
         
-    }
+    } 
 }
 
