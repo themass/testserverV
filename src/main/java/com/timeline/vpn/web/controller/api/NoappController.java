@@ -31,7 +31,7 @@ public class NoappController extends BaseController {
     @Autowired
     private ReportService reportService;
     @RequestMapping(value = "/collect.json", method = RequestMethod.POST)
-    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost,@RequestParam(required=false) String ip) {
+    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost,@RequestParam String ip) {
         reportService.collect(baseQuery, count,localhost,ip);
         return Constant.RESULT_SUCCESS;
     }
