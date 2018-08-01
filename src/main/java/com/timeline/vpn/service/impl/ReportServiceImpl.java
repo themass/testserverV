@@ -48,7 +48,7 @@ public class ReportServiceImpl implements ReportService{
     }
     @Override
     public void collect(BaseQuery baseQuery, Integer count, String localhost,String ip) {
-        Metrics.count(Measure.vpn_connect.name(),count,localhost,ip);
+        Metrics.count(Measure.vpn_connect.name(),count,localhost);
         LOGGER.info("collect  vpn_connect--"+localhost+"----"+ip);
         CollectPo po = new CollectPo();
         po.setCount(count);
@@ -58,6 +58,7 @@ public class ReportServiceImpl implements ReportService{
         po.setHour(DateTimeUtils.formatDate("HH",date));
         po.setMinute(DateTimeUtils.formatDate("ss",date));
         collectDao.add(po);
+        Metrics.count(Measure.vpn_connect_live.name(),count,"IP-"+ip);
         
     }
     @Override

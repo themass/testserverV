@@ -23,9 +23,6 @@ public class Metrics {
     public static void count(String name,Integer count,String hostName) {
         metrics.count( name, count,hostName);
     }
-    public static void count(String name,Integer count,String hostName,String ip) {
-      metrics.count( name, count,hostName,ip);
-  }
     /**
      *
      *计数

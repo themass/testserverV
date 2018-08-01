@@ -19,7 +19,7 @@ public class HostIpMonitor extends ReloadJob {
 
     public void reload() {
         for(String ip :HostCheck.allIp()){
-          Metrics.count(Measure.vpn_connect_live_all.name(),ip);
+          Metrics.count(Measure.vpn_connect_live_all.name(),"IP-"+ip);
         }
         LOGGER.info("HostIpMonitor  size="+HostCheck.allIp().size());
         

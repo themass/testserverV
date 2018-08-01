@@ -80,25 +80,6 @@ public class MetricContext {
             e.printStackTrace();
         }
     }
-    public void count(String name, Integer count, String hostName,String ip) {
-      try {
-          if (influxDB != null) {
-              Point point = Point
-                      .measurement(measurementName(name))
-                      .tag("host", hostName)
-                      .tag("ip", ip)
-                      .tag("monitor_name", name)
-                      .field("count", count)
-                      .field("keep", 1)
-                      .field("counter", count!=null&&count>0?1:0)
-                      .build();
-              influxDB.write(database, null, point);
-          }
-      } catch (Exception e) {
-          LOGGER.error("MetricContext count error name :{} count:{}", name, count, e);
-          e.printStackTrace();
-      }
-  }
     public void time(String name, Long time) {
         try {
             if (influxDB != null) {

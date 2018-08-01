@@ -6,6 +6,7 @@ public enum Measure {
     monitor,
     ping_check,
     vpn_connect,
+    vpn_connect_live,
     vpn_connect_live_all;
     public static Measure value(String value) {
         Measure[] measures = Measure.values();
