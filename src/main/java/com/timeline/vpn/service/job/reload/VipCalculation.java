@@ -1,14 +1,19 @@
 package com.timeline.vpn.service.job.reload;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.timeline.vpn.dao.db.LockJobDao;
 import com.timeline.vpn.dao.db.UserDao;
-import com.timeline.vpn.service.CacheService;
+import com.timeline.vpn.model.po.LockJobPo;
 import com.timeline.vpn.service.job.ReloadJob;
+import com.timeline.vpn.util.DateTimeUtils;
+import com.timeline.vpn.util.IpLocalUtil;
 
 /**
  * @author gqli
@@ -21,12 +26,17 @@ public class VipCalculation extends ReloadJob{
     @Autowired
     private UserDao userDao;
     @Autowired
-    private CacheService cacheService;
+    private LockJobDao lockJobDao;
 
     @Override
     @Transactional
     public void reload() {
-        if(cacheService.lock("VipCalculation")>0) {
+        LockJobPo po = new LockJobPo();
+        po.setJobName("VipCalculation");
+        po.setJobTime(DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD,new Date()));
+        po.setIp(IpLocalUtil.getHostIp());
+       
+        if(lockJobDao.insert(po)>0) {
             LOGGER.info("VipCalculation start");
             userDao.initUserVip1();
             userDao.initUserVip2();

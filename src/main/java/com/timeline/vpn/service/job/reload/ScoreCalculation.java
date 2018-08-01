@@ -1,7 +1,5 @@
 package com.timeline.vpn.service.job.reload;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -15,6 +13,7 @@ import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.model.po.LockJobPo;
 import com.timeline.vpn.service.job.ReloadJob;
 import com.timeline.vpn.util.DateTimeUtils;
+import com.timeline.vpn.util.IpLocalUtil;
 
 /**
  * @author gqli
@@ -35,13 +34,7 @@ public class ScoreCalculation extends ReloadJob{
         LockJobPo po = new LockJobPo();
         po.setJobName("ScoreCalculation");
         po.setJobTime(DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD,new Date()));
-        String address;
-        try {
-            address = InetAddress.getLocalHost().getHostAddress().toString();
-            po.setIp(address);
-        } catch (UnknownHostException e) {
-            LOGGER.error("",e);
-        }
+        po.setIp(IpLocalUtil.getHostIp());
        
         if(lockJobDao.insert(po)>0) {
             LOGGER.info("ScoreCalculation start");
