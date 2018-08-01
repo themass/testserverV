@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.job.reload;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.timeline.vpn.metric.Measure;
@@ -13,10 +15,13 @@ import com.timeline.vpn.service.job.ReloadJob;
  */
 @Repository
 public class HostIpMonitor extends ReloadJob {
+  private static final Logger LOGGER = LoggerFactory.getLogger(HostIpMonitor.class);
 
     public void reload() {
         for(String ip :HostCheck.allIp()){
           Metrics.count(Measure.vpn_connect_live_all.name(),ip);
         }
+        LOGGER.info("HostIpMonitor  size="+HostCheck.allIp().size());
+        
     }
 }
