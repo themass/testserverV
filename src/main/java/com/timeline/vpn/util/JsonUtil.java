@@ -49,7 +49,7 @@ public class JsonUtil {
   }
 
   public static <T> JavaType getListType(Class<T> clz) {
-    JavaType javaType = mapper.getTypeFactory().constructParametrizedType(List.class, List.class, clz,null);
+    JavaType javaType = mapper.getTypeFactory().constructParametrizedType(List.class, List.class, clz);
     return javaType;
   }
 
