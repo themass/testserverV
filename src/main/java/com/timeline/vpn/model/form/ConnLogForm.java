@@ -1,6 +1,7 @@
 package com.timeline.vpn.model.form;
 
-import com.sun.tools.javac.util.List;
+import java.util.List;
+
 import com.timeline.vpn.model.po.ConnLogPo;
 
 /**
