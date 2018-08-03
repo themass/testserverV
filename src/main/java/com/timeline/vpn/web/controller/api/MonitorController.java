@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,7 +17,6 @@ import com.timeline.vpn.model.form.ConnLogForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.ReportService;
-import com.timeline.vpn.service.impl.ReportServiceImpl;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 
@@ -31,7 +28,6 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/monitor")
 public class MonitorController extends BaseController {
-  private static final Logger LOGGER = LoggerFactory.getLogger(MonitorController.class);
     @Autowired
     private ReportService reportService;
     @RequestMapping(value = "/leak.json", method = RequestMethod.POST)
@@ -45,9 +41,8 @@ public class MonitorController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/connlog.json", method = RequestMethod.POST)
-    public JsonResult connlog(@UserInfo BaseQuery baseQuery,String log) {
-        LOGGER.error("connlog->"+log);
-//        reportService.connlog(baseQuery, logs);
+    public JsonResult connlog(@UserInfo BaseQuery baseQuery,@ModelAttribute @Valid ConnLogForm logs) {
+        reportService.connlog(baseQuery, logs);
         return Constant.RESULT_SUCCESS;
     }
 }
