@@ -2,8 +2,11 @@ package com.timeline.vpn.web.controller.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +41,7 @@ public class MonitorController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/connlog.json", method = RequestMethod.POST)
-    public JsonResult connlog(@UserInfo BaseQuery baseQuery,@RequestParam ConnLogForm logs) {
+    public JsonResult connlog(@UserInfo BaseQuery baseQuery,@ModelAttribute @Valid ConnLogForm logs) {
         reportService.connlog(baseQuery, logs);
         return Constant.RESULT_SUCCESS;
     }
