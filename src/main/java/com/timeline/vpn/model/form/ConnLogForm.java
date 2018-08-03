@@ -18,6 +18,12 @@ public class ConnLogForm {
   public void setLog(List<ConnLogPo> log) {
     this.log = log;
   }
+
+  @Override
+  public String toString() {
+    return "ConnLogForm [log=" + log + "]";
+  }
   
 }
+
 

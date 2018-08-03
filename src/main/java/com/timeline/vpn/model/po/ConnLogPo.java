@@ -40,6 +40,12 @@ public class ConnLogPo {
   public void setTime(String time) {
     this.time = time;
   }
+  @Override
+  public String toString() {
+    return "ConnLogPo [name=" + name + ", host=" + host + ", userIp=" + userIp + ", status="
+        + status + ", time=" + time + "]";
+  }
+  
   
 }
 

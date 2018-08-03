@@ -53,6 +53,7 @@ public class ReportServiceImpl implements ReportService{
     }
     @Override
     public void connlog(BaseQuery baseQuery,ConnLogForm logs) {
+      LOGGER.info("connlog->"+logs);
       if(!CollectionUtils.isEmpty(logs.getLog())) {
         connLogDao.insertAll(logs.getLog());
       }
