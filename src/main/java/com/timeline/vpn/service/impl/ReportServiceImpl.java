@@ -83,5 +83,10 @@ public class ReportServiceImpl implements ReportService{
         Metrics.count(Measure.ping_check.name(),type,ip);
         
     } 
+    public static void main(String[]args) {
+      String logs = "[{\"host\":\"217.12.199.177\",\"id\":26,\"name\":\"themass\",\"status\":1,\"time\":\"20180803\",\"userIp\":\"10.33.138.151\"}]";
+      List<ConnLogPo> log = JsonUtil.readValue(logs, JsonUtil.getListType(ConnLogPo.class));
+      System.out.println(log);
+    }
 }
 
