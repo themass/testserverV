@@ -35,7 +35,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/reg.json", method = RequestMethod.POST)
     public JsonResult reg(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserRegForm form) {
         userService.reg(form, baseQuery);
-        return Constant.RESULT_SUCCESS;
+        return Constant.RESULT_SUCCESS; 
     }
     @RequestMapping(value = "/findpass.json", method = RequestMethod.POST)
     public JsonResult findpass(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserEmailForm form) {

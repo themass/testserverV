@@ -19,7 +19,7 @@ public class SexRecommendServiceImpl implements BaseRecommendServie{
     @Autowired
     private SexRecommendDao recommendDao;
     @Override
-    public List<RecommendPo> getPage(int type) {
+    public List<RecommendPo> getPage(int type) { 
         return recommendDao.getPage(type);
     }
 

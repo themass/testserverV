@@ -18,7 +18,7 @@ import com.timeline.vpn.util.ScoreCalculate;
 public class ScoreServiceImpl implements ScoreService{
   @Autowired
   private UserDao userDao;
-  @Autowired
+  @Autowired 
   private RadUserCheckService checkService;
   @Override
   public UserPo updateScore(String name) {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.SexTempRecommendDao;
+import com.timeline.vpn.dao.db.VpnRecommendDao;
 import com.timeline.vpn.model.po.RecommendPo;
 
 /**
@@ -24,7 +25,7 @@ public class SexTempRecommendServiceImpl implements BaseRecommendServie{
     }
 
     @Override
-    public List<RecommendPo> getVipPage() {
+    public List<RecommendPo> getVipPage() {  
         return recommendDao.getVipPage();
     }
 

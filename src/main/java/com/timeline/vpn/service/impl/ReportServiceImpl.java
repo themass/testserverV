@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.timeline.vpn.ConstantProfile;
 import com.timeline.vpn.dao.db.CollectDao;
+import com.timeline.vpn.dao.db.ConnLogDao;
 import com.timeline.vpn.metric.Measure;
 import com.timeline.vpn.metric.Metrics;
+import com.timeline.vpn.model.form.ConnLogForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.CollectPo;
 import com.timeline.vpn.service.ReportService;
@@ -29,6 +32,8 @@ public class ReportServiceImpl implements ReportService{
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportServiceImpl.class);
     @Autowired
     private CollectDao collectDao;
+    @Autowired 
+    private ConnLogDao connLogDao;
     @Override
     public void reportBug(BaseQuery baseQuery, List<MultipartFile> fileList) {
         String dir = DateTimeUtils.formatDate(DateTimeUtils.DATEFORMAT,new Date());
@@ -45,6 +50,12 @@ public class ReportServiceImpl implements ReportService{
                 LOGGER.error("",e);
             }
         }
+    }
+    @Override
+    public void connlog(BaseQuery baseQuery,ConnLogForm logs) {
+      if(!CollectionUtils.isEmpty(logs.getLog())) {
+        connLogDao.insertAll(logs.getLog());
+      }
     }
     @Override
     public void collect(BaseQuery baseQuery, Integer count, String localhost,String ip) {

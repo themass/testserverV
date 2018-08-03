@@ -39,7 +39,7 @@
 		<typeAlias alias="VideoUserItemPo" type="com.timeline.vpn.model.po.VideoUserItemPo" />
 		<typeAlias alias="VideoUserPo" type="com.timeline.vpn.model.po.VideoUserPo" />
 		<typeAlias alias="LockJobPo" type="com.timeline.vpn.model.po.LockJobPo" />
-		
+		<typeAlias alias="ConnLogPo" type="com.timeline.vpn.model.po.ConnLogPo" />
 		
 		
 		<typeAlias alias="AppInfoPo" type="com.timeline.vpn.model.po.AppInfoPo" />

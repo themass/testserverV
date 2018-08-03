@@ -24,7 +24,7 @@ public class VpnRecommendServiceImpl implements BaseRecommendServie{
     }
 
     @Override
-    public List<RecommendPo> getVipPage() {
+    public List<RecommendPo> getVipPage() { 
         return recommendDao.getVipPage();
     }
 

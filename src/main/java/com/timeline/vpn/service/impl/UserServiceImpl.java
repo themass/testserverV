@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName) {
         DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
         if(po==null){
-            po = new DevUseinfoPo();
+            po = new DevUseinfoPo(); 
             po.setCreatTime(new Date());
             po.setDevId(appInfo.getDevId());
             po.setLastUpdate(new Date());

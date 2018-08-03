@@ -142,7 +142,7 @@ public class VoBuilder {
         page.setHasMore(data.getPageNum() < data.getPages());
         page.setPageNum(data.getPageNum() + 1);
         page.setTotal(data.getTotal());
-        return page;
+        return page; 
     }
 
     public static InfoListVo<DnsResverVo> buildDnsResverInfoList(List<DnsResverPo> list) {

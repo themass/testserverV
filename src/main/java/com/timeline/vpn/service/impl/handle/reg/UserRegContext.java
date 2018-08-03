@@ -29,7 +29,7 @@ public class UserRegContext extends BaseSingleServiceContext<Integer,BaseUserReg
   public void handleRef(BaseQuery baseQuery,String ref) {
     if(!StringUtils.isEmpty(ref)) {
       DevUseinfoPo po = devInfoDao.get(baseQuery.getAppInfo().getDevId());
-      if(StringUtils.isEmpty(po.getRef())) {
+      if(StringUtils.isEmpty(po.getRef())) { 
           devInfoDao.updateRef(po.getDevId(), ref);
           userDao.score(Constant.ADS_REF_SCORE, ref);
           UserPo user = scoreService.updateScore(ref);

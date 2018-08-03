@@ -96,7 +96,7 @@ public class DataServiceImpl implements DataService {
     public InfoListVo<RecommendVo> getRecommendNightPage(BaseQuery baseQuery, PageBaseParam param) {
         return getRecommendVipPage(baseQuery,param);
     }
-
+ 
     @Override
     public InfoListVo<RecommendVo> getRecommendAreaPage(BaseQuery baseQuery, PageBaseParam param) {
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
@@ -110,7 +110,7 @@ public class DataServiceImpl implements DataService {
                     t.setImg(baseUrl+i.getImg());
                 }
             }
-            
+             
         });
     }
     @Override
@@ -155,7 +155,7 @@ public class DataServiceImpl implements DataService {
                 }
             }
         }
-        VipDescVo desc = new VipDescVo();
+        VipDescVo desc = new VipDescVo(); 
 //        desc.setDesc("每周扣除150积分；点广告赚积分");
 //        desc.setDesc1("2100积分=VIP1；4100积分=VIP2");
 //        desc.setDesc2("邀请用户40积分/人；大于5人送vip3-15天；\\n大于10人送vip3-30天；\\n大于15人 送vip3-50天+pc1个月/200G流量");

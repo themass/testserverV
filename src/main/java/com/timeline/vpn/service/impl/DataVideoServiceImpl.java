@@ -37,11 +37,11 @@ public class DataVideoServiceImpl implements DataVideoService {
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
             public void action(VideoPo i, RecommendVo t) {
-                t.setActionUrl(i.getUrl());
+                t.setActionUrl(i.getUrl()); 
                 t.setTitle(i.getName());
                 t.setImg(i.getPic());
                 t.setAdsPopShow(false);
-                t.setAdsShow(true);
+                t.setAdsShow(true); 
                 t.setParam(i.getUrl());
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }

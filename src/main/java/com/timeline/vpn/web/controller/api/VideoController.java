@@ -27,7 +27,7 @@ import com.timeline.vpn.web.controller.BaseController;
 public class VideoController extends BaseController {
     @RequestMapping(value = "/items.json", method = RequestMethod.GET)
     public JsonResult items(@UserInfo BaseQuery baseQuery,
-            @ModelAttribute @Valid PageBaseForm form) {
+            @ModelAttribute @Valid PageBaseForm form) { 
         return new JsonResult(dataVideoService.getVideoPage(baseQuery, form.toParam()));
     }
     @RequestMapping(value = "/channel.json", method = RequestMethod.GET)
