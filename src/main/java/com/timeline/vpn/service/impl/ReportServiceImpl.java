@@ -56,7 +56,7 @@ public class ReportServiceImpl implements ReportService{
     }
     @Override
     public void connlog(BaseQuery baseQuery,ConnLogForm logs) {
-      LOGGER.info("connlog->"+logs);
+      LOGGER.error("connlog->"+logs);
       if(!StringUtils.isEmpty(logs.getLog())) {
         List<ConnLogPo> log = JsonUtil.readValue(logs.getLog(), JsonUtil.getListType(ConnLogPo.class));
         connLogDao.insertAll(log);

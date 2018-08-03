@@ -4,7 +4,6 @@ package com.timeline.vpn.util;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class JsonUtil {
   }
 
   public static <T> JavaType getListType(Class<T> clz) {
-    JavaType javaType = mapper.getTypeFactory().constructParametrizedType(ArrayList.class, List.class, clz,null);
+    JavaType javaType = mapper.getTypeFactory().constructParametrizedType(List.class, List.class, clz,null);
     return javaType;
   }
 
