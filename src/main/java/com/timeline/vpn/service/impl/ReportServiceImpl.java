@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.timeline.vpn.ConstantProfile;
@@ -19,8 +20,10 @@ import com.timeline.vpn.metric.Metrics;
 import com.timeline.vpn.model.form.ConnLogForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.CollectPo;
+import com.timeline.vpn.model.po.ConnLogPo;
 import com.timeline.vpn.service.ReportService;
 import com.timeline.vpn.util.DateTimeUtils;
+import com.timeline.vpn.util.JsonUtil;
 
 /**
  * @author gqli
@@ -54,8 +57,9 @@ public class ReportServiceImpl implements ReportService{
     @Override
     public void connlog(BaseQuery baseQuery,ConnLogForm logs) {
       LOGGER.info("connlog->"+logs);
-      if(!CollectionUtils.isEmpty(logs.getLog())) {
-        connLogDao.insertAll(logs.getLog());
+      if(!StringUtils.isEmpty(logs.getLog())) {
+        List<ConnLogPo> log = JsonUtil.readValue(logs.getLog(), JsonUtil.getListType(ConnLogPo.class));
+        connLogDao.insertAll(log);
       }
     }
     @Override
