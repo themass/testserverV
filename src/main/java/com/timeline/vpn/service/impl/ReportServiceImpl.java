@@ -59,7 +59,8 @@ public class ReportServiceImpl implements ReportService{
       LOGGER.error("connlog->"+logs);
       if(!StringUtils.isEmpty(logs.getLog())) {
         List<ConnLogPo> log = JsonUtil.readValue(logs.getLog(), JsonUtil.getListType(ConnLogPo.class));
-        connLogDao.insertAll(log);
+        if(!CollectionUtils.isEmpty(log))
+          connLogDao.insertAll(log);
       }
     }
     @Override
