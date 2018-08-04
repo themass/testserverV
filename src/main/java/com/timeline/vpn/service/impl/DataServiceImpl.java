@@ -135,14 +135,16 @@ public class DataServiceImpl implements DataService {
     }
     @Override
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel) {
+      if(Constant.VPN.equals(channel)) {
+        channel = StringUtils.isEmpty(baseQuery.getAppInfo().getPool())?channel:baseQuery.getAppInfo().getPool()+"_"+channel;
+      }
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
         vo.setAdsShow(false);
         vo.setLogUp(true);
-        if(!Constant.VPN.equals(channel)){
-            String pool = StringUtils.isEmpty(baseQuery.getAppInfo().getPool())?Constant.VPN:baseQuery.getAppInfo().getPool();
-            AppVersion vpnVer = versionDao.getLast(platform,pool);
-            vo.setVpnUrl(vpnVer.getUrl());
-        }
+//        if(!Constant.VPN.equals(channel)){
+//            AppVersion vpnVer = versionDao.getLast(platform,Constant.VPN);
+//            vo.setVpnUrl(vpnVer.getUrl());
+//        }
         if(baseQuery!=null){
             String userName = baseQuery.getUser()==null?null:baseQuery.getUser().getName();
             userService.updateDevUseinfo(baseQuery.getAppInfo(),userName);
