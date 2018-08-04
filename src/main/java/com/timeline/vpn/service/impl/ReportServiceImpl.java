@@ -56,10 +56,12 @@ public class ReportServiceImpl implements ReportService{
     }
     @Override
     public void connlog(BaseQuery baseQuery,ConnLogForm logs) {
-      LOGGER.error("connlog->"+logs);
       if(!StringUtils.isEmpty(logs.getLog())) {
         List<ConnLogPo> log = JsonUtil.readValue(logs.getLog(), JsonUtil.getListType(ConnLogPo.class));
         if(!CollectionUtils.isEmpty(log))
+          for(ConnLogPo po :log) {
+            po.setCurIp(baseQuery.getAppInfo().getUserIp());
+          }
           connLogDao.insertAll(log);
       }
     }

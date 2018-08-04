@@ -10,6 +10,7 @@ public class ConnLogPo {
   private String userIp;
   private int status;
   private String time;
+  private String curIp;
   public String getName() {
     return name;
   }
@@ -39,6 +40,13 @@ public class ConnLogPo {
   }
   public void setTime(String time) {
     this.time = time;
+  }
+  
+  public String getCurIp() {
+    return curIp;
+  }
+  public void setCurIp(String curIp) {
+    this.curIp = curIp;
   }
   @Override
   public String toString() {

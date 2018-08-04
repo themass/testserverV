@@ -6,11 +6,11 @@
 	</resultMap>
 	<insert id="insertAll">
 		insert into
-		vpn.connlog(name,host,userIp,status,time)
+		vpn.connlog(name,host,userIp,status,time,curIp)
 		values
 		 <foreach collection="list" item="item" index="index" open=""
                  close="" separator=",">
-            (#{item.name},#{item.host},#{item.userIp},#{item.status},#{item.time})
+            (#{item.name},#{item.host},#{item.userIp},#{item.status},#{item.time},#{item.curIp})
         </foreach>
 	</insert>
 </mapper>
