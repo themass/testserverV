@@ -27,6 +27,7 @@ public class DevApp {
     private String lat;
     private String tokenHeader;
     private String channel;
+    private String pool;
     public DevApp(){}
     public DevApp(String devId, String userIp, String versionName, String version,
             String platform) {
@@ -166,6 +167,13 @@ public class DevApp {
     }
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+    
+    public String getPool() {
+      return pool;
+    }
+    public void setPool(String pool) {
+      this.pool = pool;
     }
     @Override
     public String toString() {

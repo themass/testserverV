@@ -139,7 +139,8 @@ public class DataServiceImpl implements DataService {
         vo.setAdsShow(false);
         vo.setLogUp(true);
         if(!Constant.VPN.equals(channel)){
-            AppVersion vpnVer = versionDao.getLast(platform,Constant.VPN);
+            String pool = StringUtils.isEmpty(baseQuery.getAppInfo().getPool())?Constant.VPN:baseQuery.getAppInfo().getPool();
+            AppVersion vpnVer = versionDao.getLast(platform,pool);
             vo.setVpnUrl(vpnVer.getUrl());
         }
         if(baseQuery!=null){
