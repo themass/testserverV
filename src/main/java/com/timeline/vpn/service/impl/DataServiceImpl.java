@@ -139,6 +139,7 @@ public class DataServiceImpl implements DataService {
         if(Constant.VPN.equals(channel)) {
           versionchannel = StringUtils.isEmpty(baseQuery.getAppInfo().getPool())?channel:baseQuery.getAppInfo().getPool()+"_"+channel;
         }
+        LOGGER.error("versionchannel="+versionchannel);
         VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,versionchannel), VersionInfoVo.class,null);
         vo.setAdsShow(false);
         vo.setLogUp(true);
