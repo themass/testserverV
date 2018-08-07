@@ -132,7 +132,7 @@ public class VoBuilder {
         }else {
             vo.setWhere(po.getIpLocal());
         }
-        vo.setAppName(po.getAppName()+"用户");
+        vo.setAppName(po.getAppName().replace(Constant.NETTYPEA, "")+"用户");
         return vo;
     }
 

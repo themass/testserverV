@@ -80,7 +80,8 @@ public class Constant {
            public static final String WEBVIEW = "webview";
     }
     public static final String VIDEO_CHANNEL_WEB_PRF = "web_";
-
+    
+    public static final String NETTYPEA="NETTYPEA";
     public static final JsonResult RESULT_SUCCESS =
             new JsonResult(new RetInfoVo(true), Constant.ResultErrno.ERRNO_SUCCESS, null);
     public static final String HTTP_UA = "user-agent";
