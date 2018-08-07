@@ -30,14 +30,16 @@ public class DeviceUtil {
     public static final String ANDROID = "android";
     public static final String IOS = "ios";
     private static final String FORMAT = "000";
-    private static final String VPNVERSION = "(VPN|LIFE|SEX|SEX_TEMP|VPN_2)/(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
+    private static final String VPNVERSION = "(VPN|LIFE|SEX|SEX_TEMP|NETHELP)/(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
     private static final String VPNVERSION_VPN_POOL = ",channel=(MYPOOL),";
+    private static final String VPNVERSION_NETTYPE= ",NETTYPE=(NETTYPEA),";
     private static final String DEVID = "devid";
     private static final int VERSION_COUNT = 4;
     private static final String HTTP_UA = "user-agent";
     private static final String HTTP_HOST= "Host";
     private static final Pattern pattern = Pattern.compile(VPNVERSION);
     private static final Pattern pattern_pool = Pattern.compile(VPNVERSION_VPN_POOL);
+    private static final Pattern pattern_netType = Pattern.compile(VPNVERSION_NETTYPE);
     private static final String VERSION = "([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)";
     private static final Pattern versionPattern = Pattern.compile(VERSION);
     private static final String LOC = "loc";
@@ -109,8 +111,15 @@ public class DeviceUtil {
                     return null;
                 }
                 Matcher matcherPool = pattern_pool.matcher(ua);
-                if (matcher.find()) {
-                  app.setPool(matcherPool.group(1));
+                if (matcherPool.find()) {
+                    app.setPool(matcherPool.group(1));
+                }
+                Matcher matcherNetType = pattern_netType.matcher(ua);
+                if (matcherNetType.find()) {
+                  app.setNetType(matcherNetType.group(1));
+                }else {
+                  app.setNetType("");
+
                 }
                 parsLoc(webRequest,app);
                 return app;

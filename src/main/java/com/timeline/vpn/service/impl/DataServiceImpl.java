@@ -201,7 +201,7 @@ public class DataServiceImpl implements DataService {
         if(DeviceUtil.isAdmin(baseQuery)) {
             data = (Page<IWannaPo>) iWannaDao.getAll();
         }else {
-            data = (Page<IWannaPo>) iWannaDao.getPage(baseQuery.getAppInfo().getChannel());
+            data = (Page<IWannaPo>) iWannaDao.getPage(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType());
         }
         return VoBuilder.buildIWannaPageInfoVo(data, baseQuery);
     }
@@ -220,7 +220,7 @@ public class DataServiceImpl implements DataService {
         po.setLikeUsers(Constant.superMan);
         po.setName(baseQuery.getUser().getName());
         po.setIp(baseQuery.getAppInfo().getUserIp());
-        po.setAppName(baseQuery.getAppInfo().getChannel());
+        po.setAppName(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType());
         iWannaDao.insert(po);
         sendMsg(content+"--"+baseQuery.getUser().getName()+"--"+baseQuery.getAppInfo().getChannel());
         return VoBuilder.buildIWannaVo(po, baseQuery.getUser().getName());
@@ -243,7 +243,7 @@ public class DataServiceImpl implements DataService {
         if(DeviceUtil.isAdmin(baseQuery)) {
           data = (Page<IWannaPo>) iWannaDao.getAllFeed();
         }else {
-            data = (Page<IWannaPo>) iWannaDao.getPageFeed(baseQuery.getAppInfo().getChannel());
+            data = (Page<IWannaPo>) iWannaDao.getPageFeed(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType());
         }
         return VoBuilder.buildIWannaPageInfoVo(data, baseQuery);
     }
@@ -257,7 +257,7 @@ public class DataServiceImpl implements DataService {
         po.setLikeUsers(Constant.superMan);
         po.setName(baseQuery.getUser().getName());
         po.setIp(baseQuery.getAppInfo().getUserIp());
-        po.setAppName(baseQuery.getAppInfo().getChannel());
+        po.setAppName(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType());
         iWannaDao.insertFeed(po);
         sendMsg(content+"--"+baseQuery.getUser().getName()+"--"+baseQuery.getAppInfo().getChannel());
         return VoBuilder.buildIWannaVo(po, baseQuery.getUser().getName());

@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.util.DeviceUtil;
 import com.timeline.vpn.util.UrlUtil;
@@ -40,7 +41,7 @@ public class HostFilter implements Filter{
             app.setTokenHeader("1111");
             app.setUserIp(UrlUtil.getIpAddr(request));
             app.setDevId("androidimei82892812384933941456");
-            app.setChannel("VPN");
+            app.setChannel(Constant.VPN);
             app.setPool("MYPOOL");
             app.setLang("en");
             app.setPlatform("android"); 

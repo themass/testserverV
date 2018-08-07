@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.util.Md5;
@@ -28,6 +29,7 @@ public class DevApp {
     private String tokenHeader;
     private String channel;
     private String pool;
+    private String netType;
     public DevApp(){}
     public DevApp(String devId, String userIp, String versionName, String version,
             String platform) {
@@ -174,6 +176,13 @@ public class DevApp {
     }
     public void setPool(String pool) {
       this.pool = pool;
+    }
+    
+    public String getNetType() {
+      return StringUtils.isEmpty(netType)?"":netType;
+    }
+    public void setNetType(String netType) {
+      this.netType = netType;
     }
     @Override
     public String toString() {
