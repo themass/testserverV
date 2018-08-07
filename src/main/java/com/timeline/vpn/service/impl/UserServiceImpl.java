@@ -43,6 +43,7 @@ import com.timeline.vpn.service.impl.handle.recommend.RecommendServiceProxy;
 import com.timeline.vpn.service.impl.handle.reg.UserRegContext;
 import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.DateTimeUtils;
+import com.timeline.vpn.util.DeviceUtil;
 
 /**
  * @author gqli
@@ -220,7 +221,7 @@ public class UserServiceImpl implements UserService {
     public InfoListVo<RecommendVo> getRecommendCustomePage(BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList ;
-        if(baseQuery.getUser().getName().equals("themass")){
+        if(DeviceUtil.isAdmin(baseQuery)) {
             poList = recommendServiceProxy.getCustomeAllPage();
         }else{
             poList = recommendServiceProxy.getCustomePage(baseQuery.getUser().getName());

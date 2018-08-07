@@ -23,7 +23,7 @@
 		select * from vpn.iwanna where enable=1  order by create_time desc
 	</select>
 	<select id="getPage" resultMap="IWannaMap">
-		select * from vpn.iwanna where enable=1 order by create_time desc
+		select * from vpn.iwanna where enable=1  and app_name=#{channel} order by create_time desc
 	</select>
 	<select id="get" resultMap="IWannaMap">
 		select * from vpn.iwanna where id = #{id}
@@ -42,7 +42,7 @@
 		select * from vpn.score_feed where enable=1  order by create_time desc
 	</select>
 	<select id="getPageFeed" resultMap="IWannaMap">
-		select * from vpn.score_feed where enable=1 order by create_time desc
+		select * from vpn.score_feed where enable=1 and app_name=#{channel} order by create_time desc
 	</select>
 	<select id="getFeed" resultMap="IWannaMap">
 		select * from vpn.score_feed where id = #{id}

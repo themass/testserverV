@@ -97,7 +97,7 @@ public class Constant {
     public static final String HTTP_TOKEN_LIFE_KEY = "Life-Token";
     public static final String HTTP_TOKEN_SEX_KEY = "Sex-Token";
     public static final String HTTP_TOKEN_SEX_TEMP_KEY = "Sex-Token";
-    
+    public static final String ADMIN_NAME="themass";
     
     public static final String HTTP_ATTR_TOKEN = "token_key";
     public static final String HTTP_ATTR_RET = "ret_key";

@@ -2,6 +2,8 @@ package com.timeline.vpn.dao.db;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.timeline.vpn.dao.BaseDBDao;
 import com.timeline.vpn.model.po.IWannaPo;
 
@@ -11,14 +13,15 @@ import com.timeline.vpn.model.po.IWannaPo;
  * @version V1.0
  */
 public interface IWannaDao extends BaseDBDao<IWannaPo> {
-    public List<IWannaPo> getPage();
+    public List<IWannaPo> getPage(@Param("channel")String channel);
 
     public void like(IWannaPo po);
 
     public IWannaPo get(long id);
     
     public int insertFeed(IWannaPo po);
-    public List<IWannaPo> getPageFeed();
+    public List<IWannaPo> getPageFeed(@Param("channel")String channel);
+    public List<IWannaPo> getAllFeed();
     public void likeFeed(IWannaPo po);
     public IWannaPo getFeed(long id);
 }

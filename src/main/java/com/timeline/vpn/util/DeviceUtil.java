@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 
 /**
@@ -153,6 +154,9 @@ public class DeviceUtil {
         return Locale.getDefault();
       }
   }
+    public static boolean isAdmin(BaseQuery baseQuery) {
+      return baseQuery.getUser()!=null&&Constant.ADMIN_NAME.equals(baseQuery.getUser().getName());
+    }
     public static void main(String[]args){
         String str = "SEX/1.0.2.1";
         Matcher matcher = pattern.matcher(str);
