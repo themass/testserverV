@@ -108,7 +108,7 @@ public class DeviceUtil {
                     return null;
                 }
                 Matcher matcherPool = pattern_pool.matcher(ua);
-                if(matcherPool.find()) {
+                if (matcher.find()) {
                   app.setPool(matcherPool.group(1));
                 }
                 parsLoc(webRequest,app);
