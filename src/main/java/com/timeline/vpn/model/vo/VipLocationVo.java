@@ -14,6 +14,7 @@ public class VipLocationVo {
     private String desc;
     private String ename;
     private String edesc;
+    private String descVpnb;
     private List<LocationVo> list;
     public int getType() {
         return type;
@@ -56,6 +57,12 @@ public class VipLocationVo {
     }
     public void setEdesc(String edesc) {
       this.edesc = edesc;
+    }
+    public String getDescVpnb() {
+      return descVpnb;
+    }
+    public void setDescVpnb(String descVpnb) {
+      this.descVpnb = descVpnb;
     }
     
 

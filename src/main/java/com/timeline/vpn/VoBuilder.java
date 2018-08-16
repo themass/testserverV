@@ -227,6 +227,7 @@ public class VoBuilder {
             vipLocationVo.setDesc(nameType.getDesc());
             vipLocationVo.setEname(nameType.getEname());
             vipLocationVo.setEdesc(nameType.getEdesc());
+            vipLocationVo.setDescVpnb(nameType.getDescVpnb());
             list.add(vipLocationVo);
         }
         vo.setVoList(list);

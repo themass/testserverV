@@ -1,6 +1,5 @@
 package com.timeline.vpn.service.impl.handle.reg;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.timeline.vpn.model.param.BaseQuery;

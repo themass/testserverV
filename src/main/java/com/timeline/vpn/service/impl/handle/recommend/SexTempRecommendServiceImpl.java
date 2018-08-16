@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.SexTempRecommendDao;
-import com.timeline.vpn.dao.db.VpnRecommendDao;
 import com.timeline.vpn.model.po.RecommendPo;
 
 /**

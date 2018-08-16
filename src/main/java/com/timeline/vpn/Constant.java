@@ -86,7 +86,7 @@ public class Constant {
             new JsonResult(new RetInfoVo(true), Constant.ResultErrno.ERRNO_SUCCESS, null);
     public static final String HTTP_UA = "user-agent";
     public static final String VPN = "VPN";
-    public static final String MYPOOL_VPN = "MYPOOL_VPN";
+    public static final String VPNB = "VPNB";
     public static final String LIFE = "LIFE";
     public static final String SEX = "SEX";
     public static final String SEX_TEMP = "SEX_TEMP";

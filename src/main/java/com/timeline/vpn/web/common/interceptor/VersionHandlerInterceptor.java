@@ -40,7 +40,7 @@ public class VersionHandlerInterceptor extends HandlerInterceptorAdapter {
             LOGGER.error("devapp={}",app);
             throw new MonitorException("服务异常，请稍后再试");
         }
-        VersionInfoVo vo = dataService.getMaxVersion(app.getPlatform(),app.getChannel());
+        VersionInfoVo vo = dataService.getMaxVersion(app,app.getChannel());
         long version = Long.parseLong(app.getVersion());
         if (version < vo.getMinBuild()) {
             throw new ParamException(Constant.ResultMsg.RESULT_VERSION_ERROR);

@@ -42,7 +42,7 @@ public class HostController extends BaseController {
     }
     @RequestMapping(value = "/server/location/vip/cache.json", method = RequestMethod.GET)
     public JsonResult locationListVipCache(@UserInfo BaseQuery baseQuery) {
-        return new JsonResult(hostService.getAllLocationVipCache());
+        return new JsonResult(hostService.getAllLocationVipCache(baseQuery));
     }
     @RequestMapping(value = "/server/dns.json", method = RequestMethod.GET)
     public JsonResult dns(@UserInfo BaseQuery baseQuery,@RequestParam String d) {

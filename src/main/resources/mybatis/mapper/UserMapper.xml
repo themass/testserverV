@@ -6,9 +6,9 @@
 	</resultMap>
 	<insert id="insert">
 		insert into
-		vpn.user(name,pwd,sex,level,time,email)
+		vpn.user(name,pwd,sex,level,time,email,channel)
 		values
-		(#{name},#{pwd},#{sex},#{level},#{time},#{email})
+		(#{name},#{pwd},#{sex},#{level},#{time},#{email},#{channel})
 	</insert>
 	<select id="exist" resultMap="UserMap">
 		select * from vpn.user where name=#{name}
@@ -20,27 +20,30 @@
 	    update vpn.user set score=score+#{score} where name=#{name}
 	</update>
 	<update id="updateLevel">
-	    update vpn.user set level=#{level} where name=#{name} and level &lt; 3
+	    update vpn.user set level=#{level} where name=#{name} and level &lt; 3 and channel='VPN'
 	</update>
 	<update id="updateLevelPaid">
-	    update vpn.user set level=0 where level=3 and paidStartTime &gt;= #{start} and paidEndTime &lt;= #{end}
+	    update vpn.user set level=0 where level=3 and paidStartTime &gt;= #{start} and paidEndTime &lt;= #{end} and channel='VPN'
 	</update>
 	<update id="updateToLevelPaid">
-	    update vpn.user set level=3, paidStartTime= #{start}, paidEndTime = #{end} where name=#{name}
+	    update vpn.user set level=3, paidStartTime= #{start}, paidEndTime = #{end} where name=#{name} and channel='VPN'
 	</update>
 	<update id="updateEmail">
 	    update vpn.user set email=#{email} where name=#{name}
 	</update>
 	<update id="minusScore">
-	    update vpn.user set score=score-150 where score &gt;= 150
+	    update vpn.user set score=score-150 where score &gt;= 150 
 	</update>
 	<update id="initUserVip">
-	    update vpn.user set level=0 where score &lt; 2100 and level &lt; 3
+	    update vpn.user set level=0 where score &lt; 2100 and level &lt; 3 and channel='VPN'
 	</update>
 	<update id="initUserVip1">
-	    update vpn.user set level=1 where score &gt;= 2100 and score &lt; 4100 and level &lt; 3
+	    update vpn.user set level=1 where score &gt;= 2100 and score &lt; 4100 and level &lt; 3 and channel='VPN'
 	</update>
 	<update id="initUserVip2">
-	    update vpn.user set level=2 where score &gt;= 4100 and level &lt; 3
+	    update vpn.user set level=2 where score &gt;= 4100 and level &lt; 3 and channel='VPN'
+	</update>
+	<update id="updateVpnbPaid">
+	    update vpn.user set level=0 where paidEndTime &lt;= #{end} and channel='VPNB'
 	</update>
 </mapper>

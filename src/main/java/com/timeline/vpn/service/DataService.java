@@ -1,6 +1,7 @@
 package com.timeline.vpn.service;
 
 import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.vo.AppInfoVo;
 import com.timeline.vpn.model.vo.IWannaVo;
@@ -34,7 +35,7 @@ public interface DataService {
     public void addIwannaScoreLike(BaseQuery baseQuery, long id);
     
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel);
-    public VersionInfoVo getMaxVersion(String platform,String channel);
+    public VersionInfoVo getMaxVersion(DevApp app,String channel);
     
     
     public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery);

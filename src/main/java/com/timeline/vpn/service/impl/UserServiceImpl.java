@@ -148,6 +148,12 @@ public class UserServiceImpl implements UserService {
                 checkService.addRadUser(form.getName(), form.getPwd(), Constant.UserGroup.RAD_GROUP_REG);
                 baseQuery.setUser(po);
                 userRegContext.handleRef(baseQuery, form.getRef());
+                if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
+                    po.setChannel(Constant.VPN);
+                }else {
+                    po.setChannel(baseQuery.getAppInfo().getNetType());
+                }
+                
             } else {
                 throw new DataException(Constant.ResultMsg.RESULT_EXIST_ERROR);
             }

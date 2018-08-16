@@ -16,6 +16,7 @@ public interface LocationDao extends BaseDBDao<LocationPo> {
     public LocationPo get(@Param("id")int id);
     
     public List<LocationPo> getAllInfo();
+    public List<LocationPo> getAllInfoVpnb();
 
 }
 

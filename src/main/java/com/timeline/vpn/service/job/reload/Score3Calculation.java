@@ -41,6 +41,7 @@ public class Score3Calculation extends ReloadJob{
             Date end = DateTimeUtils.getDateWithoutHms(new Date());
             Date start = DateTimeUtils.getDateWithoutHms(DateTimeUtils.getYesterday());
             userDao.updateLevelPaid(start, end);
+            userDao.updateVpnbPaid(end);
         }
     }
 }

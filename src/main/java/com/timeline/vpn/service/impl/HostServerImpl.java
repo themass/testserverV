@@ -9,6 +9,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.google.common.base.Function;
 import com.timeline.vpn.BeanBuilder;
@@ -34,6 +35,7 @@ import com.timeline.vpn.model.vo.VipLocationVo;
 import com.timeline.vpn.service.HostService;
 import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.job.reload.HostIpCache;
+import com.timeline.vpn.service.job.reload.HostIpCacheVpnb;
 import com.timeline.vpn.util.AES2;
 
 /**
@@ -148,16 +150,22 @@ public class HostServerImpl implements HostService {
         return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
     }
     @Override
-    public InfoListVo<VipLocationVo> getAllLocationVipCache() {
-        InfoListVo<LocationVo> locationVo = VoBuilder.buildListInfoVo(HostIpCache.getLocationList(), LocationVo.class,null);
-        Map<Integer, Collection<LocationVo>> map =BeanBuilder.buildMultimap(locationVo.getVoList(), new Function<LocationVo, Integer>() {
+    public InfoListVo<VipLocationVo> getAllLocationVipCache(BaseQuery baseQuery) {
+      List<LocationPo> list = null;
+      if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())||baseQuery.getAppInfo().getNetType().equals(Constant.VPNB)) {
+        list = HostIpCacheVpnb.getLocationList();
+      }else {
+        list = HostIpCache.getLocationList();
+      }
+      InfoListVo<LocationVo> locationVo = VoBuilder.buildListInfoVo(list, LocationVo.class,null);
+      Map<Integer, Collection<LocationVo>> map =BeanBuilder.buildMultimap(locationVo.getVoList(), new Function<LocationVo, Integer>() {
 
-            @Override
-            public Integer apply(LocationVo input) {
-                return input.getType();
-            }
-        });
-        return VoBuilder.buildListVipLocationVo(map);
+          @Override
+          public Integer apply(LocationVo input) {
+              return input.getType();
+          }
+      });
+      return VoBuilder.buildListVipLocationVo(map);
     }
     @Override
     public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains) {

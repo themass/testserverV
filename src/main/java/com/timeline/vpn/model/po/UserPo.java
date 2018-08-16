@@ -19,6 +19,7 @@ public class UserPo {
     private String email; 
     private Date paidStartTime;
     private Date paidEndTime;
+    private String channel;
     public long getId() {
         return id;
     }
@@ -110,6 +111,14 @@ public class UserPo {
 
     public void setPaidEndTime(Date paidEndTime) {
         this.paidEndTime = paidEndTime;
+    }
+
+    public String getChannel() {
+      return channel;
+    }
+
+    public void setChannel(String channel) {
+      this.channel = channel;
     }
     
 

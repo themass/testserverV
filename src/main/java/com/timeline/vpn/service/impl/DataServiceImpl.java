@@ -22,6 +22,7 @@ import com.timeline.vpn.dao.db.AppInfoDao;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.VersionDao;
 import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.AppInfoPo;
 import com.timeline.vpn.model.po.AppVersion;
@@ -130,21 +131,22 @@ public class DataServiceImpl implements DataService {
         });
     }
     @Override
-    public VersionInfoVo getMaxVersion(String platform,String channel) {
-      return VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
+    public VersionInfoVo getMaxVersion(DevApp app,String channel) {
+      if(Constant.VPN.equals(channel) && !StringUtils.isEmpty(app.getNetType())) {
+        channel = app.getNetType()+"_"+channel;
+      }  
+      return VoBuilder.buildVo(versionDao.getLast(app.getPlatform(),channel), VersionInfoVo.class,null);
     }
     @Override
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel) {
-        String versionchannel= channel;
-        if(Constant.VPN.equals(channel)) {
-          versionchannel = StringUtils.isEmpty(baseQuery.getAppInfo().getPool())?channel:baseQuery.getAppInfo().getPool()+"_"+channel;
-        }
-//        LOGGER.error("versionchannel="+versionchannel);
-        VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,versionchannel), VersionInfoVo.class,null);
+      if(Constant.VPN.equals(channel) && !StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
+        channel = baseQuery.getAppInfo().getNetType()+"_"+channel;
+      }  
+      VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
         vo.setAdsShow(false);
         vo.setLogUp(true);
         if(!Constant.VPN.equals(channel)){
-            AppVersion vpnVer = versionDao.getLast(platform,Constant.MYPOOL_VPN);
+            AppVersion vpnVer = versionDao.getLast(platform,Constant.VPN);
             vo.setVpnUrl(vpnVer.getUrl());
         }
         if(baseQuery!=null){
@@ -164,9 +166,13 @@ public class DataServiceImpl implements DataService {
 //        desc.setDesc("每周扣除150积分；点广告赚积分");
 //        desc.setDesc1("2100积分=VIP1；4100积分=VIP2");
 //        desc.setDesc2("邀请用户40积分/人；大于5人送vip3-15天；\\n大于10人送vip3-30天；\\n大于15人 送vip3-50天+pc1个月/200G流量");
-        desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
-        desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
-        desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC2, baseQuery.getAppInfo().getLang()));
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
+          desc.setDesc("VIP1-30/月，300/年\nVIP2-40/月,350/年");
+        }else {
+          desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+          desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
+          desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC2, baseQuery.getAppInfo().getLang()));
+        }
         if(baseQuery!=null&&baseQuery.getUser()!=null)
             desc.setScore(baseQuery.getUser().getScore());
         vo.setVitamioExt(Constant.VIDEO_EXT);

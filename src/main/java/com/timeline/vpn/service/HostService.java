@@ -20,6 +20,6 @@ public interface HostService {
     public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains);
     public InfoListVo<LocationVo> getAllLocationCache(Integer type);
     public ServerVo getHostInfoById(BaseQuery baseQuery, int id);
-    public InfoListVo<VipLocationVo> getAllLocationVipCache();
+    public InfoListVo<VipLocationVo> getAllLocationVipCache(BaseQuery baseQuery);
 }
 
