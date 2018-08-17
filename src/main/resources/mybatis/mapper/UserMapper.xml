@@ -6,9 +6,9 @@
 	</resultMap>
 	<insert id="insert">
 		insert into
-		vpn.user(name,pwd,sex,level,time,email,channel)
+		vpn.user(name,pwd,sex,level,time,email,channel,paidStartTime,paidEndTime)
 		values
-		(#{name},#{pwd},#{sex},#{level},#{time},#{email},#{channel})
+		(#{name},#{pwd},#{sex},#{level},#{time},#{email},#{channel},#{paidStartTime},#{paidEndTime})
 	</insert>
 	<select id="exist" resultMap="UserMap">
 		select * from vpn.user where name=#{name}

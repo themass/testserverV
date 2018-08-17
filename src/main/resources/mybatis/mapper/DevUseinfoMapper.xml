@@ -3,20 +3,12 @@
 <mapper namespace="com.timeline.vpn.dao.db.DevUseinfoDao">
 	<resultMap id="DevUseinfoMap" type="DevUseinfoPo">
 		<id column="devId" property="devId" />
-		<result column="platform" property="platform" />
-		<result column="version" property="version" />
-		<result column="creatTime" property="creatTime" />
-		<result column="lastUpdate" property="lastUpdate" />
-		<result column="userName" property="userName" />
-		<result column="longitude" property="longitude" />
-		<result column="latitude" property="latitude" />
-		<result column="ref" property="ref" />
 	</resultMap>
 	<insert id="insert">
 		insert into
-		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate,userName,latitude,longitude)
+		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate,userName,latitude,longitude,channel)
 		values
-		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{userName},#{latitude},#{longitude})
+		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{userName},#{latitude},#{longitude},#{channel})
 	</insert>
 	<select id="get" resultMap="DevUseinfoMap">
 		select * from vpn.devuseinfo where devId=#{devId}

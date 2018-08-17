@@ -83,6 +83,11 @@ public class UserServiceImpl implements UserService {
             po.setUserName(userName);
             po.setLongitude(appInfo.getLon());
             po.setLatitude(appInfo.getLat());
+            if(StringUtils.isEmpty(appInfo.getNetType())) {
+              po.setChannel(Constant.VPN);
+            }else {
+                po.setChannel(appInfo.getNetType());
+            }
             devInfoDao.insert(po);
         }else{
             po.setDevId(appInfo.getDevId());
@@ -143,16 +148,19 @@ public class UserServiceImpl implements UserService {
                 po = new UserPo();
                 po.setTime(new Date())
                         .setLevel(Constant.UserLevel.LEVEL_FREE).setName(form.getName())
-                        .setPwd(form.getPwd()).setSex(form.getSex()).setEmail(form.getEmail());;
+                        .setPwd(form.getPwd()).setSex(form.getSex()).setEmail(form.getEmail());
+                if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
+                  po.setChannel(Constant.VPN);
+                }else {
+                    po.setChannel(baseQuery.getAppInfo().getNetType());
+                    po.setLevel(Constant.UserLevel.LEVEL_VIP);
+                    po.setPaidStartTime(new Date());
+                    po.setPaidEndTime(DateTimeUtils.addDay(new Date(), 7));
+                }
                 userDao.insert(po);
                 checkService.addRadUser(form.getName(), form.getPwd(), Constant.UserGroup.RAD_GROUP_REG);
                 baseQuery.setUser(po);
                 userRegContext.handleRef(baseQuery, form.getRef());
-                if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
-                    po.setChannel(Constant.VPN);
-                }else {
-                    po.setChannel(baseQuery.getAppInfo().getNetType());
-                }
                 
             } else {
                 throw new DataException(Constant.ResultMsg.RESULT_EXIST_ERROR);

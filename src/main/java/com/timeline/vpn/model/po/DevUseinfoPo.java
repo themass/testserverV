@@ -17,7 +17,7 @@ public class DevUseinfoPo {
     private String latitude;
     private String userName;
     private String ref;
-
+    private String channel;
     public String getDevId() {
         return devId;
     }
@@ -88,6 +88,14 @@ public class DevUseinfoPo {
 
     public void setRef(String ref) {
       this.ref = ref;
+    }
+
+    public String getChannel() {
+      return channel;
+    }
+
+    public void setChannel(String channel) {
+      this.channel = channel;
     }
     
 }
