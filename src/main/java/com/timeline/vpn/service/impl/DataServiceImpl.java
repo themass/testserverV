@@ -178,6 +178,7 @@ public class DataServiceImpl implements DataService {
             desc.setScore(baseQuery.getUser().getScore());
         vo.setVitamioExt(Constant.VIDEO_EXT);
         vo.setVipDesc(desc);
+        vo.setQq("755402202");
         return vo;
     }
     private String getMessage(String key, String lang) {

@@ -19,7 +19,7 @@ public class VersionInfoVo {
     private String vpnUrl;
     private String vitamioExt;
     private VipDescVo vipDesc;
-
+    private String qq;
     public String getVersion() {
         return version;
     }
@@ -121,6 +121,14 @@ public class VersionInfoVo {
 
     public void setVipDesc(VipDescVo vipDesc) {
         this.vipDesc = vipDesc;
+    }
+
+    public String getQq() {
+      return qq;
+    }
+
+    public void setQq(String qq) {
+      this.qq = qq;
     }
 
     @Override
