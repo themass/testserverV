@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.DevApp;
@@ -32,7 +33,9 @@ public abstract class BaseMapServiceProxy<T extends IAppAgent> {
     }
     public T getService() {
         DevApp app = DevAppContext.get();
-        T service = channelMap.get(app.getChannel());
+        String ser = Constant.VPNB.equals(app.getNetType())?Constant.VPNB:app.getChannel();
+        T service = channelMap.get(ser);
+        
         if(service==null)
             service = serviceMap.get(getDefaultName());
         if (service == null) {
