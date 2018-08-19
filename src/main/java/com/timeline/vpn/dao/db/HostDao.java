@@ -12,7 +12,7 @@ import com.timeline.vpn.model.po.HostPo;
  */
 public interface HostDao extends BaseDBDao<HostPo> {
     public HostPo get(int id);
-    public List<HostPo> getRandom();
+    public List<HostPo> getRandom(String channel);
     public List<HostPo> getByLocation(int location);
 }
 

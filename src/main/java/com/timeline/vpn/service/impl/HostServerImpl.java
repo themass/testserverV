@@ -65,8 +65,12 @@ public class HostServerImpl implements HostService {
         
         BuildAction<HostPo, HostVo> action = null;
         List<HostPo> hostList = new ArrayList<>();
+        String channel = Constant.VPN;
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
+          channel = Constant.VPNB;
+        }
         if (location == Constant.LOCATION_ALL) {
-            List<HostPo> list = hostDao.getRandom();
+            List<HostPo> list = hostDao.getRandom(channel);
             //优化成连接数最少或者网络带宽最好的一个
             hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
             hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
@@ -96,8 +100,12 @@ public class HostServerImpl implements HostService {
         
         BuildAction<HostPo, HostVo> action = null;
         List<HostPo> hostList = new ArrayList<>();
+        String channel = Constant.VPN;
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
+          channel = Constant.VPNB;
+        }
         if (id == Constant.LOCATION_ALL) {
-            List<HostPo> list = hostDao.getRandom();
+            List<HostPo> list = hostDao.getRandom(channel);
             //优化成连接数最少或者网络带宽最好的一个
             hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
             hostList.add(list.get(RandomUtils.nextInt(0, list.size())));

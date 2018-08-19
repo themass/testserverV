@@ -17,7 +17,7 @@
 		select * from vpn.host where enable=1 order by type asc ,id asc
 	</select>
 	<select id="getRandom" resultMap="HostMap">
-		select * from vpn.host where location!=1 and type=0 and enable=1
+		select * from vpn.host where cname!='中国' and type=0 and enable=1 
 	</select>
 	<select id="getByLocation" resultMap="HostMap">
 		select * from vpn.host where location=#{location} and enable=1
