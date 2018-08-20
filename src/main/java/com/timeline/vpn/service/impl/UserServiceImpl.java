@@ -113,11 +113,11 @@ public class UserServiceImpl implements UserService {
             updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
             String token = cacheService.putUser(po);
             baseQuery.setToken(token);
-            if(score!=null&&score!=0){
-                UserVo tmp = score(baseQuery,score);
-                po.setScore(tmp.getScore());
-                po.setLevel(tmp.getLevel());
-            }
+//            if(score!=null&&score!=0){
+//                UserVo tmp = score(baseQuery,score);
+//                po.setScore(tmp.getScore());
+//                po.setLevel(tmp.getLevel());
+//            }
             UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
             StateUseVo state = stateUse(Arrays.asList(vo.getName(),baseQuery.getAppInfo().getDevId()));
             vo.setStateUse(state);
