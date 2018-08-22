@@ -167,8 +167,8 @@ public class DataServiceImpl implements DataService {
 //        desc.setDesc1("2100积分=VIP1；4100积分=VIP2");
 //        desc.setDesc2("邀请用户40积分/人；大于5人送vip3-15天；\\n大于10人送vip3-30天；\\n大于15人 送vip3-50天+pc1个月/200G流量");
         if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
-          desc.setDesc("赚积分兑换VIP");
-          desc.setDesc1("VIP1-30/月，300/年\nVIP2-40/月，350/年");
+          desc.setDesc("赚积分兑换VIP：详见“关于”");
+          desc.setDesc1("折扣：VIP1-25/月，250/年\n折扣：VIP2-35/月，300/年");
         }else {
           desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
           desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
