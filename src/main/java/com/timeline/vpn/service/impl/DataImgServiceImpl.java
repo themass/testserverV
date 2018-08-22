@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -41,7 +42,8 @@ public class DataImgServiceImpl implements DataImgService {
             public void action(ImgChannelPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl());
                 t.setTitle(i.getName());
-                t.setImg(i.getPic());
+                if(!StringUtils.isEmpty(i.getPic()))
+                  t.setImg(i.getPic().trim());
                 t.setAdsPopShow(true);
                 t.setAdsShow(true);
                 if(i.getShowType()==null)
@@ -57,7 +59,13 @@ public class DataImgServiceImpl implements DataImgService {
             String channel,String keywork) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel,keywork);
-        return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>) poList, ImgItemsVo.class,null);
+        return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>) poList, ImgItemsVo.class,new VoBuilder.BuildAction<ImgItemsPo,ImgItemsVo>(){
+
+          @Override
+          public void action(ImgItemsPo i, ImgItemsVo t) {
+          }
+          
+        });
     }
     @Override
     public InfoListVo<RecommendVo> getImgItemImgs(BaseQuery baseQuery, PageBaseParam param,
@@ -69,7 +77,8 @@ public class DataImgServiceImpl implements DataImgService {
             public void action(ImgItemsPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl());
                 t.setTitle(i.getName());
-                t.setImg(i.getPic());
+                if(!StringUtils.isEmpty(i.getPic()))
+                  t.setImg(i.getPic().trim());
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
 //                t.setShowType(0);
@@ -85,8 +94,8 @@ public class DataImgServiceImpl implements DataImgService {
         return VoBuilder.buildListInfoVo(list, ImgItemVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,ImgItemVo>(){
             @Override
             public void action(ImgItemsItemPo i, ImgItemVo t) {
-                t.setOrigUrl(i.getPicUrl());
-                t.setRemoteUrl(i.getPicUrl());
+                t.setOrigUrl(i.getPicUrl().trim());
+                t.setRemoteUrl(i.getPicUrl().trim());
 //                if(!StringUtils.isEmpty(i.getPicUrl()))
 //                    if(i.getPicUrl().contains("eroti-cart")){
 //                        t.setPicUrl("http://imghhh.secondary.space/file/eroti/"+i.getId()+".jpg");
@@ -123,10 +132,10 @@ public class DataImgServiceImpl implements DataImgService {
         return VoBuilder.buildPageInfoVo((Page<ImgItemsItemPo>)list, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,RecommendVo>(){
             @Override
             public void action(ImgItemsItemPo i, RecommendVo t) {
-                t.setActionUrl(i.getPicUrl());
+                t.setActionUrl(i.getPicUrl().trim());
                 t.setAdsPopShow(false);
                 t.setAdsShow(false);
-                t.setImg(i.getPicUrl());
+                t.setImg(i.getPicUrl().trim());
                 float r =(float)RandomUtils.nextInt(5);
                 float l = 1+(r/10l);
                 t.setRate(l);
