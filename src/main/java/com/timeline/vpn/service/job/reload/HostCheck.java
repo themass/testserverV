@@ -40,6 +40,7 @@ public class HostCheck extends ReloadJob {
     }
 
     public void reload() {
+      LOGGER.error("ping start");
         init();
         List<String> errorList = new ArrayList<>();
         for(String ip :myIpList){
