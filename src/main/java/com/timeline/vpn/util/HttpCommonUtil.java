@@ -405,14 +405,14 @@ public class HttpCommonUtil {
             Process p = Runtime.getRuntime().exec("ping -c 2 -w 300 " + ip);
             InputStream input = p.getInputStream();
             BufferedReader in = new BufferedReader(new InputStreamReader(input));
-            StringBuilder stringBuffer = new StringBuilder();
+            StringBuilder stringBuffer = new StringBuilder("test");
             String content;
             while ((content = in.readLine()) != null) {
                 stringBuffer.append(content);
             }
             LOGGER.info("ping:  "+ip+" - result content : " + stringBuffer.toString());
             int status = p.waitFor();
-            if (status == 0) {
+            if (status == 0 && !stringBuffer.toString().trim().contains("100%packetloss")) {
                 result = "successful~";
                 return true;
             } else {

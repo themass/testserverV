@@ -3,6 +3,8 @@ package com.timeline.vpn.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.sun.tools.internal.jxc.ap.Const;
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.service.RadUserCheckService;
@@ -23,9 +25,13 @@ public class ScoreServiceImpl implements ScoreService{
   @Override
   public UserPo updateScore(String name) {
     UserPo po = userDao.exist(name);
-    po.setLevel(ScoreCalculate.level(po.getLevel(),po.getScore()));
-    userDao.updateLevel(po);
-    checkService.updateRadUserGroup(po.getName(), ScoreCalculate.group(po.getLevel()));
+    if(po!=null) {
+      po.setLevel(ScoreCalculate.level(po.getLevel(),po.getScore()));
+      userDao.updateLevel(po);
+      checkService.updateRadUserGroup(po.getName(), ScoreCalculate.group(po.getLevel()));
+    }else {
+      po = userDao.exist(Constant.ADMIN_NAME);
+    }
     return po;
   }
 
