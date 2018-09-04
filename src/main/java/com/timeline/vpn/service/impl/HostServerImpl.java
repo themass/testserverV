@@ -66,7 +66,7 @@ public class HostServerImpl implements HostService {
         BuildAction<HostPo, HostVo> action = null;
         List<HostPo> hostList = new ArrayList<>();
         String channel = Constant.VPN;
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
           channel = Constant.VPNB;
         }
         if (location == Constant.LOCATION_ALL) {
@@ -101,7 +101,7 @@ public class HostServerImpl implements HostService {
         BuildAction<HostPo, HostVo> action = null;
         List<HostPo> hostList = new ArrayList<>();
         String channel = Constant.VPN;
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
           channel = Constant.VPNB;
         }
         if (id == Constant.LOCATION_ALL) {

@@ -87,6 +87,7 @@ public class Constant {
     public static final String HTTP_UA = "user-agent";
     public static final String VPN = "VPN";
     public static final String VPNB = "VPNB";
+    public static final String VPNC = "VPNC";
     public static final String LIFE = "LIFE";
     public static final String SEX = "SEX";
     public static final String SEX_TEMP = "SEX_TEMP";
