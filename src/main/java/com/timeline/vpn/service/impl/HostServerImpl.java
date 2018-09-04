@@ -160,7 +160,7 @@ public class HostServerImpl implements HostService {
     @Override
     public InfoListVo<VipLocationVo> getAllLocationVipCache(BaseQuery baseQuery) {
       List<LocationPo> list = null;
-      if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
+      if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
         list = HostIpCacheVpnb.getLocationList();
       }else {
         list = HostIpCache.getLocationList();
