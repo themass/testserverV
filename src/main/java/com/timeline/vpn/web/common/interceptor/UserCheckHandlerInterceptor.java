@@ -42,12 +42,16 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
         if (StringUtils.isEmpty(token)) {
             return true;
         }
-        UserPo po = cacheService.getUser(token);
-        if (po != null) {
-            request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
-        } else {
-            LOGGER.error("没找到user信息：app={}, header={}",app.toString(),HttpCommonUtil.getHeaderStr(request));
-//            request.setAttribute(Constant.HTTP_ATTR_RET, Constant.ResultErrno.ERRNO_CLEAR_LOGIN);
+        try {
+          UserPo po = cacheService.getUser(token);
+          if (po != null) {
+              request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
+          } else {
+              LOGGER.error("没找到user信息：app={}, header={}",app.toString(),HttpCommonUtil.getHeaderStr(request));
+  //            request.setAttribute(Constant.HTTP_ATTR_RET, Constant.ResultErrno.ERRNO_CLEAR_LOGIN);
+          }
+        }catch (RuntimeException e) {
+          LOGGER.error("",e);
         }
         return true;
     }
