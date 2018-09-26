@@ -23,7 +23,7 @@
 	    update vpn.user set level=#{level} where name=#{name} and level &lt; 3 and channel='VPN'
 	</update>
 	<update id="updateLevelPaid">
-	    update vpn.user set level=0 where level=3 and paidStartTime &gt;= #{start} and paidEndTime &lt;= #{end} and channel='VPN'
+	    update vpn.user set level=0 where level=3 and paidEndTime &lt;= #{end} and channel='VPN'
 	</update>
 	<update id="updateToLevelPaid">
 	    update vpn.user set level=3, paidStartTime= #{start}, paidEndTime = #{end} where name=#{name} and channel='VPN'
