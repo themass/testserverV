@@ -84,9 +84,5 @@ public class IpLocalUtilSina {
     public static String getIpHost() {
         return IP_HOST;
     }
-
-    public static void main(String[]args){
-        System.out.println(getLocal("45.77.35.56"));
-    }
 }
 

@@ -71,7 +71,6 @@ public class JsonResult {
         if(data!=null&&!app.isTest()){
             String json = JsonUtil.writeValueAsString(data);
             String encry = AES2.encode(json, app.getAuthKey());
-            System.out.println("json="+json+"  ;encry="+encry);
             return encry;
         }
         return data;

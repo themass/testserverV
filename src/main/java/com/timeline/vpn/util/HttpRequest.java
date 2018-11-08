@@ -9,7 +9,13 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.timeline.vpn.metric.MetricContext;
+
 public class HttpRequest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequest.class);
     /**
      * 向指定URL发送GET方法的请求
      * 
@@ -37,9 +43,6 @@ public class HttpRequest {
             // 获取所有响应头字段
             Map<String, List<String>> map = connection.getHeaderFields();
             // 遍历所有的响应头字段
-            for (String key : map.keySet()) {
-                System.out.println(key + "--->" + map.get(key));
-            }
             // 定义 BufferedReader输入流来读取URL的响应
             in = new BufferedReader(new InputStreamReader(
                     connection.getInputStream()));
@@ -48,8 +51,7 @@ public class HttpRequest {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("发送GET请求出现异常！" + e);
-            e.printStackTrace();
+            LOGGER.error("",e);
         }
         // 使用finally块来关闭输入流
         finally {
@@ -58,7 +60,7 @@ public class HttpRequest {
                     in.close();
                 }
             } catch (Exception e2) {
-                e2.printStackTrace();
+                LOGGER.error("",e2);
             }
         }
         return result;
@@ -104,8 +106,7 @@ public class HttpRequest {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("发送 POST 请求出现异常！"+e);
-            e.printStackTrace();
+            LOGGER.error("",e);
         }
         //使用finally块来关闭输出流、输入流
         finally{
@@ -118,7 +119,7 @@ public class HttpRequest {
                 }
             }
             catch(IOException ex){
-                ex.printStackTrace();
+                LOGGER.error("",ex);
             }
         }
         return result;

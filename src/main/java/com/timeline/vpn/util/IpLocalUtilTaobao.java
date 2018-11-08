@@ -29,9 +29,5 @@ public class IpLocalUtilTaobao {
         }
         return null;
     }
-   
-    public static void main(String[]args){
-        System.out.println(getLocal("45.77.35.56"));
-    }
 }
 

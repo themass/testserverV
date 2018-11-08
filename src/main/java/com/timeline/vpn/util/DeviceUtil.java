@@ -166,12 +166,4 @@ public class DeviceUtil {
     public static boolean isAdmin(BaseQuery baseQuery) {
       return baseQuery.getUser()!=null&&Constant.ADMIN_NAME.equals(baseQuery.getUser().getName());
     }
-    public static void main(String[]args){
-        String str = "SEX/1.0.2.1";
-        Matcher matcher = pattern.matcher(str);
-        System.out.println(matcher.find());
-        System.out.println(matcher.group(0));
-        System.out.println(matcher.group(1));
-        System.out.println(matcher.group(2));
-    }
 }

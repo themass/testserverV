@@ -19,8 +19,5 @@ public class CommonUtil {
     public static boolean isNumAndEnglish(String str){
         return pattern.matcher(str).matches();
     }
-    public static void main(String[] args){
-        System.out.println(isNumAndEnglish("themass我w122"));
-    }
 }
 

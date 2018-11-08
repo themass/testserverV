@@ -104,10 +104,4 @@ public class ZhIpCache extends ReloadJob {
 
         return false;
     }
-    public static void main(String[]args){
-        ZhIpCache ch =new ZhIpCache();
-        ch.reload();
-        System.out.println(isChinaIp("112.74.58.248"));
-        System.out.println(isChinaIp("47.88.7.156"));
-    }
 }

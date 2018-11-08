@@ -303,7 +303,6 @@ appsecret
           WeixinAccessPo po = JsonUtil.readValue(json, WeixinAccessPo.class);
           token = po.getAccess_token();
           LOGGER.info("token="+token);
-          System.out.println(token);
 //          cacheService.put("ASS_TOKEN", token, 3);
       }
       return token;
@@ -315,7 +314,6 @@ appsecret
 //      params.put("next_openid", "NEXT_OPENID");
       String url = "https://api.weixin.qq.com/cgi-bin/user/get";
       String json = HttpCommonUtil.sendGet(url, "utf-8", params,null);
-      System.out.println(json);
     }
     private void sendMsg(String msg) {
       try {

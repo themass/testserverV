@@ -127,8 +127,4 @@ public class TypeConversion {
     public static String htmlToStr(String str){
        return  HtmlUtils.htmlUnescape(str);
     }
-    public static void main(String[]arg){
-        String str1 = "<br>sdasdad</br><p>&nbsp;&nbsp;dasdasdas";
-        System.out.println(htmlToStr(str1));
-    }
 }

@@ -28,11 +28,6 @@ public class IpLocalUtil {
         }
         return null;
     }
-    
-    
-    public static void main(String[]args){
-        System.out.println(getLocal("112.74.58.248"));
-    }
     public static String getHostIp(){
       try{
           Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -45,7 +40,6 @@ public class IpLocalUtil {
                           && ip instanceof Inet4Address
                           && !ip.isLoopbackAddress() //loopback地址即本机地址，IPv4的loopback范围是127.0.0.0 ~ 127.255.255.255
                           && ip.getHostAddress().indexOf(":")==-1){
-                      System.out.println("本机的IP = " + ip.getHostAddress());
                       return ip.getHostAddress();
                   } 
               }

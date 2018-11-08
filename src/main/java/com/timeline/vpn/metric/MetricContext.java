@@ -172,9 +172,6 @@ public class MetricContext {
         Long current = System.currentTimeMillis();
         influxDB.ping();
         influxDB.write(batchPoints);
-        System.out.println(System.currentTimeMillis() - current);
-
-
     }
 
 }

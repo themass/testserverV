@@ -192,9 +192,5 @@ public class DevApp {
                 + ", host=" + host + ", lon=" + lon + ", lat=" + lat + ", tokenHeader="
                 + tokenHeader + ", channel=" + channel + "]";
     }
-    public static void main(String[]args){
-     System.out.println(new Date(1490492113603l));   
-    }
-    
 
 }
