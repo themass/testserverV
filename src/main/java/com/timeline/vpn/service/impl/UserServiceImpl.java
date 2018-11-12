@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
 //        if(cacheService.updateCount(baseQuery.getUser())<5) {
 //            userDao.score(score, baseQuery.getUser().getName());
 //        }
-        score= score/30*50;
+//        score= score/30*50;
         userDao.score(score, baseQuery.getUser().getName());
         UserPo po = scoreService.updateScore(baseQuery.getUser().getName());
         cacheService.updateUser(baseQuery.getToken(),po);
