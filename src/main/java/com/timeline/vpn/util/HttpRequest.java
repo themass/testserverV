@@ -123,5 +123,9 @@ public class HttpRequest {
             }
         }
         return result;
-    }    
+    }   
+    public static void main(String[] args) {
+        String string = sendGet("http://weatherapi.market.xiaomi.com/wtr-v2/weather", "cityId=101010100");
+        System.out.println(string);
+    }
 }
