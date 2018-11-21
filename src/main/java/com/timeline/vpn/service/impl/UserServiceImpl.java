@@ -109,7 +109,11 @@ public class UserServiceImpl implements UserService {
         }
         UserPo po = userDao.get(name, pwd);
         baseQuery.setUser(po);
-        if (po != null && po.getChannel().equals(baseQuery.getAppInfo().getChannel())) {
+        String channel = baseQuery.getAppInfo().getChannel();
+        if(baseQuery.getAppInfo().getChannel().startsWith(Constant.SEX)) {
+            channel = Constant.VPN;
+        }
+        if (po != null && po.getChannel().equals(channel)) {
             updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
             String token = cacheService.putUser(po);
             baseQuery.setToken(token);
