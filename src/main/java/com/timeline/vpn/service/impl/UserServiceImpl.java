@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
         }
         UserPo po = userDao.get(name, pwd);
         baseQuery.setUser(po);
-        if (po != null) {
+        if (po != null && po.getChannel().equals(baseQuery.getAppInfo().getChannel())) {
             updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
             String token = cacheService.putUser(po);
             baseQuery.setToken(token);
