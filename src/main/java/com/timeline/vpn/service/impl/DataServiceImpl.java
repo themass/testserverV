@@ -169,6 +169,10 @@ public class DataServiceImpl implements DataService {
         if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
           desc.setDesc("赚积分兑换VIP：详见“关于”");
           desc.setDesc1("折扣：VIP1-25/月，250/年\n折扣：VIP2-35/月，300/年");
+        }else if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
+            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
         }else {
           desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
           desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
