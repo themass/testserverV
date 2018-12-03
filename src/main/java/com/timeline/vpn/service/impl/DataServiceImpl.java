@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.builder.BaseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.VoBuilder.BuildAction;
 import com.timeline.vpn.dao.db.AppInfoDao;
+import com.timeline.vpn.dao.db.DomainDao;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.VersionDao;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -26,10 +29,12 @@ import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.AppInfoPo;
 import com.timeline.vpn.model.po.AppVersion;
+import com.timeline.vpn.model.po.DomainPo;
 import com.timeline.vpn.model.po.IWannaPo;
 import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.po.WeixinAccessPo;
 import com.timeline.vpn.model.vo.AppInfoVo;
+import com.timeline.vpn.model.vo.DomainVo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.IWannnWeixinVo;
 import com.timeline.vpn.model.vo.InfoListVo;
@@ -69,6 +74,8 @@ public class DataServiceImpl implements DataService {
     private DataVideoService dataVideoService;
     @Autowired
     private ResourceBundleMessageSource messagesource;
+    @Autowired
+    private DomainDao domainDao;
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -284,6 +291,17 @@ public class DataServiceImpl implements DataService {
         }
         iWannaDao.likeFeed(po);
 
+    }
+    @Override
+    public DomainVo getAllDomain(BaseQuery baseQuery) {
+         List<DomainPo>list= domainDao.getList(baseQuery.getAppInfo().getChannel());
+         DomainVo vo = new DomainVo();
+         List<String> domain = Lists.newArrayList();
+         for(DomainPo po:list) {
+             domain.add(po.getDns());
+         }
+         vo.setDns(domain);
+         return vo;
     }
     /**
      * appID

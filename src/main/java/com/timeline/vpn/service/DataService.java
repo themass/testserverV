@@ -4,6 +4,7 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.vo.AppInfoVo;
+import com.timeline.vpn.model.vo.DomainVo;
 import com.timeline.vpn.model.vo.IWannaVo;
 import com.timeline.vpn.model.vo.IWannnWeixinVo;
 import com.timeline.vpn.model.vo.InfoListVo;
@@ -40,7 +41,7 @@ public interface DataService {
     
     public InfoListVo<AppInfoVo> getAllApp(BaseQuery baseQuery);
     public InfoListVo<AppInfoVo> getAllDon(BaseQuery baseQuery);
-
+    public DomainVo  getAllDomain(BaseQuery baseQuery);
     public String getAsstoken();
    
     

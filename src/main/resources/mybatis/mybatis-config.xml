@@ -43,6 +43,7 @@
 		
 		
 		<typeAlias alias="AppInfoPo" type="com.timeline.vpn.model.po.AppInfoPo" />
+		<typeAlias alias="DomainPo" type="com.timeline.vpn.model.po.DomainPo" />
 		<typeAlias alias="imgHandle"
 			type="com.timeline.vpn.dao.ImgSourceHandler" />
 	</typeAliases>
