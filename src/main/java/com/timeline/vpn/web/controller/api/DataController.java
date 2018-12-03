@@ -102,7 +102,8 @@ public class DataController extends BaseController {
         dataService.addIwannaScoreLike(baseQuery, id);
         return Constant.RESULT_SUCCESS;
     }
-    @RequestMapping(value = "/domain.json", method = RequestMethod.POST)
+    
+    @RequestMapping(value = "/domain.json", method = RequestMethod.GET)
     public JsonResult domain(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getAllDomain(baseQuery));
     }

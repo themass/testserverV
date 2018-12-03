@@ -6,7 +6,7 @@
 	</resultMap>
 	
 	<select id="getList" resultMap="DomainPoMap">
-		select * from vpn.domaininfo where channel=${channel}
+		select * from vpn.domaininfo where channel=#{channel}
 	</select>
 
 </mapper>
