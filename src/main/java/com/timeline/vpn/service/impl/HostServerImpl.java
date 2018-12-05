@@ -9,7 +9,6 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import com.google.common.base.Function;
 import com.timeline.vpn.BeanBuilder;
@@ -18,6 +17,7 @@ import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.VoBuilder.BuildAction;
 import com.timeline.vpn.dao.db.DnsResverDao;
 import com.timeline.vpn.dao.db.HostDao;
+import com.timeline.vpn.dao.db.HostV2Dao;
 import com.timeline.vpn.dao.db.LocationDao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -35,6 +35,8 @@ import com.timeline.vpn.model.vo.VipLocationVo;
 import com.timeline.vpn.service.HostService;
 import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.job.reload.HostIpCache;
+import com.timeline.vpn.service.job.reload.HostIpCacheV2;
+import com.timeline.vpn.service.job.reload.HostIpCacheV2Vpnb;
 import com.timeline.vpn.service.job.reload.HostIpCacheVpnb;
 import com.timeline.vpn.util.AES2;
 
@@ -47,6 +49,8 @@ import com.timeline.vpn.util.AES2;
 public class HostServerImpl implements HostService {
     @Autowired
     private HostDao hostDao;
+    @Autowired
+    private HostV2Dao hostV2Dao;
     @Autowired
     private LocationDao cityDao;
     @Autowired
@@ -179,6 +183,61 @@ public class HostServerImpl implements HostService {
     public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains) {
         List<DnsResverPo> list = dnsResverDao.get(domains);
         return VoBuilder.buildDnsResverInfoList(list);
+    }
+    @Override
+    public InfoListVo<LocationVo> getAllLocationCacheV2(Integer type) {
+        List<LocationPo> list ;
+        if(type==null) {
+            list = HostIpCacheV2.getLocationList();
+        }else {
+            list = new ArrayList<>();
+            for(LocationPo po : HostIpCache.getLocationList()) {
+                if(po.getType()==type) {
+                    list.add(po);
+                }
+            }
+        }
+        HostIpCache.getLocationList();
+        return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
+    }
+    @Override
+    public ServerVo getHostInfoByIdV2(BaseQuery baseQuery, int id) {
+        RadCheck check = null;
+        String name = baseQuery.getUser()==null?baseQuery.getAppInfo().getDevId():baseQuery.getUser().getName();
+        check = checkService.getRadUser(name);
+        if(check==null){
+            check = checkService.addRadUser(baseQuery.getAppInfo().getDevId(), AES2.getRandom(), Constant.UserGroup.RAD_GROUP_FREE);
+        }
+        
+        BuildAction<HostPo, HostVo> action = null;
+        List<HostPo> hostList = new ArrayList<>();
+        HostPo host = hostV2Dao.get(id);
+        if(host==null){
+            throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
+        }
+        hostList.add(host);
+        if (CollectionUtils.isEmpty(hostList)) {
+            throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
+        }
+        return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, hostList,action);
+    }
+    @Override
+    public InfoListVo<VipLocationVo> getAllLocationVipCacheV2(BaseQuery baseQuery) {
+        List<LocationPo> list = null;
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+          list = HostIpCacheV2Vpnb.getLocationList();
+        }else {
+          list = HostIpCacheV2.getLocationList();
+        }
+        InfoListVo<LocationVo> locationVo = VoBuilder.buildListInfoVo(list, LocationVo.class,null);
+        Map<Integer, Collection<LocationVo>> map =BeanBuilder.buildMultimap(locationVo.getVoList(), new Function<LocationVo, Integer>() {
+
+            @Override
+            public Integer apply(LocationVo input) {
+                return input.getType();
+            }
+        });
+        return VoBuilder.buildListVipLocationVo(map);
     }
 
 }
