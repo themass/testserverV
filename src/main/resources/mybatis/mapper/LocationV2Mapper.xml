@@ -3,7 +3,7 @@
 <mapper namespace="com.timeline.vpn.dao.db.LocationV2Dao">
 	<resultMap id="LocationMap" type="LocationPo">
 		<id column="id" property="id" />
-		<id column="name" property="showName" />
+		<id column="showName" property="name" />
 	</resultMap>
 	<select id="getAllInfoVpn" resultMap="LocationMap">
 		select l.*,h.gateway,h.port ,h.weight from vpn.location_v2 l join vpn.host_v2 h  on l.hostId=h.id  and h.enable=1 where l.enable=1 and l.channel='VPN';
