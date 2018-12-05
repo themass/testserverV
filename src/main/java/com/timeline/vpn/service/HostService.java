@@ -23,7 +23,7 @@ public interface HostService {
     public InfoListVo<VipLocationVo> getAllLocationVipCache(BaseQuery baseQuery);
     
     public InfoListVo<LocationVo> getAllLocationCacheV2(Integer type);
-    public ServerVo getHostInfoByIdV2(BaseQuery baseQuery, int id);
+    public ServerVo getHostInfoV2(BaseQuery baseQuery, int id);
     public InfoListVo<VipLocationVo> getAllLocationVipCacheV2(BaseQuery baseQuery);
 }
 

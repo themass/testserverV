@@ -201,7 +201,7 @@ public class HostServerImpl implements HostService {
         return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
     }
     @Override
-    public ServerVo getHostInfoByIdV2(BaseQuery baseQuery, int id) {
+    public ServerVo getHostInfoV2(BaseQuery baseQuery, int location) {
         RadCheck check = null;
         String name = baseQuery.getUser()==null?baseQuery.getAppInfo().getDevId():baseQuery.getUser().getName();
         check = checkService.getRadUser(name);
@@ -211,11 +211,7 @@ public class HostServerImpl implements HostService {
         
         BuildAction<HostPo, HostVo> action = null;
         List<HostPo> hostList = new ArrayList<>();
-        HostPo host = hostV2Dao.get(id);
-        if(host==null){
-            throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
-        }
-        hostList.add(host);
+        hostList = hostV2Dao.getByLocation(location);
         if (CollectionUtils.isEmpty(hostList)) {
             throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
         }
