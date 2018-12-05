@@ -153,11 +153,12 @@ public class HostServerImpl implements HostService {
           }else {
             list = HostIpCache.getLocationList();
           }
+        List<LocationPo> ret = new ArrayList<>();
         for(LocationPo po : list) {
             if(type!=null && po.getType()==type) {
-                list.add(po);
+                ret.add(po);
             }else {
-                list.add(po);
+                ret.add(po);
             }
         }
         return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
@@ -193,11 +194,12 @@ public class HostServerImpl implements HostService {
           }else {
             list = HostIpCacheV2.getLocationList();
           }
+        List<LocationPo> ret = new ArrayList<>();
         for(LocationPo po : list) {
             if(type!=null && po.getType()==type) {
-                list.add(po);
+                ret.add(po);
             }else {
-                list.add(po);
+                ret.add(po);
             }
         }
         return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
