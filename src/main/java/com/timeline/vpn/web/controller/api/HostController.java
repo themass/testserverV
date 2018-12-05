@@ -44,7 +44,7 @@ public class HostController extends BaseController {
         //单个item页，下拉刷新
     @RequestMapping(value = "/server/location/cache.json", method = RequestMethod.GET)
     public JsonResult locationListCache(@UserInfo BaseQuery baseQuery,@RequestParam(required=false)Integer type) {
-        return new JsonResult(hostService.getAllLocationCache(type));
+        return new JsonResult(hostService.getAllLocationCache(baseQuery,type));
     }
        // page页，全部缓存数据
     @RequestMapping(value = "/server/location/vip/cache.json", method = RequestMethod.GET)
@@ -61,7 +61,7 @@ public class HostController extends BaseController {
         //单个item页，下拉刷新
     @RequestMapping(value = "/server/location/cache/v2.json", method = RequestMethod.GET)
     public JsonResult locationListCacheV2(@UserInfo BaseQuery baseQuery,@RequestParam(required=false)Integer type) {
-        return new JsonResult(hostService.getAllLocationCacheV2(type));
+        return new JsonResult(hostService.getAllLocationCacheV2(baseQuery,type));
     }
        // page页，全部缓存数据
     @RequestMapping(value = "/server/location/vip/cache/v2.json", method = RequestMethod.GET)

@@ -146,19 +146,20 @@ public class HostServerImpl implements HostService {
         return VoBuilder.buildListInfoVo(cityDao.getAll(), LocationVo.class,null);
     }
     @Override
-    public InfoListVo<LocationVo> getAllLocationCache(Integer type) {
-        List<LocationPo> list ;
-        if(type==null) {
+    public InfoListVo<LocationVo> getAllLocationCache(BaseQuery baseQuery,Integer type) {
+        List<LocationPo> list = new ArrayList<>();
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+            list = HostIpCacheVpnb.getLocationList();
+          }else {
             list = HostIpCache.getLocationList();
-        }else {
-            list = new ArrayList<>();
-            for(LocationPo po : HostIpCache.getLocationList()) {
-                if(po.getType()==type) {
-                    list.add(po);
-                }
+          }
+        for(LocationPo po : list) {
+            if(type!=null && po.getType()==type) {
+                list.add(po);
+            }else {
+                list.add(po);
             }
         }
-        HostIpCache.getLocationList();
         return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
     }
     @Override
@@ -185,19 +186,20 @@ public class HostServerImpl implements HostService {
         return VoBuilder.buildDnsResverInfoList(list);
     }
     @Override
-    public InfoListVo<LocationVo> getAllLocationCacheV2(Integer type) {
-        List<LocationPo> list ;
-        if(type==null) {
+    public InfoListVo<LocationVo> getAllLocationCacheV2(BaseQuery baseQuery,Integer type) {
+        List<LocationPo> list = new ArrayList<>();
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+            list = HostIpCacheV2Vpnb.getLocationList();
+          }else {
             list = HostIpCacheV2.getLocationList();
-        }else {
-            list = new ArrayList<>();
-            for(LocationPo po : HostIpCache.getLocationList()) {
-                if(po.getType()==type) {
-                    list.add(po);
-                }
+          }
+        for(LocationPo po : list) {
+            if(type!=null && po.getType()==type) {
+                list.add(po);
+            }else {
+                list.add(po);
             }
         }
-        HostIpCache.getLocationList();
         return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
     }
     @Override

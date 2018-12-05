@@ -18,11 +18,11 @@ public interface HostService {
     public ServerVo getHostInfo(BaseQuery baseQuery, int location);
     public InfoListVo<LocationVo> getAllLocation();
     public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains);
-    public InfoListVo<LocationVo> getAllLocationCache(Integer type);
+    public InfoListVo<LocationVo> getAllLocationCache(BaseQuery baseQuery,Integer type);
     public ServerVo getHostInfoById(BaseQuery baseQuery, int id);
     public InfoListVo<VipLocationVo> getAllLocationVipCache(BaseQuery baseQuery);
     
-    public InfoListVo<LocationVo> getAllLocationCacheV2(Integer type);
+    public InfoListVo<LocationVo> getAllLocationCacheV2(BaseQuery baseQuery,Integer type);
     public ServerVo getHostInfoV2(BaseQuery baseQuery, int id);
     public InfoListVo<VipLocationVo> getAllLocationVipCacheV2(BaseQuery baseQuery);
 }
