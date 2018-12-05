@@ -38,6 +38,7 @@ public class HostIpCacheV2Vpnb extends ReloadJob {
         List<LocationPo> list = locationDao.getAllInfoVpnb();
         List<LocationPo> locationOk = new ArrayList<>();
         for(LocationPo po :list){
+            po.setName(po.getShowName());
             if(HostCheck.isErrorIp(po.getGateway())){
                 LOGGER.error("有问题的IP：hostId="+po.getHostId()+"; name="+po.getName()+"; IP="+po.getGateway());
             }else{

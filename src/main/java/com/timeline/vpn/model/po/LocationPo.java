@@ -18,7 +18,7 @@ public class LocationPo implements Comparable<LocationPo>{
     private String gateway;
     private Integer port;
     private Integer weight;
-
+    private String showName;
     public int getId() {
         return id;
     }
@@ -113,6 +113,14 @@ public class LocationPo implements Comparable<LocationPo>{
 
     public void setWeight(Integer weight) {
         this.weight = weight;
+    }
+
+    public String getShowName() {
+        return showName;
+    }
+
+    public void setShowName(String showName) {
+        this.showName = showName;
     }
 
     @Override
