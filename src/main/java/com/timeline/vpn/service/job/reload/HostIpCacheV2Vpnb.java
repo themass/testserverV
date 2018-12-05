@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.timeline.vpn.dao.db.LocationDao;
+import com.timeline.vpn.dao.db.LocationV2Dao;
 import com.timeline.vpn.model.po.LocationPo;
 import com.timeline.vpn.service.job.ReloadJob;
 
@@ -32,7 +32,7 @@ public class HostIpCacheV2Vpnb extends ReloadJob {
     private static HashMap<Integer,List<LocationPo>> locationMap = new HashMap<>();
     private static ReadWriteLock lock = new ReentrantReadWriteLock(false);
     @Autowired
-    private LocationDao locationDao;
+    private LocationV2Dao locationDao;
     
     public void init() {
         List<LocationPo> list = locationDao.getAllInfoVpnb();
