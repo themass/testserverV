@@ -39,17 +39,17 @@ public class HostController extends BaseController {
     @RequestMapping(value = "/server/list.json", method = RequestMethod.GET)
     public JsonResult serverList(@UserInfo BaseQuery baseQuery,
             @RequestParam(defaultValue = "0") int location) {
-        return new JsonResult(hostService.getHostInfoV2(baseQuery, location));
+        return new JsonResult(hostService.getHostInfo(baseQuery, location));
     }
         //单个item页，下拉刷新
     @RequestMapping(value = "/server/location/cache.json", method = RequestMethod.GET)
     public JsonResult locationListCache(@UserInfo BaseQuery baseQuery,@RequestParam(required=false)Integer type) {
-        return new JsonResult(hostService.getAllLocationCacheV2(baseQuery,type));
+        return new JsonResult(hostService.getAllLocationCache(baseQuery,type));
     }
        // page页，全部缓存数据
     @RequestMapping(value = "/server/location/vip/cache.json", method = RequestMethod.GET)
     public JsonResult locationListVipCache(@UserInfo BaseQuery baseQuery) {
-        return new JsonResult(hostService.getAllLocationVipCacheV2(baseQuery));
+        return new JsonResult(hostService.getAllLocationVipCache(baseQuery));
     }
     
   //获取具体的vpn链接线路

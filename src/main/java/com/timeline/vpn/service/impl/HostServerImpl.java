@@ -81,7 +81,7 @@ public class HostServerImpl implements HostService {
         } else {
             LocationPo loc = cityDao.get(location);
             if(loc==null){
-                throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
+                throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
             }
             if(!checkPermission(loc.getType(),baseQuery.getUser())){
                 throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
@@ -89,7 +89,7 @@ public class HostServerImpl implements HostService {
             hostList = hostDao.getByLocation(location);
         }
         if (CollectionUtils.isEmpty(hostList)) {
-            throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
+            throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }
         return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, hostList,action);
     }
