@@ -155,9 +155,7 @@ public class HostServerImpl implements HostService {
           }
         List<LocationPo> ret = new ArrayList<>();
         for(LocationPo po : list) {
-            if(type!=null && po.getType()==type) {
-                ret.add(po);
-            }else {
+            if(po.getType()==type) {
                 ret.add(po);
             }
         }
@@ -196,9 +194,7 @@ public class HostServerImpl implements HostService {
           }
         List<LocationPo> ret = new ArrayList<>();
         for(LocationPo po : list) {
-            if(type!=null && po.getType()==type) {
-                ret.add(po);
-            }else {
+            if(po.getType()==type) {
                 ret.add(po);
             }
         }
