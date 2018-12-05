@@ -159,7 +159,7 @@ public class HostServerImpl implements HostService {
                 ret.add(po);
             }
         }
-        return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
+        return VoBuilder.buildListInfoVo(ret, LocationVo.class,null);
     }
     @Override
     public InfoListVo<VipLocationVo> getAllLocationVipCache(BaseQuery baseQuery) {
@@ -198,7 +198,7 @@ public class HostServerImpl implements HostService {
                 ret.add(po);
             }
         }
-        return VoBuilder.buildListInfoVo(list, LocationVo.class,null);
+        return VoBuilder.buildListInfoVo(ret, LocationVo.class,null);
     }
     @Override
     public ServerVo getHostInfoV2(BaseQuery baseQuery, int location) {
