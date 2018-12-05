@@ -18,7 +18,7 @@
 	</select>
 
 	<select id="getByLocation" resultMap="HostMap">
-		select * from vpn.host where location=#{location} and enable=1
+		select * from vpn.host_v2 where id=#{id} and enable=1
 	</select>
 	
 </mapper>

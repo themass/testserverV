@@ -18,6 +18,7 @@ public class Constant {
         public static final String RESULT_TOKEN_EXPIRE = "RESULT.ERROR.TOKEN.EXPIRE";
         public static final String RESULT_PARAM_ERROR = "RESULT.ERROR.PARAM";
         public static final String RESULT_DATA_ERROR = "RESULT.ERROR.DATA";
+        public static final String RESULT_HOST_ERROR = "RESULT.HOST.DATA";
         public static final String RESULT_EXIST_ERROR = "RESULT.ERROR.EXIST";
         public static final String RESULT_DATA_EMPETY_ERROR = "RESULT.ERROR.DATA.EMPETY";
         public static final String RESULT_USE_TIME_ERROR = "RESULT.ERROR.USE.TIME";

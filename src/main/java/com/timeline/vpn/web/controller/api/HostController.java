@@ -23,7 +23,7 @@ import com.timeline.vpn.web.controller.BaseController;
 @RequestMapping("/api/host")
 public class HostController extends BaseController {
     
-    //废弃
+    //获取具体主机信息
     @RequestMapping(value = "/server/cache.json", method = RequestMethod.GET)
     public JsonResult serverListCache(@UserInfo BaseQuery baseQuery,
             @RequestParam(defaultValue = "0") int id) {

@@ -104,27 +104,13 @@ public class HostServerImpl implements HostService {
         
         BuildAction<HostPo, HostVo> action = null;
         List<HostPo> hostList = new ArrayList<>();
-        String channel = Constant.VPN;
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
-          channel = Constant.VPNB;
+        HostPo host = hostV2Dao.get(id);
+        if(host==null){
+            throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }
-        if (id == Constant.LOCATION_ALL) {
-            List<HostPo> list = hostDao.getRandom(channel);
-            //优化成连接数最少或者网络带宽最好的一个
-            hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
-            hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
-        } else {
-            HostPo host = hostDao.get(id);
-            if(host==null){
-                throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
-            }
-            if(!checkPermission(host.getType(),baseQuery.getUser())){
-                throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
-            }
-            hostList.add(host);
-        }
+        hostList.add(host);
         if (CollectionUtils.isEmpty(hostList)) {
-            throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
+            throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }
         return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, hostList,action);
     }
@@ -213,7 +199,7 @@ public class HostServerImpl implements HostService {
         List<HostPo> hostList = new ArrayList<>();
         hostList = hostV2Dao.getByLocation(location);
         if (CollectionUtils.isEmpty(hostList)) {
-            throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
+            throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }
         return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, hostList,action);
     }
