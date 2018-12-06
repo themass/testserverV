@@ -75,7 +75,7 @@ public class DataVideoServiceImpl implements DataVideoService {
             channel = channelOrg;
         }
         String channelType = po.getChannelType();
-        if(keywork.contains(Constant.line)) {
+        if(!StringUtils.isEmpty(keywork) && keywork.contains(Constant.line)) {
             keywork = keywork.substring(0, keywork.indexOf(Constant.line));
             channel = null;
         }
@@ -122,11 +122,12 @@ public class DataVideoServiceImpl implements DataVideoService {
         PageHelper.startPage(param.getStart(), param.getLimit());
         if(!StringUtils.isEmpty(keyword)) {
             userId = null;
+            if(keyword.contains(Constant.line)) {
+                keyword = keyword.substring(0, keyword.indexOf(Constant.line));
+                userId = null;
+            }
         }
-        if(keyword.contains(Constant.line)) {
-            keyword = keyword.substring(0, keyword.indexOf(Constant.line));
-            userId = null;
-        }
+        
         List<VideoUserItemPo> list = videoDao.getUserItems(po.getChannel(),userId,keyword);
         return VoBuilder.buildPageInfoVo((Page<VideoUserItemPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserItemPo,RecommendVo>(){
             @Override
