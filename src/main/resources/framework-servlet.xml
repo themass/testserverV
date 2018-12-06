@@ -38,6 +38,7 @@
 			<mvc:exclude-mapping path="/**/login.json"/>
 			<mvc:exclude-mapping path="/**/logout.json"/>
 			<mvc:exclude-mapping path="/api/monitor/collect.json"/>
+			<mvc:exclude-mapping path="/api/data/**/*.json"/>
 			<bean class="com.timeline.vpn.web.common.interceptor.VersionHandlerInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
