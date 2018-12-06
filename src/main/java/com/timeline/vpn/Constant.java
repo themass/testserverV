@@ -128,6 +128,7 @@ public class Constant {
     public static final String comma = ",";
     public static final String fen = ";";
     public static final String mao = ":";
+    public static final String line = "_";
     public static final int dataType_RECOMMENT = 2;
     public static final int dataType_TEXT_CHANNEL = 3;
     public static final int dataType_SOUND_CHANNEL = 4;
