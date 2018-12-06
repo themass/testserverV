@@ -78,6 +78,7 @@ public class DataVideoServiceImpl implements DataVideoService {
         if(!StringUtils.isEmpty(keywork) && keywork.contains(Constant.line)) {
             keywork = keywork.substring(0, keywork.indexOf(Constant.line));
             channel = null;
+            channelType = null;
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
         list = videoDao.getChannelItems(channel,keywork,channelType); 

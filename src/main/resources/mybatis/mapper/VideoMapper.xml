@@ -24,13 +24,17 @@
 	    select * from vpn.videochannel where enable=1 and channel=#{channel} limit 1
 	</select>
 	<select id="getChannelItems" resultMap="VideoMap">
-	    select * from vpn.videoitems where channelType=#{channelType}
-	    <if test="channel!=null">
-	        and channel=#{channel}
-	    </if> 
-	    <if test="keyword!=null">
-	        and name like CONCAT('%',#{keyword},'%')
-	    </if>
+	    select * from vpn.videoitems 
+	    where 1=1 
+		    <if test="channel!=null">
+		        and channel=#{channel}
+		    </if> 
+		    <if test="channelType!=null">
+		        and channelType=#{channelType}
+		    </if> 
+		    <if test="keyword!=null">
+		        and name like CONCAT('%',#{keyword},'%')
+		    </if>
 	    order by sortType desc,updateTime asc
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
