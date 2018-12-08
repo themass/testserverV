@@ -5,10 +5,10 @@
 		<id column="id" property="id" />
 	</resultMap>
 	<select id="getAllInfoVpn" resultMap="LocationMap">
-		select l.*,h.gateway,h.port ,h.weight ,h.showName from vpn.location_v2 l join vpn.host_v2 h  on l.hostId=h.id  and h.enable=1 where l.enable=1 and l.channel='VPN';
+		select l.*,h.gateway,h.port ,h.weight ,h.showName from vpn.location_v2 l join vpn.host_v2 h  on l.hostId=h.hostId  and h.enable=1 where l.enable=1 and l.channel='VPN';
 	</select>
 	<select id="getAllInfoVpnb" resultMap="LocationMap">
-		select l.*,h.gateway,h.port ,h.weight ,h.showName from vpn.location_v2 l join vpn.host_v2 h  on l.hostId=h.id  and h.enable=1 where l.enable=1 and l.channel='VPNB';
+		select l.*,h.gateway,h.port ,h.weight ,h.showName from vpn.location_v2 l join vpn.host_v2 h  on l.hostId=h.hostId  and h.enable=1 where l.enable=1 and l.channel='VPNB';
 	</select>
 	<select id="get" resultMap="LocationMap">
 		select * from vpn.location_v2 where id = #{id} and enable=1
