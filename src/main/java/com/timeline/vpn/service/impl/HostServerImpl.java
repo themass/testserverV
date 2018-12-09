@@ -39,6 +39,7 @@ import com.timeline.vpn.service.job.reload.HostIpCacheV2;
 import com.timeline.vpn.service.job.reload.HostIpCacheV2Vpnb;
 import com.timeline.vpn.service.job.reload.HostIpCacheVpnb;
 import com.timeline.vpn.util.AES2;
+import com.timeline.vpn.util.WeightRandom;
 
 /**
  * @author gqli
@@ -196,12 +197,15 @@ public class HostServerImpl implements HostService {
         }
         
         BuildAction<HostPo, HostVo> action = null;
-        List<HostPo> hostList = new ArrayList<>();
-        hostList = hostV2Dao.getByLocation(location);
+        
+        List<HostPo> hostList = hostV2Dao.getByLocation(location);
         if (CollectionUtils.isEmpty(hostList)) {
             throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }
-        return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, hostList,action);
+        List<HostPo> hostRet = new ArrayList<>();
+        WeightRandom random = new WeightRandom(hostList);
+        hostRet.add(random.random());
+        return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, hostRet,action);
     }
     @Override
     public InfoListVo<VipLocationVo> getAllLocationVipCacheV2(BaseQuery baseQuery) {
