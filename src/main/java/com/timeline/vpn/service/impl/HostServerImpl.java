@@ -34,6 +34,7 @@ import com.timeline.vpn.model.vo.ServerVo;
 import com.timeline.vpn.model.vo.VipLocationVo;
 import com.timeline.vpn.service.HostService;
 import com.timeline.vpn.service.RadUserCheckService;
+import com.timeline.vpn.service.job.reload.HostCheck;
 import com.timeline.vpn.service.job.reload.HostIpCache;
 import com.timeline.vpn.service.job.reload.HostIpCacheV2;
 import com.timeline.vpn.service.job.reload.HostIpCacheV2Vpnb;
@@ -203,9 +204,16 @@ public class HostServerImpl implements HostService {
             throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }
         List<HostPo> hostRet = new ArrayList<>();
-        WeightRandom random = new WeightRandom(hostList);
-        hostRet.add(random.random());
-        return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, hostRet,action);
+        for(HostPo po :hostList) {
+            if(!HostCheck.isErrorIp(po.getGateway())) {
+                hostRet.add(po);
+            }
+        }
+        
+        WeightRandom random = new WeightRandom(hostRet);
+        List<HostPo> ret = new ArrayList<>();
+        ret.add(random.random());
+        return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, ret,action);
     }
     @Override
     public InfoListVo<VipLocationVo> getAllLocationVipCacheV2(BaseQuery baseQuery) {
