@@ -76,11 +76,11 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/ads/score.json", method = RequestMethod.GET)
     public JsonResult adsFabCLick(@UserInfo(required = true) BaseQuery baseQuery,
             @RequestParam int score) {
-          return new JsonResult(userService.score(baseQuery, score));
-//        if (score == Constant.ADS_FAB_SCORE || score == Constant.ADS_CLICK_SCORE) {
-//            return new JsonResult(userService.score(baseQuery, score));
-//        }
-//        return Constant.RESULT_SUCCESS;
+//          return new JsonResult(userService.score(baseQuery, score));
+        if (score == Constant.ADS_CLICK_SCORE) {
+            return new JsonResult(userService.score(baseQuery, score));
+        }
+        return Constant.RESULT_SUCCESS;
     }
 }
 

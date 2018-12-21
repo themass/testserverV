@@ -111,8 +111,8 @@ public class Constant {
     public static final String YOUMI_OFFADS="29abff90a29bc419";
     public static final int LOCATION_ALL = 0;
     public static final long FREE_TIME = 20 * 24 * 60 * 60;
-    public static final long ADS_FAB_SCORE = 10;
-    public static final long ADS_CLICK_SCORE = 20;
+    public static final long ADS_FAB_SCORE = 30;
+    public static final long ADS_CLICK_SCORE = 30;
     public static final long ADS_REF_SCORE = 40;
     public static final long MIN_TIME = 24*3 * 60 * 60 * 1000*1000;
     public static final int MIN_PAGESIZE = 30;
