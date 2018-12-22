@@ -209,7 +209,9 @@ public class HostServerImpl implements HostService {
                 hostRet.add(po);
             }
         }
-        
+        if(CollectionUtils.isEmpty(hostRet)) {
+            throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
+        }
         WeightRandom random = new WeightRandom(hostRet);
         List<HostPo> ret = new ArrayList<>();
         ret.add(random.random());
