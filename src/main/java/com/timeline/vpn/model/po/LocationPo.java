@@ -133,6 +133,9 @@ public class LocationPo implements Comparable<LocationPo>{
 
     @Override
     public int compareTo(LocationPo o) {
+        if("大陆不可用".equals(name)) {
+            return 1;
+        }
         int ret = type-o.getType();
         ret = (ret==0?name.compareTo(o.getName()):ret);
         return ret ==0?id-o.getId():ret;
