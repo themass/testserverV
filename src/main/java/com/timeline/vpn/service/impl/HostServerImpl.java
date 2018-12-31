@@ -72,7 +72,7 @@ public class HostServerImpl implements HostService {
         BuildAction<HostPo, HostVo> action = null;
         List<HostPo> hostList = new ArrayList<>();
         String channel = Constant.VPN;
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())||Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
           channel = Constant.VPNB;
         }
         if (location == Constant.LOCATION_ALL) {
@@ -136,7 +136,7 @@ public class HostServerImpl implements HostService {
     @Override
     public InfoListVo<LocationVo> getAllLocationCache(BaseQuery baseQuery,Integer type) {
         List<LocationPo> list = new ArrayList<>();
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())||Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
             list = HostIpCacheVpnb.getLocationList();
           }else {
             list = HostIpCache.getLocationList();
@@ -152,7 +152,7 @@ public class HostServerImpl implements HostService {
     @Override
     public InfoListVo<VipLocationVo> getAllLocationVipCache(BaseQuery baseQuery) {
       List<LocationPo> list = null;
-      if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+      if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())||Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
         list = HostIpCacheVpnb.getLocationList();
       }else {
         list = HostIpCache.getLocationList();
@@ -175,7 +175,7 @@ public class HostServerImpl implements HostService {
     @Override
     public InfoListVo<LocationVo> getAllLocationCacheV2(BaseQuery baseQuery,Integer type) {
         List<LocationPo> list = new ArrayList<>();
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())||Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
             list = HostIpCacheV2Vpnb.getLocationList();
           }else {
             list = HostIpCacheV2.getLocationList();
@@ -220,7 +220,7 @@ public class HostServerImpl implements HostService {
     @Override
     public InfoListVo<VipLocationVo> getAllLocationVipCacheV2(BaseQuery baseQuery) {
         List<LocationPo> list = null;
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())||Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
           list = HostIpCacheV2Vpnb.getLocationList();
         }else {
           list = HostIpCacheV2.getLocationList();

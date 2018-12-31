@@ -32,7 +32,7 @@ public class DeviceUtil {
     private static final String FORMAT = "000";
     private static final String VPNVERSION = "(VPN|LIFE|SEX|SEX_TEMP|NETHELP)/(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
     private static final String VPNVERSION_VPN_POOL = ",channel=(MYPOOL),";
-    private static final String VPNVERSION_NETTYPE= ",NETTYPE=(NETTYPEA|VPNB|VPNC),";
+    private static final String VPNVERSION_NETTYPE= ",NETTYPE=(NETTYPEA|VPNB|VPNC|VPND),";
     private static final String DEVID = "devid";
     private static final int VERSION_COUNT = 4;
     private static final String HTTP_UA = "user-agent";

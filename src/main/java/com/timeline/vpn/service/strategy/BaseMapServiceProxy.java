@@ -33,7 +33,7 @@ public abstract class BaseMapServiceProxy<T extends IAppAgent> {
     }
     public T getService() {
         DevApp app = DevAppContext.get();
-        String ser = (Constant.VPNB.equals(app.getNetType())||Constant.VPNC.equals(app.getNetType()))?Constant.VPNB:app.getChannel();
+        String ser = (Constant.VPNB.equals(app.getNetType())||Constant.VPNC.equals(app.getNetType())||Constant.VPND.equals(app.getNetType()))?Constant.VPNB:app.getChannel();
         T service = channelMap.get(ser);
         
         if(service==null)
