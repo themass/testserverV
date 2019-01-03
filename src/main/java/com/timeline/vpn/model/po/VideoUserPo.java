@@ -19,6 +19,7 @@ public class VideoUserPo {
     private String channel;
     private Integer type;
     private String baseurl;
+    private String channelType;
     public String getBaseurl() {
         return baseurl;
     }
@@ -85,6 +86,12 @@ public class VideoUserPo {
     }
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+    public String getChannelType() {
+        return channelType;
+    }
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
     }
     
     

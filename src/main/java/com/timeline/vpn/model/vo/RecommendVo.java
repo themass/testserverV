@@ -30,6 +30,8 @@ public class RecommendVo {
     private int type;
     private String baseurl;
     private int dataType = Constant.dataType_RECOMMENT;
+    //list 
+    private String channelType;
     public String getBaseurl() {
         return baseurl;
     }
@@ -178,6 +180,12 @@ public class RecommendVo {
 
     public void setDataType(int dataType) {
         this.dataType = dataType;
+    }
+    public String getChannelType() {
+        return channelType;
+    }
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
     }
     
     

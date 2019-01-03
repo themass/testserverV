@@ -62,6 +62,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setParam(i.getChannel());
                 t.setShowLogo(i.getCount()+"部");
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
+                t.setChannelType(i.getChannelType());
             }
         });
     }
@@ -112,6 +113,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setParam(i.getChannel());
                 t.setShowLogo(i.getCount()+"部");
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
+                t.setChannelType(i.getChannelType());
             }
         });
     }
