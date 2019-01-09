@@ -1,13 +1,13 @@
 package com.timeline.vpn;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.model.vo.RetInfoVo;
 
 public class Constant {
-
     public static class ResultMsg {
         public static final String RESULT_SYSTEMERROR = "RESULT.ERROR.SYSTEM";
         public static final String RESULT_UNKNOWN = "RESULT.ERROR.UNKNOWN ";

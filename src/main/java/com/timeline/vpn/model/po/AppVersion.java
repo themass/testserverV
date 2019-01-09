@@ -17,6 +17,7 @@ public class AppVersion {
     private String minBuild;
     private String maxBuild;
     private String channel;
+    private Boolean showGdt;   
 
     public int getId() {
         return id;
@@ -88,6 +89,14 @@ public class AppVersion {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public Boolean getShowGdt() {
+        return showGdt;
+    }
+
+    public void setShowGdt(Boolean showGdt) {
+        this.showGdt = showGdt;
     }
 
 

@@ -20,6 +20,7 @@ public class VersionInfoVo {
     private String vitamioExt;
     private VipDescVo vipDesc;
     private String qq;
+    private Boolean showGdt;
     public String getVersion() {
         return version;
     }
@@ -129,6 +130,14 @@ public class VersionInfoVo {
 
     public void setQq(String qq) {
       this.qq = qq;
+    }
+
+    public Boolean getShowGdt() {
+        return showGdt;
+    }
+
+    public void setShowGdt(Boolean showGdt) {
+        this.showGdt = showGdt;
     }
 
     @Override
