@@ -81,6 +81,9 @@ public class DataVideoServiceImpl implements DataVideoService {
             channel = null;
             channelType = null;
         }
+        if(baseQuery.getAppInfo().getNetType()!=null && baseQuery.getAppInfo().getNetType().contains(Constant.PLAYTYPE)) {
+            channelType = "movie";
+        }
         PageHelper.startPage(param.getStart(), param.getLimit());
         list = videoDao.getChannelItems(channel,keywork,channelType); 
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
