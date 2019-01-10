@@ -139,14 +139,14 @@ public class DataServiceImpl implements DataService {
     }
     @Override
     public VersionInfoVo getMaxVersion(DevApp app,String channel) {
-      if(Constant.VPN.equals(channel) && !StringUtils.isEmpty(app.getNetType())) {
+      if(!StringUtils.isEmpty(app.getNetType())) {
         channel = app.getNetType()+"_"+channel;
       }  
       return VoBuilder.buildVo(versionDao.getLast(app.getPlatform(),channel), VersionInfoVo.class,null);
     }
     @Override
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel) {
-      if(Constant.VPN.equals(channel) && !StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
+      if(!StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
         channel = baseQuery.getAppInfo().getNetType()+"_"+channel;
       }  
       VersionInfoVo vo = VoBuilder.buildVo(versionDao.getLast(platform,channel), VersionInfoVo.class,null);
