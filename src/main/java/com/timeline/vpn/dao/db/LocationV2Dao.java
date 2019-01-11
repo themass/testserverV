@@ -17,6 +17,8 @@ public interface LocationV2Dao extends BaseDBDao<LocationPo> {
     public LocationPo getByHostId(@Param("hostId")int hostId);
     public List<LocationPo> getAllInfoVpn();
     public List<LocationPo> getAllInfoVpnb();
+    public List<LocationPo> getAllInfoVpnd();
+    public List<LocationPo> getAllInfoVpnbTod();
 
 }
 
