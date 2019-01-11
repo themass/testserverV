@@ -13,4 +13,7 @@
 	<select id="get" resultMap="LocationMap">
 		select * from vpn.location_v2 where id = #{id} and enable=1
 	</select>
+	<select id="getByHostId" resultMap="LocationMap">
+		select * from vpn.location_v2 where hostId = #{hostId} and enable=1 limit 1
+	</select>
 </mapper>

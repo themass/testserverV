@@ -14,7 +14,7 @@ import com.timeline.vpn.model.po.LocationPo;
  */
 public interface LocationV2Dao extends BaseDBDao<LocationPo> {
     public LocationPo get(@Param("id")int id);
-    
+    public LocationPo getByHostId(@Param("hostId")int hostId);
     public List<LocationPo> getAllInfoVpn();
     public List<LocationPo> getAllInfoVpnb();
 

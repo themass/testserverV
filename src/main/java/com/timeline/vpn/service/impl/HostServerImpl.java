@@ -19,6 +19,7 @@ import com.timeline.vpn.dao.db.DnsResverDao;
 import com.timeline.vpn.dao.db.HostDao;
 import com.timeline.vpn.dao.db.HostV2Dao;
 import com.timeline.vpn.dao.db.LocationDao;
+import com.timeline.vpn.dao.db.LocationV2Dao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.DnsResverPo;
@@ -59,6 +60,8 @@ public class HostServerImpl implements HostService {
     private RadUserCheckService checkService;
     @Autowired
     private DnsResverDao dnsResverDao;
+    @Autowired
+    private LocationV2Dao cityV2Dao;
 
     @Override
     public ServerVo getHostInfo(BaseQuery baseQuery, int location) {
@@ -202,6 +205,13 @@ public class HostServerImpl implements HostService {
         List<HostPo> hostList = hostV2Dao.getByLocation(location);
         if (CollectionUtils.isEmpty(hostList)) {
             throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
+        }
+        LocationPo loc = cityV2Dao.get(location);
+        if(loc==null){
+            throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
+        }
+        if(!checkPermission(loc.getType(),baseQuery.getUser())){
+            throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
         }
         List<HostPo> hostRet = new ArrayList<>();
         for(HostPo po :hostList) {
