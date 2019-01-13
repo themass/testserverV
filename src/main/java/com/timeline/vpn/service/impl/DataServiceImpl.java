@@ -190,8 +190,8 @@ public class DataServiceImpl implements DataService {
             desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
         }else {
           desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
-          desc.setDesc1("");
-          desc.setDesc2("");
+          desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
+          desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
         }
         if(baseQuery!=null&&baseQuery.getUser()!=null)
             desc.setScore(baseQuery.getUser().getScore());
