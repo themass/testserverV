@@ -354,7 +354,7 @@ appsecret
         String token = getAsstoken();
         String url = "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token="+token;
         Map<String, String> content = new HashMap<>();
-        content.put("content", msg);
+        content.put("content", msg.replace("VPN", "v9n").replaceAll("vpn", "v9n"));
         
         Map<String, Object> params = new HashMap<>();
         params.put("touser",Arrays.asList("oTzH21bdL3u19PE5UR11Mc-PLZ_Y","oTzH21TIeKfp9sE-YZZwJOyQ7zvQ"));
