@@ -46,10 +46,10 @@ public class DevApp {
             LOGGER.error("check fail :platform="+platform+",version="+version+",devId="+devId);
             return false;
         }
-        if (Math.abs(now - time) > Constant.MIN_TIME) {
-            LOGGER.error("check fail :now="+now+",time="+time);
-            return false;
-        }
+//        if (Math.abs(now - time) > Constant.MIN_TIME) {
+//            LOGGER.error("check fail :now="+now+",time="+time);
+//            return false;
+//        }
         if (!Md5.encode(devId + "|" + time).equals(sign)){
             LOGGER.error("check fail :sign="+sign+",devId="+devId+",time="+time);
             return false;
