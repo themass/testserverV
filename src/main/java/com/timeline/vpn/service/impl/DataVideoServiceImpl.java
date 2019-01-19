@@ -114,7 +114,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setAdsPopShow(false);
                 t.setAdsShow(true);
                 t.setParam(i.getChannel());
-                t.setShowLogo(i.getCount()+"部");
+                t.setShowLogo(i.getCount()+"大类");
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 t.setChannelType(i.getChannelType());
             }
@@ -126,15 +126,17 @@ public class DataVideoServiceImpl implements DataVideoService {
             String userId,String keyword) {
         VideoUserPo po = videoDao.getUserByUserId(userId);
         PageHelper.startPage(param.getStart(), param.getLimit());
+        String channel = po.getChannel();
         if(!StringUtils.isEmpty(keyword)) {
             userId = null;
             if(keyword.contains(Constant.line)) {
                 keyword = keyword.substring(0, keyword.indexOf(Constant.line));
                 userId = null;
+                channel = null;
             }
         }
         
-        List<VideoUserItemPo> list = videoDao.getUserItems(po.getChannel(),userId,keyword);
+        List<VideoUserItemPo> list = videoDao.getUserItems(channel,userId,keyword);
         return VoBuilder.buildPageInfoVo((Page<VideoUserItemPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserItemPo,RecommendVo>(){
             @Override
             public void action(VideoUserItemPo i, RecommendVo t) {

@@ -44,14 +44,20 @@
 	    select * from vpn.video_user where userId=#{userId} limit 1
 	</select>
 	<select id="getUserItems" resultMap="VideoUserItemMap">
-	    select * from vpn.video_user_item where channel=#{channel}
-	    <if test="userId!=null">
-	        and userId=#{userId}
-	    </if>
-	    
-	    <if test="keyword!=null">
-	        and name like CONCAT('%',#{keyword},'%')
-	    </if>
+	    select * from vpn.video_user_item
+	    <where>
+	   		 <if test="channel!=null">
+		        channel=#{channel}
+		    </if>
+		     <if test="userId!=null">
+		        and userId=#{userId}
+		    </if>
+		    
+		    <if test="keyword!=null">
+		        and name like CONCAT('%',#{keyword},'%')
+		    </if>
+	    </where>
+	   
 	    order by id desc
 	</select>
 	
