@@ -18,4 +18,15 @@
 	    </if>
 	    order by LENGTH(name)asc,name asc
 	</select>
+	
+	<select id="getByChannelById" resultMap="SoundItemsMap">
+	    select * from vpn.sounditems where 1=1
+	    <if test="channel!=null">
+	        and channel=#{channel}
+	    </if> 
+	    <if test="keyword!=null">
+	        and name like CONCAT('%',#{keyword},'%')
+	    </if>
+	    order by sortType desc , id desc
+	</select>
 </mapper>

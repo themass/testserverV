@@ -15,5 +15,7 @@ import com.timeline.vpn.model.po.SoundItems;
  */
 public interface SoundChannelDao extends BaseDBDao<SoundChannel> {
     public List<SoundItems> getByChannel(@Param("channel")String channel,@Param("keyword")String keyword);
+    public List<SoundItems> getByChannelById(@Param("channel")String channel,@Param("keyword")String keyword);
+
 }
 
