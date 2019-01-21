@@ -48,7 +48,7 @@ public class HostIpCacheV2Vpnd extends ReloadJob {
             }
         }
         try {
-//            LOGGER.info("locationOk = "+locationOk);
+            LOGGER.info("locationOk = "+locationOk.size());
             lock.writeLock().lock();
             locationList = locationOk;
         } finally {
