@@ -13,7 +13,9 @@ public class HostPo {
     private String cert;
     private int type;
     private float weight;
-
+    private int hostId;
+    private String com;
+    
     public int getId() {
         return id;
     }
@@ -70,6 +72,22 @@ public class HostPo {
 
     public void setWeight(float weight) {
         this.weight = weight;
+    }
+
+    public int getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(int hostId) {
+        this.hostId = hostId;
+    }
+
+    public String getCom() {
+        return com;
+    }
+
+    public void setCom(String com) {
+        this.com = com;
     }
     
 

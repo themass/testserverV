@@ -14,7 +14,7 @@
 		select * from vpn.host_v2 where id=#{id} and enable=1 
 	</select>
 	<select id="getAll" resultMap="HostMap">
-		select * from vpn.host_v2 where enable=1
+		select gateway,hostId,com from vpn.host_v2 where enable=1
 	</select>
 
 	<select id="getByLocation" resultMap="HostMap">
