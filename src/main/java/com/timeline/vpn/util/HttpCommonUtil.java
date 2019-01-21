@@ -410,7 +410,7 @@ public class HttpCommonUtil {
             while ((content = in.readLine()) != null) {
                 stringBuffer.append(content);
             }
-            LOGGER.info("ping:  "+ip+" - result content : " + stringBuffer.toString());
+//            LOGGER.info("ping:  "+ip+" - result content : " + stringBuffer.toString());
             int status = p.waitFor();
             if (status == 0 && !stringBuffer.toString().trim().contains("100%packetloss")) {
                 result = "successful~";

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.timeline.vpn.dao.db.HostDao;
+import com.timeline.vpn.dao.db.HostV2Dao;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.service.job.ReloadJob;
 import com.timeline.vpn.util.HttpCommonUtil;
@@ -28,7 +28,7 @@ public class HostCheck extends ReloadJob {
     private static List<String> myIpList = new ArrayList<>();
     private static Set<String> errorIp = new HashSet<>();
     @Autowired
-    private HostDao hostDao;
+    private HostV2Dao hostDao;
     @PostConstruct
     public void init() {
         List<HostPo> list = hostDao.getAll();
