@@ -13,7 +13,7 @@ public class ChannelItemsForm extends PageBaseForm{
     private String channelOrg;
     private String channelType;
     public String getChannel() {
-        return StringUtils.isEmpty(keyword)?channel:null;
+        return channel;
     }
 
     public void setChannel(String channel) {

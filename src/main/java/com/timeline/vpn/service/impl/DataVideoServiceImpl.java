@@ -81,11 +81,15 @@ public class DataVideoServiceImpl implements DataVideoService {
             channel = null;
             channelType = null;
         }
+        String baseurl = null;
+        if(!StringUtils.isEmpty(keywork) ) {
+            baseurl = po.getBaseurl();
+        }
         if(baseQuery.getAppInfo().getNetType()!=null && baseQuery.getAppInfo().getNetType().contains(Constant.PLAYTYPE)) {
             channelType = "movie";
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
-        list = videoDao.getChannelItems(channel,keywork,channelType); 
+        list = videoDao.getChannelItems(channel,keywork,channelType,baseurl); 
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
             public void action(VideoPo i, RecommendVo t) {

@@ -26,15 +26,22 @@
 	<select id="getChannelItems" resultMap="VideoMap">
 	    select * from vpn.videoitems 
 	    where 1=1 
-		    <if test="channel!=null">
-		        and channel=#{channel}
-		    </if> 
 		    <if test="channelType!=null">
 		        and channelType=#{channelType}
 		    </if> 
 		    <if test="keyword!=null">
 		        and name like CONCAT('%',#{keyword},'%')
 		    </if>
+		    <choose>
+			    <when test="channel!=null and baseurl!=null">
+			        and (channel=#{channel} or baseurl =#{baseurl})
+			    </when> 
+			    <otherwise>
+				    <if test="channel!=null">
+				        and channel=#{channel}
+				    </if>
+			    </otherwise>
+		    </choose>
 	    order by sortType desc,updateTime asc
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
