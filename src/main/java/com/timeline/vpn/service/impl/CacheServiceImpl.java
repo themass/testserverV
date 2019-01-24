@@ -29,6 +29,8 @@ public class CacheServiceImpl implements CacheService {
 
     private static final long LOCK_TIMEOUT = 60 * 1000; //加锁超时时间 单位毫秒
     private static final long SCORE_TIMEOUT = 60 * 1000; //加锁超时时间 单位毫秒
+    private static final long USERCACH_TIMEOUT = 60; //加锁超时时间 单位毫秒
+
     @Autowired
     private RedisTemplate<String, String> jedisTemplate;
     private static final Logger LOGGER = LoggerFactory.getLogger(CacheServiceImpl.class);
@@ -45,12 +47,12 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public String putUser(UserPo user) {
         String token = String.format(TOKEN_ITEM_KEY, AuthUtil.nameToToken(user.getName()));
-        jedisTemplate.opsForValue().set(token, JsonUtil.writeValueAsString(user));
+        jedisTemplate.opsForValue().set(token, JsonUtil.writeValueAsString(user),USERCACH_TIMEOUT,TimeUnit.MINUTES);
         return token;
     }
     @Override
     public String updateUser(String token, UserPo user) {
-        jedisTemplate.opsForValue().set(token, JsonUtil.writeValueAsString(user));
+        jedisTemplate.opsForValue().set(token, JsonUtil.writeValueAsString(user),USERCACH_TIMEOUT,TimeUnit.MINUTES);
         return token;
     }
     @Override
