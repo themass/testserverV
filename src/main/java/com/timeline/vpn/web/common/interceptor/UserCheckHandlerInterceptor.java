@@ -47,7 +47,7 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
           if (po != null) {
               request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
           } else {
-              LOGGER.error("没找到user信息：app={}, header={}",app.toString(),HttpCommonUtil.getHeaderStr(request));
+              LOGGER.error("没找到user信息：app={}",app.toString());
   //            request.setAttribute(Constant.HTTP_ATTR_RET, Constant.ResultErrno.ERRNO_CLEAR_LOGIN);
           }
         }catch (RuntimeException e) {
