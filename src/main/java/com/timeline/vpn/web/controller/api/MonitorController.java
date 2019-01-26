@@ -42,7 +42,7 @@ public class MonitorController extends BaseController {
     }
     @RequestMapping(value = "/connlog.json", method = RequestMethod.POST)
     public JsonResult connlog(@UserInfo BaseQuery baseQuery,@ModelAttribute @Valid ConnLogForm logs) {
-        reportService.connlog(baseQuery, logs);
+//        reportService.connlog(baseQuery, logs);
         return Constant.RESULT_SUCCESS;
     }
 }
