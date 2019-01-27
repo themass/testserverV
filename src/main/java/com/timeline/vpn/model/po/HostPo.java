@@ -15,7 +15,7 @@ public class HostPo {
     private float weight;
     private int hostId;
     private String com;
-    
+    private int needPing=1;
     public int getId() {
         return id;
     }
@@ -89,7 +89,14 @@ public class HostPo {
     public void setCom(String com) {
         this.com = com;
     }
-    
+
+    public int getNeedPing() {
+        return needPing;
+    }
+
+    public void setNeedPing(int needPing) {
+        this.needPing = needPing;
+    }
 
 }
 

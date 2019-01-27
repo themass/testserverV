@@ -27,14 +27,19 @@ public class HostCheck extends ReloadJob {
     private static final Logger LOGGER = LoggerFactory.getLogger(HostCheck.class);
     private static List<String> myIpList = new ArrayList<>();
     private static Set<String> errorIp = new HashSet<>();
+    private List<String> noPing = new ArrayList<>();
     @Autowired
     private HostV2Dao hostDao;
     @PostConstruct
     public void init() {
         List<HostPo> list = hostDao.getAll();
         List<String> ips = new ArrayList<>(); 
+        noPing.clear();
         for(HostPo po :list){
             ips.add(po.getGateway());
+            if(po.getNeedPing()==0) {
+                noPing.add(po.getGateway());
+            }
         }
         myIpList = ips;
     }
@@ -45,6 +50,10 @@ public class HostCheck extends ReloadJob {
         List<String> errorList = new ArrayList<>();
         for(String ip :myIpList){
             int count = 0;
+            if(noPing.contains(ip)) {
+                LOGGER.error("不需要检测ip-》"+ip);
+                continue;
+            }
             while(count<3){
                 boolean ret = HttpCommonUtil.ping(ip);
                 if(!ret){

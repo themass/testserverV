@@ -39,8 +39,11 @@ public class CacheServiceImpl implements CacheService {
     }
 
     public UserPo getUser(String token) {
-        if (!StringUtils.isEmpty(token))
-            return JsonUtil.readValue(jedisTemplate.opsForValue().get(token), UserPo.class);
+        if (!StringUtils.isEmpty(token)) {
+            String string = jedisTemplate.opsForValue().get(token);
+            if(!StringUtils.isEmpty(string))
+                return JsonUtil.readValue(string, UserPo.class);
+        }
         return null;
     }
 

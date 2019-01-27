@@ -10,6 +10,7 @@ public class HostVo {
     private int port;
     private int location;
     private String cert;
+    
 
     public String getGateway() {
         return gateway;
@@ -42,7 +43,6 @@ public class HostVo {
     public void setCert(String cert) {
         this.cert = cert;
     }
-
 
 }
 
