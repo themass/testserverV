@@ -34,7 +34,7 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
             Object handler) throws Exception {
         long startTime = System.currentTimeMillis();
         startTimeThreadLocal.set(startTime);
-        LOGGER.info(request.getServletPath() + "--start; "+HttpCommonUtil.getHeaderStr(request));
+//        LOGGER.info(request.getServletPath() + "--start; "+HttpCommonUtil.getHeaderStr(request));
         return true;
     }
 
@@ -42,7 +42,7 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
 //        Metrics.count(Measure.http.name(),);
-       
+//        LOGGER.info(request.getServletPath() + "-ua=-"+HttpCommonUtil.getHeaderStr(request));
         if (modelAndView != null && modelAndView.getModel() != null) {
             Map<String, Object> map = modelAndView.getModel();
             if (map.get(JsonResult.MODEL_KEY) != null) {
@@ -50,8 +50,8 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
                 long costTime = endTime - startTimeThreadLocal.get();
                 JsonResult result = (JsonResult) map.get(JsonResult.MODEL_KEY);
                 result.setCost(costTime);
-                LOGGER.info(String.format(request.getServletPath()+"[%s],cost:%s", request.getQueryString(),costTime));
-                String uri=request.getRequestURI();
+                LOGGER.info(String.format(request.getServletPath()+"[%s],[ua=%s]cost:%s", request.getQueryString(),HttpCommonUtil.getHeaderStr(request),costTime));
+//                String uri=request.getRequestURI();
 //                Metrics.time(MetricsName.http(uri),
 //                        costTime);
 //                Metrics.time(MetricsName.http("ALL"),
