@@ -80,7 +80,11 @@ public class DataVideoServiceImpl implements DataVideoService {
             keywork = keywork.substring(0, keywork.indexOf(Constant.line));
             channel = null;
             channelType = null;
+        }else if(!StringUtils.isEmpty(keywork)&&channelType =="movie") {
+            channel = null;
+            channelType = "movie";
         }
+        
         String baseurl = null;
         if(!StringUtils.isEmpty(keywork) ) {
             baseurl = po.getBaseurl();
