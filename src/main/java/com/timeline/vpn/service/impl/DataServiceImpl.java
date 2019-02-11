@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.builder.BaseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +49,8 @@ import com.timeline.vpn.util.DeviceUtil;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.HttpRequest;
 import com.timeline.vpn.util.JsonUtil;
+import com.timeline.vpn.util.cache.CacheUtil;
+import com.timeline.vpn.util.cache.MemCache;
 
 /**
  * @author gqli
@@ -76,6 +77,7 @@ public class DataServiceImpl implements DataService {
     private ResourceBundleMessageSource messagesource;
     @Autowired
     private DomainDao domainDao;
+    private MemCache memCache= new MemCache();
     @Override
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery, PageBaseParam param) {
         //未登录   ， 登录，  VIP
@@ -142,7 +144,13 @@ public class DataServiceImpl implements DataService {
       if(!StringUtils.isEmpty(app.getNetType())) {
         channel = app.getNetType()+"_"+channel;
       }  
-      return VoBuilder.buildVo(versionDao.getLast(app.getPlatform(),channel), VersionInfoVo.class,null);
+      VersionInfoVo cache = (VersionInfoVo)memCache.getValue(CacheUtil.getVersion(channel), Constant.CACHETIME, Constant.CACHESIZE);
+      if(cache!=null) {
+          return cache;
+      }
+      cache = VoBuilder.buildVo(versionDao.getLast(app.getPlatform(),channel), VersionInfoVo.class,null);
+      memCache.putValue(CacheUtil.getVersion(channel), cache,Constant.CACHETIME, Constant.CACHESIZE);
+      return cache;
     }
     @Override
     public VersionInfoVo getVersion(BaseQuery baseQuery,String platform,String channel) {

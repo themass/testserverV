@@ -43,7 +43,8 @@ public class PerformenceMonitor {
         long time = end - begin;
         String methed =
                 pjp.getTarget().getClass().getSimpleName() + "." + pjp.getSignature().getName();
-        LOGGER.info("{}:{}", methed, time);
+        if(time>300)
+            LOGGER.error("{}:{}", methed, time);
         return o;
     }
 }

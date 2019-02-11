@@ -119,9 +119,9 @@ public class Constant {
     public static final int MIN_PAGESIZE = 30;
     public static final String RAD_PASS = "Cleartext-Password";
     public static final String RAD_EQ = ":=";
-    public static final int SCORE_TO_VIP = 2100;
-    public static final int SCORE_TO_VIP2 = 4100;
-    public static final int SCORE_TO_VIP3 = 40000000;
+    public static final int SCORE_TO_VIP = 2500;
+    public static final int SCORE_TO_VIP2 = 4500;
+    public static final int SCORE_TO_VIP3 = 1000000000;
     public static final int RAD_PRIORITY_DEF = 2;
     public static String superMan = "FREE_VPN";
     public static final String STATE_TIME_USE="%s h, %sm, %ss";
@@ -146,5 +146,9 @@ public class Constant {
             "#ea92b2","#ea1bdc", "#78b5ea",
             "#75ef67","#d0f744","#f7c744",
             "#f55220");
+    
+    
+    public static Long CACHETIME=600l;
+    public static Long CACHESIZE=100l;
 
 }

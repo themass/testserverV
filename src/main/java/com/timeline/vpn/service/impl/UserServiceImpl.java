@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -26,7 +27,6 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.DevUseinfoPo;
-import com.timeline.vpn.model.po.RadacctState;
 import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.InfoListVo;
@@ -70,36 +70,42 @@ public class UserServiceImpl implements UserService {
     private RecommendServiceProxy recommendServiceProxy;
     @Autowired
     private UserRegContext userRegContext;
-
-    public DevUseinfoPo updateDevUseinfo(DevApp appInfo,String userName) {
-        DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
-        if(po==null){
-            po = new DevUseinfoPo(); 
-            po.setCreatTime(new Date());
-            po.setDevId(appInfo.getDevId());
-            po.setLastUpdate(new Date());
-            po.setPlatform(appInfo.getPlatform());
-            po.setVersion(appInfo.getVersion());
-            po.setUserName(userName);
-            po.setLongitude(appInfo.getLon());
-            po.setLatitude(appInfo.getLat());
-            if(StringUtils.isEmpty(appInfo.getNetType())) {
-              po.setChannel(Constant.VPN);
-            }else {
-                po.setChannel(appInfo.getNetType());
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
+    public void updateDevUseinfo(final DevApp appInfo,final String userName) {
+        taskExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                DevUseinfoPo po = devInfoDao.get(appInfo.getDevId());
+                if(po==null){
+                    po = new DevUseinfoPo(); 
+                    po.setCreatTime(new Date());
+                    po.setDevId(appInfo.getDevId());
+                    po.setLastUpdate(new Date());
+                    po.setPlatform(appInfo.getPlatform());
+                    po.setVersion(appInfo.getVersion());
+                    po.setUserName(userName);
+                    po.setLongitude(appInfo.getLon());
+                    po.setLatitude(appInfo.getLat());
+                    if(StringUtils.isEmpty(appInfo.getNetType())) {
+                      po.setChannel(Constant.VPN);
+                    }else {
+                        po.setChannel(appInfo.getNetType());
+                    }
+                    devInfoDao.insert(po);
+                }else{
+                    po.setDevId(appInfo.getDevId());
+                    po.setLastUpdate(new Date());
+                    po.setPlatform(appInfo.getPlatform());
+                    po.setVersion(appInfo.getVersion());
+                    po.setUserName(userName);
+                    po.setLongitude(appInfo.getLon());
+                    po.setLatitude(appInfo.getLat());
+                    devInfoDao.update(po);
+                }
             }
-            devInfoDao.insert(po);
-        }else{
-            po.setDevId(appInfo.getDevId());
-            po.setLastUpdate(new Date());
-            po.setPlatform(appInfo.getPlatform());
-            po.setVersion(appInfo.getVersion());
-            po.setUserName(userName);
-            po.setLongitude(appInfo.getLon());
-            po.setLatitude(appInfo.getLat());
-            devInfoDao.update(po);
-        }
-        return po;
+        });
+        
     }
 
     @Override
@@ -188,16 +194,16 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public StateUseVo stateUse(List<String> names){
-        RadacctState state = new RadacctState();
-        for(String name:names){
-            RadacctState ret = radacctDao.dateState(name);
-            if(ret!=null){
-                state.setAcctInputOctets(state.getAcctInputOctets()+ret.getAcctInputOctets());
-                state.setAcctOutputOctets(state.getAcctOutputOctets()+ret.getAcctOutputOctets());
-                state.setAcctSessionTime(state.getAcctSessionTime()+ret.getAcctSessionTime());
-            }
-        }
-        return VoBuilder.buildStateUseVo(state);
+//        RadacctState state = new RadacctState();
+//        for(String name:names){
+//            RadacctState ret = radacctDao.dateState(name);
+//            if(ret!=null){
+//                state.setAcctInputOctets(state.getAcctInputOctets()+ret.getAcctInputOctets());
+//                state.setAcctOutputOctets(state.getAcctOutputOctets()+ret.getAcctOutputOctets());
+//                state.setAcctSessionTime(state.getAcctSessionTime()+ret.getAcctSessionTime());
+//            }
+//        }
+        return VoBuilder.buildStateUseVo(null);
     }
 
     @Override

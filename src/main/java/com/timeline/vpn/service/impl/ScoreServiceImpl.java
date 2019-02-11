@@ -26,9 +26,11 @@ public class ScoreServiceImpl implements ScoreService{
   public UserPo updateScore(String name) {
     UserPo po = userDao.exist(name);
     if(po!=null) {
+      int level = po.getLevel();
       po.setLevel(ScoreCalculate.level(po.getLevel(),po.getScore()));
       userDao.updateLevel(po);
-      checkService.updateRadUserGroup(po.getName(), ScoreCalculate.group(po.getLevel()));
+      if(level!=po.getLevel())
+          checkService.updateRadUserGroup(po.getName(), ScoreCalculate.group(po.getLevel()));
     }else {
       po = userDao.exist(Constant.ADMIN_NAME);
     }

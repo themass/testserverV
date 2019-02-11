@@ -20,19 +20,19 @@
        http://www.springframework.org/schema/task
        http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 
-    <aop:aspectj-autoproxy />
-	<context:component-scan base-package="com.timeline.vpn.service,com.timeline.vpn.util,com.timeline.vpn.web.common">
-		<context:exclude-filter type="annotation"
-			expression="org.springframework.stereotype.Controller" />
-	</context:component-scan>
-	<context:property-placeholder location="classpath*:conf/*.properties" />
-	<beans>
-	    <import resource="classpath:framework-doc.xml" />
-		<import resource="classpath:framework-dao.xml" />
-		<import resource="classpath:framework-util.xml" />
-		<import resource="classpath:quartz.xml" />
-		<import resource="classpath:framework-redis.xml" />
-		<import resource="classpath:framework-task.xml" />
-	</beans>
-	
+		<!-- spring thread pool executor -->           
+    	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+	        <!-- 线程池维护线程的最少数量 -->
+	        <property name="corePoolSize" value="4" />
+	        <!-- 允许的空闲时间 -->
+	        <property name="keepAliveSeconds" value="200" />
+	        <!-- 线程池维护线程的最大数量 -->
+	        <property name="maxPoolSize" value="8" />
+	        <!-- 缓存队列 -->
+	        <property name="queueCapacity" value="2000" />
+	        <!-- 对拒绝task的处理策略 -->
+	        <property name="rejectedExecutionHandler">
+	            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+	        </property>
+    	</bean>
 </beans>
