@@ -25,12 +25,7 @@
 				<if test="version != null">
 					version = #{version},
 				</if> 
-				<if test="platform != null">
-					platform = #{platform},
-				</if> 
 				userName = #{userName},
-				latitude = #{latitude},
-				longitude = #{longitude}
 			</set>
 			where devId = #{devId}
 	</update>
