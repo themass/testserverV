@@ -2,6 +2,7 @@ package com.timeline.vpn.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,9 @@ public class DataTextServiceImpl implements DataTextService {
     public InfoListVo<TextItemsVo> getTextItems(final BaseQuery baseQuery, PageBaseParam param,
             String channel,String keyword) {
         PageHelper.startPage(param.getStart(), param.getLimit());
+        if(!StringUtils.isEmpty(keyword)) {
+            channel = null;
+        }
         List<TextItemsPo> poList = textChannelDao.getByChannel(channel,keyword);
         return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,new VoBuilder.BuildAction<TextItemsPo,TextItemsVo>(){
 

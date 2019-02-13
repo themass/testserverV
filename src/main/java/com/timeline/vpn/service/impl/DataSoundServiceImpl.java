@@ -59,6 +59,9 @@ public class DataSoundServiceImpl implements DataSoundService {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<SoundItems> poList = null;
         if(!StringUtils.isEmpty(channel) && (channel.contains("短篇小说") ||channel.contains("现场"))) {
+            if(!StringUtils.isEmpty(keywork)) {
+                channel = null;
+            }
             poList = soundChannelDao.getByChannelById(channel,keywork);
         }else {
             poList = soundChannelDao.getByChannel(channel,keywork);
