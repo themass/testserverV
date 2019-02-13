@@ -76,21 +76,29 @@ public class DataVideoServiceImpl implements DataVideoService {
             channel = channelOrg;
         }
         String channelType = po.getChannelType();
+        String baseurl = null;
+        //关键字检索-》使用baseurl来检索
+        if(!StringUtils.isEmpty(keywork) && !StringUtils.isEmpty(po.getBaseurl())) {
+            baseurl = po.getBaseurl();
+            channel = null;
+        }
         if(!StringUtils.isEmpty(keywork) && keywork.contains(Constant.line)) {
+            //全局检索
             keywork = keywork.substring(0, keywork.indexOf(Constant.line));
             channel = null;
             channelType = null;
+            baseurl = null;
         }else if(!StringUtils.isEmpty(keywork)&&"movie".equals(channelType)) {
             channel = null;
             channelType = "movie";
+            baseurl = null;
         }
         
-        String baseurl = null;
-        if(!StringUtils.isEmpty(keywork) ) {
-            baseurl = po.getBaseurl();
-        }
+        
         if(baseQuery.getAppInfo().getNetType()!=null && baseQuery.getAppInfo().getNetType().contains(Constant.PLAYTYPE)) {
             channelType = "movie";
+            baseurl = null;
+            channel = null;
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
         list = videoDao.getChannelItems(channel,keywork,channelType,baseurl); 
