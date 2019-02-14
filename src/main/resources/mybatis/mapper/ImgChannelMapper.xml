@@ -11,14 +11,14 @@
 	<result column="picUrl" property="picUrl" typeHandler="imgHandle"/>
 	</resultMap>
 	<select id="getAll" resultMap="ImgChannelMap">
-	    select * from vpn.imgchannel where enable=1 group by name
+	    select * from vpn.imgchannel where enable=1 group by name order by id desc
 	</select>
 	<select id="getChannel" resultMap="ImgChannelMap">
 	    select * from vpn.imgchannel where enable=1
 	    <if test="channel != null">
 			and channel = #{channel}
 		</if>
-		group by name
+		group by name order by id desc
 	</select>
 	<select id="getByChannel" resultMap="ImgItemsMap">
 	    select * from vpn.imgitems where 1=1
