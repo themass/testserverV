@@ -95,6 +95,9 @@ public class UserController extends BaseController {
             score = Integer.parseInt(key.replace("sdsktesstkey", ""));
         }
         LOGGER.info(baseQuery.getUser().getName()+"------"+score);
+        if(score==0) {
+            return Constant.RESULT_SUCCESS;
+        }
         return new JsonResult(userService.score(baseQuery, score));
     }
 }
