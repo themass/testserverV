@@ -1,7 +1,10 @@
 package com.timeline.vpn.web.controller.api;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,7 +77,7 @@ public class UserController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/ads/score.json", method = RequestMethod.GET)
-    public JsonResult adsFabCLick(@UserInfo(required = true) BaseQuery baseQuery,
+    public JsonResult adsFabClick(@UserInfo(required = true) BaseQuery baseQuery,
             @RequestParam int score) {
 //          return new JsonResult(userService.score(baseQuery, score));
         LOGGER.info(baseQuery.getUser().getName()+"------"+score);
@@ -82,6 +85,17 @@ public class UserController extends BaseController {
             return new JsonResult(userService.score(baseQuery, score));
         }
         return Constant.RESULT_SUCCESS;
+    }
+    @RequestMapping(value = "/ads/check.json", method = RequestMethod.POST)
+    public JsonResult adsFabcheck(ServletRequest servletRequest,@UserInfo(required = true) BaseQuery baseQuery) {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        String key = request.getHeader("CookieCache");
+        int score = 0;
+        if(!StringUtils.isEmpty(key)) {
+            score = Integer.parseInt(key.replace("sdsktesstkey", ""));
+        }
+        LOGGER.info(baseQuery.getUser().getName()+"------"+score);
+        return new JsonResult(userService.score(baseQuery, score));
     }
 }
 
