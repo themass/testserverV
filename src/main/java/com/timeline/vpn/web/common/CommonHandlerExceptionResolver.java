@@ -19,6 +19,7 @@ import org.springframework.web.util.UrlPathHelper;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.ApiException;
+import com.timeline.vpn.exception.MonitorException;
 import com.timeline.vpn.exception.TokenException;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.util.DeviceUtil;
@@ -50,7 +51,10 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
         } else if (ex instanceof TypeMismatchException) { // 请求参数类型错误
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
             result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR, request));
-        } else if (ex instanceof TokenException) {
+        } else if (ex instanceof MonitorException) { // 请求参数类型错误
+            result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
+            result.setError(ex.getMessage());
+        }else if (ex instanceof TokenException) {
             try {
               ResponseUtil.writeResponse(response, ex.getMessage());
             } catch (IOException e) {
