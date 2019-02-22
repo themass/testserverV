@@ -25,7 +25,9 @@
 				<if test="version != null">
 					version = #{version},
 				</if> 
-				userName = #{userName},
+				<if test="userName != null">
+					userName = #{userName},
+				</if> 
 			</set>
 			where devId = #{devId}
 	</update>

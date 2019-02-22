@@ -98,7 +98,8 @@ public class UserServiceImpl implements UserService {
                     po.setLastUpdate(new Date());
                     po.setPlatform(appInfo.getPlatform());
                     po.setVersion(appInfo.getVersion());
-                    po.setUserName(userName);
+                    if(!StringUtils.isEmpty(userName))
+                        po.setUserName(userName);
                     po.setLongitude(appInfo.getLon());
                     po.setLatitude(appInfo.getLat());
                     devInfoDao.update(po);
