@@ -126,7 +126,7 @@ public class DeviceUtil {
             }
 
         }
-        LOGGER.error("ua或者版本不多，有可能抓取数据:{}", ua);
+        LOGGER.error("ua或者版本不对，有可能抓取数据:{}", HttpCommonUtil.getHeaderStr(webRequest));
         return null;
     }
     public static void parsLoc(HttpServletRequest webRequest,DevApp app){
