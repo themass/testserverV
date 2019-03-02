@@ -152,6 +152,7 @@ public class DataServiceImpl implements DataService {
       }
       cache = VoBuilder.buildVo(versionDao.getLast(app.getPlatform(),channel), VersionInfoVo.class,null);
 //      LOGGER.info("cache1 ="+cache);
+      cache.setUpdate(true);
       memCache.putValue(CacheUtil.getVersion(channel), cache,Constant.CACHETIME, Constant.CACHESIZE);
       return cache;
     }
