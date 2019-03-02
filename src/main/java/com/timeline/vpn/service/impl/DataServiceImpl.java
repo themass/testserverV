@@ -144,14 +144,14 @@ public class DataServiceImpl implements DataService {
       if(!StringUtils.isEmpty(app.getNetType())) {
         channel = app.getNetType()+"_"+channel;
       }  
-      LOGGER.info("channel ="+channel);
+//      LOGGER.info("channel ="+channel);
       VersionInfoVo cache = (VersionInfoVo)memCache.getValue(CacheUtil.getVersion(channel), Constant.CACHETIME, Constant.CACHESIZE);
-      LOGGER.info("cache0 ="+cache);
+//      LOGGER.info("cache0 ="+cache);
       if(cache!=null) {
           return cache;
       }
       cache = VoBuilder.buildVo(versionDao.getLast(app.getPlatform(),channel), VersionInfoVo.class,null);
-      LOGGER.info("cache1 ="+cache);
+//      LOGGER.info("cache1 ="+cache);
       memCache.putValue(CacheUtil.getVersion(channel), cache,Constant.CACHETIME, Constant.CACHESIZE);
       return cache;
     }
