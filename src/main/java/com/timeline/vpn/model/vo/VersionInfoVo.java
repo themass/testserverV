@@ -21,6 +21,7 @@ public class VersionInfoVo {
     private VipDescVo vipDesc;
     private String qq;
     private Boolean showGdt;
+    private boolean update = true;
     public String getVersion() {
         return version;
     }
@@ -138,6 +139,14 @@ public class VersionInfoVo {
 
     public void setShowGdt(Boolean showGdt) {
         this.showGdt = showGdt;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
     }
 
     @Override
