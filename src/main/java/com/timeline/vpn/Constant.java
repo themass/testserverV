@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.sun.tools.classfile.StackMap_attribute.stack_map_frame;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.model.vo.RetInfoVo;
 
@@ -25,6 +26,7 @@ public class Constant {
         public static final String RESULT_PERM_ERROR = "RESULT.ERROR.PERM";
         public static final String RESULT_VERSION_ERROR = "RESULT.ERROR.VERSION";
         public static final String RESULT_REG_REGCODE = "RESULT.ERROR.REGCODE";
+        public static final String RESULT_ERROR_USER = "RESULT.ERROR.USER";
         
         public static final String RESULT_MSG_DESC= "RESULT.MSG.DESC";
         public static final String RESULT_MSG_DESC1 = "RESULT.MSG.DESC1";
@@ -150,5 +152,8 @@ public class Constant {
     
     public static Long CACHETIME=600l;
     public static Long CACHESIZE=100l;
+    
+    public static final List<String> user = Arrays.asList("themass111","1103965695","110525","1157067035","1203578269","123456","123456789","1234567890","13425220655","1352735727","13652647957","1391273952","1473776707","1505408166","15141739791","1544206042","1665623198","1747578370","17685811385","1768789565","18177222867","18227914335","18484690549","18846781046","18930481562","1907412510","195578445","19960205","2066553133","2354460392","2411102429","253911907","260190325","294626441","306654268","3221585793","3327610490","35919819","374372142","392863074","416939422","50424371","6259","664414858","765403518","835779330","853726664","8610086","86890266","920578506","935900086","970524","987654321","ASFGDER","Accelerator","Alialiakisang","Asher0881","BasaraChilde","Chanchal","Cxhang","DNXdnx","Fragrancesurnhe","Friday","GAU","Gczy","Gin","HSHS","Hemithia","JMHQ","JOJO","JayDad","KANGTAO","LIV1118","Meng1","My8022052","MySandbox","OTOT","TTCACG","TTTPPP","Umegae","VenusQAQ","Yxw","a1398311841","a545145168","a934300309","aa2412593225","ai570289909","ai570289923","aiweinanhai","al233","alexlai","asd99","asdfghjkkkk","backkom","beebee","bishop","boduonganh","btwaljsn","calyen","catherine09","cc19981002","cenhy","cheungkit","colorfox","conor","cyw0572","dudu","elemental","fiyand","fj6259","fock","fuckthewall","fuyuxin","gao2435","gin718239187","gyyvpn","hakutie","hchaaa","hhyydd6666","hongziqinglaide","huangfulai","jiajin","jinmu","jzz","kingloverock","kqq1995","l1234","laukong","lhh544597","liaolidudududu","lindong53","liuhuakang","liushuiwuyi","lolv007","lu68086","lukacs","male152","mango123","maz313","mhb25","mikasau","miku5201314520","moxinhenji","myxox","nanashi140","noob2","omly","p1097800","poilsh","qjs15695580309","qq37549873","qq496941015","qust","qw1231111","qwelxj","qxykzx","sar","sexing1000","sfeer","shizufunv","sin","surphope","szwxzf","szx","tantzongwei","tfdsdj","tiandacore","tizheng","tuanzi","txc2703","victor110","wangyixun","wfs1900","wghdwbd","wh3396270441","whencheer","wodejb","wsxvc","wtm","wulei","wuzhi123","wxeka","wxy","wyk953","wzh4888487","xbxbzxb","xgh124158777","xh715","xiaoxuge111","xiewen","yuling","ywd008","yyk926127","yyqxer","zei6","zhg282624","zhixumo","zjw123","zqslzwzw","zx15348679",
+            "zxc7728","zxcaq");
 
 }

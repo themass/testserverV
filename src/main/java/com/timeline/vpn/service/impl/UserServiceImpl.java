@@ -114,6 +114,9 @@ public class UserServiceImpl implements UserService {
         if(!CommonUtil.isNumAndEnglish(name)||!CommonUtil.isNumAndEnglish(pwd)){
             throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
         }
+        if(Constant.user.contains(name)) {
+            throw new LoginException(Constant.ResultMsg.RESULT_ERROR_USER);
+        }
         UserPo po = userDao.get(name, pwd);
         baseQuery.setUser(po);
         String channel = baseQuery.getAppInfo().getChannel();
