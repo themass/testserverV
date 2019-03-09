@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.math.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,7 @@ import com.timeline.vpn.service.ScoreService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.impl.handle.recommend.RecommendServiceProxy;
 import com.timeline.vpn.service.impl.handle.reg.UserRegContext;
+import com.timeline.vpn.service.job.reload.DeleInvalidAcc;
 import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.DateTimeUtils;
 import com.timeline.vpn.util.DeviceUtil;
@@ -52,6 +55,8 @@ import com.timeline.vpn.util.DeviceUtil;
  */
 @Service
 public class UserServiceImpl implements UserService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     private DevUseinfoDao devInfoDao;
     @Autowired
@@ -114,7 +119,9 @@ public class UserServiceImpl implements UserService {
         if(!CommonUtil.isNumAndEnglish(name)||!CommonUtil.isNumAndEnglish(pwd)){
             throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
         }
+        LOGGER.info("[name="+name+"; devId="+baseQuery.getAppInfo().getDevId()+"]");
         if(Constant.user.contains(name)) {
+            LOGGER.error("账号滥用用户："+name);
             throw new LoginException(Constant.ResultMsg.RESULT_ERROR_USER);
         }
         UserPo po = userDao.get(name, pwd);
