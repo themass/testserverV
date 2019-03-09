@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.mortbay.util.UrlEncoded;
 
-import com.sun.tools.classfile.StackMap_attribute.stack_map_frame;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.JsonUtil;
 

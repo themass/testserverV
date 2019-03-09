@@ -3,7 +3,6 @@ package com.timeline.vpn.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.sun.tools.internal.jxc.ap.Const;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.model.po.UserPo;
