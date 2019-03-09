@@ -30,6 +30,7 @@ public class DevApp {
     private String channel;
     private String pool;
     private String netType;
+    private String ua;
     public DevApp(){}
     public DevApp(String devId, String userIp, String versionName, String version,
             String platform) {
@@ -183,6 +184,13 @@ public class DevApp {
     }
     public void setNetType(String netType) {
       this.netType = netType;
+    }
+    
+    public String getUa() {
+        return ua;
+    }
+    public void setUa(String ua) {
+        this.ua = ua;
     }
     @Override
     public String toString() {

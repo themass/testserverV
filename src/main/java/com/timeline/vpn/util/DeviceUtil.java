@@ -122,6 +122,7 @@ public class DeviceUtil {
 
                 }
                 parsLoc(webRequest,app);
+                app.setUa(ua);
                 return app;
             }
 
