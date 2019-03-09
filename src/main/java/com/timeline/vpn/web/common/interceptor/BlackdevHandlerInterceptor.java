@@ -34,7 +34,7 @@ public class BlackdevHandlerInterceptor extends HandlerInterceptorAdapter {
         BlackDevPo po = blackDevDao.get(app.getDevId());
         if(po!=null){
             LOGGER.error("这是一个黑名单用户，{}",app);
-            throw new MonitorException("您被禁止使用，加入QQ群联系管理员"); 
+            throw new MonitorException("您被禁止使用，加入QQ群联系管理员说明情况"); 
         }
         return true;
     }
