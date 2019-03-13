@@ -39,9 +39,11 @@ public class ScoreCalculation extends ReloadJob{
         if(lockJobDao.insert(po)>0) {
             LOGGER.info("ScoreCalculation start");
             userDao.minusScore();
+            userDao.minusScoreEx();
             userDao.initUserVip();
             userDao.initUserVip1();
             userDao.initUserVip2();
+            LOGGER.info("ScoreCalculation end");
         }
     }
 }

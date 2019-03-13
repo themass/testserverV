@@ -137,6 +137,8 @@ public class LocationPo implements Comparable<LocationPo>{
             return 1;
         }else if(!"大陆不可用".equals(name) && "大陆不可用".equals(o.getName()) ) {
             return -1;
+        }else if("大陆不可用".equals(name) && "大陆不可用".equals(o.getName()) ) {
+            return ename.compareTo(o.getEname());
         }
         int ret = type-o.getType();
         ret = (ret==0?name.compareTo(o.getName()):ret);
