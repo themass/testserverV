@@ -14,7 +14,7 @@
 		select l.*,h.gateway,h.port ,h.weight ,h.showName from vpn.location_v2 l join vpn.host_v2 h  on l.hostId=h.hostId  and h.enable=1 where l.enable=1 and l.channel='VPND';
 	</select>
 	<select id="getAllInfoVpnbTod" resultMap="LocationMap">
-		select l.*,h.gateway,h.port ,h.weight ,h.showName from vpn.location_v2 l join vpn.host_v2 h  on l.hostId=h.hostId  and h.enable=1 where l.enable=1 and l.channel='VPNB' and l.type in (0,1);
+		select l.*,h.gateway,h.port ,h.weight ,h.showName from vpn.location_v2 l join vpn.host_v2 h  on l.hostId=h.hostId  and h.enable=1 where l.enable=1 and l.channel='VPNB' and l.type in (1);
 	</select>
 	<select id="get" resultMap="LocationMap">
 		select * from vpn.location_v2 where id = #{id} and enable=1
