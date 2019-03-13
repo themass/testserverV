@@ -3,6 +3,8 @@ package com.timeline.vpn.service.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ import com.timeline.vpn.service.DataVideoService;
  */
 @Service
 public class DataVideoServiceImpl implements DataVideoService {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(DataVideoServiceImpl.class);
     @Autowired
     private VideoDao videoDao;
     @Override
@@ -101,6 +105,7 @@ public class DataVideoServiceImpl implements DataVideoService {
             channel = null;
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
+        LOGGER.error(channel+"-"+keywork+"-"+channelType+"-"+baseurl);
         list = videoDao.getChannelItems(channel,keywork,channelType,baseurl); 
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
