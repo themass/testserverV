@@ -18,6 +18,8 @@ public class DevUseinfoPo {
     private String userName;
     private String ref;
     private String channel;
+    private String ext;
+    private String uHist;
     public String getDevId() {
         return devId;
     }
@@ -96,6 +98,22 @@ public class DevUseinfoPo {
 
     public void setChannel(String channel) {
       this.channel = channel;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public void setExt(String ext) {
+        this.ext = ext;
+    }
+
+    public String getuHist() {
+        return uHist;
+    }
+
+    public void setuHist(String uHist) {
+        this.uHist = uHist;
     }
     
 }

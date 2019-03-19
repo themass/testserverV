@@ -6,12 +6,12 @@
 	</resultMap>
 	<insert id="insert">
 		insert into
-		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate,userName,latitude,longitude,channel)
+		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate,userName,latitude,longitude,channel,uHist,ext)
 		values
-		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{userName},#{latitude},#{longitude},#{channel})
+		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{userName},#{latitude},#{longitude},#{channel},#{uHist},#{ext})
 	</insert>
 	<select id="get" resultMap="DevUseinfoMap">
-		select * from vpn.devuseinfo where devId=#{devId}
+		select devId,version,userName,channel,uHist from vpn.devuseinfo where devId=#{devId}
 	</select>
 	<select id="getAll" resultMap="DevUseinfoMap">
 		select * from vpn.devuseinfo
@@ -27,6 +27,12 @@
 				</if> 
 				<if test="userName != null">
 					userName = #{userName},
+				</if> 
+				<if test="ext != null">
+					ext = #{ext},
+				</if> 
+				<if test="uHist != null">
+					uHist = #{uHist},
 				</if> 
 			</set>
 			where devId = #{devId}

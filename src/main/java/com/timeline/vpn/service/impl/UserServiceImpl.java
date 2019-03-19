@@ -92,6 +92,10 @@ public class UserServiceImpl implements UserService {
                     po.setUserName(userName);
                     po.setLongitude(appInfo.getLon());
                     po.setLatitude(appInfo.getLat());
+                    if(!StringUtils.isEmpty(userName)) {
+                        po.setuHist(userName+",");
+                    }
+                    po.setExt(appInfo.getUa().substring(0, Math.min(2000, appInfo.getUa().length())));
                     if(StringUtils.isEmpty(appInfo.getNetType())) {
                       po.setChannel(Constant.VPN);
                     }else {
@@ -103,8 +107,11 @@ public class UserServiceImpl implements UserService {
                     po.setLastUpdate(new Date());
                     po.setPlatform(appInfo.getPlatform());
                     po.setVersion(appInfo.getVersion());
-                    if(!StringUtils.isEmpty(userName))
+                    if(!StringUtils.isEmpty(userName)) {
                         po.setUserName(userName);
+                        po.setuHist(po.getuHist().replace(userName+",", ""));
+                        po.setuHist(po.getuHist()+userName+",");
+                    }
                     po.setLongitude(appInfo.getLon());
                     po.setLatitude(appInfo.getLat());
                     devInfoDao.update(po);
