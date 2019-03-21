@@ -173,6 +173,7 @@ public class UserServiceImpl implements UserService {
         if (form.getPwd().equals(form.getRePwd())) {
             UserPo po = userDao.exist(form.getName());
             if (po == null) {
+                updateDevUseinfo(baseQuery.getAppInfo(),form.getName());
                 po = new UserPo();
                 po.setTime(new Date())
                         .setLevel(Constant.UserLevel.LEVEL_FREE).setName(form.getName())
