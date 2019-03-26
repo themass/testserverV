@@ -111,6 +111,7 @@ public class UserServiceImpl implements UserService {
                         po.setUserName(userName);
                         po.setuHist(po.getuHist().replace(userName+",", ""));
                         po.setuHist(po.getuHist()+userName+",");
+                        LOGGER.warn(userName+"->"+po.getuHist()+"->"+appInfo.getUa());
                     }
                     po.setLongitude(appInfo.getLon());
                     po.setLatitude(appInfo.getLat());
