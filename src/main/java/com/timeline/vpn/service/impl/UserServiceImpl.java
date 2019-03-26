@@ -183,8 +183,8 @@ public class UserServiceImpl implements UserService {
                 }else {
                     po.setChannel(baseQuery.getAppInfo().getNetType());
                     po.setLevel(Constant.UserLevel.LEVEL_VIP);
-                    po.setPaidStartTime(new Date());
-                    po.setPaidEndTime(DateTimeUtils.addDay(new Date(), 7));
+//                    po.setPaidStartTime(new Date());
+//                    po.setPaidEndTime(DateTimeUtils.addDay(new Date(), 7));
                 }
                 userDao.insert(po);
                 checkService.addRadUser(form.getName(), form.getPwd(), Constant.UserGroup.RAD_GROUP_REG);
