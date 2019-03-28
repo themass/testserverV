@@ -183,7 +183,7 @@ public class UserServiceImpl implements UserService {
                   po.setChannel(Constant.VPN);
                 }else {
                     po.setChannel(baseQuery.getAppInfo().getNetType());
-                    po.setLevel(Constant.UserLevel.LEVEL_VIP);
+                    po.setLevel(Constant.UserLevel.LEVEL_FREE);
 //                    po.setPaidStartTime(new Date());
 //                    po.setPaidEndTime(DateTimeUtils.addDay(new Date(), 7));
                 }
