@@ -36,7 +36,7 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
             Object handler) throws Exception {
         DevApp app = DevAppContext.get();
         if(app==null) {
-            throw new RuntimeException("滚你妈逼");
+            throw new RuntimeException("欢迎光临");
         }
         String token = request.getHeader(app.getTokenHeader());
         if (StringUtils.isEmpty(token)) {

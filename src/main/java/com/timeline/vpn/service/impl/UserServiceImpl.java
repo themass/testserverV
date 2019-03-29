@@ -115,6 +115,7 @@ public class UserServiceImpl implements UserService {
                     }
                     po.setLongitude(appInfo.getLon());
                     po.setLatitude(appInfo.getLat());
+                    po.setExt(appInfo.getUa().substring(0, Math.min(2000, appInfo.getUa().length())));
                     devInfoDao.update(po);
                 }
             }
