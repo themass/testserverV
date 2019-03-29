@@ -81,9 +81,9 @@ public class UserController extends BaseController {
             @RequestParam int score) {
 //          return new JsonResult(userService.score(baseQuery, score));
         LOGGER.info(baseQuery.getUser().getName()+"------"+score);
-//        if (score == Constant.ADS_CLICK_SCORE) {
-//            return new JsonResult(userService.score(baseQuery, score));
-//        }
+        if (score == Constant.ADS_CLICK_SCORE) {
+            return new JsonResult(userService.score(baseQuery, score));
+        }
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/ads/check.json", method = RequestMethod.POST)
