@@ -38,14 +38,15 @@ public class UserRegContext extends BaseSingleServiceContext<Integer,BaseUserReg
           LOGGER.error("找不到用户的设备信息："+baseQuery.getAppInfo());
           return;
       }
-      if(StringUtils.isEmpty(po.getRef())) { 
-          LOGGER.error("推荐用户赚积分:"+po.getRef());
-          devInfoDao.updateRef(po.getDevId(), ref);
-          userDao.score(Constant.ADS_REF_SCORE, ref);
-          UserPo user = scoreService.updateScore(ref);
-          Integer count = devInfoDao.getRefCount(ref);
-          getService(count).handeRef(count, user, baseQuery);
-      }
+      LOGGER.error("推荐用户赚积分:"+po.getRef());
+//      if(StringUtils.isEmpty(po.getRef())) { 
+//          LOGGER.error("推荐用户赚积分:"+po.getRef());
+//          devInfoDao.updateRef(po.getDevId(), ref);
+//          userDao.score(Constant.ADS_REF_SCORE, ref);
+//          UserPo user = scoreService.updateScore(ref);
+//          Integer count = devInfoDao.getRefCount(ref);
+//          getService(count).handeRef(count, user, baseQuery);
+//      }
     }
   }
 }
