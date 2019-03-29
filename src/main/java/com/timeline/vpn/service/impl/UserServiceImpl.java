@@ -175,6 +175,14 @@ public class UserServiceImpl implements UserService {
             UserPo po = userDao.exist(form.getName());
             if (po == null) {
                 updateDevUseinfo(baseQuery.getAppInfo(),form.getName());
+                DevUseinfoPo info = devInfoDao.get(baseQuery.getAppInfo().getDevId());
+                if(info!=null && !StringUtils.isEmpty(info.getuHist())) {
+                    String[]len =info.getuHist().split(",");
+                    if(len.length>4) {
+                        LOGGER.error("垃圾用户，注册账号刷积分:"+info.getDevId());
+                        return;
+                    }
+                }
                 po = new UserPo();
                 po.setTime(new Date())
                         .setLevel(Constant.UserLevel.LEVEL_FREE).setName(form.getName())

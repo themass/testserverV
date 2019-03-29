@@ -39,6 +39,7 @@ public class UserRegContext extends BaseSingleServiceContext<Integer,BaseUserReg
           return;
       }
       if(StringUtils.isEmpty(po.getRef())) { 
+          LOGGER.error("推荐用户赚积分:"+po.getRef());
           devInfoDao.updateRef(po.getDevId(), ref);
           userDao.score(Constant.ADS_REF_SCORE, ref);
           UserPo user = scoreService.updateScore(ref);
