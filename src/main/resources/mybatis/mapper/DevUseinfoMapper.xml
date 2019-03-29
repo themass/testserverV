@@ -11,7 +11,7 @@
 		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{userName},#{latitude},#{longitude},#{channel},#{uHist},#{ext})
 	</insert>
 	<select id="get" resultMap="DevUseinfoMap">
-		select devId,version,userName,channel,uHist from vpn.devuseinfo where devId=#{devId}
+		select devId,version,userName,channel,uHist,ref from vpn.devuseinfo where devId=#{devId}
 	</select>
 	<select id="getAll" resultMap="DevUseinfoMap">
 		select * from vpn.devuseinfo
