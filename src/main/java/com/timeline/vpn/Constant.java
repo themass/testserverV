@@ -152,6 +152,6 @@ public class Constant {
     public static Long CACHETIME=600l;
     public static Long CACHESIZE=100l;
     
-    public static final List<String> user = Arrays.asList("123456","123456789","18484690549","294626441","3032480875","664414858","853726664","Alialiakisang","Gin","HSHS","My8022052","Umegae","a1398311841","ai570289909","asd99","calyen","fuckthewall","huangfulai","liyonglin","male152","mikasau","qxykzx","sexing1000","szx","tanli1316","tiandacore","wangyixun","wh3396270441","wsxvc","xiewen");
+    public static final List<String> user = Arrays.asList("Luna00040","fuckthewall2","15540479849","saiekibu","123456","123456789","18484690549","294626441","3032480875","664414858","853726664","Alialiakisang","Gin","HSHS","My8022052","Umegae","a1398311841","ai570289909","asd99","calyen","fuckthewall","huangfulai","liyonglin","male152","mikasau","qxykzx","sexing1000","szx","tanli1316","tiandacore","wangyixun","wh3396270441","wsxvc","xiewen");
 
 }
