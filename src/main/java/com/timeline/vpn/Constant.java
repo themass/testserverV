@@ -26,6 +26,7 @@ public class Constant {
         public static final String RESULT_VERSION_ERROR = "RESULT.ERROR.VERSION";
         public static final String RESULT_REG_REGCODE = "RESULT.ERROR.REGCODE";
         public static final String RESULT_ERROR_USER = "RESULT.ERROR.USER";
+        public static final String RESULT_ERROR_NEEDUSER = "RESULT.ERROR.NEEDUSER";
         
         public static final String RESULT_MSG_DESC= "RESULT.MSG.DESC";
         public static final String RESULT_MSG_DESC1 = "RESULT.MSG.DESC1";

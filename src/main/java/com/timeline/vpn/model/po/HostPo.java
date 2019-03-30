@@ -16,6 +16,7 @@ public class HostPo {
     private int hostId;
     private String com;
     private int needPing=1;
+    private String showName;
     public int getId() {
         return id;
     }
@@ -96,6 +97,14 @@ public class HostPo {
 
     public void setNeedPing(int needPing) {
         this.needPing = needPing;
+    }
+
+    public String getShowName() {
+        return showName;
+    }
+
+    public void setShowName(String showName) {
+        this.showName = showName;
     }
 
 }

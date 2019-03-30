@@ -9,6 +9,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.google.common.base.Function;
 import com.timeline.vpn.BeanBuilder;
@@ -208,6 +209,10 @@ public class HostServerImpl implements HostService {
         List<HostPo> hostList = hostV2Dao.getByLocation(location);
         if (CollectionUtils.isEmpty(hostList)) {
             throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
+        }else {
+            if(!StringUtils.isEmpty(hostList.get(0).getShowName()) && hostList.get(0).getShowName().contains("菲律宾") && baseQuery.getUser()==null) {
+                throw new DataException(Constant.ResultMsg.RESULT_ERROR_NEEDUSER);
+            }
         }
         LocationPo loc = cityV2Dao.get(location);
         if(loc==null){
@@ -228,6 +233,7 @@ public class HostServerImpl implements HostService {
         WeightRandom random = new WeightRandom(hostRet);
         List<HostPo> ret = new ArrayList<>();
         ret.add(random.random());
+        
         return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, ret,action);
     }
     @Override
