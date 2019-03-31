@@ -177,11 +177,11 @@ public class UserServiceImpl implements UserService {
             if (po == null) {
                 updateDevUseinfo(baseQuery.getAppInfo(),form.getName());
                 DevUseinfoPo info = devInfoDao.get(baseQuery.getAppInfo().getDevId());
-                if(info!=null && !StringUtils.isEmpty(info.getuHist())) {
+                if(info!=null && !StringUtils.isEmpty(info.getuHist()) && baseQuery.getAppInfo().getDevId().length()>22) {
                     String[]len =info.getuHist().split(",");
                     if(len.length>4) {
                         LOGGER.error("垃圾用户，注册账号刷积分:"+info.getDevId());
-                        return;
+                        throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
                     }
                 }
                 po = new UserPo();
