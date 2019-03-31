@@ -23,6 +23,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -443,5 +444,13 @@ public class HttpCommonUtil {
     public static void main(String[] args) {
         sendGet("https://collection.lianjia.com/homelink/inner/sleep");
     }
-
+    
+    public static String getUA(String ua) {
+        if(ua.startsWith("google:")) {
+            ua = ua.replace("google:", "");
+            return new String(Base64.decodeBase64(ua.getBytes()));
+        }else {
+            return ua;
+        }
+    }
 }

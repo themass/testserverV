@@ -23,6 +23,7 @@ import com.timeline.vpn.exception.MonitorException;
 import com.timeline.vpn.exception.TokenException;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.util.DeviceUtil;
+import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.ResponseUtil;
 
 public class CommonHandlerExceptionResolver implements HandlerExceptionResolver {
@@ -36,7 +37,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
             Object handler, Exception ex) {
-        String ua = request.getHeader(Constant.HTTP_UA);
+        String ua = HttpCommonUtil.getUA(request.getHeader(Constant.HTTP_UA));
         String requestUrl = urlPathHelper.getRequestUri(request) + "?" + request.getQueryString()
                 + "[" + ua + "]";
         JsonResult result = new JsonResult();

@@ -35,7 +35,6 @@ public class DeviceUtil {
     private static final String VPNVERSION_NETTYPE= ",NETTYPE=(NETTYPEA|VPNB|VPNC|VPND|SEXPLAY),";
     private static final String DEVID = "devid";
     private static final int VERSION_COUNT = 4;
-    private static final String HTTP_UA = "user-agent";
     private static final String HTTP_HOST= "Host";
     private static final Pattern pattern = Pattern.compile(VPNVERSION);
     private static final Pattern pattern_pool = Pattern.compile(VPNVERSION_VPN_POOL);
@@ -44,7 +43,7 @@ public class DeviceUtil {
     private static final Pattern versionPattern = Pattern.compile(VERSION);
     private static final String LOC = "loc";
     public static String getPlatForm(HttpServletRequest webRequest) {
-        String ua = webRequest.getHeader(HTTP_UA);
+        String ua = HttpCommonUtil.getUA(webRequest.getHeader(Constant.HTTP_UA));
         if (ua != null) {
             if (ua.toLowerCase().contains(ANDROID)) {
                 return ANDROID;
@@ -75,7 +74,7 @@ public class DeviceUtil {
     }
 
     public static DevApp getAPPInfo(HttpServletRequest webRequest) {
-        String ua = webRequest.getHeader(HTTP_UA);
+        String ua = HttpCommonUtil.getUA(webRequest.getHeader(Constant.HTTP_UA));
         String devId = webRequest.getHeader(DEVID);
         String language = webRequest.getHeader(Constant.LANG);
         if (ua != null) {
