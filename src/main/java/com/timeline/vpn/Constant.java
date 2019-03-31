@@ -50,6 +50,7 @@ public class Constant {
         public static final int ERRNO_SUCCESS = 0;
         public static final int ERRNO_SYSTEM = 10000;
         public static final int ERRNO_CLEAR_LOGIN = 1;
+        public static final int ERRNO_NEED_LOGIN = 2;
         //
         public static final int ERRNO_PWD = 11001;// 用户名密码错误
         public static final int ERRNO_PARAM = 11002; // 参数错误

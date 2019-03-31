@@ -211,7 +211,7 @@ public class HostServerImpl implements HostService {
             throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }else {
             if(!StringUtils.isEmpty(hostList.get(0).getShowName()) && hostList.get(0).getShowName().contains("菲律宾") && baseQuery.getUser()==null) {
-                throw new DataException(Constant.ResultMsg.RESULT_ERROR_NEEDUSER);
+                throw new DataException(Constant.ResultErrno.ERRNO_NEED_LOGIN,Constant.ResultMsg.RESULT_ERROR_NEEDUSER);
             }
         }
         LocationPo loc = cityV2Dao.get(location);
