@@ -45,5 +45,11 @@ public class MonitorController extends BaseController {
 //        reportService.connlog(baseQuery, logs);
         return Constant.RESULT_SUCCESS;
     }
+    @RequestMapping(value = "/emulator.json", method = RequestMethod.POST)
+    public JsonResult emulator(@UserInfo BaseQuery baseQuery,@RequestParam String dev) {
+//        reportService.connlog(baseQuery, logs);
+        LOGGER.error("这是一个模拟器："+dev);
+        return Constant.RESULT_SUCCESS;
+    }
 }
 

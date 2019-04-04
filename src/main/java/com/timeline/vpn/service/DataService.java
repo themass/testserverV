@@ -43,6 +43,7 @@ public interface DataService {
     public InfoListVo<AppInfoVo> getAllDon(BaseQuery baseQuery);
     public DomainVo  getAllDomain(BaseQuery baseQuery);
     public String getAsstoken();
+    public void sendMsg(String msg);
    
     
 }

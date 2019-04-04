@@ -357,7 +357,7 @@ appsecret
       String url = "https://api.weixin.qq.com/cgi-bin/user/get";
       String json = HttpCommonUtil.sendGet(url, "utf-8", params,null);
     }
-    private void sendMsg(String msg) {
+    public void sendMsg(String msg) {
       try {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");

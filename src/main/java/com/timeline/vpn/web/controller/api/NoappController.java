@@ -16,6 +16,7 @@ import com.timeline.vpn.model.form.YoumiOffadsForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.PingCheck;
 import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.ReportService;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
@@ -30,8 +31,14 @@ import com.timeline.vpn.web.controller.BaseController;
 public class NoappController extends BaseController {
     @Autowired
     private ReportService reportService;
+    @Autowired
+    private DataService dataService;
     @RequestMapping(value = "/collect.json", method = RequestMethod.POST)
     public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost,@RequestParam(required=false) String ip) {
+        if(count==-1) {
+            LOGGER.error("ip 错误了，服务断了，快速处理吧"+localhost+"---"+ip);
+            dataService.sendMsg("ip 错误了，服务断了，快速处理吧"+localhost+"---"+ip);
+        }
         reportService.collect(baseQuery, count,localhost,ip);
         return Constant.RESULT_SUCCESS;
     }
