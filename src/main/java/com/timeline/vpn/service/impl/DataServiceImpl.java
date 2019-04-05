@@ -378,7 +378,7 @@ appsecret
   //        StringEntity entity = new StringEntity(pcontent, ContentType.APPLICATION_JSON);
   //        entity.setContentType("UTF-8");
   //        String reString = HttpCommonUtil.sendPostWithEntity(url, entity, headers, true);
-          LOGGER.info("发送微信消息："+reString);
+//          LOGGER.info("发送微信消息："+reString);
       }catch (Exception e) {
         LOGGER.error("发送微信消息： 失败");
       }

@@ -99,6 +99,7 @@ public class Constant {
     public static final String LIFE = "LIFE";
     public static final String SEX = "SEX";
     public static final String SEX_TEMP = "SEX_TEMP";
+    public static final String LANG_ZH="zh";
     
     public static final String VIDEO_EXT="avi,rmvb,3gp,wmv";
     public static final String MOVIE_TYPE="movie";

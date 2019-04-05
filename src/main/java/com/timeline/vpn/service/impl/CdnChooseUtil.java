@@ -17,14 +17,14 @@ public class CdnChooseUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(CdnChooseUtil.class);
     public static String getImageBaseUrl(String ip){
         if(HostCheck.isMyHost(ip)){
-            LOGGER.info("cdn : ip={},vpn已连接",ip);
+//            LOGGER.info("cdn : ip={},vpn已连接",ip);
             return null;
         }
         if(ZhIpCache.isChinaIp(ip)){
-            LOGGER.info("cdn : ip={},中国ip",ip);
+//            LOGGER.info("cdn : ip={},中国ip",ip);
             return FileIpCache.getHost(Constant.FileIpTYPE.IMG, Constant.FileIpExtra.ZH);
         }
-        LOGGER.info("cdn : ip={},国外ip",ip);
+//        LOGGER.info("cdn : ip={},国外ip",ip);
         return FileIpCache.getHost(Constant.FileIpTYPE.IMG, Constant.FileIpExtra.OTHER);
     }
     public static String getFetchImageBaseUrl(String ip ,String url){

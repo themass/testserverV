@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
                         po.setUserName(userName);
                         po.setuHist(po.getuHist().replace(userName+",", ""));
                         po.setuHist(po.getuHist()+userName+",");
-                        LOGGER.warn(userName+"->"+po.getuHist()+"->"+appInfo.getUa());
+//                        LOGGER.warn(userName+"->"+po.getuHist()+"->"+appInfo.getUa());
                     }
                     po.setLongitude(appInfo.getLon());
                     po.setLatitude(appInfo.getLat());
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
         if(!CommonUtil.isNumAndEnglish(name)||!CommonUtil.isNumAndEnglish(pwd)){
             throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
         }
-        LOGGER.info("[name="+name+"; devId="+baseQuery.getAppInfo().getDevId()+"; ua="+baseQuery.getAppInfo().getUa()+"]");
+//        LOGGER.info("[name="+name+"; devId="+baseQuery.getAppInfo().getDevId()+"; ua="+baseQuery.getAppInfo().getUa()+"]");
         if(Constant.user.contains(name)) {
             LOGGER.error("账号滥用用户："+name);
             throw new LoginException(Constant.ResultMsg.RESULT_ERROR_USER);

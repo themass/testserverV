@@ -75,7 +75,7 @@ public class CacheServiceImpl implements CacheService {
     }
     @Override
     public Long lock(final String lockKey) {
-        LOGGER.info("开始执行加锁"+lockKey);
+//        LOGGER.info("开始执行加锁"+lockKey);
         Long lock_timeout = System.currentTimeMillis() + LOCK_TIMEOUT + 1; //锁时间
             if (jedisTemplate.execute(new RedisCallback<Boolean>() {
  
@@ -84,11 +84,11 @@ public class CacheServiceImpl implements CacheService {
                     return connection.setNX(lockKey.getBytes(), "1".getBytes());
             }
         })) { //如果加锁成功
-            LOGGER.info("加锁成功++++++++"+lockKey);
+//            LOGGER.info("加锁成功++++++++"+lockKey);
             jedisTemplate.expire(lockKey, LOCK_TIMEOUT, TimeUnit.MILLISECONDS); //设置超时时间，释放内存
             return lock_timeout;
         }else {
-            LOGGER.info("加锁失败++++++++"+lockKey);
+//            LOGGER.info("加锁失败++++++++"+lockKey);
             return -1l;
         }
     }

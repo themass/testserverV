@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -52,6 +54,8 @@ import com.timeline.vpn.util.WeightRandom;
  */
 @Service
 public class HostServerImpl implements HostService {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(HostServerImpl.class);
     @Autowired
     private HostDao hostDao;
     @Autowired
@@ -207,6 +211,10 @@ public class HostServerImpl implements HostService {
         BuildAction<HostPo, HostVo> action = null;
         
         List<HostPo> hostList = hostV2Dao.getByLocation(location);
+        if(location==0 && Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
+            LOGGER.info("中国线路，增加鲨鱼");
+            hostList.addAll(hostV2Dao.getByLocation(-1));
+        }
         if (CollectionUtils.isEmpty(hostList)) {
             throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }else {

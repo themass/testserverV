@@ -59,7 +59,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
             try {
               ResponseUtil.writeResponse(response, ex.getMessage());
             } catch (IOException e) {
-              LOGGER.error("",e);
+//              LOGGER.error("",e);
             }
         } else if (ex instanceof ApiException) {
             result.setErrno(((ApiException) ex).getStatus());
@@ -70,7 +70,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
         }else {
             result.setErrno(Constant.ResultErrno.ERRNO_SYSTEM);
             result.setError("系统正在进行升级，请稍等再用");
-            LOGGER.error(requestUrl, ex);
+//            LOGGER.error(requestUrl, ex);
         }
 //        result.setError("系统正在进行升级，请稍等再用");
         // result.setData(new Object());
