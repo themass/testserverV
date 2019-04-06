@@ -224,15 +224,15 @@ public class HostServerImpl implements HostService {
             }
         }
         LocationPo loc = cityV2Dao.get(location);
-//        if(!StringUtils.isEmpty(hostList.get(0).getShowName()) && hostList.get(0).getShowName().contains("菲律宾")) {
-//            if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008012) {
-//                LOGGER.error("版本低："+baseQuery.getAppInfo());
-//                throw new DataException(Constant.ResultErrno.ERRNO_SYSTEM,Constant.ResultMsg.RESULT_VERSION_ERROR);
-//            }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1001008011){
-//                LOGGER.error("版本低："+baseQuery.getAppInfo());
-//                throw new DataException(Constant.ResultErrno.ERRNO_SYSTEM,Constant.ResultMsg.RESULT_VERSION_ERROR);
-//            }
-//        }
+        if(!StringUtils.isEmpty(hostList.get(0).getShowName()) && hostList.get(0).getShowName().contains("菲律宾")) {
+            if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008013) {
+                LOGGER.error("版本低："+baseQuery.getAppInfo());
+                throw new DataException(Constant.ResultErrno.ERRNO_SYSTEM,Constant.ResultMsg.RESULT_VERSION_ERROR);
+            }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1001008012){
+                LOGGER.error("版本低："+baseQuery.getAppInfo());
+                throw new DataException(Constant.ResultErrno.ERRNO_SYSTEM,Constant.ResultMsg.RESULT_VERSION_ERROR);
+            }
+        }
         if(loc==null){
             throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }
