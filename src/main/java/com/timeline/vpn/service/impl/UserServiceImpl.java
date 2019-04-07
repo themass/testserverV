@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService {
                 userRegContext.handleRef(baseQuery, form.getRef());
                 
             } else {
-                throw new DataException(Constant.ResultMsg.RESULT_EXIST_ERROR);
+                throw new LoginException(Constant.ResultMsg.RESULT_EXIST_ERROR);
             }
         } else {
             throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);

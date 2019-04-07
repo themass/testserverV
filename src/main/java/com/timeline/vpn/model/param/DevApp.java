@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.util.DateTimeUtils;
 import com.timeline.vpn.util.Md5;
 
 public class DevApp {
@@ -44,14 +45,15 @@ public class DevApp {
     public boolean check() {
         long now = new Date().getTime();
         if(platform==null||version==null||devId==null){
-            LOGGER.error("签名：平台&版本检测错误:platform="+platform+",version="+version+",devId="+devId);
+            LOGGER.error("签名：平台&版本检测错误:platform="+platform+",version="+version+",devId="+devId+";dev="+this);
             return false;
         }
         if (Math.abs(now - time) > Constant.MIN_TIME) {
-            LOGGER.error("签名：时间戳错误 :now="+now+",time="+time);
+            Date date = new Date(time);
+            LOGGER.error("签名：时间戳错误 :now="+now+",time="+time+";long="+(now-time)/1000/60/60+";date="+DateTimeUtils.formatDate(date)+";dev="+this);
         }
         if (!Md5.encode(devId + "|" + time).equals(sign)){
-            LOGGER.error("签名：加密监测异常:sign="+sign+",devId="+devId+",time="+time);
+            LOGGER.error("签名：加密监测异常:sign="+sign+",devId="+devId+",time="+time+";dev="+this);
             return false;
         }
         return true;
