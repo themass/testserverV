@@ -238,7 +238,7 @@ public class HostServerImpl implements HostService {
             throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }
         if(!checkPermission(loc.getType(),baseQuery.getUser())){
-            throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
+            throw new LoginException(Constant.ResultMsg.RESULT_PERM_ERROR);
         }
         List<HostPo> hostRet = new ArrayList<>();
         for(HostPo po :hostList) {
