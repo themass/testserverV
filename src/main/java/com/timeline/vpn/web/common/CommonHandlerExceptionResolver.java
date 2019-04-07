@@ -19,6 +19,7 @@ import org.springframework.web.util.UrlPathHelper;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.ApiException;
+import com.timeline.vpn.exception.LoginException;
 import com.timeline.vpn.exception.MonitorException;
 import com.timeline.vpn.exception.TokenException;
 import com.timeline.vpn.model.vo.JsonResult;
@@ -41,7 +42,6 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
         String requestUrl = urlPathHelper.getRequestUri(request) + "?" + request.getQueryString()
                 + "[" + ua + "]";
         JsonResult result = new JsonResult();
-        LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
         if (ex instanceof MissingServletRequestParameterException) { // 缺少请求参数
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
             result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR, request)
@@ -72,6 +72,16 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
             result.setError("系统正在进行升级，请稍等再用");
 //            LOGGER.error(requestUrl, ex);
         }
+        if (ex instanceof ApiException) {
+            if (ex instanceof LoginException) {
+                LOGGER.error("error url=" + requestUrl);
+            }else {
+                LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
+            }
+        }else {
+            LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
+        }
+        
 //        result.setError("系统正在进行升级，请稍等再用");
         // result.setData(new Object());
         return new ModelAndView("", JsonResult.MODEL_KEY, result);

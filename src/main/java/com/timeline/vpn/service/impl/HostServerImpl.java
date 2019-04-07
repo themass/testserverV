@@ -24,6 +24,7 @@ import com.timeline.vpn.dao.db.HostV2Dao;
 import com.timeline.vpn.dao.db.LocationDao;
 import com.timeline.vpn.dao.db.LocationV2Dao;
 import com.timeline.vpn.exception.DataException;
+import com.timeline.vpn.exception.LoginException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.DnsResverPo;
 import com.timeline.vpn.model.po.HostPo;
@@ -220,17 +221,17 @@ public class HostServerImpl implements HostService {
             throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }else {
             if(!StringUtils.isEmpty(hostList.get(0).getShowName()) && hostList.get(0).getShowName().contains("菲律宾") && baseQuery.getUser()==null) {
-                throw new DataException(Constant.ResultErrno.ERRNO_NEED_LOGIN,Constant.ResultMsg.RESULT_ERROR_NEEDUSER);
+                throw new LoginException(Constant.ResultErrno.ERRNO_NEED_LOGIN,Constant.ResultMsg.RESULT_ERROR_NEEDUSER);
             }
         }
         LocationPo loc = cityV2Dao.get(location);
         if(!StringUtils.isEmpty(hostList.get(0).getShowName()) && hostList.get(0).getShowName().contains("菲律宾")) {
             if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008013) {
                 LOGGER.error("版本低："+baseQuery.getAppInfo());
-                throw new DataException(Constant.ResultErrno.ERRNO_SYSTEM,Constant.ResultMsg.RESULT_VERSION_ERROR);
+                throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
             }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1001008012){
                 LOGGER.error("版本低："+baseQuery.getAppInfo());
-                throw new DataException(Constant.ResultErrno.ERRNO_SYSTEM,Constant.ResultMsg.RESULT_VERSION_ERROR);
+                throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
             }
         }
         if(loc==null){

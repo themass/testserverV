@@ -157,6 +157,7 @@ public class UserServiceImpl implements UserService {
                 vo.setPaidTime(DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD, po.getPaidEndTime()));
             return vo;
         } else {
+            LOGGER.error("登录密码错误："+name+"--"+pwd);
             throw new LoginException(Constant.ResultMsg.RESULT_PWD_ERROR);
         }
     }

@@ -32,12 +32,15 @@ public class HostIpMonitor extends ReloadJob {
       time = time.substring(0, time.length()-1);
       po.setJobTime(time);
       po.setIp(IpLocalUtil.getHostIp());
-     
+     try {
       if(lockJobDao.insert(po)>0) {
         for(String ip :HostCheck.allIp()){
           Metrics.count(Measure.vpn_connect_live_all.name(),"IP-"+ip);
         }
         LOGGER.info("HostIpMonitor  size="+HostCheck.allIp().size());
       }
+     }catch (Exception e) {
+        
+    }
     }
 }
