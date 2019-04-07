@@ -121,7 +121,7 @@ public class Constant {
     public static final long ADS_FAB_SCORE = 30;
     public static final long ADS_CLICK_SCORE = 30;
     public static final long ADS_REF_SCORE = 80;
-    public static final long MIN_TIME = 12 * 60 * 60 * 1000;
+    public static final long MIN_TIME = 24 * 60 * 60 * 1000;
     public static final int MIN_PAGESIZE = 30;
     public static final String RAD_PASS = "Cleartext-Password";
     public static final String RAD_EQ = ":=";
