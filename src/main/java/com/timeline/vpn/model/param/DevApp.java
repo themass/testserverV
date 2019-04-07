@@ -44,15 +44,15 @@ public class DevApp {
     public boolean check() {
         long now = new Date().getTime();
         if(platform==null||version==null||devId==null){
-            LOGGER.error("check fail :platform="+platform+",version="+version+",devId="+devId);
+            LOGGER.error("签名：平台&版本检测错误:platform="+platform+",version="+version+",devId="+devId);
             return false;
         }
-//        if (Math.abs(now - time) > Constant.MIN_TIME) {
-//            LOGGER.error("check fail :now="+now+",time="+time);
-//            return false;
-//        }
+        if (Math.abs(now - time) > Constant.MIN_TIME) {
+            LOGGER.error("签名：时间戳错误 :now="+now+",time="+time);
+            return false;
+        }
         if (!Md5.encode(devId + "|" + time).equals(sign)){
-            LOGGER.error("check fail :sign="+sign+",devId="+devId+",time="+time);
+            LOGGER.error("签名：加密监测异常:sign="+sign+",devId="+devId+",time="+time);
             return false;
         }
         return true;

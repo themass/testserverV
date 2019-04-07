@@ -181,7 +181,7 @@ public class UserServiceImpl implements UserService {
                     String[]len =info.getuHist().split(",");
                     if(len.length>4) {
                         LOGGER.error("垃圾用户，注册账号刷积分:"+info.getDevId());
-                        throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
+                        throw new LoginException(Constant.ResultMsg.RESULT_ERROR_MANYUSER);
                     }
                 }
                 po = new UserPo();
