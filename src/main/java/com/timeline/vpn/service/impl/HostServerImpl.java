@@ -218,7 +218,7 @@ public class HostServerImpl implements HostService {
             hostList.addAll(sha);
         }
         if (CollectionUtils.isEmpty(hostList)) {
-            throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
+            throw new LoginException(Constant.ResultMsg.RESULT_HOST_ERROR);
         }else {
             if(!StringUtils.isEmpty(hostList.get(0).getShowName()) && hostList.get(0).getShowName().contains("菲律宾") && baseQuery.getUser()==null) {
                 throw new LoginException(Constant.ResultErrno.ERRNO_NEED_LOGIN,Constant.ResultMsg.RESULT_ERROR_NEEDUSER);

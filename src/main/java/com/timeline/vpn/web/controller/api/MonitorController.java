@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.timeline.vpn.Constant;
-import com.timeline.vpn.exception.DataException;
+import com.timeline.vpn.exception.LoginException;
 import com.timeline.vpn.model.form.ConnLogForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
@@ -50,7 +50,7 @@ public class MonitorController extends BaseController {
     public JsonResult emulator(@UserInfo BaseQuery baseQuery,@RequestParam String dev) {
 //        reportService.connlog(baseQuery, logs);
         LOGGER.error("这是一个模拟器："+dev);
-        throw new DataException(Constant.ResultMsg.RESULT_ERROR_DEV);
+        throw new LoginException(Constant.ResultMsg.RESULT_ERROR_DEV);
 //        return Constant.RESULT_SUCCESS;
     }
 }
