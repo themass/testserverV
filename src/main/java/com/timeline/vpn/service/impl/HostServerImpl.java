@@ -216,6 +216,10 @@ public class HostServerImpl implements HostService {
             List<HostPo> sha = hostV2Dao.getByLocation(-1);
             LOGGER.info("中国线路，增加鲨鱼 : "+sha.size());
             hostList.addAll(sha);
+        }else {
+            List<HostPo> sha = hostV2Dao.getByLocation(-2);
+            LOGGER.info("国外线路，增加欧洲 : "+sha.size());
+            hostList.addAll(sha);
         }
         if (CollectionUtils.isEmpty(hostList)) {
             throw new LoginException(Constant.ResultMsg.RESULT_HOST_ERROR);
