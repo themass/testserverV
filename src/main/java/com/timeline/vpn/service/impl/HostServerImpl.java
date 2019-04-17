@@ -217,11 +217,11 @@ public class HostServerImpl implements HostService {
             log = true;
            if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
                 List<HostPo> sha = hostV2Dao.getByLocation(-1);
-                LOGGER.info("中国线路，增加鲨鱼 : "+sha.size());
+                LOGGER.info("ipport:中国线路，增加鲨鱼 : "+sha.size());
                 hostList.addAll(sha);
             }else {
                 List<HostPo> sha = hostV2Dao.getByLocation(-2);
-                LOGGER.info("国外线路，增加欧洲 : "+sha.size());
+                LOGGER.info("ipport:国外线路，增加欧洲 : "+sha.size());
                 hostList.addAll(sha);
             }
         }
@@ -235,10 +235,10 @@ public class HostServerImpl implements HostService {
         LocationPo loc = cityV2Dao.get(location);
         if(!StringUtils.isEmpty(hostList.get(0).getShowName()) && hostList.get(0).getShowName().contains("菲律宾")) {
             if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008013) {
-                LOGGER.error("版本低："+baseQuery.getAppInfo());
+                LOGGER.error("ipport:版本低："+baseQuery.getAppInfo());
                 throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
             }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1001008012){
-                LOGGER.error("版本低："+baseQuery.getAppInfo());
+                LOGGER.error("ipport:版本低："+baseQuery.getAppInfo());
                 throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
             }
         }

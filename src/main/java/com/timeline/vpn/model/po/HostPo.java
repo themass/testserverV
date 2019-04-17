@@ -109,7 +109,7 @@ public class HostPo {
 
     @Override
     public String toString() {
-        return showName+";"+gateway+";"+id+";"+weight;
+        return "ipport:"+com+";"+gateway+";"+id+";"+weight+showName;
     }
 
 }
