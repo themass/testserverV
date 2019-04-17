@@ -212,14 +212,18 @@ public class HostServerImpl implements HostService {
         BuildAction<HostPo, HostVo> action = null;
         
         List<HostPo> hostList = hostV2Dao.getByLocation(location);
-        if(location==0 && Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
-            List<HostPo> sha = hostV2Dao.getByLocation(-1);
-            LOGGER.info("中国线路，增加鲨鱼 : "+sha.size());
-            hostList.addAll(sha);
-        }else {
-            List<HostPo> sha = hostV2Dao.getByLocation(-2);
-            LOGGER.info("国外线路，增加欧洲 : "+sha.size());
-            hostList.addAll(sha);
+        boolean log = false;
+        if(location==0) {
+            log = true;
+           if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
+                List<HostPo> sha = hostV2Dao.getByLocation(-1);
+                LOGGER.info("中国线路，增加鲨鱼 : "+sha.size());
+                hostList.addAll(sha);
+            }else {
+                List<HostPo> sha = hostV2Dao.getByLocation(-2);
+                LOGGER.info("国外线路，增加欧洲 : "+sha.size());
+                hostList.addAll(sha);
+            }
         }
         if (CollectionUtils.isEmpty(hostList)) {
             throw new LoginException(Constant.ResultMsg.RESULT_HOST_ERROR);
@@ -255,7 +259,7 @@ public class HostServerImpl implements HostService {
         }
         WeightRandom random = new WeightRandom(hostRet);
         List<HostPo> ret = new ArrayList<>();
-        ret.add(random.random());
+        ret.add(random.random(log));
         
         return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, ret,action);
     }

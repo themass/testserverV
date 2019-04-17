@@ -22,9 +22,12 @@ public class WeightRandom {
         }
     }
  
-    public HostPo random() {
-        double randomWeight = this.weightMap.lastKey() * Math.random();
+    public HostPo random(boolean log) {
+        double randomWeight = this.weightMap.lastKey().doubleValue() * Math.random();
         SortedMap<Double, HostPo> tailMap = this.weightMap.tailMap(randomWeight, false);
+        if(log) {
+            logger.info("max="+weightMap.lastKey().doubleValue()+";random="+randomWeight+"; ip="+weightMap.get(tailMap.firstKey()));
+        }
         return this.weightMap.get(tailMap.firstKey());
     }
  

@@ -107,5 +107,10 @@ public class HostPo {
         this.showName = showName;
     }
 
+    @Override
+    public String toString() {
+        return showName+";"+gateway+";"+id+";"+weight;
+    }
+
 }
 
