@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
                 DevUseinfoPo info = devInfoDao.get(baseQuery.getAppInfo().getDevId());
                 if(info!=null && !StringUtils.isEmpty(info.getuHist()) && baseQuery.getAppInfo().getDevId().length()>22) {
                     String[]len =info.getuHist().split(",");
-                    if(len.length>4) {
+                    if(len.length>10) {
                         LOGGER.error("垃圾用户，注册账号刷积分:"+info.getDevId());
                         throw new LoginException(Constant.ResultMsg.RESULT_ERROR_MANYUSER);
                     }
