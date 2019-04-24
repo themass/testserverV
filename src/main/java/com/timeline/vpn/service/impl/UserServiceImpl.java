@@ -153,8 +153,9 @@ public class UserServiceImpl implements UserService {
             vo.setStateUse(state);
             vo.setToken(token);
             vo.setAreaMi(po.getPwd());
-            if(po.getPaidEndTime()!=null)
-                vo.setPaidTime(DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD, po.getPaidEndTime()));
+            if(po.getPaidEndTime()!=null) {
+                vo.setPaidTime("->VIP"+po.getLevel()+"-"+DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD, po.getPaidEndTime()));
+            }
             return vo;
         } else {
             LOGGER.error("登录密码错误："+name+"--"+pwd);
