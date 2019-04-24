@@ -20,33 +20,33 @@
 	    update vpn.user set score=score+#{score} where name=#{name}
 	</update>
 	<update id="updateLevel">
-	    update vpn.user set level=#{level} where name=#{name} and level &lt; 3
+	    update vpn.user
+	    <set>
+				<if test="level != null">
+					level = #{level},
+				</if>
+				<if test="score != null">
+					score = #{score},
+				</if> 
+				<if test="paidStartTime != null">
+					paidStartTime = #{paidStartTime},
+				</if> 
+				<if test="paidEndTime != null">
+					paidEndTime = #{paidEndTime},
+				</if> 
+			</set>
+		where name=#{name}
 	</update>
 	<update id="updateLevelPaid">
-	    update vpn.user set level=0 where level=3 and paidEndTime &lt;= #{end}
-	</update>
-	<update id="updateToLevelPaid">
-	    update vpn.user set level=3, paidStartTime= #{start}, paidEndTime = #{end} where name=#{name}
+	    update vpn.user set level=0 where paidEndTime &lt;= #{end}
 	</update>
 	<update id="updateEmail">
 	    update vpn.user set email=#{email} where name=#{name}
 	</update>
-	<update id="minusScore">
-	    update vpn.user set score=score-190 where score &gt;= 400
-	</update>
-	<update id="minusScoreEx">
-	    update vpn.user set score=score-100 where score &gt;= 15000
-	</update>
-	<update id="initUserVip">
-	    update vpn.user set level=0 where score &lt; 2500 and level &lt; 3
-	</update>
 	<update id="initUserVip1">
-	    update vpn.user set level=1 where score &gt;= 2500 and score &lt; 4500 and level &lt; 3
+	    update vpn.user set level=1,score=score-2500,paidEndTime=#{time}  where score &gt;= 2500  and paidEndTime &lt;= #{end}
 	</update>
 	<update id="initUserVip2">
-	    update vpn.user set level=2 where score &gt;= 4500 and level &lt; 3
-	</update>
-	<update id="updateVpnbPaid">
-	    update vpn.user set level=0 where paidEndTime &lt;= #{end} and channel='VPNB'
+	    update vpn.user set level=2,score=score-4500,paidEndTime=#{time}  where score &gt;= 4500  and paidEndTime &lt;= #{end}
 	</update>
 </mapper>

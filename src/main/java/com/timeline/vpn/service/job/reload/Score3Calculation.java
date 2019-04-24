@@ -40,8 +40,10 @@ public class Score3Calculation extends ReloadJob{
             LOGGER.info("ScoreCalculation start");
             Date end = DateTimeUtils.getDateWithoutHms(new Date());
             Date start = DateTimeUtils.getDateWithoutHms(DateTimeUtils.getYesterday());
+            Date time = DateTimeUtils.addDay(end, 30);
             userDao.updateLevelPaid(start, end);
-            userDao.updateVpnbPaid(end);
+            userDao.initUserVip2(time, end);
+            userDao.initUserVip1(time, end);
         }
     }
 }

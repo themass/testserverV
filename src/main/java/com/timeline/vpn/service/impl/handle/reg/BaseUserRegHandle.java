@@ -37,7 +37,7 @@ public abstract class BaseUserRegHandle implements BaseSupportHandle<Integer>{
         user.setPaidStartTime(start);
         user.setPaidEndTime(end);
         user.setLevel(3);
-        userDao.updateToLevelPaid(start, end, user.getName());
+//        userDao.updateToLevelPaid(start, end, user.getName());
       }
 
 }

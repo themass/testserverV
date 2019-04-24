@@ -2,6 +2,8 @@ package com.timeline.vpn.model.po;
 
 import java.util.Date;
 
+import com.timeline.vpn.util.DateTimeUtils;
+
 /**
  * @author gqli
  * @date 2016年8月9日 上午10:56:12
@@ -119,6 +121,14 @@ public class UserPo {
 
     public void setChannel(String channel) {
       this.channel = channel;
+    }
+
+    @Override
+    public String toString() {
+        return "UserPo [id=" + id + ", name=" + name + ", pwd=" + pwd + ", time=" + time + ", sex="
+                + sex + ", level=" + level + ", photo=" + photo + ", score=" + score + ", email="
+                + email + ", paidStartTime=" + DateTimeUtils.formatDate(paidStartTime) + ", paidEndTime=" + DateTimeUtils.formatDate(paidEndTime)
+                + ", channel=" + channel + "]";
     }
     
 

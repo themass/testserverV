@@ -19,16 +19,12 @@ public interface UserDao extends BaseDBDao<UserPo> {
 
     public void score(@Param(value = "score") long score, @Param(value = "name") String name);
     public void updateEmail(@Param(value = "email") String email, @Param(value = "name") String name);
-    public void minusScore();
-    public void minusScoreEx();
-    public void initUserVip();
-    public void initUserVip1();
-    public void initUserVip2();
+    
+    public void initUserVip1(@Param(value = "time")Date time, @Param(value = "end")Date end);
+    public void initUserVip2(@Param(value = "time")Date time, @Param(value = "end")Date end);
     
     public void updateLevel(UserPo po);
     public void updateLevelPaid(@Param(value = "start") Date start,@Param(value = "end") Date end);
-    public void updateToLevelPaid(@Param(value = "start") Date start,@Param(value = "end") Date end,@Param(value = "name") String name);
-    public void updateVpnbPaid(@Param(value = "end") Date end);
 
 }
 
