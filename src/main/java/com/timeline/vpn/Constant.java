@@ -178,7 +178,6 @@ public class Constant {
             ,"913190617"
             ,"935521841"
             ,"973383045"
-            ,"Alialiakisang1"
             ,"CLOND7"
             ,"Cxhang"
             ,"KingRootwang"
