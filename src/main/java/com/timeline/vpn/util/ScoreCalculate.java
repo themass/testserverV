@@ -3,9 +3,12 @@ package com.timeline.vpn.util;
 import java.util.Date;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.po.UserPo;
+import com.timeline.vpn.service.impl.UserServiceImpl;
 
 /**
  * @author gqli
@@ -13,6 +16,8 @@ import com.timeline.vpn.model.po.UserPo;
  * @version V1.0
  */
 public class ScoreCalculate {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScoreCalculate.class);
+
     public static int level(Integer level,long score){
         if (level!=null && level==Constant.UserLevel.LEVEL_VIP3) {
           return Constant.UserLevel.LEVEL_VIP3;
@@ -27,6 +32,7 @@ public class ScoreCalculate {
         return Constant.UserLevel.LEVEL_FREE;
     }
     public static int calculate(UserPo po){
+        LOGGER.info("calculate--"+po.getName()+"---"+po.getLevel()+"---"+po.getScore()+"---"+DateTimeUtils.formatDate(po.getPaidEndTime()));
         if(po.getLevel()==Constant.UserLevel.LEVEL_FREE) {
             if(po.getScore()>Constant.SCORE_TO_VIP2) {
                 po.setLevel(Constant.UserLevel.LEVEL_VIP2);
