@@ -216,12 +216,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVo score(BaseQuery baseQuery, int score) {
-        if(cacheService.updateCount(baseQuery.getUser())<10) {
+        if(cacheService.updateCount(baseQuery.getUser())<15) {
             userDao.score(score, baseQuery.getUser().getName());
         }
         UserPo po = scoreService.updateScore(baseQuery.getUser().getName());
         cacheService.updateUser(baseQuery.getToken(),po);
         UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
+        vo.setPaidTime(DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD,po.getPaidEndTime()));
         vo.setToken(baseQuery.getToken());
         return vo;
     }
