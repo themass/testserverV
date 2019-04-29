@@ -222,7 +222,9 @@ public class UserServiceImpl implements UserService {
         UserPo po = scoreService.updateScore(baseQuery.getUser().getName());
         cacheService.updateUser(baseQuery.getToken(),po);
         UserVo vo = VoBuilder.buildVo(po, UserVo.class,null);
-        vo.setPaidTime(DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD,po.getPaidEndTime()));
+        if(po.getPaidEndTime()!=null) {
+            vo.setPaidTime("->VIP"+po.getLevel()+"-"+DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD, po.getPaidEndTime()));
+        }
         vo.setToken(baseQuery.getToken());
         return vo;
     }
