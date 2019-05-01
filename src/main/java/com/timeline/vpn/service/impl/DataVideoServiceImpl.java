@@ -114,7 +114,7 @@ public class DataVideoServiceImpl implements DataVideoService {
             channelType = "movie";
             baseurl = null;
             channel = null;
-            if(!StringUtils.isEmpty(keywork)) {
+            if(StringUtils.isEmpty(keywork)) {
                 channel = channelOrg;
             }
         }
