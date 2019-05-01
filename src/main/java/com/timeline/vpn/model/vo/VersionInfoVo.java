@@ -22,6 +22,7 @@ public class VersionInfoVo {
     private String qq;
     private Boolean showGdt;
     private boolean update = true;
+    private  float traf=180;
     public String getVersion() {
         return version;
     }
@@ -147,6 +148,15 @@ public class VersionInfoVo {
 
     public void setUpdate(boolean update) {
         this.update = update;
+    }
+    
+
+    public float getTraf() {
+        return traf;
+    }
+
+    public void setTraf(float traf) {
+        this.traf = traf;
     }
 
     @Override
