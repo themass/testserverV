@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,7 +56,17 @@ public class DataVideoServiceImpl implements DataVideoService {
     @Override
     public InfoListVo<RecommendVo> getVideoChannel(BaseQuery baseQuery,String channel) {
         List<VideoChannelPo> list = videoDao.getChannel(channel);
-        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoChannelPo,RecommendVo>(){
+        List<VideoChannelPo> list2= new ArrayList<>();
+        if(baseQuery.getAppInfo().getNetType()!=null && baseQuery.getAppInfo().getNetType().contains(Constant.PLAYTYPE)) {
+            for(VideoChannelPo po:list) {
+                if(po.getM()==1) {
+                    list2.add(po);
+                }
+            }
+        }else {
+            list2 = list;
+        }
+        return VoBuilder.buildListInfoVo(list2, RecommendVo.class,new VoBuilder.BuildAction<VideoChannelPo,RecommendVo>(){
             @Override
             public void action(VideoChannelPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl());
@@ -103,6 +114,9 @@ public class DataVideoServiceImpl implements DataVideoService {
             channelType = "movie";
             baseurl = null;
             channel = null;
+            if(!StringUtils.isEmpty(keywork)) {
+                channel = channelOrg;
+            }
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
 //        LOGGER.error(channel+"-"+keywork+"-"+channelType+"-"+baseurl);

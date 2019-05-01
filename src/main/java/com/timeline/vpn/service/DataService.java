@@ -20,6 +20,7 @@ public interface DataService {
     public InfoListVo<RecommendVo> getRecommendPage(BaseQuery baseQuery,PageBaseParam param);
     
     public InfoListVo<RecommendVo> getRecommendMoviePage(BaseQuery baseQuery);
+    public InfoListVo<RecommendVo> getRecommendMoviePage2(BaseQuery baseQuery);
     public InfoListVo<RecommendVo> getRecommendNightPage(BaseQuery baseQuery, PageBaseParam param);
     public InfoListVo<RecommendVo> getRecommendAreaPage(BaseQuery baseQuery, PageBaseParam param);
     

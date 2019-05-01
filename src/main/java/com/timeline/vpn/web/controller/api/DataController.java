@@ -34,6 +34,10 @@ public class DataController extends BaseController {
     public JsonResult movie(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getRecommendMoviePage(baseQuery));
     }
+    @RequestMapping(value = "/recommend/movie2.json", method = RequestMethod.GET)
+    public JsonResult movie2(@UserInfo BaseQuery baseQuery) {
+        return new JsonResult(dataService.getRecommendMoviePage2(baseQuery));
+    }
     @RequestMapping(value = "/recommend/night.json", method = RequestMethod.GET)
     public JsonResult night(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {

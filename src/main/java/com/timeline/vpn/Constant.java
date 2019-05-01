@@ -34,6 +34,9 @@ public class Constant {
         public static final String RESULT_MSG_DESC1 = "RESULT.MSG.DESC1";
         public static final String RESULT_MSG_DESC2 = "RESULT.MSG.DESC2";
         public static final String RESULT_MSG_DESC3 = "RESULT.MSG.DESC3";
+        
+        public static final String RESULT_MSG_DESC4 = "RESULT.MSG.DESC4";
+        public static final String RESULT_MSG_DESC5 = "RESULT.MSG.DESC5";
 
         
     }
