@@ -14,7 +14,7 @@ import com.timeline.vpn.model.po.RadacctState;
  * @version V1.0
  */
 public interface RadacctDao {
-    public RadacctState dateState(@Param("userName")List<String> name);
+    public RadacctState dateState(@Param("names")List<String> name);
     public List<Radacct> selectIpLocal();
     public void updateIpLocal(@Param("list")List<Radacct>list);
     public int deleteHistoryAcce(@Param("time")Date time);

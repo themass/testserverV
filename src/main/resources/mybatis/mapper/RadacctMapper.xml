@@ -18,7 +18,7 @@
 		acctSessionTime,sum(acctinputoctets+acctoutputoctets)accData
 		from radius.radacct where
 		username  in
-		<foreach collection="name" index="index" item="item"
+		<foreach collection="names" index="index" item="item"
 			separator="," open="(" close=")">
 			#{item}
 		</foreach>
