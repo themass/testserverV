@@ -190,7 +190,7 @@ public class VoBuilder {
 //                }
 //            }
             vo.setTrafficUse(result);
-            vo.setTraf(traffic/1024/1024+10);
+            vo.setTraf(traffic/1024/1024+15);
         }else{
             vo.setTimeUse("0 s");
             vo.setTrafficUse("0B");
