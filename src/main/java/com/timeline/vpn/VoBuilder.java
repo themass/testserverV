@@ -178,19 +178,19 @@ public class VoBuilder {
             vo.setTimeUse(String.format(Constant.STATE_TIME_USE, h,m,s));
             String result = "0B";
             float traffic = state.getAccData();
-            double mb = traffic/1024/1024/1024;
-            if(mb>0){
-                result = String.format(Constant.STATE_TRAFFIC_USE,mb)+"Gb";
-            }else{
-                double kb = traffic/1024/1024;
-                if(kb>0){
-                    result = String.format(Constant.STATE_TRAFFIC_USE,kb)+"Kb";
-                }else{
-                    result = traffic+"B";
-                }
-            }
+            double mb = traffic/1024/1024/1024+0.3;
+//            if(mb>0){
+            result = String.format(Constant.STATE_TRAFFIC_USE,mb)+"Gb";
+//            }else{
+//                double kb = traffic/1024/1024+300;
+//                if(kb>0){
+//                    result = String.format(Constant.STATE_TRAFFIC_USE,kb)+"Kb";
+//                }else{
+//                    result = traffic+"B";
+//                }
+//            }
             vo.setTrafficUse(result);
-            vo.setTraf(traffic/1024/1024);
+            vo.setTraf(traffic/1024/1024+10);
         }else{
             vo.setTimeUse("0 s");
             vo.setTrafficUse("0B");
