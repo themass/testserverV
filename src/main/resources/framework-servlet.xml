@@ -29,8 +29,8 @@
 			<bean class="com.timeline.vpn.web.common.interceptor.CostHandlerInterceptor"/>
 		</mvc:interceptor>
 		<mvc:interceptor>
-			<mvc:mapping path="/api/host/**/*.json" />
-			<mvc:mapping path="/api/host/*.json" />
+			<!-- mvc:mapping path="/api/host/**/*.json" /-->
+			<!-- mvc:mapping path="/api/host/*.json" /-->
 			<bean class="com.timeline.vpn.web.common.interceptor.BlackdevHandlerInterceptor"/>
 		</mvc:interceptor>
 		<mvc:interceptor>
