@@ -177,13 +177,16 @@ public class DataServiceImpl implements DataService {
             if(Constant.VPN.equals(channel)){
                 if(baseQuery.getUser()!=null){
                     StateUseVo state = userService.stateUse(Arrays.asList(baseQuery.getUser().getName(),baseQuery.getAppInfo().getDevId()));
-                    vo.setStateUse(state);    
+                    vo.setStateUse(state);  
+                    vo.setTraf(state.getTraf());
                 }else{
                     StateUseVo state = userService.stateUse(Arrays.asList(baseQuery.getAppInfo().getDevId()));
-                    vo.setStateUse(state);    
+                    vo.setStateUse(state); 
+                    vo.setTraf(state.getTraf());
                 }
             }
         }
+        LOGGER.info("traf="+vo.getTraf());
         VipDescVo desc = new VipDescVo(); 
 //        desc.setDesc("每周扣除150积分；点广告赚积分");
 //        desc.setDesc1("2100积分=VIP1；4100积分=VIP2");

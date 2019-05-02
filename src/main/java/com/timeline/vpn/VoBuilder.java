@@ -1,5 +1,7 @@
 package com.timeline.vpn;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -175,7 +177,7 @@ public class VoBuilder {
             long s = (time%(3600))%60;
             vo.setTimeUse(String.format(Constant.STATE_TIME_USE, h,m,s));
             String result = "0B";
-            double traffic = (state.getAcctInputOctets()+state.getAcctOutputOctets());
+            float traffic = state.getAccData();
             double mb = traffic/1024/1024/1024;
             if(mb>0){
                 result = String.format(Constant.STATE_TRAFFIC_USE,mb)+"Gb";
@@ -188,9 +190,11 @@ public class VoBuilder {
                 }
             }
             vo.setTrafficUse(result);
+            vo.setTraf(traffic/1024/1024);
         }else{
             vo.setTimeUse("0 s");
             vo.setTrafficUse("0B");
+            vo.setTraf(0);
         }
         return vo;
     }

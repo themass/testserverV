@@ -7,6 +7,7 @@ package com.timeline.vpn.model.vo;
 public class StateUseVo {
     private String timeUse;
     private String trafficUse;
+    private float traf;
     public String getTimeUse() {
         return timeUse;
     }
@@ -19,6 +20,13 @@ public class StateUseVo {
     public void setTrafficUse(String trafficUse) {
         this.trafficUse = trafficUse;
     }
+    public float getTraf() {
+        return traf;
+    }
+    public void setTraf(float traf) {
+        this.traf = traf;
+    }
+    
     
 }
 

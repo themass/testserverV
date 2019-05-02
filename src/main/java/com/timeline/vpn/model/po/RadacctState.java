@@ -5,26 +5,19 @@ package com.timeline.vpn.model.po;
  * @version V1.0
  */
 public class RadacctState {
-    private Integer acctSessionTime;
-    private Double acctInputOctets;
-    private Double acctOutputOctets;
-    public int getAcctSessionTime() {
+    private Long acctSessionTime=0l;
+    private Float accData=0f;
+    public Long getAcctSessionTime() {
         return acctSessionTime==null?0:acctSessionTime;
     }
-    public void setAcctSessionTime(Integer acctSessionTime) {
+    public void setAcctSessionTime(Long acctSessionTime) {
         this.acctSessionTime = acctSessionTime;
     }
-    public double getAcctInputOctets() {
-        return acctInputOctets==null?0:acctInputOctets;
+    public Float getAccData() {
+        return accData==null?0:accData;
     }
-    public void setAcctInputOctets(Double acctInputOctets) {
-        this.acctInputOctets = acctInputOctets;
-    }
-    public double getAcctOutputOctets() {
-        return acctOutputOctets==null?0:acctOutputOctets;
-    }
-    public void setAcctOutputOctets(Double acctOutputOctets) {
-        this.acctOutputOctets = acctOutputOctets;
+    public void setAccData(Float accData) {
+        this.accData = accData;
     }
     
     

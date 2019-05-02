@@ -22,7 +22,7 @@ public class VersionInfoVo {
     private String qq;
     private Boolean showGdt;
     private boolean update = true;
-    private  float traf=180;
+    private  float traf=10;
     public String getVersion() {
         return version;
     }

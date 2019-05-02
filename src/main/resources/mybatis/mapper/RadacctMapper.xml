@@ -3,8 +3,7 @@
 <mapper namespace="com.timeline.vpn.dao.db.RadacctDao">
 	<resultMap id="RadacctStateMap" type="RadacctState">
 		<result column="acctSessionTime" property="acctSessionTime" />
-		<result column="acctInputOctets" property="acctInputOctets" />
-		<result column="acctOutputOctets" property="acctOutputOctets" />
+		<result column="accData" property="accData" />
 	</resultMap>
 	<resultMap id="RadacctMap" type="Radacct">
 		<id column="radacctid" property="radacctid" />
@@ -16,10 +15,13 @@
 	</resultMap>
 	<select id="dateState" resultMap="RadacctStateMap">
 		select sum(acctsessiontime)
-		acctSessionTime,sum(acctinputoctets)acctInputOctets,
-		sum(acctoutputoctets) acctOutputOctets
+		acctSessionTime,sum(acctinputoctets+acctoutputoctets)accData
 		from radius.radacct where
-		username=#{userName}
+		username  in
+		<foreach collection="name" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item}
+		</foreach>
 	</select>
 	<select id="selectIpLocal" resultMap="RadacctMap">
 		select

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
@@ -29,6 +30,7 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.param.PageBaseParam;
 import com.timeline.vpn.model.po.DevUseinfoPo;
+import com.timeline.vpn.model.po.RadacctState;
 import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.InfoListVo;
@@ -43,7 +45,6 @@ import com.timeline.vpn.service.ScoreService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.impl.handle.recommend.RecommendServiceProxy;
 import com.timeline.vpn.service.impl.handle.reg.UserRegContext;
-import com.timeline.vpn.service.job.reload.DeleInvalidAcc;
 import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.DateTimeUtils;
 import com.timeline.vpn.util.DeviceUtil;
@@ -230,16 +231,13 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public StateUseVo stateUse(List<String> names){
-//        RadacctState state = new RadacctState();
-//        for(String name:names){
-//            RadacctState ret = radacctDao.dateState(name);
-//            if(ret!=null){
-//                state.setAcctInputOctets(state.getAcctInputOctets()+ret.getAcctInputOctets());
-//                state.setAcctOutputOctets(state.getAcctOutputOctets()+ret.getAcctOutputOctets());
-//                state.setAcctSessionTime(state.getAcctSessionTime()+ret.getAcctSessionTime());
-//            }
-//        }
-        return VoBuilder.buildStateUseVo(null);
+        if(CollectionUtils.isEmpty(names)) {
+            return VoBuilder.buildStateUseVo(null);
+        }else {
+            RadacctState ret = radacctDao.dateState(names);
+            return VoBuilder.buildStateUseVo(ret);
+        }
+        
     }
 
     @Override
