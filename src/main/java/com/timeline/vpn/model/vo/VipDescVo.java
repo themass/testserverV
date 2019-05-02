@@ -8,6 +8,7 @@ public class VipDescVo {
     public String desc;
     public String desc1;
     public String desc2;
+    public String desc3;
     public Long score;
     public String getDesc() {
         return desc;
@@ -32,6 +33,12 @@ public class VipDescVo {
     }
     public void setDesc2(String desc2) {
       this.desc2 = desc2;
+    }
+    public String getDesc3() {
+        return desc3;
+    }
+    public void setDesc3(String desc3) {
+        this.desc3 = desc3;
     }
     
     
