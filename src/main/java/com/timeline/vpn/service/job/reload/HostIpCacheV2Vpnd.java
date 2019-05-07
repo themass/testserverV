@@ -36,8 +36,8 @@ public class HostIpCacheV2Vpnd extends ReloadJob {
     
     public void init() {
         List<LocationPo> list = locationDao.getAllInfoVpnd();
-        List<LocationPo> list2 = locationDao.getAllInfoVpnbTod();
-        list.addAll(list2);
+//        List<LocationPo> list2 = locationDao.getAllInfoVpnbTod();
+//        list.addAll(list2);
         List<LocationPo> locationOk = new ArrayList<>();
         for(LocationPo po :list){
             po.setName(po.getShowName());
