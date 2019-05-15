@@ -27,7 +27,7 @@ public abstract class BaseMultipleServiceContext<O,T extends BaseSupportHandle<O
                 list.add(handle);
             }
         }
-        LOGGER.debug("获取handle 列表：{}"+list);
+//        LOGGER.debug("获取handle 列表：{}"+list);
         return list;
     }
 }

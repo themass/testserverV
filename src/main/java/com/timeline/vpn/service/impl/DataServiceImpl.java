@@ -188,7 +188,7 @@ public class DataServiceImpl implements DataService {
                 }
             }
         }
-        LOGGER.info("traf="+vo.getTraf());
+//        LOGGER.info("traf="+vo.getTraf());
         VipDescVo desc = new VipDescVo(); 
 //        desc.setDesc("每周扣除150积分；点广告赚积分");
 //        desc.setDesc1("2100积分=VIP1；4100积分=VIP2");
@@ -353,7 +353,7 @@ appsecret
           String json = HttpCommonUtil.sendGet("https://api.weixin.qq.com/cgi-bin/token", "utf-8", params, headers);
           WeixinAccessPo po = JsonUtil.readValue(json, WeixinAccessPo.class);
           token = po.getAccess_token();
-          LOGGER.info("token="+token);
+//          LOGGER.info("token="+token);
 //          cacheService.put("ASS_TOKEN", token, 3);
       }
       return token;

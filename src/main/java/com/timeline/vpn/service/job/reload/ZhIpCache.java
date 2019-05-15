@@ -44,9 +44,9 @@ public class ZhIpCache extends ReloadJob {
                     String ip = strs[3];
                     String[] add = ip.split("\\.");
                     int count = Integer.valueOf(strs[4]);
-                    if(ip.startsWith("112.74")){
-                        LOGGER.info("my host："+line);
-                    }
+//                    if(ip.startsWith("112.74")){
+//                        LOGGER.info("my host："+line);
+//                    }
                     int startIp = Integer.parseInt(add[0]) * 256 + Integer.parseInt(add[1]);
                     while (count >0) {
                         if (count >= 65536) {

@@ -49,7 +49,7 @@ public class FileIpCache extends ReloadJob {
         try {
             lock.writeLock().lock();
             configMap = map;
-            LOGGER.info("FileIp metaMap size = {}", configMap.size());
+//            LOGGER.info("FileIp metaMap size = {}", configMap.size());
         } finally {
             lock.writeLock().unlock();
         }

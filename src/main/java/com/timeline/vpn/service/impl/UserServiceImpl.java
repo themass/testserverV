@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
         }
 //        LOGGER.info("[name="+name+"; devId="+baseQuery.getAppInfo().getDevId()+"; ua="+baseQuery.getAppInfo().getUa()+"]");
         if(Constant.user.contains(name)) {
-            LOGGER.error("账号滥用用户："+name);
+//            LOGGER.error("账号滥用用户："+name);
             throw new LoginException(Constant.ResultMsg.RESULT_ERROR_USER);
         }
         UserPo po = userDao.get(name, pwd);

@@ -68,7 +68,7 @@ public class ReportServiceImpl implements ReportService{
     @Override
     public void collect(BaseQuery baseQuery, Integer count, String localhost,String ip) {
         Metrics.count(Measure.vpn_connect.name(),count,localhost);
-        LOGGER.info("collect  vpn_connect--"+localhost+"----"+ip);
+//        LOGGER.info("collect  vpn_connect--"+localhost+"----"+ip);
         CollectPo po = new CollectPo();
         po.setCount(count);
         po.setIp(baseQuery.getAppInfo().getUserIp());
