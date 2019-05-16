@@ -24,7 +24,7 @@
 	</select>
 	<select id="getPage" resultMap="IWannaMap">
 		select * from vpn.iwanna where enable=1  and app_name=#{channel} 
-		and name in ('themass',${name})
+		and name in ('themass',#{name})
 		order by create_time desc
 	</select>
 	<select id="get" resultMap="IWannaMap">
@@ -45,7 +45,7 @@
 	</select>
 	<select id="getPageFeed" resultMap="IWannaMap">
 		select * from vpn.score_feed where enable=1 and app_name=#{channel}
-		and name in ('themass',${name})
+		and name in ('themass',#{name})
 		 order by create_time desc
 	</select>
 	<select id="getFeed" resultMap="IWannaMap">
