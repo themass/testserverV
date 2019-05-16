@@ -205,7 +205,11 @@ public class DataServiceImpl implements DataService {
             desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
             desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
             desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
-        }if(Constant.PLAYTYPE.equals(baseQuery.getAppInfo().getNetType())){
+        }else if(Constant.SEX.equals(baseQuery.getAppInfo().getChannel())) {
+            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC4, baseQuery.getAppInfo().getLang()));
+            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC5, baseQuery.getAppInfo().getLang()));
+        }else if(Constant.PLAYTYPE.equals(baseQuery.getAppInfo().getNetType())){
             desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
             desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC4, baseQuery.getAppInfo().getLang()));
             desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC5, baseQuery.getAppInfo().getLang()));
