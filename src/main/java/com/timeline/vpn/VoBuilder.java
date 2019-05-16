@@ -136,12 +136,11 @@ public class VoBuilder {
         }
         if(po.getAppName().equals("VPN")) {
             vo.setAppName("Free用户");
-        }else if(po.getAppName().equals("VPN")) {
+        }else if(po.getAppName().equals("VPNVPNC")) {
             vo.setAppName("灯塔用户");
-        }else if(po.getAppName().equals("VPN")) {
+        }else if(po.getAppName().equals("SEX")) {
             vo.setAppName("红颜用户");
         } 
-        
         return vo;
     }
 
