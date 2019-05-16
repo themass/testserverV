@@ -13,14 +13,14 @@ import com.timeline.vpn.model.po.IWannaPo;
  * @version V1.0
  */
 public interface IWannaDao extends BaseDBDao<IWannaPo> {
-    public List<IWannaPo> getPage(@Param("channel")String channel);
+    public List<IWannaPo> getPage(@Param("channel")String channel,@Param("name")String name);
 
     public void like(IWannaPo po);
 
     public IWannaPo get(long id);
     
     public int insertFeed(IWannaPo po);
-    public List<IWannaPo> getPageFeed(@Param("channel")String channel);
+    public List<IWannaPo> getPageFeed(@Param("channel")String channel,@Param("name")String name);
     public List<IWannaPo> getAllFeed();
     public void likeFeed(IWannaPo po);
     public IWannaPo getFeed(long id);

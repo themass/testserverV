@@ -68,7 +68,7 @@ public class UserController extends BaseController {
     }
     @RequestMapping(value = "/custome/add.json", method = RequestMethod.POST)
     public JsonResult customeUpdate(@UserInfo(required = true) BaseQuery baseQuery,@Valid @ModelAttribute CustomeAddForm form) {
-//        userService.addOrUpdateCustome(baseQuery,form);
+        userService.addOrUpdateCustome(baseQuery,form);
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/custome/del.json", method = RequestMethod.POST)

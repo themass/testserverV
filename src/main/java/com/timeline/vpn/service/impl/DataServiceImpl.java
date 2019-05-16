@@ -249,14 +249,15 @@ public class DataServiceImpl implements DataService {
         if(DeviceUtil.isAdmin(baseQuery)) {
             data = (Page<IWannaPo>) iWannaDao.getAll();
         }else {
-            data = (Page<IWannaPo>) iWannaDao.getPage(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType());
+            String name = baseQuery.getUser()!=null?baseQuery.getUser().getName():Constant.ADMIN_NAME;
+            data = (Page<IWannaPo>) iWannaDao.getPage(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType(),name);
         }
         return VoBuilder.buildIWannaPageInfoVo(data, baseQuery);
     }
     @Override
     public InfoListVo<IWannnWeixinVo> getIwannaWeiXin() {
         PageHelper.startPage(1, 30);
-        Page<IWannaPo> data = (Page<IWannaPo>) iWannaDao.getPage(null);
+        Page<IWannaPo> data = (Page<IWannaPo>) iWannaDao.getPage(null,Constant.ADMIN_NAME);
         return VoBuilder.buildListInfoVo(data, IWannnWeixinVo.class, null);
     }
     @Override
@@ -291,7 +292,8 @@ public class DataServiceImpl implements DataService {
         if(DeviceUtil.isAdmin(baseQuery)) {
           data = (Page<IWannaPo>) iWannaDao.getAllFeed();
         }else {
-            data = (Page<IWannaPo>) iWannaDao.getPageFeed(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType());
+            String name = baseQuery.getUser()!=null?baseQuery.getUser().getName():Constant.ADMIN_NAME;
+            data = (Page<IWannaPo>) iWannaDao.getPageFeed(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType(),name);
         }
         return VoBuilder.buildIWannaPageInfoVo(data, baseQuery);
     }
