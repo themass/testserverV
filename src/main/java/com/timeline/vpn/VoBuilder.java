@@ -134,7 +134,14 @@ public class VoBuilder {
         }else {
             vo.setWhere(po.getIpLocal());
         }
-        vo.setAppName(po.getAppName().replace(Constant.NETTYPEA, "")+"用户");
+        if(po.getAppName().equals("VPN")) {
+            vo.setAppName("Free用户");
+        }else if(po.getAppName().equals("VPN")) {
+            vo.setAppName("灯塔用户");
+        }else if(po.getAppName().equals("VPN")) {
+            vo.setAppName("红颜用户");
+        } 
+        
         return vo;
     }
 
