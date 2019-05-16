@@ -200,7 +200,7 @@ public class VoBuilder {
         }else{
             vo.setTimeUse("0 s");
             vo.setTrafficUse("0B");
-            vo.setTraf(0);
+            vo.setTraf(20);
         }
         return vo;
     }

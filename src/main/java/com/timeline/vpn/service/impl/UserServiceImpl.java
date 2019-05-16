@@ -234,8 +234,8 @@ public class UserServiceImpl implements UserService {
         if(CollectionUtils.isEmpty(names)) {
             return VoBuilder.buildStateUseVo(null);
         }else {
-            RadacctState ret = radacctDao.dateState(names);
-            return VoBuilder.buildStateUseVo(ret);
+//            RadacctState ret = radacctDao.dateState(names);
+            return VoBuilder.buildStateUseVo(null);
         }
         
     }
