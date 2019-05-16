@@ -15,16 +15,16 @@
 	</resultMap>
 	
 	<select id="getPage" resultMap="VideoMap">
-	    select * from vpn.videoitems
+	    select * from vpn.videoitems_1
 	</select>
 	<select id="getChannel" resultMap="VideoChannelMap">
-	    select * from vpn.videochannel where enable=1 and channelType=#{channelType} group by channel order by id desc
+	    select * from vpn.videochannel_1 where enable=1 and channelType=#{channelType} group by channel order by id desc
 	</select>
 	<select id="getOneChannel" resultMap="VideoChannelMap">
-	    select * from vpn.videochannel where enable=1 and channel=#{channel} limit 1
+	    select * from vpn.videochannel_1 where enable=1 and channel=#{channel} limit 1
 	</select>
 	<select id="getChannelItems" resultMap="VideoMap">
-	    select * from vpn.videoitems 
+	    select * from vpn.videoitems_1 
 	    where 1=1 
 		    <if test="channelType!=null">
 		        and channelType=#{channelType}
@@ -41,13 +41,13 @@
 	    order by sortType desc,id asc
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
-	    select * from vpn.video_user where channel=#{channel} order by count desc
+	    select * from vpn.video_user_1 where channel=#{channel} order by count desc
 	</select>
 	<select id="getUserByUserId" resultMap="VideoUserMap">
-	    select * from vpn.video_user where userId=#{userId} limit 1
+	    select * from vpn.video_user_1 where userId=#{userId} limit 1
 	</select>
 	<select id="getUserItems" resultMap="VideoUserItemMap">
-	    select * from vpn.video_user_item
+	    select * from vpn.video_user_item_1
 	    <where>
 	   		 <if test="channel!=null">
 		        channel=#{channel}
