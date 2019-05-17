@@ -204,6 +204,13 @@ public class DataServiceImpl implements DataService {
             desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
             desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
             desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
+            if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
+                LOGGER.info("中国灯塔用户"); 
+                vo.setMinBuild("1000008023");
+                vo.setMaxBuild("1000008023");
+                vo.setContent("灯塔提示：系统维护一周时间\\n请使用AFree\\nAFree爱生活\\nQQ群：957430787\\nhttp:\\sspacee.com 下载");
+                vo.setVpnUrl("http://file.sspacee.com/file/app/FreeV9N_11817.apk");
+            }
         }else if(Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
             desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
             desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
@@ -225,7 +232,7 @@ public class DataServiceImpl implements DataService {
             desc.setScore(baseQuery.getUser().getScore());
         vo.setVitamioExt(Constant.VIDEO_EXT);
         vo.setVipDesc(desc);
-        vo.setQq("1015749133");
+        vo.setQq("957430787");
         return vo;
     }
     private String getMessage(String key, String lang) {
