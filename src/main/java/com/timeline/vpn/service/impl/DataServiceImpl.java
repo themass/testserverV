@@ -208,7 +208,7 @@ public class DataServiceImpl implements DataService {
                 LOGGER.info("中国灯塔用户  1000008024"); 
                 vo.setMinBuild("1000008024");
                 vo.setMaxBuild("1000008024"); 
-                vo.setContent("灯塔提示：系统维护一周时间\n请使用AFree\nAFree爱生活\nQQ群：957430787\nhttp:\\\\sspacee.com 下载");
+                vo.setContent("灯塔提示：系统维护一周时间\n请使用AFree\nAFree爱生活\nQQ群：957430787\nhttp:\\\\sspacee.com 下载\n无法解析？点击分享有链接");
                 vo.setVpnUrl("http://file.sspacee.com/file/app/FreeV9N_11818.apk");
                 vo.setUrl("http://file.sspacee.com/file/app/FreeV9N_11818.apk");
                 desc.setDesc("灯塔系统维护一周\n请使用Afree\n无法解析？点击分享\n就可以找到链接");
