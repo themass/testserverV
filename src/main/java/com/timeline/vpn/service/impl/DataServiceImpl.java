@@ -205,9 +205,9 @@ public class DataServiceImpl implements DataService {
             desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
             desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
             if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
-                LOGGER.info("中国灯塔用户"); 
-                vo.setMinBuild("1000008023");
-                vo.setMaxBuild("1000008023");
+                LOGGER.info("中国灯塔用户  1000008024"); 
+                vo.setMinBuild("1000008024");
+                vo.setMaxBuild("1000008024");
                 vo.setContent("灯塔提示：系统维护一周时间\\n请使用AFree\\nAFree爱生活\\nQQ群：957430787\\nhttp:\\sspacee.com 下载");
                 vo.setVpnUrl("http://file.sspacee.com/file/app/FreeV9N_11817.apk");
             }
