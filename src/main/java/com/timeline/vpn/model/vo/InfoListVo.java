@@ -3,6 +3,8 @@ package com.timeline.vpn.model.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 /**
  *
  * @author gqli
@@ -13,11 +15,11 @@ public class InfoListVo<T> implements Serializable {
     /**
      * @Fields serialVersionUID :
      */
-    private long total;
-    private boolean hasMore;
+    private long total=0;
+    private boolean hasMore=false;
     private int pageNum;
     private static final long serialVersionUID = 1L;
-    private List<T> voList;
+    private List<T> voList=Lists.newArrayList();
 
     public InfoListVo() {}
 
