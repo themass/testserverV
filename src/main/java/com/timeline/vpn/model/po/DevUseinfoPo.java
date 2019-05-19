@@ -20,6 +20,8 @@ public class DevUseinfoPo {
     private String channel;
     private String ext;
     private String uHist;
+    private String ip;
+    private String loc;
     public String getDevId() {
         return devId;
     }
@@ -115,6 +117,23 @@ public class DevUseinfoPo {
     public void setuHist(String uHist) {
         this.uHist = uHist;
     }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getLoc() {
+        return loc;
+    }
+
+    public void setLoc(String loc) {
+        this.loc = loc;
+    }
+    
     
 }
 

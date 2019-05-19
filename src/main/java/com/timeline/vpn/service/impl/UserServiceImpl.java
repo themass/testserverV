@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService {
                     }else {
                         po.setChannel(appInfo.getNetType());
                     }
+                    po.setIp(appInfo.getUserIp());
                     devInfoDao.insert(po);
                 }else{
                     po.setDevId(appInfo.getDevId());
@@ -117,6 +118,7 @@ public class UserServiceImpl implements UserService {
                     po.setLongitude(appInfo.getLon());
                     po.setLatitude(appInfo.getLat());
                     po.setExt(appInfo.getUa().substring(0, Math.min(2000, appInfo.getUa().length())));
+                    po.setIp(appInfo.getUserIp());
                     devInfoDao.update(po);
                 }
             }
