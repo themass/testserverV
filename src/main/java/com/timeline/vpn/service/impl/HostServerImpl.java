@@ -176,9 +176,9 @@ public class HostServerImpl implements HostService {
           }
       });
       if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
-          LOGGER.info("中国灯塔用户 3  1000008024"); 
           map.remove(0);
           map.remove(1);
+          LOGGER.info("中国灯塔用户 3  1000008024->"+map.keySet());
       }
       return VoBuilder.buildListVipLocationVo(map);
     }

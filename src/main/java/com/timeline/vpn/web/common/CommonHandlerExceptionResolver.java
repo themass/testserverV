@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -88,7 +89,11 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
     }
 
     private String getMessage(String key, HttpServletRequest request) {
-        return messagesource.getMessage(key, null, DeviceUtil.getLocale(request));
+        String msg = messagesource.getMessage(key, null, DeviceUtil.getLocale(request));
+        if(StringUtils.isEmpty(msg)) {
+            return key;
+        }
+        return msg;
     }
 
 }
