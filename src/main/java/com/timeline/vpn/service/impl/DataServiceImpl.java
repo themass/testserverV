@@ -212,7 +212,7 @@ public class DataServiceImpl implements DataService {
                 vo.setVpnUrl("http://file.sspacee.com/file/app/FreeV9N_11818.apk");
                 vo.setUrl("http://file.sspacee.com/file/app/FreeV9N_11818.apk");
                 desc.setDesc("灯塔系统维护一周\n请使用Afree\n无法解析？点击分享\n就可以找到链接");
-                desc.setDesc2("QQ群：957430787");
+                desc.setDesc2("QQ群：146312741");
                 
             }
         }else if(Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
