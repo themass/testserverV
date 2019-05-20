@@ -89,11 +89,15 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
     }
 
     private String getMessage(String key, HttpServletRequest request) {
-        String msg = messagesource.getMessage(key, null, DeviceUtil.getLocale(request));
-        if(StringUtils.isEmpty(msg)) {
+        try {
+            String msg = messagesource.getMessage(key, null, DeviceUtil.getLocale(request));
+            if(StringUtils.isEmpty(msg)) {
+                return key;
+            }
+            return msg;
+        }catch (Exception e) {
             return key;
         }
-        return msg;
     }
 
 }
