@@ -175,6 +175,11 @@ public class HostServerImpl implements HostService {
               return input.getType();
           }
       });
+      if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
+          LOGGER.info("中国灯塔用户 3  1000008024"); 
+          map.remove(0);
+          map.remove(1);
+      }
       return VoBuilder.buildListVipLocationVo(map);
     }
     @Override
@@ -215,7 +220,7 @@ public class HostServerImpl implements HostService {
         boolean log = false;
         if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
             LOGGER.info("中国灯塔用户 2  1000008024"); 
-            throw new DataException("灯塔提示：系统维护一周时间\n请使用AFree,账号通用\n无法解析？点击分享有下载链接");
+            throw new DataException("灯塔提示：请使用AFree,账号通用.试试分享！！");
         }
         if(location==0) {
             log = true;
