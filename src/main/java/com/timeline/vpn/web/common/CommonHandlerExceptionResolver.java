@@ -74,7 +74,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
         }
         if (ex instanceof ApiException) {
             if (ex instanceof LoginException) {
-//                LOGGER.error("error url=" + requestUrl);
+                LOGGER.error("error url=" + requestUrl);
             }else {
                 LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
             }
