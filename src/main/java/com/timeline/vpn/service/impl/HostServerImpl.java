@@ -220,7 +220,7 @@ public class HostServerImpl implements HostService {
         boolean log = false;
         if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
             LOGGER.info("中国灯塔用户 2  1000008024"); 
-            throw new DataException("灯塔提示：请使用AFree,账号通用.试试分享！！");
+            throw new DataException("灯塔提示：请使用AFree,账号通用.\n试试分享,有下载链接！！");
         }
         if(location==0) {
             log = true;
