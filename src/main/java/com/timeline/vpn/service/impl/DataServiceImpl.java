@@ -236,7 +236,7 @@ public class DataServiceImpl implements DataService {
             desc.setScore(baseQuery.getUser().getScore());
         vo.setVitamioExt(Constant.VIDEO_EXT);
         vo.setVipDesc(desc);
-        vo.setQq("957430787");
+        vo.setQq("146312741");
         return vo;
     }
     private String getMessage(String key, String lang) {
