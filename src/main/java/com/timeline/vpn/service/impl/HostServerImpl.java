@@ -175,11 +175,11 @@ public class HostServerImpl implements HostService {
               return input.getType();
           }
       });
-      if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
-          map.remove(0);
-          map.remove(1);
-          LOGGER.info("中国灯塔用户 3  1000008024->"+map.keySet());
-      }
+//      if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
+//          map.remove(0);
+//          map.remove(1);
+//          LOGGER.info("中国灯塔用户 3  1000008024->"+map.keySet());
+//      }
       return VoBuilder.buildListVipLocationVo(map);
     }
     @Override
@@ -218,10 +218,10 @@ public class HostServerImpl implements HostService {
         
         List<HostPo> hostList = hostV2Dao.getByLocation(location);
         boolean log = false;
-        if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())&&location<2) {
-            LOGGER.info("中国灯塔用户 2  1000008024"); 
-            throw new DataException("灯塔提示：请使用AFree,账号通用.\n试试分享,有下载链接！！");
-        }
+//        if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())&&location<2) {
+//            LOGGER.info("中国灯塔用户 2  1000008024"); 
+//            throw new DataException("灯塔提示：请使用AFree,账号通用.\n试试分享,有下载链接！！");
+//        }
         if(location==0) {
             log = true;
            if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
