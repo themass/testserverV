@@ -28,7 +28,7 @@ public class CacheServiceImpl implements CacheService {
     private static final String SCORE_ITEM_KEY = "score_%s";
 
     private static final long LOCK_TIMEOUT = 60 * 1000; //加锁超时时间 单位毫秒
-    private static final long SCORE_TIMEOUT = 60 * 1000; //加锁超时时间 单位毫秒
+    private static final long SCORE_TIMEOUT = 3600 * 1000; //加锁超时时间 单位毫秒
     private static final long USERCACH_TIMEOUT = 60*24; //加锁超时时间 单位毫秒
 
     @Autowired
