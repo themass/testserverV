@@ -16,6 +16,9 @@
 	<select id="getAll" resultMap="DevUseinfoMap">
 		select * from vpn.devuseinfo
 	</select>
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from vpn.devuseinfo where userName=#{name}
+	</select>
 	<update id="update">
 	    update vpn.devuseinfo 
 			<set>

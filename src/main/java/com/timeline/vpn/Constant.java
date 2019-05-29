@@ -161,5 +161,6 @@ public class Constant {
     public static Long CACHESIZE=100l;
     
     public static final List<String> user = Arrays.asList();
+    public static final List<String> userNoCheck = Arrays.asList("");
 
 }

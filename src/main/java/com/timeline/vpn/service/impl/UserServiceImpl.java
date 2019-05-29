@@ -144,6 +144,13 @@ public class UserServiceImpl implements UserService {
         }
         if (po != null) {
             updateDevUseinfo(baseQuery.getAppInfo(),po.getName());
+            
+            if(po.getLevel()<3 && !Constant.userNoCheck.contains(name)) {
+                int devCount = devInfoDao.getCount(name);
+                if(devCount>2) {
+                    throw new LoginException(Constant.ResultMsg.RESULT_ERROR_USER);
+                }
+            }
             String token = cacheService.putUser(po);
             baseQuery.setToken(token);
 //            if(score!=null&&score!=0){

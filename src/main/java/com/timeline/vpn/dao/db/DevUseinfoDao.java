@@ -13,6 +13,7 @@ public interface DevUseinfoDao {
     public void insert(DevUseinfoPo po);
     public void update(DevUseinfoPo po);
     public DevUseinfoPo get(String devId);
+    public int getCount(String name);
     public void updateRef(@Param("devId")String devId,@Param("ref")String ref);
     public int getRefCount(@Param("ref")String ref);
 }
