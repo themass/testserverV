@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
             
             if(po.getLevel()<3 && !Constant.userNoCheck.contains(name)) {
                 int devCount = devInfoDao.getCount(name);
-                if(devCount>2) {
+                if(devCount>3) {
                     LOGGER.error("多个设备登录账号："+name+"----"+devCount);
                     throw new LoginException(Constant.ResultMsg.RESULT_ERROR_USER);
                 }
