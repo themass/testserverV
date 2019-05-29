@@ -204,17 +204,17 @@ public class DataServiceImpl implements DataService {
             desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
             desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
             desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
-//            if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
-//                LOGGER.info("中国灯塔用户  1000008024"); 
-//                vo.setMinBuild("1000008022");
-//                vo.setMaxBuild("1000008024"); 
-//                vo.setContent("灯塔提示：系统维护一周时间\n请使用AFree,账号通用\nQQ群：957430787\nhttp:\\\\sspacee.com 下载\n无法解析？点击分享有下载链接");
-//                vo.setVpnUrl("http://file.sspacee.com/file/app/FreeV9N_11818.apk");
-//                vo.setUrl("http://file.sspacee.com/file/app/FreeV9N_11818.apk");
-//                desc.setDesc("灯塔系统维护一周\n请使用Afree\n无法解析？点击分享\n就可以找到链接");
-//                desc.setDesc2("QQ群：146312741");
-//                
-//            }
+            if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
+                LOGGER.info("中国灯塔用户  1000008024"); 
+                vo.setMinBuild("1000008022");
+                vo.setMaxBuild("1000008024"); 
+                vo.setContent("灯塔提示：必须升级啦\nQQ群：957430787\nhttp:\\\\sspacee.com 下载\n无法解析？点击分享有下载链接");
+                vo.setVpnUrl("http://file.sspacee.com/file/app/dtV9N_new_10824.apk");
+                vo.setUrl("http://file.sspacee.com/file/app/dtV9N_new_10824.apk");
+                desc.setDesc("无法解析？点击分享\n就可以找到链接");
+                desc.setDesc2("QQ群：146312741");
+                
+            }
         }else if(Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
             desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
             desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
