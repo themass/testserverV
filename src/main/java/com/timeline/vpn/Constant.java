@@ -164,6 +164,6 @@ public class Constant {
     
     public static final List<String> user = Arrays.asList();
     public static final List<String> userNoCheck = Arrays.asList("");
-    public static final List<String> userNodog = Arrays.asList("070580","27892120");
+    public static final List<String> userNodog = Arrays.asList("070580","27892120","e5r65");
 
 }
