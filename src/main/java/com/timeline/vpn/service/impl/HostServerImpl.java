@@ -206,9 +206,6 @@ public class HostServerImpl implements HostService {
         if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 3)==1) {
             throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_ERROR);
         }
-        if(baseQuery.getUser()!=null && Constant.userNodog2.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 5)<4) {
-            throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_ERROR);
-        }
         return VoBuilder.buildListInfoVo(ret, LocationVo.class,null);
     }
     @Override
