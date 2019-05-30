@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
                 int devCount = devInfoDao.getCount(name);
                 if(devCount>3) {
                     LOGGER.error("多个设备登录账号："+name+"----"+devCount);
-                    throw new LoginException(Constant.ResultMsg.RESULT_ERROR_USER);
+                    throw new LoginException(Constant.ResultMsg.RESULT_ERROR_MANYUSERLOG);
                 }
             }
             String token = cacheService.putUser(po);
