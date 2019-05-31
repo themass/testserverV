@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.LoginException;
+import com.timeline.vpn.model.form.CInfoForm;
 import com.timeline.vpn.model.form.ConnLogForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
@@ -52,6 +53,12 @@ public class MonitorController extends BaseController {
         LOGGER.error("这是一个模拟器："+dev);
         throw new LoginException(Constant.ResultMsg.RESULT_ERROR_DEV);
 //        return Constant.RESULT_SUCCESS;
+    }
+    @RequestMapping(value = "/detail.json", method = RequestMethod.POST)
+    public JsonResult detail(@UserInfo BaseQuery baseQuery,@ModelAttribute @Valid CInfoForm form) {
+//        reportService.connlog(baseQuery, logs);
+        LOGGER.error(" info detail："+form);
+        return Constant.RESULT_SUCCESS;
     }
 }
 
