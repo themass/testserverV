@@ -203,6 +203,12 @@ public class HostServerImpl implements HostService {
                 ret.add(po);
             }
         }
+        if(baseQuery.getUser()!=null 
+                && Constant.userNodog.contains(baseQuery.getUser().getName()) 
+                &&Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())
+                && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025) {
+            throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
+        }
         if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 6)<4) {
             throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_ERROR);
         }
