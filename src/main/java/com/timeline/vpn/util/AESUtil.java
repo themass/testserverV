@@ -89,7 +89,7 @@ public class AESUtil {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         kgen.init(128, new SecureRandom("12345678".getBytes()));
         SecretKey secretKey = kgen.generateKey();
-        String str = AESUtil.getInstance().encrypt("11112e3dsadsads", new String(secretKey.getEncoded()));
+        String str = AESUtil.getInstance().encrypt("1111111111","1111111111");
         System.out.print(str);
     }
 }

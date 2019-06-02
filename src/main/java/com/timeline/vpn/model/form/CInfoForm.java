@@ -1,6 +1,6 @@
 package com.timeline.vpn.model.form;
 
-import com.timeline.vpn.util.AES;
+import com.timeline.vpn.util.AES2;
 
 /**
  * Created by liguoqing on 2019/5/31.
@@ -23,7 +23,7 @@ public class CInfoForm {
     }
     @Override
     public String toString() {
-        return "CInfoForm [key=" + key + ", info=" + AES.decrypt(info,key) + "]";
+        return "CInfoForm [key=" + key + ", info=" + AES2.decode(info,"abcdefg!@#123456") + "]";
     }
     
 }

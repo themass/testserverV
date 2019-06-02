@@ -107,7 +107,7 @@ public class AES2 {
     
     // 测试用例
     public static void test1() {
-        String content = "111";
+        String content = "111Dfasdfadsfdsafadsfadsfadsfdsanfdsankfnadskjnfjdsafkjadsfadskjfadskjfakjdsfkjdsafkjdsafkjdsafkjdsanfkjsadfkjsadf";
         String key = "abcdefg123456!@#";
         String pStr = encode(content,key);
         System.out.println("加密前：" + content);
