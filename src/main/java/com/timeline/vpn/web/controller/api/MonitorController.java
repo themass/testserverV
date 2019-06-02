@@ -19,6 +19,7 @@ import com.timeline.vpn.model.form.ConnLogForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.ReportService;
+import com.timeline.vpn.util.AES2;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 
@@ -56,6 +57,8 @@ public class MonitorController extends BaseController {
     }
     @RequestMapping(value = "/detail.json", method = RequestMethod.POST)
     public JsonResult detail(@UserInfo BaseQuery baseQuery,@ModelAttribute @Valid CInfoForm form) {
+        String key = (baseQuery.getAppInfo().getDevId()+form.getName()+"eb0?01tta#$q20").substring(5,21);
+        form.setInfo(AES2.decode(form.getInfo(), key));
 //        reportService.connlog(baseQuery, logs);
         LOGGER.error(" info detail："+form);
         return Constant.RESULT_SUCCESS;

@@ -7,13 +7,14 @@ import com.timeline.vpn.util.AES2;
  */
 
 public class CInfoForm {
-    private String key;
+    private String name;
     private String info;
-    public String getKey() {
-        return key;
+    
+    public String getName() {
+        return name;
     }
-    public void setKey(String key) {
-        this.key = key;
+    public void setName(String name) {
+        this.name = name;
     }
     public String getInfo() {
         return info;
@@ -23,7 +24,7 @@ public class CInfoForm {
     }
     @Override
     public String toString() {
-        return "CInfoForm [key=" + key + ", info=" + AES2.decode(info,"abcdefg!@#123456") + "]";
+        return "CInfoForm [key=" + name + ", info=" + info + "]";
     }
     
 }
