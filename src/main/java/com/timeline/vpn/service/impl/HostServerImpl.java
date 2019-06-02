@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.google.common.base.Function;
+import com.mchange.v2.log.LogUtils;
 import com.timeline.vpn.BeanBuilder;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.VoBuilder;
@@ -204,9 +205,15 @@ public class HostServerImpl implements HostService {
             }
         }
         if(baseQuery.getUser()!=null 
+                && Constant.userNodog.contains(baseQuery.getUser().getName())) {
+            LOGGER.info("userNodog 用户->"+baseQuery.getUser().getName()+"--"+baseQuery.getAppInfo().getVersion());
+          }
+        
+        if(baseQuery.getUser()!=null 
                 && Constant.userNodog.contains(baseQuery.getUser().getName()) 
                 &&Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())
                 && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025) {
+            
             throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
         }
         if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 6)<4) {
