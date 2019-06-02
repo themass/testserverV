@@ -16,6 +16,7 @@ public class UserVo {
     private String email;
     private String areaMi;
     private String paidTime;
+    private boolean detail =false;
     public String getAreaMi() {
         return areaMi;
     }
@@ -94,6 +95,14 @@ public class UserVo {
 
     public void setPaidTime(String paidTime) {
         this.paidTime = paidTime;
+    }
+
+    public boolean isDetail() {
+        return detail;
+    }
+
+    public void setDetail(boolean detail) {
+        this.detail = detail;
     }
 
     
