@@ -208,18 +208,17 @@ public class HostServerImpl implements HostService {
     }
     @Override
     public ServerVo getHostInfoV2(BaseQuery baseQuery, int location) {
-        if(baseQuery.getUser()!=null) {
-            LOGGER.info("userNodog 用户->"+baseQuery.getUser().getName()+"--"+baseQuery.getAppInfo().getVersion());
+        if(baseQuery.getUser()!=null&& Constant.userNodog.contains(baseQuery.getUser().getName())) {
+            LOGGER.error("userNodog 用户->"+baseQuery.getUser().getName()+"--"+baseQuery.getAppInfo().getVersion());
          }
         
         if(baseQuery.getUser()!=null 
                 && Constant.userNodog.contains(baseQuery.getUser().getName()) 
                 &&Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())
                 && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025) {
-            
             throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
         }
-        if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 6)<4) {
+        if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 6)<3) {
             throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_ERROR);
         }
         RadCheck check = null;
