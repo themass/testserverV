@@ -204,10 +204,13 @@ public class HostServerImpl implements HostService {
                 ret.add(po);
             }
         }
-        if(baseQuery.getUser()!=null 
-                && Constant.userNodog.contains(baseQuery.getUser().getName())) {
+        return VoBuilder.buildListInfoVo(ret, LocationVo.class,null);
+    }
+    @Override
+    public ServerVo getHostInfoV2(BaseQuery baseQuery, int location) {
+        if(baseQuery.getUser()!=null) {
             LOGGER.info("userNodog 用户->"+baseQuery.getUser().getName()+"--"+baseQuery.getAppInfo().getVersion());
-          }
+         }
         
         if(baseQuery.getUser()!=null 
                 && Constant.userNodog.contains(baseQuery.getUser().getName()) 
@@ -219,10 +222,6 @@ public class HostServerImpl implements HostService {
         if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 6)<4) {
             throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_ERROR);
         }
-        return VoBuilder.buildListInfoVo(ret, LocationVo.class,null);
-    }
-    @Override
-    public ServerVo getHostInfoV2(BaseQuery baseQuery, int location) {
         RadCheck check = null;
         String name = baseQuery.getUser()==null?baseQuery.getAppInfo().getDevId():baseQuery.getUser().getName();
         check = checkService.getRadUser(name);
