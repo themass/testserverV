@@ -206,7 +206,7 @@ public class DataServiceImpl implements DataService {
             desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
             if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
                 LOGGER.info("中国灯塔用户  1000008024"); 
-                vo.setMinBuild("1000008024");
+                vo.setMinBuild("1000008008");
                 vo.setMaxBuild("1000008025"); 
                 vo.setContent("灯塔提示：升级修复流量问题\n修复链接保持");
                 vo.setVpnUrl("http://file.sspacee.com/file/app/dtV9N_10825.apk");
