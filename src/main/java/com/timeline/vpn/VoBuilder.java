@@ -1,7 +1,5 @@
 package com.timeline.vpn;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -223,14 +221,20 @@ public class VoBuilder {
         vo.setHasMore(false);
         vo.setPageNum(1);
         List<VipLocationVo> list = new ArrayList<>();
-        for(int i=0;i<4;i++) {
-            Collection<LocationVo> itemList = map.get(i);
-            LocationTypeNameEnum nameType = LocationTypeNameEnum.getModelType(i);
+        for(int i=0;i<5;i++) {
+            int j=i; 
+            boolean insert=false;
+            if(j==4) {
+                j=0;
+                insert = true;
+            }
+            Collection<LocationVo> itemList = map.get(j);
+            LocationTypeNameEnum nameType = LocationTypeNameEnum.getModelType(j);
             if(nameType==null || CollectionUtils.isEmpty(itemList)) {
                 continue;
             }
             VipLocationVo vipLocationVo  = new VipLocationVo();
-            vipLocationVo.setType(i);
+            vipLocationVo.setType(j);
             vipLocationVo.setCount(itemList.size());
             vipLocationVo.setList(new ArrayList<>(itemList));
             vipLocationVo.setName(nameType.getName());
@@ -238,7 +242,13 @@ public class VoBuilder {
             vipLocationVo.setEname(nameType.getEname());
             vipLocationVo.setEdesc(nameType.getEdesc());
             vipLocationVo.setDescVpnb(nameType.getDescVpnb());
-            list.add(vipLocationVo);
+            if(insert) {
+                list.add(1,vipLocationVo);
+            }
+            else {
+                list.add(vipLocationVo);
+            }
+            
         }
         vo.setVoList(list);
         vo.setTotal(list.size());
