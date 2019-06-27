@@ -228,7 +228,7 @@ public class VoBuilder {
                 j=0;
                 insert = true;
             }
-            Collection<LocationVo> itemList = map.get(j);
+            Collection<LocationVo> itemList = map.get(i);
             LocationTypeNameEnum nameType = LocationTypeNameEnum.getModelType(j);
             if(nameType==null || CollectionUtils.isEmpty(itemList)) {
                 continue;
