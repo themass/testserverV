@@ -112,9 +112,6 @@ public class DataServiceImpl implements DataService {
  
     @Override
     public InfoListVo<RecommendVo> getRecommendAreaPage(BaseQuery baseQuery, PageBaseParam param) {
-        if(baseQuery.getUser()!=null || baseQuery.getUser().getLevel()<Constant.UserLevel.LEVEL_VIP2) {
-            return new InfoListVo<RecommendVo>();
-        }
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendServiceProxy.getAreaPage();
