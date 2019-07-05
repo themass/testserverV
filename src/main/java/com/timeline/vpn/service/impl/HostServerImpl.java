@@ -129,7 +129,7 @@ public class HostServerImpl implements HostService {
     }
     private boolean checkPermission(int type,UserPo user){
         //免费服务器
-        if(type==Constant.ServeType.SERVER_TYPE_FREE){
+        if(type==Constant.ServeType.SERVER_TYPE_FREE || type==4){
             return true;
         }else{//VIP服务器
             if(user==null){
