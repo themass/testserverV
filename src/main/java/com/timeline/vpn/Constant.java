@@ -107,7 +107,7 @@ public class Constant {
     public static final String SEX_TEMP = "SEX_TEMP";
     public static final String LANG_ZH="zh";
     
-    public static final String VIDEO_EXT="avi,rmvb,3gp,wmv";
+    public static final String VIDEO_EXT="avi,rmvb,3gp,wmv,flv";
     public static final String MOVIE_TYPE="movie";
     
     public static final String HTTP_TOKEN_KEY = "Vpn-Token";
