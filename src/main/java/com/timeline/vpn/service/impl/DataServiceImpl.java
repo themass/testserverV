@@ -23,6 +23,8 @@ import com.timeline.vpn.dao.db.AppInfoDao;
 import com.timeline.vpn.dao.db.DomainDao;
 import com.timeline.vpn.dao.db.IWannaDao;
 import com.timeline.vpn.dao.db.VersionDao;
+import com.timeline.vpn.exception.LoginException;
+import com.timeline.vpn.exception.ParamException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.param.PageBaseParam;
@@ -276,6 +278,15 @@ public class DataServiceImpl implements DataService {
     }
     @Override
     public IWannaVo addIwanna(BaseQuery baseQuery, String content) {
+        if(baseQuery.getUser()!=null 
+                && Constant.userNodog.contains(baseQuery.getUser().getName())) {
+            if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
+                    (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()) && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025)) {
+                throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
+            }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
+                throw new ParamException(Constant.ResultMsg.RESULT_DENGTA_ERROR);
+            }
+        }
         IWannaPo po = new IWannaPo();
         po.setContent(content);
         po.setCreateTime(new Date());
@@ -314,6 +325,15 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public IWannaVo addIwannaScore(BaseQuery baseQuery, String content) {
+        if(baseQuery.getUser()!=null 
+                && Constant.userNodog.contains(baseQuery.getUser().getName())) {
+            if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
+                    (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()) && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025)) {
+                throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
+            }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
+                throw new ParamException(Constant.ResultMsg.RESULT_DENGTA_ERROR);
+            }
+        }
         IWannaPo po = new IWannaPo();
         po.setContent(content);
         po.setCreateTime(new Date());
