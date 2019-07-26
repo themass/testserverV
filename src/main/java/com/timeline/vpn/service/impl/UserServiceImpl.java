@@ -169,6 +169,7 @@ public class UserServiceImpl implements UserService {
             }
             if(Constant.userNodog.contains(name)) {
                 vo.setDetail(true);
+                LOGGER.error("傻逼登陆了"+name+"----"+baseQuery.getAppInfo().toString());
             }
             return vo;
         } else {

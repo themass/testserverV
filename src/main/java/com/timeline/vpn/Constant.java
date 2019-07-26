@@ -24,6 +24,7 @@ public class Constant {
         public static final String RESULT_USE_TIME_ERROR = "RESULT.ERROR.USE.TIME";
         public static final String RESULT_PERM_ERROR = "RESULT.ERROR.PERM";
         public static final String RESULT_VERSION_ERROR = "RESULT.ERROR.VERSION";
+        public static final String RESULT_DENGTA_ERROR = "RESULT.ERROR.DENGTA";
         public static final String RESULT_REG_REGCODE = "RESULT.ERROR.REGCODE";
         public static final String RESULT_ERROR_USER = "RESULT.ERROR.USER";
         public static final String RESULT_ERROR_NEEDUSER = "RESULT.ERROR.NEEDUSER";
@@ -164,6 +165,6 @@ public class Constant {
     
     public static final List<String> user = Arrays.asList();
     public static final List<String> userNoCheck = Arrays.asList("");
-    public static final List<String> userNodog = Arrays.asList("070580","27892120","themass123");
+    public static final List<String> userNodog = Arrays.asList("070580","27892120","themass123","Poilce");
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.exception.ParamException;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.JsonResult;
@@ -46,6 +47,13 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
           UserPo po = cacheService.getUser(token);
           if (po != null) {
               request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
+              if(Constant.userNodog.contains(po.getName())) {
+                  if(Constant.VPN.equals(app.getNetType())) {
+                      throw new ParamException(Constant.ResultMsg.RESULT_DENGTA_ERROR);
+                  }else if(Constant.VPNC.equals(app.getNetType()) && Integer.valueOf(app.getVersion())<1000008025) {
+                      throw new ParamException(Constant.ResultMsg.RESULT_VERSION_ERROR);
+                  }
+              }
           } else {
 //              LOGGER.error("没找到user信息：app={}",app.getTokenHeader());
   //            request.setAttribute(Constant.HTTP_ATTR_RET, Constant.ResultErrno.ERRNO_CLEAR_LOGIN);
