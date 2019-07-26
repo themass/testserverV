@@ -26,6 +26,7 @@ import com.timeline.vpn.dao.db.LocationDao;
 import com.timeline.vpn.dao.db.LocationV2Dao;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.exception.LoginException;
+import com.timeline.vpn.exception.ParamException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.DnsResverPo;
 import com.timeline.vpn.model.po.HostPo;
@@ -217,6 +218,8 @@ public class HostServerImpl implements HostService {
             if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
                     (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()) && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025)) {
                 throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
+            }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
+                throw new ParamException(Constant.ResultMsg.RESULT_DENGTA_ERROR);
             }
         }
         if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 6)<2) {

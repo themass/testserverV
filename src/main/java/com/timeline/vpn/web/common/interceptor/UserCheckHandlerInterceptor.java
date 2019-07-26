@@ -48,9 +48,7 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
           if (po != null) {
               request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
               if(Constant.userNodog.contains(po.getName())) {
-                  if(Constant.VPN.equals(app.getNetType())) {
-                      throw new ParamException(Constant.ResultMsg.RESULT_DENGTA_ERROR);
-                  }else if(Constant.VPNC.equals(app.getNetType()) && Integer.valueOf(app.getVersion())<1000008025) {
+                  if(Constant.VPNC.equals(app.getNetType()) && Integer.valueOf(app.getVersion())<1000008025) {
                       throw new ParamException(Constant.ResultMsg.RESULT_VERSION_ERROR);
                   }
               }
