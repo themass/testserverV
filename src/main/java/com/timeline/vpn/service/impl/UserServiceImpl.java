@@ -120,6 +120,9 @@ public class UserServiceImpl implements UserService {
                         po.setLatitude(appInfo.getLat());
                         po.setExt(appInfo.getUa().substring(0,
                                 Math.min(2000, appInfo.getUa().length())));
+                        if(po.getIp()==null) {
+                            po.setIp("");
+                        }
                         po.setIp(po.getIp().replace(appInfo.getUserIp(), "").replace(",,", ","));
                         po.setIp(po.getIp()+","+appInfo.getUserIp());
                         devInfoDao.update(po);
