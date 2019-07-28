@@ -16,6 +16,7 @@ import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.CacheService;
+import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.web.common.DevAppContext;
 
@@ -47,7 +48,7 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
           UserPo po = cacheService.getUser(token);
           if (po != null) {
               request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
-              if(Constant.userNodog.contains(po.getName())) {
+              if(CommonUtil.isDog(app,po.getName())) {
                   if(Constant.VPNC.equals(app.getNetType()) && Integer.valueOf(app.getVersion())<1000008025) {
                       throw new ParamException(Constant.ResultMsg.RESULT_VERSION_ERROR);
                   }

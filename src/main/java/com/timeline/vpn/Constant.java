@@ -166,5 +166,6 @@ public class Constant {
     public static final List<String> user = Arrays.asList();
     public static final List<String> userNoCheck = Arrays.asList("");
     public static final List<String> userNodog = Arrays.asList("070580","27892120","themass123","Poilce");
+    public static final List<String> userNodogDiv = Arrays.asList("androidwifiB4:0F:B3:D3:D7:5F","androidwifi88:6a:b1:39:7c:1a","androidwifi94:87:E0:3F:BB:F4","androidwifiDC:EF:CA:4F:8E:38");
 
 }

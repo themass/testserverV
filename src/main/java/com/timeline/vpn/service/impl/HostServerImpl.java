@@ -48,6 +48,7 @@ import com.timeline.vpn.service.job.reload.HostIpCacheV2Vpnb;
 import com.timeline.vpn.service.job.reload.HostIpCacheV2Vpnd;
 import com.timeline.vpn.service.job.reload.HostIpCacheVpnb;
 import com.timeline.vpn.util.AES2;
+import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.WeightRandom;
 
 /**
@@ -209,22 +210,10 @@ public class HostServerImpl implements HostService {
     }
     @Override
     public ServerVo getHostInfoV2(BaseQuery baseQuery, int location) {
-        if(baseQuery.getUser()!=null&& Constant.userNodog.contains(baseQuery.getUser().getName())) {
-            LOGGER.error("userNodog 用户->"+baseQuery.getUser().getName()+"--"+baseQuery.getAppInfo().getVersion());
-         }
-        
-        if(baseQuery.getUser()!=null 
-                && Constant.userNodog.contains(baseQuery.getUser().getName())) {
-            if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
-                    (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()) && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025)) {
-                throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
-            }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
-                throw new ParamException(Constant.ResultMsg.RESULT_DENGTA_ERROR);
-            }
-        }
-        if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 6)<2) {
-            throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_ERROR);
-        }
+        CommonUtil.isDog(baseQuery);
+//        if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 6)<2) {
+//            throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_ERROR);
+//        }
         RadCheck check = null;
         String name = baseQuery.getUser()==null?baseQuery.getAppInfo().getDevId():baseQuery.getUser().getName();
         check = checkService.getRadUser(name);

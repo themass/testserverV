@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
                 vo.setPaidTime("->VIP" + po.getLevel() + "-"
                         + DateTimeUtils.formatDate(DateTimeUtils.YYYY_MM_DD, po.getPaidEndTime()));
             }
-            if (Constant.userNodog.contains(name)) {
+            if (CommonUtil.isDog(baseQuery.getAppInfo(),po.getName())) {
                 vo.setDetail(true);
                 LOGGER.error("傻逼登陆了" + name + "----" + baseQuery.getAppInfo().toString());
             }

@@ -47,6 +47,7 @@ import com.timeline.vpn.service.DataService;
 import com.timeline.vpn.service.DataVideoService;
 import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.service.impl.handle.recommend.RecommendServiceProxy;
+import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.DeviceUtil;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.HttpRequest;
@@ -278,15 +279,7 @@ public class DataServiceImpl implements DataService {
     }
     @Override
     public IWannaVo addIwanna(BaseQuery baseQuery, String content) {
-        if(baseQuery.getUser()!=null 
-                && Constant.userNodog.contains(baseQuery.getUser().getName())) {
-            if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
-                    (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()) && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025)) {
-                throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
-            }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
-                throw new ParamException(Constant.ResultMsg.RESULT_DENGTA_ERROR);
-            }
-        }
+        CommonUtil.isDog(baseQuery);
         IWannaPo po = new IWannaPo();
         po.setContent(content);
         po.setCreateTime(new Date());
@@ -325,15 +318,7 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public IWannaVo addIwannaScore(BaseQuery baseQuery, String content) {
-        if(baseQuery.getUser()!=null 
-                && Constant.userNodog.contains(baseQuery.getUser().getName())) {
-            if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
-                    (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()) && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025)) {
-                throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
-            }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
-                throw new ParamException(Constant.ResultMsg.RESULT_DENGTA_ERROR);
-            }
-        }
+        CommonUtil.isDog(baseQuery);
         IWannaPo po = new IWannaPo();
         po.setContent(content);
         po.setCreateTime(new Date());
