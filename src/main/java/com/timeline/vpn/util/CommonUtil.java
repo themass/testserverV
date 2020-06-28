@@ -34,7 +34,7 @@ public class CommonUtil {
     public static boolean isDog(BaseQuery baseQuery) {
         if((baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName())) 
                 || Constant.userNodogDiv.contains(baseQuery.getAppInfo().getDevId())) {
-            if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
+            if(Constant.VPN.equals(baseQuery.getAppInfo().getChannel()) || 
                     (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()) && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025)) {
                 throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
             }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
@@ -45,14 +45,11 @@ public class CommonUtil {
     }
     public static boolean isWhite(BaseQuery baseQuery) {
         LOGGER.error("user--isWhite-- "+baseQuery.getAppInfo());
-        if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
+        if(Constant.VPN.equals(baseQuery.getAppInfo().getChannel()) || 
                 Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
-            LOGGER.error("user--isWhite--"+baseQuery.getUser());
-
             if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>1) {
                 return true;
             }else {
-                LOGGER.error("user--isWhite-- 抛异常了");
                 throw new LoginException(Constant.ResultMsg.RESULT_PERM_ERROR);
             }
         }
