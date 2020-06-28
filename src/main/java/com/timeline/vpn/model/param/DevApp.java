@@ -199,7 +199,9 @@ public class DevApp {
                 + ", platform=" + platform + ", userIp=" + userIp + ", lang=" + lang + ", sign="
                 + sign + ", time=" + time + ", authKey=" + authKey + ", isTest=" + isTest
                 + ", host=" + host + ", lon=" + lon + ", lat=" + lat + ", tokenHeader="
-                + tokenHeader + ", channel=" + channel + "]";
+                + tokenHeader + ", channel=" + channel + ", pool=" + pool + ", netType=" + netType
+                + ", ua=" + ua + "]";
     }
+    
 
 }
