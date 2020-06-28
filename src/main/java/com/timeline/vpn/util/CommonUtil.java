@@ -38,6 +38,18 @@ public class CommonUtil {
         }
         return false;
     }
+    public static boolean isWhite(BaseQuery baseQuery) {
+        if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
+                (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()))) {
+            if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>2) {
+                return true;
+            }else {
+                throw new LoginException(Constant.ResultMsg.RESULT_PERM_ERROR);
+            }
+        }
+        return true;
+    }
+    
     public static boolean isDog(DevApp appInfo,String name) {
         if(Constant.userNodog.contains(name) 
                 || Constant.userNodogDiv.contains(appInfo.getDevId())) {
