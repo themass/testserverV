@@ -44,6 +44,7 @@ public class CommonUtil {
         return false;
     }
     public static boolean isWhite(BaseQuery baseQuery) {
+        LOGGER.error("user--isWhite-- "+baseQuery.getAppInfo().getNetType());
         if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
                 Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
             LOGGER.error("user--isWhite--"+baseQuery.getUser());

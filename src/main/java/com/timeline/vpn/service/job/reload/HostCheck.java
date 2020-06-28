@@ -68,7 +68,7 @@ public class HostCheck extends ReloadJob {
                     break;
                 }
             }
-            LOGGER.info("check {} finish",ip);
+           // LOGGER.info("check {} finish",ip);
         }
         LOGGER.error("异常的服务器:"+errorList);
         errorIp.clear();
