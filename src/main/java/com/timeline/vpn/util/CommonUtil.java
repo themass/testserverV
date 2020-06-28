@@ -3,6 +3,8 @@ package com.timeline.vpn.util;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.timeline.vpn.Constant;
@@ -10,6 +12,7 @@ import com.timeline.vpn.exception.LoginException;
 import com.timeline.vpn.exception.ParamException;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
+import com.timeline.vpn.service.impl.HostServerImpl;
 
 /**
  * @author gqli
@@ -17,6 +20,8 @@ import com.timeline.vpn.model.param.DevApp;
  * @version V1.0
  */
 public class CommonUtil {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(CommonUtil.class);
     private static final int CODE_START = 1000;
     private static final int CODE_END = 9999;
     private static final Pattern pattern = Pattern.compile("[0-9A-Za-z]*");
@@ -40,10 +45,13 @@ public class CommonUtil {
     }
     public static boolean isWhite(BaseQuery baseQuery) {
         if(Constant.VPN.equals(baseQuery.getAppInfo().getNetType()) || 
-                (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()))) {
-            if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>2) {
+                Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+            LOGGER.error("user--isWhite--"+baseQuery.getUser());
+
+            if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>1) {
                 return true;
             }else {
+                LOGGER.error("user--isWhite-- 抛异常了");
                 throw new LoginException(Constant.ResultMsg.RESULT_PERM_ERROR);
             }
         }
