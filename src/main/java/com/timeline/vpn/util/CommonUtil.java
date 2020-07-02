@@ -44,13 +44,12 @@ public class CommonUtil {
         return false;
     }
     public static boolean isWhite(BaseQuery baseQuery) {
-        LOGGER.error("user--isWhite-- "+baseQuery.getAppInfo());
         if(Constant.VPN.equals(baseQuery.getAppInfo().getChannel()) || 
                 Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
             if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>1) {
                 return true;
             }else {
-                throw new LoginException(Constant.ResultMsg.RESULT_PERM_ERROR);
+                throw new LoginException(Constant.ResultMsg.RESULT_ERROR_SUPPORT);
             }
         }
         return true;

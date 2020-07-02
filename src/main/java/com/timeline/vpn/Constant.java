@@ -31,6 +31,8 @@ public class Constant {
         public static final String RESULT_ERROR_MANYUSER = "RESULT.ERROR.MANYUSER";
         public static final String RESULT_ERROR_DEV = "RESULT.ERROR.DEV";
         public static final String RESULT_ERROR_MANYUSERLOG = "RESULT.ERROR.MANYUSERLOG";
+        public static final String RESULT_ERROR_SUPPORT = "RESULT.ERROR.SUPPORT";
+        
         
         
         public static final String RESULT_MSG_DESC= "RESULT.MSG.DESC";
