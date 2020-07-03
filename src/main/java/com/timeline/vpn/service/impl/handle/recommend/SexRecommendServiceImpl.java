@@ -62,7 +62,8 @@ public class SexRecommendServiceImpl implements BaseRecommendServie{
     }
 
     @Override
-    public List<RecommendPo> getAreaPage() {
+    public List<RecommendPo> getAreaPage(BaseQuery baseQuery) {
+        CommonUtil.isWhiteAll(baseQuery);
         return recommendDao.getAreaPage();
     }
 

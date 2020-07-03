@@ -57,8 +57,8 @@ public class RecommendServiceProxy extends BaseMapServiceProxy<BaseRecommendServ
     }
 
     @Override 
-    public List<RecommendPo> getAreaPage() {
-        return getService().getAreaPage();
+    public List<RecommendPo> getAreaPage(BaseQuery baseQuery) {
+        return getService().getAreaPage(baseQuery);
     }
 
 }

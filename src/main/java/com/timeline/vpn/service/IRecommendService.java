@@ -12,7 +12,7 @@ import com.timeline.vpn.model.po.RecommendPo;
  */
 public interface IRecommendService {
     public List<RecommendPo> getPage(int type);
-    public List<RecommendPo> getAreaPage();
+    public List<RecommendPo> getAreaPage(BaseQuery baseQuery);
     public List<RecommendPo> getVipPage(BaseQuery baseQuery);
     public List<RecommendPo> getCustomePage(String name);
     public List<RecommendPo> getCustomeAllPage();

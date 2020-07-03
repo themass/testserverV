@@ -60,7 +60,7 @@ public class VpncRecommendServiceImpl implements BaseRecommendServie{
     }
 
     @Override
-    public List<RecommendPo> getAreaPage() {
+    public List<RecommendPo> getAreaPage(BaseQuery baseQuery) {
         return null;
     }
 
