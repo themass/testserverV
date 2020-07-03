@@ -211,7 +211,7 @@ public class HostServerImpl implements HostService {
     @Override
     public ServerVo getHostInfoV2(BaseQuery baseQuery, int location) {
         CommonUtil.isDog(baseQuery);
-        CommonUtil.isWhite(baseQuery);
+        //CommonUtil.isWhiteAll(baseQuery);
         
 //        if(baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName()) &&RandomUtils.nextInt(1, 6)<2) {
 //            throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_ERROR);

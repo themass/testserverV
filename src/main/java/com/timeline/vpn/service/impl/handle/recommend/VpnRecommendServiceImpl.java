@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.VpnRecommendDao;
+import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.RecommendPo;
 
 /**
@@ -14,7 +15,7 @@ import com.timeline.vpn.model.po.RecommendPo;
  * @date 2017年11月28日 下午6:38:29
  * @version V1.0
  */
-@Component
+@Component 
 public class VpnRecommendServiceImpl implements BaseRecommendServie{
     @Autowired
     private VpnRecommendDao recommendDao;
@@ -24,7 +25,7 @@ public class VpnRecommendServiceImpl implements BaseRecommendServie{
     }
 
     @Override
-    public List<RecommendPo> getVipPage() { 
+    public List<RecommendPo> getVipPage(BaseQuery baseQuery) { 
         return recommendDao.getVipPage();
     }
 

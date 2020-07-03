@@ -2,6 +2,7 @@ package com.timeline.vpn.service;
 
 import java.util.List;
 
+import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.RecommendPo;
 
 /**
@@ -12,7 +13,7 @@ import com.timeline.vpn.model.po.RecommendPo;
 public interface IRecommendService {
     public List<RecommendPo> getPage(int type);
     public List<RecommendPo> getAreaPage();
-    public List<RecommendPo> getVipPage();
+    public List<RecommendPo> getVipPage(BaseQuery baseQuery);
     public List<RecommendPo> getCustomePage(String name);
     public List<RecommendPo> getCustomeAllPage();
     public void delCustome(Integer id);

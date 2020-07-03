@@ -133,7 +133,7 @@ public class DataServiceImpl implements DataService {
     public InfoListVo<RecommendVo> getRecommendVipPage( final BaseQuery baseQuery, PageBaseParam param) {
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<RecommendPo> poList = recommendServiceProxy.getVipPage();
+        List<RecommendPo> poList = recommendServiceProxy.getVipPage(baseQuery);
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
 
             @Override

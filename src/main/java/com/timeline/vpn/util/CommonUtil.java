@@ -43,10 +43,17 @@ public class CommonUtil {
         }
         return false;
     }
+    public static boolean isWhiteAll(BaseQuery baseQuery) {
+        if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>0) {
+            return true;
+        }else {
+            throw new LoginException(Constant.ResultMsg.RESULT_ERROR_SUPPORT);
+        }
+    }
     public static boolean isWhite(BaseQuery baseQuery) {
         if(Constant.VPN.equals(baseQuery.getAppInfo().getChannel()) || 
                 Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
-            if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>1) {
+            if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>0) {
                 return true;
             }else {
                 throw new LoginException(Constant.ResultMsg.RESULT_ERROR_SUPPORT);

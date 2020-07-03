@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.dao.db.SexRecommendDao;
+import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.RecommendPo;
+import com.timeline.vpn.util.CommonUtil;
 
 /**
  * @author gqli
@@ -24,7 +26,8 @@ public class SexRecommendServiceImpl implements BaseRecommendServie{
     }
 
     @Override
-    public List<RecommendPo> getVipPage() {
+    public List<RecommendPo> getVipPage(BaseQuery baseQuery) {
+        CommonUtil.isWhiteAll(baseQuery);
         return recommendDao.getVipPage();
     }
 

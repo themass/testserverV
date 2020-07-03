@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.service.IRecommendService;
 import com.timeline.vpn.service.strategy.BaseMapServiceProxy;
@@ -21,8 +22,8 @@ public class RecommendServiceProxy extends BaseMapServiceProxy<BaseRecommendServ
     }
 
     @Override
-    public List<RecommendPo> getVipPage() {
-        return getService().getVipPage();
+    public List<RecommendPo> getVipPage(BaseQuery baseQuery) {
+        return getService().getVipPage(baseQuery);
     }
 
     @Override
