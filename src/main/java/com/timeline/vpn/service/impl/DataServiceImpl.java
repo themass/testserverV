@@ -193,44 +193,45 @@ public class DataServiceImpl implements DataService {
         }
 //        LOGGER.info("traf="+vo.getTraf());
         VipDescVo desc = new VipDescVo(); 
-        desc.setDesc("每周扣除150积分；点广告赚积分");
-        desc.setDesc1("2100积分=VIP1；4100积分=VIP2");
+        desc.setDesc("不支持中国大陆与朝鲜用户");
+        desc.setDesc1("不支持中国大陆与朝鲜用户");
         desc.setDesc2("邀请用户40积分/人；大于5人送vip3-15天；\\n大于10人送vip3-30天；\\n大于15人 送vip3-50天+pc1个月/200G流量");
-        desc.setDesc3(getMessage(Constant.ResultMsg.RESULT_MSG_DESC5, baseQuery.getAppInfo().getLang()));
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
-          desc.setDesc("赚积分兑换VIP：详见“关于”");
-          desc.setDesc1("折扣：VIP1-25/月，250/年\n折扣：VIP2-35/月，300/年");
-        }else if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
-            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
-            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
-            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
-            if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
-                LOGGER.info("中国灯塔用户  1000008024"); 
-                vo.setMinBuild("1000008008");
-                vo.setMaxBuild("1000008025"); 
-                vo.setContent("灯塔提示：升级修复流量问题\n修复链接保持");
-                vo.setVpnUrl("http://file.sspacee.com/file/app/dtV9N_10825.apk");
-                vo.setUrl("http://file.sspacee.com/file/app/dtV9N_10825.apk");
-                desc.setDesc("无法解析？点击分享\n就可以找到链接");
-                desc.setDesc2("QQ群：146312741");
-            }
-        }else if(Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
-            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
-            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
-            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
-        }else if(Constant.SEX.equals(baseQuery.getAppInfo().getChannel())) {
-            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
-            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC4, baseQuery.getAppInfo().getLang()));
-            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC5, baseQuery.getAppInfo().getLang()));
-        }else if(Constant.PLAYTYPE.equals(baseQuery.getAppInfo().getNetType())){
-            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
-            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC4, baseQuery.getAppInfo().getLang()));
-            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC5, baseQuery.getAppInfo().getLang()));
-        }else {
-          desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
-          desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
-          desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
-        }
+//        desc.setDesc3(getMessage(Constant.ResultMsg.RESULT_MSG_DESC5, baseQuery.getAppInfo().getLang()));
+//        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
+////          desc.setDesc("赚积分兑换VIP：详见“关于”");
+////          desc.setDesc1("折扣：VIP1-25/月，250/年\n折扣：VIP2-35/月，300/年");
+//        }else if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
+//            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+//            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
+//            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
+//            if(Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
+//                LOGGER.info("中国灯塔用户  1000008024"); 
+//                vo.setMinBuild("1000008008");
+//                vo.setMaxBuild("1000008025"); 
+//                vo.setContent("灯塔提示：升级修复流量问题\n修复链接保持");
+//                vo.setVpnUrl("http://file.sspacee.com/file/app/dtV9N_10825.apk");
+//                vo.setUrl("http://file.sspacee.com/file/app/dtV9N_10825.apk");
+//                desc.setDesc("无法解析？点击分享\n就可以找到链接");
+//                desc.setDesc2("QQ群：146312741");
+//            }
+//        }
+//        else if(Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
+//            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+//            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
+//            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
+//        }else if(Constant.SEX.equals(baseQuery.getAppInfo().getChannel())) {
+//            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+//            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC4, baseQuery.getAppInfo().getLang()));
+//            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC5, baseQuery.getAppInfo().getLang()));
+//        }else if(Constant.PLAYTYPE.equals(baseQuery.getAppInfo().getNetType())){
+//            desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+//            desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC4, baseQuery.getAppInfo().getLang()));
+//            desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC5, baseQuery.getAppInfo().getLang()));
+//        }else {
+//          desc.setDesc(getMessage(Constant.ResultMsg.RESULT_MSG_DESC, baseQuery.getAppInfo().getLang()));
+//          desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
+//          desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
+//        }
         if(baseQuery!=null&&baseQuery.getUser()!=null)
             desc.setScore(baseQuery.getUser().getScore());
         vo.setVitamioExt(Constant.VIDEO_EXT);
