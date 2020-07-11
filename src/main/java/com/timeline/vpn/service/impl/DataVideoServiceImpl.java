@@ -101,11 +101,14 @@ public class DataVideoServiceImpl implements DataVideoService {
             //全局检索
             keywork = keywork.substring(0, keywork.indexOf(Constant.line));
             channel = null;
-            channelType = null;
+            channelType = "movie";
+            if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>0) {
+                channelType = null;
+            }
             baseurl = null;
         }else if(!StringUtils.isEmpty(keywork)&&"movie".equals(channelType)) {
             channel = null;
-            channelType = "movie";
+           
             baseurl = null;
         }
         
