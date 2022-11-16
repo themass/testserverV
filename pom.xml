@@ -38,7 +38,7 @@
 		<commons-codec.version>1.10</commons-codec.version>
 		<commons-lang.version>2.6</commons-lang.version>
 		<javax.servlet.version>3.1.0</javax.servlet.version>
-		<jackson.version>2.6.0</jackson.version>
+		<jackson.version>2.12.7.1</jackson.version>
 		<influxdb-java.version>2.1</influxdb-java.version>
 		<jetty-util.version>6.1.26</jetty-util.version>
 		<druid.version>1.0.7</druid.version>
