@@ -122,7 +122,7 @@ public class DataVideoServiceImpl implements DataVideoService {
             }
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
-        LOGGER.info(channel+"-"+keywork+"-"+channelType+"-"+baseurl+"-"+channelOrg+"-"+po);
+        LOGGER.info(channel+"-"+keywork+"-"+channelType+"-"+baseurl+"-"+channelOrg+"-"+po.toString());
         list = videoDao.getChannelItems(channel,keywork,channelType,baseurl); 
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override

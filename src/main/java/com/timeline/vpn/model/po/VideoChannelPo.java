@@ -100,7 +100,24 @@ public class VideoChannelPo {
     public void setM(int m) {
         this.m = m;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "VideoChannelPo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", pic='" + pic + '\'' +
+                ", channel='" + channel + '\'' +
+                ", updateTime=" + updateTime +
+                ", rate=" + rate +
+                ", showType=" + showType +
+                ", count=" + count +
+                ", channelType='" + channelType + '\'' +
+                ", type=" + type +
+                ", baseurl='" + baseurl + '\'' +
+                ", m=" + m +
+                '}';
+    }
 }
 

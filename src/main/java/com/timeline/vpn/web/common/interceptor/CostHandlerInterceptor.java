@@ -42,7 +42,7 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
 //        Metrics.count(Measure.http.name(),);
-        LOGGER.info(request.getServletPath()+"?"+request.getQueryString() + "-ua=-"+HttpCommonUtil.getHeaderStr(request));
+        LOGGER.info(request.getServletPath()+"?"+request.getQueryString() + " -ua=-"+HttpCommonUtil.getHeaderStr(request));
         if (modelAndView != null && modelAndView.getModel() != null) {
             Map<String, Object> map = modelAndView.getModel();
             if (map.get(JsonResult.MODEL_KEY) != null) {
