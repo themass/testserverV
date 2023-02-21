@@ -101,10 +101,10 @@ public class Constant {
     public static final JsonResult RESULT_SUCCESS =
             new JsonResult(new RetInfoVo(true), Constant.ResultErrno.ERRNO_SUCCESS, null);
     public static final String HTTP_UA = "user-agent";
-    public static final String VPN = "VPN";
-    public static final String VPNB = "VPNB";
-    public static final String VPNC = "VPNC";
-    public static final String VPND = "VPND";
+    public static final String VPN = "VVV";
+    public static final String VPNB = "VVVB";
+    public static final String VPNC = "VVVC";
+    public static final String VPND = "VVVD";
     public static final String LIFE = "LIFE";
     public static final String SEX = "SEX";
     public static final String SEX_TEMP = "SEX_TEMP";
