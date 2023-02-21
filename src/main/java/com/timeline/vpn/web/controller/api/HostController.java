@@ -24,51 +24,51 @@ import com.timeline.vpn.web.controller.BaseController;
 public class HostController extends BaseController {
     
     //获取具体主机信息
-    @RequestMapping(value = "/server/cache.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/server/cache.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult serverListCache(@UserInfo BaseQuery baseQuery,
             @RequestParam(defaultValue = "0") int id) {
         return new JsonResult(hostService.getHostInfoById(baseQuery, id));
     }
     //废弃
-    @RequestMapping(value = "/server/location.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/server/location.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult locationList(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(hostService.getAllLocation());
     }
     
     //获取具体的vpn链接线路
-    @RequestMapping(value = "/server/list.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/server/list.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult serverList(@UserInfo BaseQuery baseQuery,
             @RequestParam(defaultValue = "0") int location) {
         return new JsonResult(hostService.getHostInfoV2(baseQuery, location));
     }
         //单个item页，下拉刷新
-    @RequestMapping(value = "/server/location/cache.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/server/location/cache.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult locationListCache(@UserInfo BaseQuery baseQuery,@RequestParam(required=false)Integer type) {
         return new JsonResult(hostService.getAllLocationCacheV2(baseQuery,type));
     }
        // page页，全部缓存数据
-    @RequestMapping(value = "/server/location/vip/cache.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/server/location/vip/cache.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult locationListVipCache(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(hostService.getAllLocationVipCacheV2(baseQuery));
     }
     
   //获取具体的vpn链接线路
-    @RequestMapping(value = "/server/list/v2.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/server/list/v2.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult serverListV2(@UserInfo BaseQuery baseQuery,
             @RequestParam(defaultValue = "0") int location) {
         return new JsonResult(hostService.getHostInfoV2(baseQuery, location));
     }
         //单个item页，下拉刷新
-    @RequestMapping(value = "/server/location/cache/v2.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/server/location/cache/v2.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult locationListCacheV2(@UserInfo BaseQuery baseQuery,@RequestParam(required=false)Integer type) {
         return new JsonResult(hostService.getAllLocationCacheV2(baseQuery,type));
     }
        // page页，全部缓存数据
-    @RequestMapping(value = "/server/location/vip/cache/v2.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/server/location/vip/cache/v2.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult locationListVipCacheV2(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(hostService.getAllLocationVipCacheV2(baseQuery));
     }
-    @RequestMapping(value = "/server/dns.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/server/dns.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult dns(@UserInfo BaseQuery baseQuery,@RequestParam String d) {
         List<String> list = Arrays.asList(d.split(Constant.comma));
         return new JsonResult(hostService.getDnsResver(baseQuery, list));

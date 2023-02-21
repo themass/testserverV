@@ -23,17 +23,17 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/text")
 public class TextController extends BaseController {
-    @RequestMapping(value = {"/channle.json","/channel.json"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/channle.json","/channel.json"}, method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult channle(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataTextService.getAllTextChannel(baseQuery, form.toParam()));
     }
-    @RequestMapping(value = "/items.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/items.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult items(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid ChannelItemsForm form) {
         return new JsonResult(dataTextService.getTextItems(baseQuery, form.toParam(),form.getChannel(),form.getKeyword()));
     }
-    @RequestMapping(value = "/item.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/item.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult items(@UserInfo BaseQuery baseQuery,@RequestParam Integer id) {
         return new JsonResult(dataTextService.getTextItem(baseQuery, id));
     }

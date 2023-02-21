@@ -51,7 +51,7 @@ public class UserController extends BaseController {
         userService.updateEmail(form, baseQuery);
         return Constant.RESULT_SUCCESS;
     }
-    @RequestMapping(value = "/info.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/info.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult info(@UserInfo(required = true) BaseQuery baseQuery) {
         return new JsonResult(userService.info(baseQuery));
     }
@@ -76,7 +76,7 @@ public class UserController extends BaseController {
         userService.delCustome(baseQuery,id);
         return Constant.RESULT_SUCCESS;
     }
-    @RequestMapping(value = "/ads/score.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/ads/score.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult adsFabClick(@UserInfo(required = true) BaseQuery baseQuery,
             @RequestParam int score) {
 //          return new JsonResult(userService.score(baseQuery, score));

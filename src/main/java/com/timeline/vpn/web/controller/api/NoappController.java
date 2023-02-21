@@ -50,7 +50,7 @@ public class NoappController extends BaseController {
             reportService.pingCheck(baseQuery, item.getType(),item.getIp());
         return Constant.RESULT_SUCCESS; 
     }
-    @RequestMapping(value = "/offerads/youmi.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/offerads/youmi.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult youmiOfferads(@UserInfo BaseQuery baseQuery,@RequestParam YoumiOffadsForm form) {
         LOGGER.info(form.toString()+"; check"+form.isRightReq());
         return Constant.RESULT_SUCCESS;

@@ -25,36 +25,36 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/video")
 public class VideoController extends BaseController {
-    @RequestMapping(value = "/items.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/items.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult items(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) { 
         return new JsonResult(dataVideoService.getVideoPage(baseQuery, form.toParam()));
     }
-    @RequestMapping(value = "/channel.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/channel.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult channel(@UserInfo BaseQuery baseQuery,@RequestParam(defaultValue=Constant.VideoShowType.NORMAL) String channel) {
         return new JsonResult(dataVideoService.getVideoChannel(baseQuery,channel));
     }
-    @RequestMapping(value = "/channel/items.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/channel/items.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult channelItems(@UserInfo BaseQuery baseQuery,@ModelAttribute @Valid ChannelItemsForm form) {
         return new JsonResult(dataVideoService.getVideoChannelItemsPage(baseQuery, form.toParam(),form.getChannel(),form.getKeyword(),form.getChannelOrg()));
     } 
-    @RequestMapping(value = "/user.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/user.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult user(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form,@RequestParam(required=false) String channel) {
         if(StringUtils.isEmpty(channel))
             channel = "人气女优";
         return new JsonResult(dataVideoService.getVideoUserPage(baseQuery, form.toParam(),channel));
     } 
-    @RequestMapping(value = "/user/items.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/items.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult userItems(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form,@RequestParam String userId,@ModelAttribute @Valid ChannelItemsForm keyword) {
         return new JsonResult(dataVideoService.getVideoUserItemsPage(baseQuery, form.toParam(),userId,keyword.getKeyword()));
     }
-    @RequestMapping(value = "/tv/channel.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/tv/channel.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult tvChannel(@UserInfo BaseQuery baseQuery,@ModelAttribute @Valid ChannelItemsForm form) {
         return new JsonResult(dataVideoService.getVideoTvChannelPage(baseQuery, form.toParam(), form.getChannelOrg(),form.getKeyword()));
     }
-    @RequestMapping(value = "/tv/item.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/tv/item.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult tvItem(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form,@RequestParam String channel) {
         return new JsonResult(dataVideoService.getVideoTvItemPage(baseQuery, form.toParam(), channel));

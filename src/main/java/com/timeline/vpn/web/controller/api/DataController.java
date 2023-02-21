@@ -24,31 +24,31 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/data")
 public class DataController extends BaseController {
-    @RequestMapping(value = "/recommend.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/recommend.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getRecommendPage(baseQuery,form.toParam()));
     }
      
-    @RequestMapping(value = "/recommend/movie.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/recommend/movie.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult movie(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getRecommendMoviePage(baseQuery));
     }
-    @RequestMapping(value = "/recommend/movie2.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/recommend/movie2.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult movie2(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getRecommendMoviePage2(baseQuery));
     }
-    @RequestMapping(value = "/recommend/night.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/recommend/night.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult night(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getRecommendNightPage(baseQuery,form.toParam()));
     }
-    @RequestMapping(value = "/recommend/area.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/recommend/area.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult area(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getRecommendAreaPage(baseQuery,form.toParam()));
     }
-    @RequestMapping(value = "/recommend/custome.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/recommend/custome.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult customeList(@UserInfo(required=true) BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(userService.getRecommendCustomePage(baseQuery,form.toParam()));
@@ -57,26 +57,26 @@ public class DataController extends BaseController {
     
     
     
-    @RequestMapping(value = "/recommend/vip.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/recommend/vip.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult vipList(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getRecommendVipPage(baseQuery,form.toParam()));
     }
     
-    @RequestMapping(value = "/version.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/version.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult version(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getVersion(baseQuery,baseQuery.getAppInfo().getPlatform(),baseQuery.getAppInfo().getChannel()));
     }
-    @RequestMapping(value = "/appinfo.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/appinfo.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult appinfo(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getAllApp(baseQuery));
     }
-    @RequestMapping(value = "/donation.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/donation.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult donation(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getAllDon(baseQuery));
     }
     
-    @RequestMapping(value = "/feed/wanna.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/feed/wanna.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult wanna(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getIwannaPage(baseQuery, form.toParam())); 
@@ -92,7 +92,7 @@ public class DataController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     
-    @RequestMapping(value = "/feed/score.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/feed/score.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult wannaScore(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getIwannaScorePage(baseQuery, form.toParam()));
@@ -107,7 +107,7 @@ public class DataController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     
-    @RequestMapping(value = "/domain.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/domain.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult domain(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(dataService.getAllDomain(baseQuery));
     }

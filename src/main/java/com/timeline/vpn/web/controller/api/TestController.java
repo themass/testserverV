@@ -20,7 +20,7 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/test")
 public class TestController extends BaseController {
-    @RequestMapping(value = "/test.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/test.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery) {
         Map<String, String> map = new HashMap<>();
         map.put("key", "test");

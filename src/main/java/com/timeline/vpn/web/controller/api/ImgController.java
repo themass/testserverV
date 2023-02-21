@@ -23,26 +23,26 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/img")
 public class ImgController extends BaseController {
-    @RequestMapping(value = "/channel.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/channel.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult channle(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form,@RequestParam(required=false) String channel) {
         return new JsonResult(dataImgService.getAllImgChannel(baseQuery, form.toParam(),channel));
     }
-    @RequestMapping(value = "/items.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/items.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult items(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid ChannelItemsForm form) {
         return new JsonResult(dataImgService.getImgItems(baseQuery, form.toParam(),form.getChannel(),form.getKeyword()));
     }
-    @RequestMapping(value = "/items/img.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/items/img.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult itemsImg(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid ChannelItemsForm form) {
         return new JsonResult(dataImgService.getImgItemImgs(baseQuery, form.toParam(),form.getChannel(),form.getKeyword()));
     }
-    @RequestMapping(value = "/item.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/item.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult item(@UserInfo BaseQuery baseQuery,@RequestParam String itemUrl) {
         return new JsonResult(dataImgService.getImgItem(baseQuery, itemUrl));
     }
-    @RequestMapping(value = "/item/page.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/item/page.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult itemPage(@UserInfo BaseQuery baseQuery,@RequestParam String itemUrl ,@ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataImgService.getImgItem(baseQuery, itemUrl,form.toParam()));
     }
