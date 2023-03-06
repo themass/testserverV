@@ -91,10 +91,8 @@ public class DataVideoServiceImpl implements DataVideoService {
             channel = channelOrg;
         }
         String channelType = po.getChannelType();
-        String baseurl = null;
         //关键字检索-》使用baseurl来检索
         if(!StringUtils.isEmpty(keywork) && !StringUtils.isEmpty(po.getBaseurl())) {
-            baseurl = po.getBaseurl();
             channel = null;
         }
         if(!StringUtils.isEmpty(keywork) && keywork.contains(Constant.line)) {
@@ -105,25 +103,21 @@ public class DataVideoServiceImpl implements DataVideoService {
             if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>0) {
                 channelType = null;
             }
-            baseurl = null;
         }else if(!StringUtils.isEmpty(keywork)&&"movie".equals(channelType)) {
             channel = null;
-           
-            baseurl = null;
         }
         
         
         if(baseQuery.getAppInfo().getNetType()!=null && baseQuery.getAppInfo().getNetType().contains(Constant.PLAYTYPE)) {
             channelType = "movie";
-            baseurl = null;
             channel = null;
             if(StringUtils.isEmpty(keywork)) {
                 channel = channelOrg;
             }
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
-        LOGGER.info(channel+"-"+keywork+"-"+channelType+"-"+baseurl+"-"+channelOrg+"-"+po.toString());
-        list = videoDao.getChannelItems(channel,keywork,channelType,baseurl); 
+        LOGGER.info(channel+"-"+keywork+"-"+channelType+"-"+"-"+channelOrg+"-"+po.toString());
+        list = videoDao.getChannelItems(channel,keywork,channelType, null);
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
             public void action(VideoPo i, RecommendVo t) {
