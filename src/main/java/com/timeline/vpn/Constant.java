@@ -143,7 +143,7 @@ public class Constant {
     public static final String comma = ",";
     public static final String fen = ";";
     public static final String mao = ":";
-    public static final String line = "_";
+    public static final String line = "-";
     public static final String PLAYTYPE = "SEXPLAY";
 
     public static final int dataType_RECOMMENT = 2;
