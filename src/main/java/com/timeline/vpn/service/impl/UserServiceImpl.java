@@ -329,7 +329,7 @@ public class UserServiceImpl implements UserService {
     public InfoListVo<RecommendVo> getRecommendLocal(BaseQuery baseQuery, PageBaseParam param) {
         PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList;
-        poList = recommendServiceProxy.getCustomeAllPage();
+        poList = recommendServiceProxy.getLocal();
         for (int index = 0; index < poList.size(); index++) {
             if (StringUtils.isEmpty(poList.get(index).getColor())) {
                 poList.get(index).setColor(Constant.colorBg.get(index % Constant.colorBg.size()));
