@@ -19,6 +19,7 @@ public interface IRecommendService {
     public void delCustome(Integer id);
     public void replaceCustome(RecommendPo po);
     public List<RecommendPo> getRecoPage();
-    
+
+    public List<RecommendPo> getLocal();
 }
 

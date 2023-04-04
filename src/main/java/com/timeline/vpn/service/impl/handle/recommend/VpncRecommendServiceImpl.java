@@ -63,6 +63,9 @@ public class VpncRecommendServiceImpl implements BaseRecommendServie{
     public List<RecommendPo> getAreaPage(BaseQuery baseQuery) {
         return null;
     }
-
+    @Override
+    public List<RecommendPo> getLocal() {
+        return recommendDao.getLocal();
+    }
 }
 

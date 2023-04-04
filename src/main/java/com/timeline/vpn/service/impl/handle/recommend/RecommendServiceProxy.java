@@ -35,7 +35,10 @@ public class RecommendServiceProxy extends BaseMapServiceProxy<BaseRecommendServ
     public List<RecommendPo> getCustomeAllPage() {
         return getService().getCustomeAllPage();
     }
-
+    @Override
+    public List<RecommendPo> getLocal() {
+        return getService().getLocal();
+    }
     @Override
     public void delCustome(Integer id) {
         getService().delCustome(id);        

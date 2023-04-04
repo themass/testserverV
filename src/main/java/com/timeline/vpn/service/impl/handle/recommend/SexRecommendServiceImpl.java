@@ -57,6 +57,11 @@ public class SexRecommendServiceImpl implements BaseRecommendServie{
     }
 
     @Override
+    public List<RecommendPo> getLocal() {
+        return recommendDao.getLocal();
+    }
+
+    @Override
     public String getAgent() {
         return Constant.SEX;
     }

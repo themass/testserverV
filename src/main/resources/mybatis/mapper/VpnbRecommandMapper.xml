@@ -52,6 +52,9 @@
 	<select id="getCustomeAllPage" resultMap="RecommendCustomeMap">
 		select * from vpn.recommendCustome order by createTime desc
 	</select>
+	<select id="getLocal" resultMap="RecommendCustomeMap">
+		select * from vpn.recommend_local order by createTime desc
+	</select>
 	<insert id="replaceCustome">
 	    replace into
 		vpn.recommendCustome(id,title,actionUrl,name,createTime,color)

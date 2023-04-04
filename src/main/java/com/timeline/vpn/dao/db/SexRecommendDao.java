@@ -21,5 +21,7 @@ public interface SexRecommendDao extends BaseDBDao<RecommendPo> {
     public void replaceCustome(RecommendPo po);
     public List<RecommendPo> getRecoPage();
     public List<RecommendPo> getAreaPage();
+
+    List<RecommendPo> getLocal();
 }
 

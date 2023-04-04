@@ -53,7 +53,11 @@ public class DataController extends BaseController {
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(userService.getRecommendCustomePage(baseQuery,form.toParam()));
     }
-    
+    @RequestMapping(value = "/recommend/local.json", method = {RequestMethod.POST,RequestMethod.GET})
+    public JsonResult local(@UserInfo(required=true) BaseQuery baseQuery,
+            @ModelAttribute @Valid PageBaseForm form) {
+        return new JsonResult(userService.getRecommendLocal(baseQuery,form.toParam()));
+    }
     
     
     

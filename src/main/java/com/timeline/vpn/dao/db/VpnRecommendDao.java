@@ -20,5 +20,7 @@ public interface VpnRecommendDao extends BaseDBDao<RecommendPo> {
     public void delCustome(@Param("id")Integer id);
     public void replaceCustome(RecommendPo po);
     public List<RecommendPo> getRecoPage();
+
+    List<RecommendPo> getLocal();
 }
 

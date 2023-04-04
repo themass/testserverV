@@ -317,8 +317,23 @@ public class UserServiceImpl implements UserService {
             poList = recommendServiceProxy.getCustomePage(baseQuery.getUser().getName());
         }
         for (int index = 0; index < poList.size(); index++) {
-            if (StringUtils.isEmpty(poList.get(index).getColor()))
+            if (StringUtils.isEmpty(poList.get(index).getColor())) {
                 poList.get(index).setColor(Constant.colorBg.get(index % Constant.colorBg.size()));
+            }
+        }
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class, null);
+
+    }
+
+    @Override
+    public InfoListVo<RecommendVo> getRecommendLocal(BaseQuery baseQuery, PageBaseParam param) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<RecommendPo> poList;
+        poList = recommendServiceProxy.getCustomeAllPage();
+        for (int index = 0; index < poList.size(); index++) {
+            if (StringUtils.isEmpty(poList.get(index).getColor())) {
+                poList.get(index).setColor(Constant.colorBg.get(index % Constant.colorBg.size()));
+            }
         }
         return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class, null);
 

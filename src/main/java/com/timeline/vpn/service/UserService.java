@@ -40,5 +40,6 @@ public interface UserService {
 
     public void delCustome(BaseQuery baseQuery, int id);
     public InfoListVo<RecommendVo> getRecommendCustomePage(BaseQuery baseQuery, PageBaseParam param);
+    public InfoListVo<RecommendVo> getRecommendLocal(BaseQuery baseQuery, PageBaseParam param);
 }
 
