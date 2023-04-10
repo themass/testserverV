@@ -15,7 +15,7 @@ public class VersionInfoVo {
     private Boolean logUp;
     private StateUseVo stateUse;
     private String dnspodIp;
-    private Boolean needDnspod=true;
+    private Boolean needDnspod=false;
     private String vpnUrl;
     private String vitamioExt;
     private VipDescVo vipDesc;
