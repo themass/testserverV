@@ -38,7 +38,7 @@ public class VersionHandlerInterceptor extends HandlerInterceptorAdapter {
         }
         if (app == null || !app.check()) {
             LOGGER.error("恶意攻击--devapp={}",app);
-            throw new MonitorException("服务异常，请稍后再试");
+            throw new MonitorException("try again");
         }
         VersionInfoVo vo = dataService.getMaxVersion(app,app.getChannel());
         long version = Long.parseLong(app.getVersion());

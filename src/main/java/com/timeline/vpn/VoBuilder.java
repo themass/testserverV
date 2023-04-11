@@ -128,16 +128,16 @@ public class VoBuilder {
         vo.setLike(StringUtils.isNotBlank(po.getLikeUsers()) && po.getLikeUsers().contains(name));
         vo.setTime(po.getCreateTime() != null ? po.getCreateTime().getTime() : 0);
         if(org.apache.commons.lang3.StringUtils.isEmpty(po.getIpLocal())) {
-            vo.setWhere("来自火星");
+            vo.setWhere("from universe");
         }else {
             vo.setWhere(po.getIpLocal());
         }
         if(po.getAppName().equals("VPN")) {
-            vo.setAppName("Free用户");
+            vo.setAppName("FreeVPN");
         }else if(po.getAppName().equals("VPNVPNC")) {
-            vo.setAppName("灯塔用户");
+            vo.setAppName("dt");
         }else if(po.getAppName().equals("SEX")) {
-            vo.setAppName("红颜用户");
+            vo.setAppName("afreedom");
         } 
         return vo;
     }
