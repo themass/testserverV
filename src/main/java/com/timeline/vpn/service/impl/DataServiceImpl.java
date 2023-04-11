@@ -193,9 +193,9 @@ public class DataServiceImpl implements DataService {
         }
 //        LOGGER.info("traf="+vo.getTraf());
         VipDescVo desc = new VipDescVo(); 
-        desc.setDesc("不支持中国大陆与朝鲜用户");
-        desc.setDesc1("不支持中国大陆与朝鲜用户");
-        desc.setDesc2("邀请用户40积分/人；大于5人送vip3-15天；\\n大于10人送vip3-30天；\\n大于15人 送vip3-50天+pc1个月/200G流量");
+        desc.setDesc("Don't support Chinese and North Korean users");
+        desc.setDesc1("Don't support Chinese and North Korean users");
+        desc.setDesc2("");
 //        desc.setDesc3(getMessage(Constant.ResultMsg.RESULT_MSG_DESC5, baseQuery.getAppInfo().getLang()));
 //        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
 ////          desc.setDesc("赚积分兑换VIP：详见“关于”");
