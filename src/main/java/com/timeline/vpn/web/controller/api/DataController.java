@@ -80,7 +80,7 @@ public class DataController extends BaseController {
         return new JsonResult(dataService.getAllDon(baseQuery));
     }
     
-    @RequestMapping(value = "/feed/wanna.json", method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "/feed/wanna.json", method = {RequestMethod.GET})
     public JsonResult wanna(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getIwannaPage(baseQuery, form.toParam())); 
@@ -96,7 +96,7 @@ public class DataController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     
-    @RequestMapping(value = "/feed/score.json", method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "/feed/score.json", method = {RequestMethod.GET})
     public JsonResult wannaScore(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataService.getIwannaScorePage(baseQuery, form.toParam()));
