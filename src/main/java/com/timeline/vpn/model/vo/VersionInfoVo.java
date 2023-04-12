@@ -24,6 +24,7 @@ public class VersionInfoVo {
     private boolean update = true;
     private  float traf=10;
     private Boolean chinaUser = false;
+    private String userIp;
     public String getVersion() {
         return version;
     }
@@ -168,6 +169,14 @@ public class VersionInfoVo {
         this.chinaUser = chinaUser;
     }
 
+    public String getUserIp() {
+        return userIp;
+    }
+
+    public void setUserIp(String userIp) {
+        this.userIp = userIp;
+    }
+
     @Override
     public String toString() {
         return "VersionInfoVo{" +
@@ -189,6 +198,7 @@ public class VersionInfoVo {
                 ", update=" + update +
                 ", traf=" + traf +
                 ", chinaUser=" + chinaUser +
+                ", userIp='" + userIp + '\'' +
                 '}';
     }
 }

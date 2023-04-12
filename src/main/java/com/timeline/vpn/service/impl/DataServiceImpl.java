@@ -174,6 +174,7 @@ public class DataServiceImpl implements DataService {
         vo.setAdsShow(false);
         vo.setLogUp(true);
         vo.setVpnUrl(vpnVer.getUrl());
+        vo.setUserIp(baseQuery.getAppInfo().getUserIp());
 //        if(!channel.contains(Constant.VPN)){
 //            AppVersion vpnVer = versionDao.getLast(platform,Constant.VPN);
 //            vo.setVpnUrl(vpnVer.getUrl());
