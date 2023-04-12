@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.util.NetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import com.timeline.vpn.model.po.AppInfoPo;
 import com.timeline.vpn.model.po.AppVersion;
 import com.timeline.vpn.model.po.DomainPo;
 import com.timeline.vpn.model.po.IWannaPo;
+import com.timeline.vpn.model.po.IpAdress;
 import com.timeline.vpn.model.po.RecommendPo;
 import com.timeline.vpn.model.po.WeixinAccessPo;
 import com.timeline.vpn.model.vo.AppInfoVo;
@@ -232,16 +234,35 @@ public class DataServiceImpl implements DataService {
 //          desc.setDesc1(getMessage(Constant.ResultMsg.RESULT_MSG_DESC3, baseQuery.getAppInfo().getLang()));
 //          desc.setDesc2(getMessage(Constant.ResultMsg.RESULT_MSG_DESC1, baseQuery.getAppInfo().getLang()));
 //        }
-        if(baseQuery!=null&&baseQuery.getUser()!=null)
+        if(baseQuery!=null&&baseQuery.getUser()!=null) {
             desc.setScore(baseQuery.getUser().getScore());
+        }
         vo.setVitamioExt(Constant.VIDEO_EXT);
         vo.setVipDesc(desc);
+        vo.setChain(isChainIp(baseQuery));
 //        vo.setQq("146312741");
         return vo;
     }
+    private boolean isChainIp(BaseQuery query){
+        String url = "http://www.geoplugin.net/json.gp?ip=";
+        String str = HttpCommonUtil.sendGet(url+query.getAppInfo().getUserIp());
+        LOGGER.info(str+"-----"+query);
+        try {
+            if (!StringUtils.isEmpty(str)) {
+                IpAdress vo = JsonUtil.readValue(str, IpAdress.class);
+                if ("China".equals(vo.getGeoplugin_countryName()) || "CN".equals(vo.getGeoplugin_countryCode())) {
+                    return true;
+                }
+            }
+        }catch (Exception e){
+            LOGGER.error("isChainIp ",e);
+        }
+        return false;
+
+    }
     private String getMessage(String key, String lang) {
       return messagesource.getMessage(key, null, DeviceUtil.getLocale(lang));
-  }
+    }
 
     @Override
     public InfoListVo<RecommendVo> getRecommendRecPage(BaseQuery baseQuery, PageBaseParam param) {

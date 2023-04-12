@@ -23,6 +23,7 @@ public class VersionInfoVo {
     private Boolean showGdt;
     private boolean update = true;
     private  float traf=10;
+    private Boolean isChain = false;
     public String getVersion() {
         return version;
     }
@@ -159,9 +160,35 @@ public class VersionInfoVo {
         this.traf = traf;
     }
 
+    public Boolean getChain() {
+        return isChain;
+    }
+
+    public void setChain(Boolean chain) {
+        isChain = chain;
+    }
+
     @Override
     public String toString() {
-        return "VersionInfoVo [version=" + version + ", content=" + content + ", url=" + url
-                + ", minBuild=" + minBuild + ", maxBuild=" + maxBuild + "]";
+        return "VersionInfoVo{" +
+                "version='" + version + '\'' +
+                ", content='" + content + '\'' +
+                ", url='" + url + '\'' +
+                ", minBuild=" + minBuild +
+                ", maxBuild=" + maxBuild +
+                ", adsShow=" + adsShow +
+                ", logUp=" + logUp +
+                ", stateUse=" + stateUse +
+                ", dnspodIp='" + dnspodIp + '\'' +
+                ", needDnspod=" + needDnspod +
+                ", vpnUrl='" + vpnUrl + '\'' +
+                ", vitamioExt='" + vitamioExt + '\'' +
+                ", vipDesc=" + vipDesc +
+                ", qq='" + qq + '\'' +
+                ", showGdt=" + showGdt +
+                ", update=" + update +
+                ", traf=" + traf +
+                ", isChain=" + isChain +
+                '}';
     }
 }

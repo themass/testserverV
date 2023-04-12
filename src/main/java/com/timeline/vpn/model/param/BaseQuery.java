@@ -37,4 +37,12 @@ public class BaseQuery {
         this.user = user;
     }
 
+    @Override
+    public String toString() {
+        return "BaseQuery{" +
+                "appInfo=" + appInfo +
+                ", token='" + token + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }
