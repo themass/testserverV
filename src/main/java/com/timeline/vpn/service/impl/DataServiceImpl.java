@@ -239,7 +239,7 @@ public class DataServiceImpl implements DataService {
         }
         vo.setVitamioExt(Constant.VIDEO_EXT);
         vo.setVipDesc(desc);
-        vo.setChain(isChainIp(baseQuery));
+        vo.setChinaUser(isChainIp(baseQuery));
 //        vo.setQq("146312741");
         return vo;
     }
@@ -250,6 +250,7 @@ public class DataServiceImpl implements DataService {
         try {
             if (!StringUtils.isEmpty(str)) {
                 IpAdress vo = JsonUtil.readValue(str, IpAdress.class);
+                LOGGER.info(vo.toString());
                 if ("China".equals(vo.getGeoplugin_countryName()) || "CN".equals(vo.getGeoplugin_countryCode())) {
                     return true;
                 }
