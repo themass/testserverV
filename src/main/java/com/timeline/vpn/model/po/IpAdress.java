@@ -64,4 +64,17 @@ public class IpAdress {
     public void setGeoplugin_countryName(String geoplugin_countryName) {
         this.geoplugin_countryName = geoplugin_countryName;
     }
+
+    @Override
+    public String toString() {
+        return "IpAdress{" +
+                "geoplugin_request='" + geoplugin_request + '\'' +
+                ", geoplugin_city='" + geoplugin_city + '\'' +
+                ", geoplugin_region='" + geoplugin_region + '\'' +
+                ", geoplugin_regionCode='" + geoplugin_regionCode + '\'' +
+                ", geoplugin_regionName='" + geoplugin_regionName + '\'' +
+                ", geoplugin_countryCode='" + geoplugin_countryCode + '\'' +
+                ", geoplugin_countryName='" + geoplugin_countryName + '\'' +
+                '}';
+    }
 }
