@@ -1,6 +1,7 @@
 package com.timeline.vpn.web.common;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -90,7 +91,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
 
     private String getMessage(String key, HttpServletRequest request) {
         try {
-            String msg = messagesource.getMessage(key, null, DeviceUtil.getLocale(request));
+            String msg = messagesource.getMessage(key, null, Locale.ENGLISH);
             if(StringUtils.isEmpty(msg)) {
                 return key;
             }
