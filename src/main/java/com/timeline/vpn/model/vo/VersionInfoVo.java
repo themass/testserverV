@@ -23,7 +23,7 @@ public class VersionInfoVo {
     private Boolean showGdt;
     private boolean update = true;
     private  float traf=10;
-    private Boolean isChain = false;
+    private Boolean chinaUser = false;
     public String getVersion() {
         return version;
     }
@@ -160,12 +160,12 @@ public class VersionInfoVo {
         this.traf = traf;
     }
 
-    public Boolean getChain() {
-        return isChain;
+    public Boolean getChinaUser() {
+        return chinaUser;
     }
 
-    public void setChain(Boolean chain) {
-        isChain = chain;
+    public void setChinaUser(Boolean chinaUser) {
+        this.chinaUser = chinaUser;
     }
 
     @Override
@@ -188,7 +188,7 @@ public class VersionInfoVo {
                 ", showGdt=" + showGdt +
                 ", update=" + update +
                 ", traf=" + traf +
-                ", isChain=" + isChain +
+                ", chinaUser=" + chinaUser +
                 '}';
     }
 }
