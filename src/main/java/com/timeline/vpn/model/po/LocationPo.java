@@ -1,5 +1,8 @@
 package com.timeline.vpn.model.po;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 /**
  * @author gqli
  * @date 2016年8月9日 下午12:20:59
@@ -148,13 +151,23 @@ public class LocationPo implements Comparable<LocationPo>{
             return -1;
         }else if("大陆不可用".equals(name) && "大陆不可用".equals(o.getName()) ) {
             return ename.compareTo(o.getEname());
+        }else if(category.equals("random")){
+            return -1;
+        }else if(o.category.equals("random")){
+            return 1;
         }
         int ret = type-o.getType();
-        ret = (ret==0?name.compareTo(o.getName()):ret);
-        return ret ==0?id-o.getId():ret;
+        int cate = category.compareTo(o.getCategory());
+        if(ret==0){
+            if(cate==0){
+               return name.compareTo(o.getName())==0?id-o.getId():name.compareTo(o.getName());
+            }else{
+                return cate;
+            }
+        }else{
+            return  ret;
+        }
     }
-    
-
 
 }
 
