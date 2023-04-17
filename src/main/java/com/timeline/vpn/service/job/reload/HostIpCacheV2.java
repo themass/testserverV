@@ -53,6 +53,7 @@ public class HostIpCacheV2 extends ReloadJob {
             lock.writeLock().unlock();
         }
     }
+    @Override
     @PostConstruct
     public void reload() {
         init();
@@ -68,8 +69,9 @@ public class HostIpCacheV2 extends ReloadJob {
                 if(po.getWeight()==null){
                     list.add(po);
                 }else{
-                    for(int i=0;i<po.getWeight();i++)
+                    for(int i=0;i<po.getWeight();i++) {
                         list.add(po);
+                    }
                 }
             }
         } finally {

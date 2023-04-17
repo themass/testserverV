@@ -74,41 +74,6 @@ public class HostServerImpl implements HostService {
     private LocationV2Dao cityV2Dao;
 
     @Override
-    public ServerVo getHostInfo(BaseQuery baseQuery, int location) {
-        RadCheck check = null;
-        String name = baseQuery.getUser()==null?baseQuery.getAppInfo().getDevId():baseQuery.getUser().getName();
-        check = checkService.getRadUser(name);
-        if(check==null){
-            check = checkService.addRadUser(baseQuery.getAppInfo().getDevId(), AES2.getRandom(), Constant.UserGroup.RAD_GROUP_FREE);
-        }
-        
-        BuildAction<HostPo, HostVo> action = null;
-        List<HostPo> hostList = new ArrayList<>();
-        String channel = Constant.VPN;
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())||Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
-          channel = Constant.VPNB;
-        }
-        if (location == Constant.LOCATION_ALL) {
-            List<HostPo> list = hostDao.getRandom(channel);
-            //优化成连接数最少或者网络带宽最好的一个
-            hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
-            hostList.add(list.get(RandomUtils.nextInt(0, list.size())));
-        } else {
-            LocationPo loc = cityDao.get(location);
-            if(loc==null){
-                throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
-            }
-            if(!checkPermission(loc.getType(),baseQuery.getUser())){
-                throw new DataException(Constant.ResultMsg.RESULT_PERM_ERROR);
-            }
-            hostList = hostDao.getByLocation(location);
-        }
-        if (CollectionUtils.isEmpty(hostList)) {
-            throw new DataException(Constant.ResultMsg.RESULT_HOST_ERROR);
-        }
-        return VoBuilder.buildServerVo(check.getUserName(),check.getValue(),Constant.ServeType.SERVER_TYPE_FREE, hostList,action);
-    }
-    @Override
     public ServerVo getHostInfoById(BaseQuery baseQuery, int id){
         RadCheck check = null;
         String name = baseQuery.getUser()==null?baseQuery.getAppInfo().getDevId():baseQuery.getUser().getName();
@@ -141,49 +106,6 @@ public class HostServerImpl implements HostService {
             }
         }
         return false;
-    }
-    @Override
-    public InfoListVo<LocationVo> getAllLocation() {
-        return VoBuilder.buildListInfoVo(cityDao.getAll(), LocationVo.class,null);
-    }
-    @Override
-    public InfoListVo<LocationVo> getAllLocationCache(BaseQuery baseQuery,Integer type) {
-        List<LocationPo> list = new ArrayList<>();
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())||Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
-            list = HostIpCacheVpnb.getLocationList();
-          }else {
-            list = HostIpCache.getLocationList();
-          }
-        List<LocationPo> ret = new ArrayList<>();
-        for(LocationPo po : list) {
-            if(po.getType()==type) {
-                ret.add(po);
-            }
-        }
-        return VoBuilder.buildListInfoVo(ret, LocationVo.class,null);
-    }
-    @Override
-    public InfoListVo<VipLocationVo> getAllLocationVipCache(BaseQuery baseQuery) {
-      List<LocationPo> list = null;
-      if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())||Constant.VPND.equals(baseQuery.getAppInfo().getNetType())) {
-        list = HostIpCacheVpnb.getLocationList();
-      }else {
-        list = HostIpCache.getLocationList();
-      }
-      InfoListVo<LocationVo> locationVo = VoBuilder.buildListInfoVo(list, LocationVo.class,null);
-      Map<Integer, Collection<LocationVo>> map =BeanBuilder.buildMultimap(locationVo.getVoList(), new Function<LocationVo, Integer>() {
-
-          @Override
-          public Integer apply(LocationVo input) {
-              return input.getType();
-          }
-      });
-//      if(Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())) {
-//          map.remove(0);
-//          map.remove(1);
-//          LOGGER.info("中国灯塔用户 3  1000008024->"+map.keySet());
-//      }
-      return VoBuilder.buildListVipLocationVo(map);
     }
     @Override
     public InfoListVo<DnsResverVo> getDnsResver(BaseQuery baseQuery,List<String> domains) {

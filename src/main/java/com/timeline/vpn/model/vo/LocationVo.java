@@ -16,6 +16,9 @@ public class LocationVo {
     private Integer hostId;
     private String gateway;
     private Integer port;
+    private String  category;
+    //代表这条数据是 location信息还是一条分类;0 = location信息，1 = cate信息
+    private int  locationType =0 ;
 
     public String getImg() {
         return img;
@@ -96,6 +99,13 @@ public class LocationVo {
     public void setPort(Integer port) {
         this.port = port;
     }
-    
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }
 

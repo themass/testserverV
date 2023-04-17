@@ -68,6 +68,7 @@ public class DataSoundServiceImpl implements DataSoundService {
         }
         
         return VoBuilder.buildPageInfoVo((Page<SoundItems>) poList, SoundItemsVo.class,new BuildAction<SoundItems,SoundItemsVo>(){
+            @Override
             public void action(SoundItems i, SoundItemsVo t){
                 if(!StringUtils.isEmpty(i.getMyFile()) && ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){
                     t.setUrl(i.getMyFile());
