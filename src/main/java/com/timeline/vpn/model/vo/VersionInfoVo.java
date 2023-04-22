@@ -25,6 +25,7 @@ public class VersionInfoVo {
     private  float traf=10;
     private Boolean chinaUser = false;
     private String userIp;
+    private Boolean checkChina = true;
     public String getVersion() {
         return version;
     }
@@ -175,6 +176,22 @@ public class VersionInfoVo {
 
     public void setUserIp(String userIp) {
         this.userIp = userIp;
+    }
+
+    public void setMinBuild(int minBuild) {
+        this.minBuild = minBuild;
+    }
+
+    public void setMaxBuild(int maxBuild) {
+        this.maxBuild = maxBuild;
+    }
+
+    public Boolean getCheckChina() {
+        return checkChina;
+    }
+
+    public void setCheckChina(Boolean checkChina) {
+        this.checkChina = checkChina;
     }
 
     @Override
