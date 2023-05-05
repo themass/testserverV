@@ -58,8 +58,8 @@ public class HttpCommonUtil {
     public static final String UTF8_CHARSET = DEFAULT_CHARSET;
     private static final String UA =
             "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-    private static RequestConfig config = RequestConfig.custom().setConnectTimeout(15000)
-            .setSocketTimeout(30000).setConnectionRequestTimeout(20000).build();
+    private static RequestConfig config = RequestConfig.custom().setConnectTimeout(3000)
+            .setSocketTimeout(3000).setConnectionRequestTimeout(5000).build();
     private static HttpClientBuilder httpClientBuilder = null;
     private static final int MAX_PERROUTE = 800;
     private static final int MAXTOTAL = 2500;
