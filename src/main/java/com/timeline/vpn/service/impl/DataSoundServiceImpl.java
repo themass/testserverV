@@ -33,9 +33,9 @@ public class DataSoundServiceImpl implements DataSoundService {
 
     @Override
     public InfoListVo<RecommendVo> getAllSoundChannel(final BaseQuery baseQuery, PageBaseParam param) {
-//        PageHelper.startPage(param.getStart(), param.getLimit());
+        PageHelper.startPage(param.getStart(), param.getLimit());
         List<SoundChannel> poList = soundChannelDao.getAll();
-        return VoBuilder.buildPageInfoVo(poList, RecommendVo.class,new VoBuilder.BuildAction<SoundChannel,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo((Page<SoundChannel>) poList, RecommendVo.class,new VoBuilder.BuildAction<SoundChannel,RecommendVo>(){
             @Override
             public void action(SoundChannel i, RecommendVo t) {
                 t.setActionUrl(i.getActionUrl());
@@ -51,12 +51,12 @@ public class DataSoundServiceImpl implements DataSoundService {
                     t.setRate(i.getRate());
                 }
             }
-        },param.getLimit());
+        });
     }
 
     @Override
     public InfoListVo<SoundItemsVo> getSoundItems(final BaseQuery baseQuery,PageBaseParam param,String channel,String keywork) {
-//        PageHelper.startPage(param.getStart(), param.getLimit());
+        PageHelper.startPage(param.getStart(), param.getLimit());
         List<SoundItems> poList = null;
         if(!StringUtils.isEmpty(channel) && (channel.contains("短篇小说") ||channel.contains("现场"))) {
             if(!StringUtils.isEmpty(keywork)) {
@@ -67,14 +67,14 @@ public class DataSoundServiceImpl implements DataSoundService {
             poList = soundChannelDao.getByChannel(channel,keywork);
         }
         
-        return VoBuilder.buildPageInfoVo(poList, SoundItemsVo.class,new BuildAction<SoundItems,SoundItemsVo>(){
+        return VoBuilder.buildPageInfoVo((Page<SoundItems>) poList, SoundItemsVo.class,new BuildAction<SoundItems,SoundItemsVo>(){
             @Override
             public void action(SoundItems i, SoundItemsVo t){
                 if(!StringUtils.isEmpty(i.getMyFile()) && ZhIpCache.isChinaIp(baseQuery.getAppInfo().getUserIp())){
                     t.setUrl(i.getMyFile());
                 }
             }
-        },param.getLimit());
+        });
     }
 
 

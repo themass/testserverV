@@ -309,7 +309,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public InfoListVo<RecommendVo> getRecommendCustomePage(BaseQuery baseQuery,
             PageBaseParam param) {
-//        PageHelper.startPage(param.getStart(), param.getLimit());
+        PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList;
         if (DeviceUtil.isAdmin(baseQuery)) {
             poList = recommendServiceProxy.getCustomeAllPage();
@@ -321,13 +321,13 @@ public class UserServiceImpl implements UserService {
                 poList.get(index).setColor(Constant.colorBg.get(index % Constant.colorBg.size()));
             }
         }
-        return VoBuilder.buildPageInfoVo(poList, RecommendVo.class, null,param.getLimit());
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class, null);
 
     }
 
     @Override
     public InfoListVo<RecommendVo> getRecommendLocal(BaseQuery baseQuery, PageBaseParam param) {
-//        PageHelper.startPage(param.getStart(), param.getLimit());
+        PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList;
         poList = recommendServiceProxy.getLocal();
         for (int index = 0; index < poList.size(); index++) {
@@ -335,7 +335,7 @@ public class UserServiceImpl implements UserService {
                 poList.get(index).setColor(Constant.colorBg.get(index % Constant.colorBg.size()));
             }
         }
-        return VoBuilder.buildPageInfoVo(poList, RecommendVo.class, null,param.getLimit());
+        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class, null);
 
     }
 
