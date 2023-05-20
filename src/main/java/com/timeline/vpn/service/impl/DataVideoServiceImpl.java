@@ -118,7 +118,7 @@ public class DataVideoServiceImpl implements DataVideoService {
 //        PageHelper.startPage(param.getStart(), param.getLimit());
         LOGGER.info(channel+"-"+keywork+"-"+channelType+"-"+"-"+channelOrg+"-"+po.toString());
         list = videoDao.getChannelItems(channel,keywork,channelType, null);
-        return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
             public void action(VideoPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl());
