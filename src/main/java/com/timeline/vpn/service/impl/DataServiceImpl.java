@@ -89,9 +89,9 @@ public class DataServiceImpl implements DataService {
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
         int type = baseQuery.getUser()==null?Constant.RecommendType.TYPE_OTHER:
             (baseQuery.getUser().getLevel()==Constant.UserLevel.LEVEL_FREE?Constant.RecommendType.TYPE_REG:Constant.RecommendType.TYPE_VIP);
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendServiceProxy.getPage(type);
-        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
 
             @Override
             public void action(RecommendPo i, RecommendVo t) {
@@ -100,7 +100,7 @@ public class DataServiceImpl implements DataService {
                 }
             }
             
-        });
+        },param.getLimit());
     }
     @Override
     public InfoListVo<RecommendVo> getRecommendMoviePage(BaseQuery baseQuery) {
@@ -118,9 +118,9 @@ public class DataServiceImpl implements DataService {
     @Override
     public InfoListVo<RecommendVo> getRecommendAreaPage(BaseQuery baseQuery, PageBaseParam param) {
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendServiceProxy.getAreaPage(baseQuery);
-        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
 
             @Override
             public void action(RecommendPo i, RecommendVo t) {
@@ -129,14 +129,14 @@ public class DataServiceImpl implements DataService {
                 }
             }
              
-        });
+        },param.getLimit());
     }
     @Override
     public InfoListVo<RecommendVo> getRecommendVipPage( final BaseQuery baseQuery, PageBaseParam param) {
         final String baseUrl = CdnChooseUtil.getImageBaseUrl(baseQuery.getAppInfo().getUserIp());
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendServiceProxy.getVipPage(baseQuery);
-        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(poList, RecommendVo.class,new BuildAction<RecommendPo,RecommendVo>(){
 
             @Override
             public void action(RecommendPo i, RecommendVo t) {
@@ -145,7 +145,7 @@ public class DataServiceImpl implements DataService {
                 }
             }
             
-        });
+        },param.getLimit());
     }
     @Override
     public VersionInfoVo getMaxVersion(DevApp app,String channel) {
@@ -269,9 +269,9 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public InfoListVo<RecommendVo> getRecommendRecPage(BaseQuery baseQuery, PageBaseParam param) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<RecommendPo> poList = recommendServiceProxy.getRecoPage();
-        return VoBuilder.buildPageInfoVo((Page<RecommendPo>) poList, RecommendVo.class,null);
+        return VoBuilder.buildPageInfoVo(poList, RecommendVo.class,null,param.getLimit());
     }
 
     @Override
@@ -286,19 +286,19 @@ public class DataServiceImpl implements DataService {
     }
     @Override
     public InfoListVo<IWannaVo> getIwannaPage(BaseQuery baseQuery, PageBaseParam param) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        Page<IWannaPo> data = null;
+//        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<IWannaPo> data = null;
         if(DeviceUtil.isAdmin(baseQuery)) {
-            data = (Page<IWannaPo>) iWannaDao.getAll();
+            data = iWannaDao.getAll();
         }else {
             String name = baseQuery.getUser()!=null?baseQuery.getUser().getName():Constant.ADMIN_NAME;
-            data = (Page<IWannaPo>) iWannaDao.getPage(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType(),name);
+            data = iWannaDao.getPage(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType(),name);
         }
-        return VoBuilder.buildIWannaPageInfoVo(data, baseQuery);
+        return VoBuilder.buildIWannaPageInfoVo(data, baseQuery,param.getLimit());
     }
     @Override
     public InfoListVo<IWannnWeixinVo> getIwannaWeiXin() {
-        PageHelper.startPage(1, 30);
+//        PageHelper.startPage(1, 30);
         Page<IWannaPo> data = (Page<IWannaPo>) iWannaDao.getPage(null,Constant.ADMIN_NAME);
         return VoBuilder.buildListInfoVo(data, IWannnWeixinVo.class, null);
     }
@@ -330,15 +330,15 @@ public class DataServiceImpl implements DataService {
     }
     @Override
     public InfoListVo<IWannaVo> getIwannaScorePage(BaseQuery baseQuery, PageBaseParam param) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        Page<IWannaPo> data = null;
+//        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<IWannaPo> data = null;
         if(DeviceUtil.isAdmin(baseQuery)) {
-          data = (Page<IWannaPo>) iWannaDao.getAllFeed();
+          data = iWannaDao.getAllFeed();
         }else {
             String name = baseQuery.getUser()!=null?baseQuery.getUser().getName():Constant.ADMIN_NAME;
-            data = (Page<IWannaPo>) iWannaDao.getPageFeed(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType(),name);
+            data = iWannaDao.getPageFeed(baseQuery.getAppInfo().getChannel()+baseQuery.getAppInfo().getNetType(),name);
         }
-        return VoBuilder.buildIWannaPageInfoVo(data, baseQuery);
+        return VoBuilder.buildIWannaPageInfoVo(data, baseQuery,param.getLimit());
     }
 
     @Override

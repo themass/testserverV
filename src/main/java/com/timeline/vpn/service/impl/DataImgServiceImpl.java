@@ -60,15 +60,15 @@ public class DataImgServiceImpl implements DataImgService {
         if(!StringUtils.isEmpty(keywork)) {
             channel = null;
         }
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel,keywork);
-        return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>) poList, ImgItemsVo.class,new VoBuilder.BuildAction<ImgItemsPo,ImgItemsVo>(){
+        return VoBuilder.buildPageInfoVo(poList, ImgItemsVo.class,new VoBuilder.BuildAction<ImgItemsPo,ImgItemsVo>(){
 
           @Override
           public void action(ImgItemsPo i, ImgItemsVo t) {
           }
           
-        });
+        },param.getLimit());
     }
     @Override
     public InfoListVo<RecommendVo> getImgItemImgs(BaseQuery baseQuery, PageBaseParam param,
@@ -77,9 +77,9 @@ public class DataImgServiceImpl implements DataImgService {
             channel = null;
         }
 
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<ImgItemsPo> poList = imgChannelDao.getByChannel(channel,keywork);
-        return VoBuilder.buildPageInfoVo((Page<ImgItemsPo>)poList, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(poList, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsPo,RecommendVo>(){
             @Override
             public void action(ImgItemsPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl());
@@ -93,7 +93,7 @@ public class DataImgServiceImpl implements DataImgService {
                 t.setShowLogo(i.getPics()+"张");
 //                t.setDataType(Constant.dataType_IMG_CHANNEL);
             }
-        });
+        },param.getLimit());
     }
     @Override
     public InfoListVo<ImgItemVo> getImgItem(final BaseQuery baseQuery, String url) {
@@ -134,9 +134,9 @@ public class DataImgServiceImpl implements DataImgService {
     @Override
     public InfoListVo<RecommendVo> getImgItem(BaseQuery baseQuery, String url, PageBaseParam param) {
         final ImgItemsPo itemsPo = imgChannelDao.getByUrl(url);
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<ImgItemsItemPo> list = imgChannelDao.getItem(url);
-        return VoBuilder.buildPageInfoVo((Page<ImgItemsItemPo>)list, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<ImgItemsItemPo,RecommendVo>(){
             @Override
             public void action(ImgItemsItemPo i, RecommendVo t) {
                 t.setActionUrl(i.getPicUrl().trim());
@@ -151,7 +151,7 @@ public class DataImgServiceImpl implements DataImgService {
 //                t.setDataType(Constant.dataType_IMG_CHANNEL);
 
             }
-        });
+        },param.getLimit());
     }
 
 

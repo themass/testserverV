@@ -101,8 +101,8 @@ public class VoBuilder {
         return vo;
     }
 
-    public static InfoListVo<IWannaVo> buildIWannaPageInfoVo(Page<IWannaPo> data,
-            BaseQuery baseQuery) {
+    public static InfoListVo<IWannaVo> buildIWannaPageInfoVo(List<IWannaPo> data,
+            BaseQuery baseQuery,int pageNum) {
         String name =
                 baseQuery.getUser() == null ? Constant.superMan : baseQuery.getUser().getName();
         InfoListVo<IWannaVo> page = new InfoListVo<IWannaVo>();
@@ -113,8 +113,8 @@ public class VoBuilder {
             }
         }
         page.setVoList(list);
-        page.setHasMore(data.getPageNum() < data.getPages());
-        page.setPageNum(data.getPageNum() + 1);
+        page.setHasMore(data.size()!=0);
+        page.setPageNum(pageNum+1);
         return page;
     }
     public static IWannnWeixinVo buildIWannaXinXVo(IWannaPo po, String name) {
@@ -145,12 +145,12 @@ public class VoBuilder {
         return vo;
     }
 
-    public static <M, I> InfoListVo<M> buildPageInfoVo(Page<I> data, Class<M> clasz,
-            BuildAction<I, M> action) {
+    public static <M, I> InfoListVo<M> buildPageInfoVo(List<I> data, Class<M> clasz,
+            BuildAction<I, M> action, int pageNum) {
         InfoListVo<M> page = buildListInfoVo(data, clasz, action);
-        page.setHasMore(data.getPageNum() < data.getPages());
-        page.setPageNum(data.getPageNum() + 1);
-        page.setTotal(data.getTotal());
+        page.setHasMore(data.size()!=0);
+        page.setPageNum(pageNum + 1);
+        page.setTotal(1000);
         return page; 
     }
 

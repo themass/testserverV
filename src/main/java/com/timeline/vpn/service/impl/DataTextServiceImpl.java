@@ -52,19 +52,19 @@ public class DataTextServiceImpl implements DataTextService {
     @Override
     public InfoListVo<TextItemsVo> getTextItems(final BaseQuery baseQuery, PageBaseParam param,
             String channel,String keyword) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         if(!StringUtils.isEmpty(keyword)) {
             channel = null;
         }
         List<TextItemsPo> poList = textChannelDao.getByChannel(channel,keyword);
-        return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,new VoBuilder.BuildAction<TextItemsPo,TextItemsVo>(){
+        return VoBuilder.buildPageInfoVo(poList, TextItemsVo.class,new VoBuilder.BuildAction<TextItemsPo,TextItemsVo>(){
 
             @Override
             public void action(TextItemsPo i, TextItemsVo t) {
               t.setFileUrl(CdnChooseUtil.getBookWebBaseUrl(baseQuery.getAppInfo().getUserIp())+i.getId()+".html");
             }
         }
-        );
+                ,param.getLimit());
     }
 
     @Override

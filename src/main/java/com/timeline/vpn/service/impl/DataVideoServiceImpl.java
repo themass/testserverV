@@ -37,9 +37,9 @@ public class DataVideoServiceImpl implements DataVideoService {
     private VideoDao videoDao;
     @Override
     public InfoListVo<RecommendVo> getVideoPage(BaseQuery baseQuery, PageBaseParam param) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<VideoPo> list = videoDao.getPage();
-        return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
             public void action(VideoPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl()); 
@@ -50,7 +50,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setParam(i.getUrl());
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
-        });
+        },param.getLimit());
     }
 
     @Override
@@ -115,7 +115,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 channel = channelOrg;
             }
         }
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         LOGGER.info(channel+"-"+keywork+"-"+channelType+"-"+"-"+channelOrg+"-"+po.toString());
         list = videoDao.getChannelItems(channel,keywork,channelType, null);
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
@@ -130,14 +130,14 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setExtra(i.getVideoType());
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
-        });
+        },param.getLimit());
     }
 
     @Override
     public InfoListVo<RecommendVo> getVideoUserPage(BaseQuery baseQuery, PageBaseParam param,String channel) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<VideoUserPo> list = videoDao.getUsers(channel);
-        return VoBuilder.buildPageInfoVo((Page<VideoUserPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserPo,RecommendVo>(){
             @Override
             public void action(VideoUserPo i, RecommendVo t) {
                 t.setActionUrl(i.getUserId());
@@ -150,14 +150,14 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 t.setChannelType(i.getChannelType());
             }
-        });
+        },param.getLimit());
     }
 
     @Override
     public InfoListVo<RecommendVo> getVideoUserItemsPage(BaseQuery baseQuery, PageBaseParam param,
             String userId,String keyword) {
         VideoUserPo po = videoDao.getUserByUserId(userId);
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         String channel = po.getChannel();
         if(!StringUtils.isEmpty(keyword)) {
             userId = null;
@@ -169,7 +169,7 @@ public class DataVideoServiceImpl implements DataVideoService {
         }
         
         List<VideoUserItemPo> list = videoDao.getUserItems(channel,userId,keyword);
-        return VoBuilder.buildPageInfoVo((Page<VideoUserItemPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserItemPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserItemPo,RecommendVo>(){
             @Override
             public void action(VideoUserItemPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl());
@@ -181,14 +181,14 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setExtra(i.getVideoType());
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
-        });
+        },param.getLimit());
     }
 
     @Override
     public InfoListVo<RecommendVo> getVideoTvItemPage(BaseQuery baseQuery, PageBaseParam param,
             String channel) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
-        Page<VideoPo>list = (Page<VideoPo>)videoDao.getTvItem(channel);
+//        PageHelper.startPage(param.getStart(), param.getLimit());
+        List<VideoPo>list = videoDao.getTvItem(channel);
         return VoBuilder.buildPageInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
             public void action(VideoPo i, RecommendVo t) {
@@ -201,15 +201,15 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setExtra(i.getVideoType());
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
-        });
+        },param.getLimit());
     }
 
     @Override
     public InfoListVo<RecommendVo> getVideoTvChannelPage(BaseQuery baseQuery,  PageBaseParam param,String channelType,
             String keyword) {
-        PageHelper.startPage(param.getStart(), param.getLimit());
+//        PageHelper.startPage(param.getStart(), param.getLimit());
         List<VideoChannelPo> list = videoDao.getTvChannel(channelType, keyword);
-        return VoBuilder.buildPageInfoVo((Page<VideoChannelPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoChannelPo,RecommendVo>(){
+        return VoBuilder.buildPageInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<VideoChannelPo,RecommendVo>(){
             @Override
             public void action(VideoChannelPo i, RecommendVo t) {
                 t.setActionUrl(i.getUrl());
@@ -221,7 +221,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setShowLogo(i.getCount()+"集");
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
-        });
+        },param.getLimit());
     }
 
 }
