@@ -23,7 +23,7 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/text")
 public class TextController extends BaseController {
-    @RequestMapping(value = {"/channle.json"}, method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = {"/channel.json"}, method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult channle(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form) {
         return new JsonResult(dataTextService.getAllTextChannel(baseQuery, form.toParam()));
