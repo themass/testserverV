@@ -17,11 +17,11 @@
 	        and channelName=#{channel}
 	    </if> 
 	    <if test="keyword!=null">
-	        and name like CONCAT('%',#{keyword},'%')
+	        and LOWER(name) like CONCAT('%',#{keyword},'%')
 	    </if>
 	    order by sortType desc,id asc
 	</select>
 	<select id="getFile" resultMap="TextItemMap">
-	    select * from vpn.textitems_item where id=#{id}
+	    select * from vpn.textitems_item where fileUrl = (select url from vpn.textitems where id=#{id}) limit 1
 	</select>
 </mapper>
