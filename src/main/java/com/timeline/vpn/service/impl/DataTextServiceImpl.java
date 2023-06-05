@@ -75,10 +75,12 @@ public class DataTextServiceImpl implements DataTextService {
     public TextItemVo getTextItem(BaseQuery baseQuery, Integer id) {
         TextItemsPo po = textChannelDao.getItemById(id);
         if(po==null){
+            LOGGER.error("没找到 TextItemsPo id= "+id);
             throw new DataException();
         }
         TextItemPo itemPo = textChannelDao.getFile(po.getUrl());
         if(itemPo==null){
+            LOGGER.error("没找到 TextItemPo fileUrl= "+po.toString());
             throw new DataException();
         }
         return VoBuilder.buildVo(itemPo, TextItemVo.class, null);

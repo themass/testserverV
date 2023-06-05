@@ -50,6 +50,17 @@ public class TextItemsPo {
     public void setFileDate(String fileDate) {
         this.fileDate = fileDate;
     }
-   
+
+    @Override
+    public String toString() {
+        return "TextItemsPo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", channel='" + channel + '\'' +
+                ", url='" + url + '\'' +
+                ", updateTime=" + updateTime +
+                ", fileDate='" + fileDate + '\'' +
+                '}';
+    }
 }
 
