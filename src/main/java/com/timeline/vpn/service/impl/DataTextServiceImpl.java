@@ -61,7 +61,7 @@ public class DataTextServiceImpl implements DataTextService {
 
             @Override
             public void action(TextItemsPo i, TextItemsVo t) {
-                t.setFileUrl(CdnChooseUtil.getBookWebBaseUrl(baseQuery.getAppInfo().getUserIp())+"&id="+i.getId());
+                t.setFileUrl(CdnChooseUtil.getBookWebBaseUrl(baseQuery.getAppInfo().getUserIp())+"?id="+i.getId());
             }
         }
         );
