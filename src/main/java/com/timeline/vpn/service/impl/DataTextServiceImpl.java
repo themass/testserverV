@@ -73,11 +73,15 @@ public class DataTextServiceImpl implements DataTextService {
 
     @Override
     public TextItemVo getTextItem(BaseQuery baseQuery, Integer id) {
-        TextItemPo po = textChannelDao.getFile(id);
+        TextItemsPo po = textChannelDao.getItemById(id);
         if(po==null){
             throw new DataException();
         }
-        return VoBuilder.buildVo(po, TextItemVo.class, null);
+        TextItemPo itemPo = textChannelDao.getFile(po.getUrl());
+        if(itemPo==null){
+            throw new DataException();
+        }
+        return VoBuilder.buildVo(itemPo, TextItemVo.class, null);
     }
 
 }

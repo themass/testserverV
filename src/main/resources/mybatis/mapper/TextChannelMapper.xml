@@ -21,7 +21,10 @@
 	    </if>
 	    order by sortType desc,id asc
 	</select>
+	<select id="getItemById" resultMap="TextItemsMap">
+	    select * from vpn.textitems where id=#{id}
+	</select>
 	<select id="getFile" resultMap="TextItemMap">
-	    select * from vpn.textitems_item where fileUrl = (select url from vpn.textitems where id=#{id}) limit 1
+	    select * from vpn.textitems_item where fileUrl = #{fileUrl}
 	</select>
 </mapper>
