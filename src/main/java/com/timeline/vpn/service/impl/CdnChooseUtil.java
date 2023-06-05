@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.Constant.FileIpTYPE;
 import com.timeline.vpn.service.job.reload.FileIpCache;
 import com.timeline.vpn.service.job.reload.HostCheck;
 import com.timeline.vpn.service.job.reload.ZhIpCache;
@@ -36,7 +37,7 @@ public class CdnChooseUtil {
         return url;
     }
     public static String getBookWebBaseUrl(String ip){
-        return FileIpCache.getHost(Constant.FileIpTYPE.BOOKWEB, Constant.FileIpExtra.ALL);
+        return FileIpCache.getHost(FileIpTYPE.BOOK, Constant.FileIpExtra.ALL);
     }
 }
 
