@@ -3,6 +3,8 @@ package com.timeline.vpn.service.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,8 @@ import com.timeline.vpn.service.DataTextService;
  */
 @Service
 public class DataTextServiceImpl implements DataTextService {
-
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(DataTextServiceImpl.class);
     @Autowired
     private TextChannelDao textChannelDao;
 
@@ -53,6 +56,7 @@ public class DataTextServiceImpl implements DataTextService {
     public InfoListVo<TextItemsVo> getTextItems(final BaseQuery baseQuery, PageBaseParam param,
             String channel,String keyword) {
         PageHelper.startPage(param.getStart(), param.getLimit());
+        LOGGER.info("channel="+channel);
         if(!StringUtils.isEmpty(keyword)) {
             channel = null;
         }
