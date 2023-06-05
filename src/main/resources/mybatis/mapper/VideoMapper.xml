@@ -38,7 +38,7 @@
 		    <if test="keyword!=null">
 		        and LOWER(name) like CONCAT('%',#{keyword},'%')
 		    </if>
-	    order by sortType desc,id asc
+	    order by sortType desc,id desc
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
 	    select * from vpn.video_user_1 where channel=#{channel} order by count desc
