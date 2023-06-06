@@ -28,10 +28,7 @@
 	    where 1=1 
 		    <if test="channelType!=null">
 		        and channelType=#{channelType}
-		    </if> 
-		    <if test="baseurl!=null">
-		        and baseurl=#{baseurl}
-		    </if> 
+		    </if>
 		    <if test="channel!=null">
 		        and channel=#{channel}
 		    </if> 
