@@ -47,9 +47,6 @@ import com.timeline.vpn.service.RadUserCheckService;
 import com.timeline.vpn.service.job.reload.HostCheck;
 import com.timeline.vpn.service.job.reload.HostIpCache;
 import com.timeline.vpn.service.job.reload.HostIpCacheV2;
-import com.timeline.vpn.service.job.reload.HostIpCacheV2Vpnb;
-import com.timeline.vpn.service.job.reload.HostIpCacheV2Vpnd;
-import com.timeline.vpn.service.job.reload.HostIpCacheVpnb;
 import com.timeline.vpn.util.AES2;
 import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.WeightRandom;
@@ -119,9 +116,9 @@ public class HostServerImpl implements HostService {
     public InfoListVo<LocationVo> getAllLocationCacheV2(BaseQuery baseQuery,Integer type) {
         List<LocationPo> list = new ArrayList<>();
         if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
-            list = HostIpCacheV2Vpnb.getLocationList();
+//            list = HostIpCacheV2Vpnb.getLocationList();
           }else if(Constant.VPND.equals(baseQuery.getAppInfo().getNetType())){
-              list = HostIpCacheV2Vpnd.getLocationList();
+//              list = HostIpCacheV2Vpnd.getLocationList();
           }else {
             list = HostIpCacheV2.getLocationList();
           }
@@ -215,9 +212,9 @@ public class HostServerImpl implements HostService {
     public InfoListVo<VipLocationVo> getAllLocationVipCacheV2(BaseQuery baseQuery) {
         List<LocationPo> list = null;
         if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
-          list = HostIpCacheV2Vpnb.getLocationList();
+//          list = HostIpCacheV2Vpnb.getLocationList();
         }else if (Constant.VPND.equals(baseQuery.getAppInfo().getNetType())){
-            list = HostIpCacheV2Vpnd.getLocationList();
+//            list = HostIpCacheV2Vpnd.getLocationList();
         }else {
           list = HostIpCacheV2.getLocationList();
         }
