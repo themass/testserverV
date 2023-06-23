@@ -92,7 +92,7 @@ public class DataVideoServiceImpl implements DataVideoService {
         }
         String channelType = po.getChannelType();
         //关键字检索-》使用baseurl来检索
-        if(!StringUtils.isEmpty(keywork) && !StringUtils.isEmpty(po.getBaseurl())) {
+        if(!StringUtils.isEmpty(keywork)) {
             channel = null;
         }
         if(!StringUtils.isEmpty(keywork) && keywork.contains(Constant.line)) {
@@ -102,17 +102,6 @@ public class DataVideoServiceImpl implements DataVideoService {
             channelType = "movie";
             if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>0) {
                 channelType = null;
-            }
-        }else if(!StringUtils.isEmpty(keywork)&&"movie".equals(channelType)) {
-            channel = null;
-        }
-        
-        
-        if(baseQuery.getAppInfo().getNetType()!=null && baseQuery.getAppInfo().getNetType().contains(Constant.PLAYTYPE)) {
-            channelType = "movie";
-            channel = null;
-            if(StringUtils.isEmpty(keywork)) {
-                channel = channelOrg;
             }
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
