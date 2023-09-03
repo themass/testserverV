@@ -147,28 +147,6 @@
                         </bean>
                     </property>
                 </bean>
-                <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 * * ? * *"/>
-                    <property name="jobDetail">
-                        <bean
-                                class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-                            <property name="targetObject" ref="hostIpCacheV2Vpnb"/>
-                            <property name="targetMethod" value="execute"/>
-                            <property name="concurrent" value="false"/>
-                        </bean>
-                    </property>
-                </bean>
-                <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="0 * * ? * *"/>
-                    <property name="jobDetail">
-                        <bean
-                                class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-                            <property name="targetObject" ref="hostIpCacheV2Vpnd"/>
-                            <property name="targetMethod" value="execute"/>
-                            <property name="concurrent" value="false"/>
-                        </bean>
-                    </property>
-                </bean>
 			</list>
 		</property>
 	</bean>
