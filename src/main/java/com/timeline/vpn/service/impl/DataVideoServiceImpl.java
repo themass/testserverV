@@ -223,10 +223,12 @@ public class DataVideoServiceImpl implements DataVideoService {
             VideoPo item = videoDao.getOneItem(id);
             try {
                 Document doc = Jsoup.connect(item.getBaseurl()).get();
+                LOGGER.info(doc.html());
                 Elements links = doc.select("source");
+                LOGGER.info(links.html());
                 for (Element link : links) {
                     String url = link.attr("src");
-                    System.out.println("链接文字：" + url);
+                    LOGGER.info("url = "+url);
                     RecommendVo vo = new RecommendVo();
                     vo.setActionUrl(url);
                     return vo;
