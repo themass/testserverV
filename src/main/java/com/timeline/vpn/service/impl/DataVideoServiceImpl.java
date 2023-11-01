@@ -239,7 +239,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                     return vo;
                 }
             } catch (Exception e) {
-
+                LOGGER.error("抓取失败",e);
             }
             return new RecommendVo();
     }
