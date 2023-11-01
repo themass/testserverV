@@ -188,7 +188,13 @@ public class RecommendVo {
     public void setChannelType(String channelType) {
         this.channelType = channelType;
     }
-    
-    
+
+    public Boolean getNeedLazyUrl() {
+        return needLazyUrl;
+    }
+
+    public void setNeedLazyUrl(Boolean needLazyUrl) {
+        this.needLazyUrl = needLazyUrl;
+    }
 }
 

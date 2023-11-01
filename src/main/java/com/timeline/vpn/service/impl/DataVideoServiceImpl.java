@@ -123,6 +123,11 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setParam(i.getBaseurl());
                 t.setExtra(i.getVideoType());
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
+                if(i.getBaseurl().contains("hsex")){
+                    t.setNeedLazyUrl(true);
+                }else {
+                    t.setNeedLazyUrl(false);
+                }
             }
         });
     }
