@@ -41,8 +41,9 @@ public class VideoController extends BaseController {
     @RequestMapping(value = "/user.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult user(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form,@RequestParam(required=false) String channel) {
-        if(StringUtils.isEmpty(channel))
+        if(StringUtils.isEmpty(channel)) {
             channel = "人气女优";
+        }
         return new JsonResult(dataVideoService.getVideoUserPage(baseQuery, form.toParam(),channel));
     } 
     @RequestMapping(value = "/user/items.json", method = {RequestMethod.POST,RequestMethod.GET})
@@ -58,6 +59,11 @@ public class VideoController extends BaseController {
     public JsonResult tvItem(@UserInfo BaseQuery baseQuery,
             @ModelAttribute @Valid PageBaseForm form,@RequestParam String channel) {
         return new JsonResult(dataVideoService.getVideoTvItemPage(baseQuery, form.toParam(), channel));
+    }
+    @RequestMapping(value = "/item/url.json", method = {RequestMethod.POST,RequestMethod.GET})
+    public JsonResult url(@UserInfo BaseQuery baseQuery,
+            @ModelAttribute @Valid PageBaseForm form,@RequestParam long id) {
+        return new JsonResult(dataVideoService.getVideoUrl(baseQuery, form.toParam(), id));
     }
     
 }

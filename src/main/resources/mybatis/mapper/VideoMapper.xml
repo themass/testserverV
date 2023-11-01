@@ -79,4 +79,8 @@
 	<select id="getTvItem" resultMap="VideoMap">
 	    select * from vpn.video_tv_item where channel=#{channel}
 	</select>
+
+	<select id="getOneItem" resultMap="VideoMap">
+		select * from vpn.videoitems_1 where id=#{id}
+	</select>
 </mapper>

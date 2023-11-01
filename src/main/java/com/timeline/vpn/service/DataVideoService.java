@@ -27,6 +27,8 @@ public interface DataVideoService {
     InfoListVo<RecommendVo> getVideoTvItemPage(BaseQuery baseQuery, PageBaseParam param,String channel);
 
     InfoListVo<RecommendVo> getVideoTvChannelPage(BaseQuery baseQuery, PageBaseParam param, String channel,String keyword);
-    
+
+    RecommendVo getVideoUrl(BaseQuery baseQuery, PageBaseParam param, long id);
+
 }
 

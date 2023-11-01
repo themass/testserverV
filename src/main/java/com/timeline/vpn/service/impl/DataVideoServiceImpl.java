@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,7 @@ import com.timeline.vpn.model.po.VideoUserPo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.service.DataVideoService;
+import com.timeline.vpn.util.HttpCommonUtil;
 
 /**
  * @author gqli
@@ -211,6 +216,25 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
             }
         });
+    }
+
+    @Override
+    public RecommendVo getVideoUrl(BaseQuery baseQuery, PageBaseParam param, long id) {
+            VideoPo item = videoDao.getOneItem(id);
+            try {
+                Document doc = Jsoup.connect(item.getBaseurl()).get();
+                Elements links = doc.select("source");
+                for (Element link : links) {
+                    String url = link.attr("src");
+                    System.out.println("链接文字：" + url);
+                    RecommendVo vo = new RecommendVo();
+                    vo.setActionUrl(url);
+                    return vo;
+                }
+            } catch (Exception e) {
+
+            }
+            return new RecommendVo();
     }
 
 }

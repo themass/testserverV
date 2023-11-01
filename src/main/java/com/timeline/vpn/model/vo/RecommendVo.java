@@ -26,6 +26,7 @@ public class RecommendVo {
     private String minVersion;
     private Boolean newShow;
     private String showLogo;
+    private Boolean needLazyUrl = false;
     private Object extra;
     private int type;
     private String baseurl;
