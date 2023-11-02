@@ -1,6 +1,8 @@
 package com.timeline.vpn.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -256,7 +258,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 LOGGER.info("title------"+doc.title());
                 LOGGER.info("links---"+links.size());
                 LOGGER.info("data---"+doc.data());
-                String str = new String(GZipUtils.decompress(doc.data().getBytes()));
+                String str = new String(GZipUtils.decompress(conn.response().body().getBytes()));
                 LOGGER.info("str------"+str);
                 for (Element link : links) {
                     LOGGER.info("links---"+link.html());
