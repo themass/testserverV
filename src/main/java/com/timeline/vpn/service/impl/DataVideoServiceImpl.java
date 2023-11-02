@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -243,12 +244,12 @@ public class DataVideoServiceImpl implements DataVideoService {
                         + ".525bb5a7-0.2.1698859152; _ga_XDTWVRMJNJ=GS1.1.1698858493.3.1.1698859169.42.0.0; "
                         + "bnState_1871751={\"impressions\":18,\"delayStarted\":0}");
                 Document doc = Jsoup.connect(item.getBaseurl()).headers(header).get();
-                LOGGER.info(doc.html());
                 Elements links = doc.select("source");
-                LOGGER.info(links.html());
+                LOGGER.info("title------"+doc.title());
+                LOGGER.info("links---"+links.size());
                 for (Element link : links) {
+                    LOGGER.info("links---"+link.html());
                     String url = link.attr("src");
-                    LOGGER.info("url = "+url);
                     RecommendVo vo = new RecommendVo();
                     vo.setActionUrl(url);
                     return vo;
@@ -259,5 +260,22 @@ public class DataVideoServiceImpl implements DataVideoService {
             return new RecommendVo();
     }
 
+    public static void main(String[] args) throws IOException {
+        Map<String ,String > header = new HashMap<>();
+        header.put("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
+        header.put("Referer","https://baidu.com");
+        header.put("Accept-Encoding","gzip, deflate, br");
+        header.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+        header.put("Cookie","_ga=GA1.1.795572755.1697563920; hid=ltaq2vrr0id0rvcs0p0ossslj7; "
+                + "cf_clearance=Z2ttErQF2v95ZMNSedXdrrvNKSdOap_xP_9kzqjHJVk-1698859152-0-1-55aea47.8ed5e39"
+                + ".525bb5a7-0.2.1698859152; _ga_XDTWVRMJNJ=GS1.1.1698858493.3.1.1698859169.42.0.0; "
+                + "bnState_1871751={\"impressions\":18,\"delayStarted\":0}");
+        Document doc = Jsoup.connect("https://hsex.men").headers(header).get();
+        Elements links = doc.select("source");
+        System.out.println(doc.html());
+        System.out.println(doc.title());
+        LOGGER.info(doc.data());
+        LOGGER.info(links.html());
+    }
 }
 
