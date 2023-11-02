@@ -257,6 +257,13 @@ public class DataVideoServiceImpl implements DataVideoService {
                     String url = link.attr("src");
                     RecommendVo vo = new RecommendVo();
                     vo.setActionUrl(url);
+                    vo.setTitle(item.getName());
+                    vo.setImg(item.getPic());
+                    vo.setAdsPopShow(false);
+                    vo.setAdsShow(true);
+                    vo.setParam(item.getBaseurl());
+                    vo.setExtra(item.getVideoType());
+                    vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
                     return vo;
                 }
             } catch (Exception e) {
