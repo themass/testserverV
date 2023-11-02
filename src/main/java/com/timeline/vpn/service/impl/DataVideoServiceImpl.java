@@ -250,12 +250,12 @@ public class DataVideoServiceImpl implements DataVideoService {
                 Document doc = conn.get();
                 Elements links = doc.select("source");
                 LOGGER.info("url---"+item.getBaseurl());
-                LOGGER.info("doc---"+doc.html());
-                String str = new String(GZipUtils.decompress(doc.html().getBytes()));
-                LOGGER.info("str------"+str);
+
                 LOGGER.info("title------"+doc.title());
                 LOGGER.info("links---"+links.size());
                 LOGGER.info("data---"+doc.data());
+                String str = new String(GZipUtils.decompress(doc.data().getBytes()));
+                LOGGER.info("str------"+str);
                 for (Element link : links) {
                     LOGGER.info("links---"+link.html());
                     String url = link.attr("src");
