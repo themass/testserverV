@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -244,7 +245,9 @@ public class DataVideoServiceImpl implements DataVideoService {
                         + "cf_clearance=Z2ttErQF2v95ZMNSedXdrrvNKSdOap_xP_9kzqjHJVk-1698859152-0-1-55aea47.8ed5e39"
                         + ".525bb5a7-0.2.1698859152; _ga_XDTWVRMJNJ=GS1.1.1698858493.3.1.1698859169.42.0.0; "
                         + "bnState_1871751={\"impressions\":18,\"delayStarted\":0}");
-                Document doc = Jsoup.connect(item.getBaseurl()).headers(header).get();
+                Connection conn = Jsoup.connect(item.getBaseurl()).headers(header);
+                LOGGER.info("conn---"+conn.response().statusCode()+"----"+conn.response().body());
+                Document doc = conn.get();
                 Elements links = doc.select("source");
                 LOGGER.info("url---"+item.getBaseurl());
                 LOGGER.info("doc---"+doc.html());
