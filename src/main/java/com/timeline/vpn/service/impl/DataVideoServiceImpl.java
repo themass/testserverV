@@ -250,7 +250,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 Connection conn = Jsoup.connect(item.getBaseurl()).headers(header);
                 Document doc = conn.get();
                 conn.execute();
-                LOGGER.info("conn---"+conn.response().statusCode()+"----"+conn.response().body());
+                LOGGER.info("conn---"+conn.response().statusCode());
 
                 Elements links = doc.select("source");
                 LOGGER.info("url---"+item.getBaseurl());
