@@ -249,17 +249,9 @@ public class DataVideoServiceImpl implements DataVideoService {
                         + "bnState_1871751={\"impressions\":18,\"delayStarted\":0}");
                 Connection conn = Jsoup.connect(item.getBaseurl()).headers(header);
                 Document doc = conn.get();
-                conn.execute();
-                LOGGER.info("conn---"+conn.response().statusCode());
-
                 Elements links = doc.select("source");
                 LOGGER.info("url---"+item.getBaseurl());
-
                 LOGGER.info("title------"+doc.title());
-                LOGGER.info("links---"+links.size());
-                LOGGER.info("data---"+doc.data());
-                String str = new String(GZipUtils.decompress(conn.response().body().getBytes()));
-                LOGGER.info("str------"+str);
                 for (Element link : links) {
                     LOGGER.info("links---"+link.html());
                     String url = link.attr("src");
