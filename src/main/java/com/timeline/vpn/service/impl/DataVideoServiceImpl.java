@@ -246,8 +246,9 @@ public class DataVideoServiceImpl implements DataVideoService {
                         + ".525bb5a7-0.2.1698859152; _ga_XDTWVRMJNJ=GS1.1.1698858493.3.1.1698859169.42.0.0; "
                         + "bnState_1871751={\"impressions\":18,\"delayStarted\":0}");
                 Connection conn = Jsoup.connect(item.getBaseurl()).headers(header);
-                LOGGER.info("conn---"+conn.response().statusCode()+"----"+conn.response().body());
                 Document doc = conn.get();
+                LOGGER.info("conn---"+conn.response().statusCode()+"----"+conn.response().body());
+
                 Elements links = doc.select("source");
                 LOGGER.info("url---"+item.getBaseurl());
 
