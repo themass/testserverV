@@ -30,6 +30,7 @@ import com.timeline.vpn.model.po.VideoUserPo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.service.DataVideoService;
+import com.timeline.vpn.util.GZipUtils;
 import com.timeline.vpn.util.HttpCommonUtil;
 
 /**
@@ -245,8 +246,13 @@ public class DataVideoServiceImpl implements DataVideoService {
                         + "bnState_1871751={\"impressions\":18,\"delayStarted\":0}");
                 Document doc = Jsoup.connect(item.getBaseurl()).headers(header).get();
                 Elements links = doc.select("source");
+                LOGGER.info("url---"+item.getBaseurl());
+                LOGGER.info("doc---"+doc.html());
+                String str = new String(GZipUtils.decompress(doc.html().getBytes()));
+                LOGGER.info("str------"+str);
                 LOGGER.info("title------"+doc.title());
                 LOGGER.info("links---"+links.size());
+                LOGGER.info("data---"+doc.data());
                 for (Element link : links) {
                     LOGGER.info("links---"+link.html());
                     String url = link.attr("src");
