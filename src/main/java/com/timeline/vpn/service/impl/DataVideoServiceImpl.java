@@ -241,7 +241,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 Map<String ,String > header = new HashMap<>();
                 header.put("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
                 header.put("Referer",item.getBaseurl());
-                header.put("Accept-Encoding","gzip, deflate, br");
+//                header.put("Accept-Encoding","gzip, deflate, br");
                 header.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
                 header.put("Cookie","_ga=GA1.1.795572755.1697563920; hid=ltaq2vrr0id0rvcs0p0ossslj7; "
                         + "cf_clearance=Z2ttErQF2v95ZMNSedXdrrvNKSdOap_xP_9kzqjHJVk-1698859152-0-1-55aea47.8ed5e39"
