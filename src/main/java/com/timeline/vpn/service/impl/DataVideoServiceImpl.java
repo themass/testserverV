@@ -107,6 +107,10 @@ public class DataVideoServiceImpl implements DataVideoService {
         if(!StringUtils.isEmpty(keywork)) {
             channel = null;
         }
+        if(!StringUtils.isEmpty(keywork)&& keywork.startsWith(Constant.comma)) {
+            channel = channelOrg;
+            keywork = keywork.substring(1, keywork.length()-1);
+        }
         if(!StringUtils.isEmpty(keywork) && keywork.contains(Constant.line)) {
             //全局检索
             keywork = keywork.substring(0, keywork.indexOf(Constant.line));
@@ -117,7 +121,7 @@ public class DataVideoServiceImpl implements DataVideoService {
             }
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
-        LOGGER.info(channel+"-"+keywork+"-"+channelType+"-"+"-"+channelOrg+"-"+po.toString());
+        LOGGER.info("channel="+channel+"-keywork="+keywork+"-channelType="+channelType+"-channelOrg"+channelOrg+"-po="+po.toString());
         list = videoDao.getChannelItems(channel,keywork,channelType, null);
         return VoBuilder.buildPageInfoVo((Page<VideoPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoPo,RecommendVo>(){
             @Override
