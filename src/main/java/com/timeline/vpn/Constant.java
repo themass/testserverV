@@ -141,6 +141,7 @@ public class Constant {
     public static final String STATE_TIME_USE="%s h, %sm, %ss";
     public static final String STATE_TRAFFIC_USE="%.2f";
     public static final String comma = ",";
+    public static final String commaCH = "，";
     public static final String fen = ";";
     public static final String mao = ":";
     public static final String line = "-";
