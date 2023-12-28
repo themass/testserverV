@@ -297,7 +297,8 @@ public class DataVideoServiceImpl implements DataVideoService {
 //        LOGGER.info(doc.data());
 //        LOGGER.info(links.html());
         String str = "，spa";
-        System.out.println(str.substring(1));
+        System.out.println(str.startsWith(Constant.commaCH));
+        System.out.println(str.replace(Constant.commaCH,""));
     }
 }
 
