@@ -3,6 +3,7 @@ package com.timeline.vpn.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.ChatVo;
+import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.service.ChatService;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.JsonUtil;
@@ -36,11 +37,11 @@ public class ChatServiceImpl implements ChatService {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(ChatServiceImpl.class);
     @Override
-    public ChatVo chatWithGpt(BaseQuery baseQuery, String content) throws Exception {
+    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
 
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
-        chatMessages.add(new ChatRequestSystemMessage("哈哈哈哈"));
-        chatMessages.add(new ChatRequestUserMessage("对对对"));
+//        chatMessages.add(new ChatRequestSystemMessage("哈哈哈哈"));
+        chatMessages.add(new ChatRequestUserMessage(content));
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
         chatCompletionsOptions.setModel("photon-72b-sft-240117-exp");
         chatCompletionsOptions.setTopP(0.5);
@@ -60,7 +61,14 @@ public class ChatServiceImpl implements ChatService {
             System.out.println(message.getContent());
         }
         System.out.println(JsonUtil.writeValueAsString(chatCompletions));
-        return JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions),ChatVo.class);
+        ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions),ChatVo.class);
+//        vo.setId(id);
+        if(vo.getChoices()!=null&&vo.getChoices().size()>0){
+            Choice choice =  vo.getChoices().get(0);
+            choice.setId(id);
+            return choice;
+        }
+        return null;
 //        Map<String, String> data = new HashMap<>();
 //        data.put("model", "gpt-3.5-turbo-16k");
 //        data.put("stream", "false");
@@ -72,7 +80,7 @@ public class ChatServiceImpl implements ChatService {
 
     public static void main(String[] args) throws Exception {
         ChatServiceImpl chatService = new ChatServiceImpl();
-        ChatVo vo = chatService.chatWithGpt(null,"哈哈哈");
+        Choice vo = chatService.chatWithGpt(null,"哈哈哈","哈哈哈");
         System.out.println(vo);
     }
 }

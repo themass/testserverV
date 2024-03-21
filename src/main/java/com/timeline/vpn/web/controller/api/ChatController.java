@@ -28,8 +28,8 @@ public class ChatController extends BaseController {
     private ChatService chatService;
     @RequestMapping(value = "/nostream.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult nostream(@UserInfo BaseQuery baseQuery,
-            @ModelAttribute @Valid PageBaseForm form,@RequestParam(required=false) String content) throws Exception {
-        return new JsonResult(chatService.chatWithGpt(baseQuery, content));
+            @ModelAttribute @Valid PageBaseForm form,@RequestParam(required=false) String content, @RequestParam(required=false) String id) throws Exception {
+        return new JsonResult(chatService.chatWithGpt(baseQuery, content,id));
     }
     @RequestMapping(value = "/stream.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult stream(@UserInfo BaseQuery baseQuery,

@@ -1,6 +1,7 @@
 package com.timeline.vpn.model.vo;
 
 public class Choice {
+    private String id;
     private int index;
     private Message message;
     private String logprobs;
@@ -46,6 +47,14 @@ public class Choice {
 
     public void setFinish_reason(String finish_reason) {
         this.finish_reason = finish_reason;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
