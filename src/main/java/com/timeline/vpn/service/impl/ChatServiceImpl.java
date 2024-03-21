@@ -45,7 +45,7 @@ public class ChatServiceImpl implements ChatService {
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
         chatCompletionsOptions.setModel("photon-72b-sft-240117-exp");
         chatCompletionsOptions.setTopP(0.5);
-        chatCompletionsOptions.setMaxTokens(128);
+        chatCompletionsOptions.setMaxTokens(500);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
 
@@ -80,7 +80,7 @@ public class ChatServiceImpl implements ChatService {
 
     public static void main(String[] args) throws Exception {
         ChatServiceImpl chatService = new ChatServiceImpl();
-        Choice vo = chatService.chatWithGpt(null,"哈哈哈","哈哈哈");
+        Choice vo = chatService.chatWithGpt(null,"200字的小说","哈哈哈");
         System.out.println(vo);
     }
 }
