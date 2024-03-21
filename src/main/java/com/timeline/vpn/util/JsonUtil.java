@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +47,7 @@ public class JsonUtil {
     simpleModule.addSerializer(BigDecimal.class, new BigDecimalSerializer(2));
     simpleModule.addSerializer(Long.class, new LongSerializer());
     mapper.registerModule(simpleModule);
+    mapper.registerModule(new JavaTimeModule());
   }
 
   public static <T> JavaType getListType(Class<T> clz) {

@@ -1,9 +1,10 @@
 package com.timeline.vpn.test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class TestLongStr {
+public class TestLongStr implements Comparable{
     public static void main(String[] args) {
 //        String str1 = "abcooopddddddfvxzx但是";
 //        String str2 = "dadadadadaddsdddooopddddddadadada cfff";
@@ -15,14 +16,17 @@ public class TestLongStr {
 //            System.out.println();
 //        }
 
-        String str1 = "bcbab";
-        int[][] dp = huiStr(str1);
-        for(int i=0;i<dp.length;i++) {
-            for(int j=0;j<dp[i].length;j++) {
-                System.out.print(dp[i][j]);
-            }
-            System.out.println();
-        }
+//        String str1 = "bcbab";
+//        int[][] dp = huiStr(str1);
+//        for(int i=0;i<dp.length;i++) {
+//            for(int j=0;j<dp[i].length;j++) {
+//                System.out.print(dp[i][j]);
+//            }
+//            System.out.println();
+//        }
+        String str = "/a//c/c/c/c/c";
+        String[] s = str.split("/");
+        System.out.println(Arrays.asList(s));
 
     }
     public static void longgest_subString(String str1, String str2) {
@@ -157,5 +161,10 @@ public class TestLongStr {
             }
         }
         return dp;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }
