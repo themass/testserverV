@@ -15,33 +15,33 @@
 	</context:component-scan>
 
 	<!-- json接口性能监控拦截器 -->
-<!--	<mvc:interceptors> -->
-<!--	    <mvc:interceptor>-->
-<!--	        <mvc:mapping path="/**/*.json" />-->
-<!--		    <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />-->
-<!--		</mvc:interceptor>-->
-<!--	    <mvc:interceptor>-->
-<!--			<mvc:mapping path="/**/*.json" />-->
-<!--			<bean class="com.timeline.vpn.web.common.interceptor.UserCheckHandlerInterceptor"/>-->
-<!--		</mvc:interceptor>-->
-<!--		<mvc:interceptor>-->
-<!--			<mvc:mapping path="/**/*.json" />-->
-<!--			<bean class="com.timeline.vpn.web.common.interceptor.CostHandlerInterceptor"/>-->
-<!--		</mvc:interceptor>-->
-<!--		<mvc:interceptor>-->
-<!--			<mvc:mapping path="/**/*.json" />-->
-<!--			<bean class="com.timeline.vpn.web.common.interceptor.BlackdevHandlerInterceptor"/>-->
-<!--		</mvc:interceptor>-->
-<!--		<mvc:interceptor>-->
-<!--			<mvc:mapping path="/**/*.json" />-->
-<!--			<mvc:exclude-mapping path="/**/version.json"/>-->
-<!--			<mvc:exclude-mapping path="/**/login.json"/>-->
-<!--			<mvc:exclude-mapping path="/**/logout.json"/>-->
-<!--			<mvc:exclude-mapping path="/api/monitor/collect.json"/>-->
-<!--			<mvc:exclude-mapping path="/api/data/**/*.json"/>-->
-<!--			<bean class="com.timeline.vpn.web.common.interceptor.VersionHandlerInterceptor"/>-->
-<!--		</mvc:interceptor>-->
-<!--	</mvc:interceptors>-->
+	<mvc:interceptors>
+	    <mvc:interceptor>
+	        <mvc:mapping path="/**/*.json" />
+		    <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+		</mvc:interceptor>
+	    <mvc:interceptor>
+			<mvc:mapping path="/**/*.json" />
+			<bean class="com.timeline.vpn.web.common.interceptor.UserCheckHandlerInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.json" />
+			<bean class="com.timeline.vpn.web.common.interceptor.CostHandlerInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.json" />
+			<bean class="com.timeline.vpn.web.common.interceptor.BlackdevHandlerInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.json" />
+			<mvc:exclude-mapping path="/**/version.json"/>
+			<mvc:exclude-mapping path="/**/login.json"/>
+			<mvc:exclude-mapping path="/**/logout.json"/>
+			<mvc:exclude-mapping path="/api/monitor/collect.json"/>
+			<mvc:exclude-mapping path="/api/data/**/*.json"/>
+			<bean class="com.timeline.vpn.web.common.interceptor.VersionHandlerInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
 	    <!-- 配置基于Session的处理,将提交上来的locale参数进行处理 -->  
      <!-- 
     <bean id="localeResolver"
