@@ -1,25 +1,30 @@
 package com.timeline.vpn.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.reflect.TypeToken;
 import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.po.ChatHistory;
+import com.timeline.vpn.model.po.ConnLogPo;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
+import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.ChatService;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.azure.ai.openai.OpenAIClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.ai.openai.models.*;
 import com.azure.core.credential.AzureKeyCredential;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.timeline.vpn.service.impl.CacheServiceImpl.USERCACH_TIMEOUT;
 
 @Service
 public class ChatServiceImpl implements ChatService {
@@ -36,12 +41,13 @@ public class ChatServiceImpl implements ChatService {
             .buildClient();
     private static final Logger LOGGER =
             LoggerFactory.getLogger(ChatServiceImpl.class);
+    @Autowired
+    private CacheService cacheService;
     @Override
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
 
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
-//        chatMessages.add(new ChatRequestSystemMessage("哈哈哈哈"));
-        chatMessages.add(new ChatRequestUserMessage(content));
+        chatMessages.add(new ChatRequestSystemMessage("You are an AI assistant"));
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
         chatCompletionsOptions.setModel("photon-72b-sft-240117-exp");
         chatCompletionsOptions.setTopP(0.5);
@@ -49,23 +55,41 @@ public class ChatServiceImpl implements ChatService {
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
 
+        //补充历史
+        String key = baseQuery.getUser().getName()+"_chat_hist";
+        String his = cacheService.get(key);
+        String appHis = null;
+        List<ChatHistory> chatHis = null;
+        if(!StringUtils.isEmpty(his)){
+            chatHis = JsonUtil.readValue(his, JsonUtil.getListType(ChatHistory.class));
+            if(chatHis.size()>10){
+                chatHis = chatHis.subList(chatHis.size()-10,chatHis.size()-1);
+            }
+        }else{
+            chatHis = new ArrayList<>();
+        }
+        ChatHistory newMsg = new ChatHistory();
+        newMsg.setRole("[you]");
+        newMsg.setContent(content);
+        chatHis.add(newMsg);
+        appHis = appendHistory(chatHis);
+        //发请求
+        chatMessages.add(new ChatRequestUserMessage(appHis));
+        LOGGER.info("chat 请求"+JsonUtil.writeValueAsString(appHis));
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4", chatCompletionsOptions);
 
-        LOGGER.info("Model ID={} is created at {}", chatCompletions.getId(), chatCompletions.getCreatedAt());
-        LOGGER.info("chatCompletions {}", chatCompletions);
-
-        for (ChatChoice choice : chatCompletions.getChoices()) {
-            ChatResponseMessage message = choice.getMessage();
-            LOGGER.info("Index: {}, Chat Role: {}", choice.getIndex(), message.getRole());
-            LOGGER.info("Message:{}", message.getContent());
-            System.out.println(message.getContent());
-        }
-        System.out.println(JsonUtil.writeValueAsString(chatCompletions));
         ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions),ChatVo.class);
+        LOGGER.info("chat 回复"+JsonUtil.writeValueAsString(chatCompletions));
 //        vo.setId(id);
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
             choice.setId(id);
+            //返回值写进历史
+            ChatHistory newReMsg = new ChatHistory();
+            newReMsg.setRole("[assistant]");
+            newReMsg.setContent(content);
+            chatHis.add(newReMsg);
+            cacheService.put(key, JsonUtil.writeValueAsString(chatHis),USERCACH_TIMEOUT);
             return choice;
         }
         return null;
@@ -77,7 +101,13 @@ public class ChatServiceImpl implements ChatService {
 //        LOGGER.info(msg);
 //        return JsonUtil.readValue(msg,ChatVo.class);
     }
-
+    private String appendHistory(List<ChatHistory> history) {
+        String value = Optional.ofNullable(history).orElse(null).stream().map(role -> {
+                    return role.getRole()+role.getContent()+"\n";
+                })
+                .collect(Collectors.joining("\n"));
+        return value;
+    }
     public static void main(String[] args) throws Exception {
         ChatServiceImpl chatService = new ChatServiceImpl();
         Choice vo = chatService.chatWithGpt(null,"200字的小说","哈哈哈");

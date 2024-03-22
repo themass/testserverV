@@ -2,6 +2,8 @@ package com.timeline.vpn.service;
 
 import com.timeline.vpn.model.po.UserPo;
 
+import java.util.List;
+
 /**
  * @author gqli
  * @date 2015年12月14日 下午10:09:53
@@ -23,5 +25,5 @@ public interface CacheService {
     public Long lock(String lockKey);
 
     public void unlock(String lockKey);
-}
+    }
 
