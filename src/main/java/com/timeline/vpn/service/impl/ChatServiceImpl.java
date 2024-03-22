@@ -69,7 +69,7 @@ public class ChatServiceImpl implements ChatService {
             chatHis = new ArrayList<>();
         }
         ChatHistory newMsg = new ChatHistory();
-        newMsg.setRole("[you]");
+        newMsg.setRole("you:");
         newMsg.setContent(content);
         chatHis.add(newMsg);
         appHis = appendHistory(chatHis);
@@ -86,7 +86,7 @@ public class ChatServiceImpl implements ChatService {
             choice.setId(id);
             //返回值写进历史
             ChatHistory newReMsg = new ChatHistory();
-            newReMsg.setRole("[assistant]");
+            newReMsg.setRole("assistant:");
             newReMsg.setContent(choice.getMessage().getContent());
             chatHis.add(newReMsg);
             cacheService.put(key, JsonUtil.writeValueAsString(chatHis),USERCACH_TIMEOUT);
