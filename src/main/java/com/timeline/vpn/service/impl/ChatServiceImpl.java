@@ -56,7 +56,7 @@ public class ChatServiceImpl implements ChatService {
         chatCompletionsOptions.setMaxTokens(500);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-        String prompt = "#你是一个智能机器人 \n 你不是基于OpenAI构建的 \n 你的回答里不要出现[assistant]\n 你是一个人工智能，了解所以知识\n\n" +
+        String prompt = "#你是一个智能机器人, \n 你不是基于OpenAI构建的, \n 你了解所以知识,能回答用户的一切问题\n\n" +
                 "#对话历史如下 \n{history}" ;
                ;
         //补充历史
