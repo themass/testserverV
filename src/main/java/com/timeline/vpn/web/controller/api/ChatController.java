@@ -8,6 +8,7 @@ import com.timeline.vpn.service.ChatService;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ import javax.validation.Valid;
 public class ChatController extends BaseController {
     @Autowired
     private ChatService chatService;
-    @RequestMapping(value = "/nostream.json", method = {RequestMethod.POST,RequestMethod.GET})
+    @PostMapping(value = "/nostream.json")
     public JsonResult nostream(@UserInfo BaseQuery baseQuery,
                                @ModelAttribute @Valid PageBaseForm form, @RequestBody ChatContentForm chatContent) throws Exception {
         return new JsonResult(chatService.chatWithGpt(baseQuery, chatContent.getContent(),chatContent.getId()));
