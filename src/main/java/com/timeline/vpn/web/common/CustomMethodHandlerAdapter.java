@@ -34,7 +34,7 @@ public class CustomMethodHandlerAdapter extends RequestMappingHandlerAdapter {
     }
     @PostConstruct
     public void initConverters() {
-        getMessageConverters().add(fastJsonHttpMessageConverterEx);
+//        getMessageConverters().add(fastJsonHttpMessageConverterEx);
         getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         LOGGER.info(getMessageConverters().toString());
     }
