@@ -111,7 +111,7 @@ public class ChatServiceImpl implements ChatService {
     }
     private String appendHistory(List<SimpleMessage> history) {
         String value = Optional.ofNullable(history).orElse(null).stream().map(role -> {
-                    return role.getRole()+":"+role.getText();
+                    return role.getRole()+role.getText();
                 })
                 .collect(Collectors.joining("\n"));
         return value;
