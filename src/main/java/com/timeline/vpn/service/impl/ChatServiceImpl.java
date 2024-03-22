@@ -87,7 +87,7 @@ public class ChatServiceImpl implements ChatService {
             //返回值写进历史
             ChatHistory newReMsg = new ChatHistory();
             newReMsg.setRole("[assistant]");
-            newReMsg.setContent(content);
+            newReMsg.setContent(choice.getMessage().getContent());
             chatHis.add(newReMsg);
             cacheService.put(key, JsonUtil.writeValueAsString(chatHis),USERCACH_TIMEOUT);
             return choice;
@@ -103,7 +103,7 @@ public class ChatServiceImpl implements ChatService {
     }
     private String appendHistory(List<ChatHistory> history) {
         String value = Optional.ofNullable(history).orElse(null).stream().map(role -> {
-                    return role.getRole()+role.getContent()+"\n";
+                    return role.getRole()+role.getContent();
                 })
                 .collect(Collectors.joining("\n"));
         return value;
