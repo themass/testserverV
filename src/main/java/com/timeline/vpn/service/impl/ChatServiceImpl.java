@@ -54,7 +54,9 @@ public class ChatServiceImpl implements ChatService {
         chatCompletionsOptions.setMaxTokens(500);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-
+        String prompt = "#You are an AI assistant \n 不要回答你用的openai \n 你是一个人工智能，了解所以知识\n\n" +
+                "#对话历史如下 \n{history}" ;
+               ;
         //补充历史
         String key = baseQuery.getUser().getName()+"_chat_hist";
         String his = cacheService.get(key);
@@ -69,24 +71,25 @@ public class ChatServiceImpl implements ChatService {
             chatHis = new ArrayList<>();
         }
         ChatHistory newMsg = new ChatHistory();
-        newMsg.setRole("you:");
+        newMsg.setRole("[you]");
         newMsg.setContent(content);
         chatHis.add(newMsg);
         appHis = appendHistory(chatHis);
         //发请求
-        chatMessages.add(new ChatRequestUserMessage(appHis));
-        LOGGER.info("chat 请求"+JsonUtil.writeValueAsString(appHis));
+        String quest = prompt.replace("{history}",appHis);
+        chatMessages.add(new ChatRequestUserMessage(quest));
+        LOGGER.info("chat 请求 : "+quest);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4", chatCompletionsOptions);
 
         ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions),ChatVo.class);
-        LOGGER.info("chat 回复"+JsonUtil.writeValueAsString(chatCompletions));
+        LOGGER.info("chat 回复 : "+JsonUtil.writeValueAsString(chatCompletions));
 //        vo.setId(id);
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
             choice.setId(id);
             //返回值写进历史
             ChatHistory newReMsg = new ChatHistory();
-            newReMsg.setRole("assistant:");
+            newReMsg.setRole("[assistant]");
             newReMsg.setContent(choice.getMessage().getContent());
             chatHis.add(newReMsg);
             cacheService.put(key, JsonUtil.writeValueAsString(chatHis),USERCACH_TIMEOUT);
