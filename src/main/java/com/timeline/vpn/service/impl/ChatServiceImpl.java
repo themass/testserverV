@@ -60,6 +60,7 @@ public class ChatServiceImpl implements ChatService {
         //补充历史
         String key = baseQuery.getUser().getName()+"_chat_hist";
         String his = cacheService.get(key);
+        LOGGER.info("redis :" +his);
         String appHis = null;
         List<ChatHistory> chatHis = null;
         if(!StringUtils.isEmpty(his)){
