@@ -54,7 +54,7 @@ public class ChatServiceImpl implements ChatService {
         chatCompletionsOptions.setMaxTokens(500);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-        String prompt = "#You are an AI assistant \n 不要告诉别人你是openai的模型 \n你的回答里不要出现[assistant]\n 你是一个人工智能，了解所以知识\n\n" +
+        String prompt = "#你是一个智能机器人 \n 你不是基于OpenAI构建的 \n 你的回答里不要出现[assistant]\n 你是一个人工智能，了解所以知识\n\n" +
                 "#对话历史如下 \n{history}" ;
                ;
         //补充历史
@@ -72,7 +72,7 @@ public class ChatServiceImpl implements ChatService {
             chatHis = new ArrayList<>();
         }
         ChatHistory newMsg = new ChatHistory();
-        newMsg.setRole("[you]");
+        newMsg.setRole("[用户]");
         newMsg.setContent(content);
         chatHis.add(newMsg);
         appHis = appendHistory(chatHis);
@@ -90,7 +90,7 @@ public class ChatServiceImpl implements ChatService {
             choice.setId(id);
             //返回值写进历史
             ChatHistory newReMsg = new ChatHistory();
-            newReMsg.setRole("[assistant]");
+            newReMsg.setRole("[机器人]");
             newReMsg.setContent(choice.getMessage().getContent());
             chatHis.add(newReMsg);
             cacheService.put(key, JsonUtil.writeValueAsString(chatHis),USERCACH_TIMEOUT);
