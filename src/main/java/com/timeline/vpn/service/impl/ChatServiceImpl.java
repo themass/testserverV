@@ -2,6 +2,7 @@ package com.timeline.vpn.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.reflect.TypeToken;
+import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.ChatHistory;
 import com.timeline.vpn.model.po.ConnLogPo;
@@ -59,25 +60,27 @@ public class ChatServiceImpl implements ChatService {
                 "#对话历史如下 \n{history}" ;
                ;
         //补充历史
-        String key = baseQuery.getUser().getName()+"_chat_hist";
-        String his = cacheService.get(key);
-        LOGGER.info("redis :" +his);
-        String appHis = null;
-        List<ChatHistory> chatHis = null;
-        if(!StringUtils.isEmpty(his)){
-            chatHis = JsonUtil.readValue(his, JsonUtil.getListType(ChatHistory.class));
-            if(chatHis.size()>10){
-                chatHis = chatHis.subList(chatHis.size()-10,chatHis.size()-1);
-            }
-        }else{
-            chatHis = new ArrayList<>();
-        }
-        ChatHistory newMsg = new ChatHistory();
-        newMsg.setRole("[用户]");
-        newMsg.setContent(content);
-        chatHis.add(newMsg);
-        appHis = appendHistory(chatHis);
+//        String key = baseQuery.getUser().getName()+"_chat_hist";
+//        String his = cacheService.get(key);
+//        LOGGER.info("redis :" +his);
+//        String appHis = null;
+//        List<ChatHistory> chatHis = null;
+//        if(!StringUtils.isEmpty(his)){
+//            chatHis = JsonUtil.readValue(his, JsonUtil.getListType(ChatHistory.class));
+//            if(chatHis.size()>10){
+//                chatHis = chatHis.subList(chatHis.size()-10,chatHis.size()-1);
+//            }
+//        }else{
+//            chatHis = new ArrayList<>();
+//        }
+//        ChatHistory newMsg = new ChatHistory();
+//        newMsg.setRole("[用户]");
+//        newMsg.setContent(content);
+//        chatHis.add(newMsg);
+//        appHis = appendHistory(chatHis);
         //发请求
+        List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
+        String appHis = appendHistory(msgs);
         String quest = prompt.replace("{history}",appHis);
         chatMessages.add(new ChatRequestUserMessage(quest));
         LOGGER.info("chat 请求 : "+quest);
@@ -90,11 +93,11 @@ public class ChatServiceImpl implements ChatService {
             Choice choice =  vo.getChoices().get(0);
             choice.setId(id);
             //返回值写进历史
-            ChatHistory newReMsg = new ChatHistory();
-            newReMsg.setRole("[机器人]");
-            newReMsg.setContent(choice.getMessage().getContent());
-            chatHis.add(newReMsg);
-            cacheService.put(key, JsonUtil.writeValueAsString(chatHis),USERCACH_TIMEOUT);
+//            ChatHistory newReMsg = new ChatHistory();
+//            newReMsg.setRole("[机器人]");
+//            newReMsg.setContent(choice.getMessage().getContent());
+//            chatHis.add(newReMsg);
+//            cacheService.put(key, JsonUtil.writeValueAsString(chatHis),USERCACH_TIMEOUT);
             return choice;
         }
         return null;
@@ -106,9 +109,9 @@ public class ChatServiceImpl implements ChatService {
 //        LOGGER.info(msg);
 //        return JsonUtil.readValue(msg,ChatVo.class);
     }
-    private String appendHistory(List<ChatHistory> history) {
+    private String appendHistory(List<SimpleMessage> history) {
         String value = Optional.ofNullable(history).orElse(null).stream().map(role -> {
-                    return role.getRole()+role.getContent();
+                    return role.getRole()+":"+role.getText();
                 })
                 .collect(Collectors.joining("\n"));
         return value;
