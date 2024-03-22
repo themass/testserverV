@@ -46,6 +46,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
 
+        LOGGER.info("content :" +content+"； id:"+id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("You are an AI assistant"));
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
