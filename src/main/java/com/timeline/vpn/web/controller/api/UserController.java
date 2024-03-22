@@ -6,10 +6,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.form.CustomeAddForm;
@@ -57,7 +54,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/login.json", method = RequestMethod.POST)
-    public JsonResult login(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute LoginForm form) {
+    public JsonResult login(@UserInfo BaseQuery baseQuery, @RequestBody LoginForm form) {
         return new JsonResult(userService.login(baseQuery, form.getName(), form.getPwd(),form.getScore()));
     }
 
