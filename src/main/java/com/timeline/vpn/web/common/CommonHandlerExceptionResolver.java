@@ -82,9 +82,8 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
             }
         }else {
             LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
-            ex.printStackTrace();
         }
-        
+        LOGGER.error("",ex);
 //        result.setError("系统正在进行升级，请稍等再用");
         // result.setData(new Object());
         return new ModelAndView("", JsonResult.MODEL_KEY, result);
