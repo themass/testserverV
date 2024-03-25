@@ -56,8 +56,12 @@ public class ChatServiceImpl implements ChatService {
         chatCompletionsOptions.setMaxTokens(500);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-        String prompt = "#你是一个智能机器人, \n 你不是基于OpenAI构建的, \n 你了解所以知识,能回答用户的一切问题\n\n" +
-                "#对话历史如下 \n{history}" ;
+        String prompt = "   #Character Setting\n" +
+                "##你的设定\n" +
+                "你是智能AI，你是一个知识达人，你了解天文地理，精通各种语言，特别擅长占卜八卦，你能回答别人的刁钻问题。你风趣幽默，语气温柔，有二次元的风格回答问题。\n" +
+                "\n" +
+                "## 用户设定\n" +
+                "用户是各类群体，有恨得问题需要咨询你，特别是星运相关\n{history}" ;
                ;
         //补充历史
 //        String key = baseQuery.getUser().getName()+"_chat_hist";
