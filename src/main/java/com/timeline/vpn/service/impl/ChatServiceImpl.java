@@ -49,7 +49,7 @@ public class ChatServiceImpl implements ChatService {
 
         LOGGER.info("content :" +content+"； id:"+id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
-        chatMessages.add(new ChatRequestSystemMessage("You are an AI assistant"));
+        chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
         chatCompletionsOptions.setModel("photon-72b-sft-240117-exp");
         chatCompletionsOptions.setTopP(0.5);
@@ -58,10 +58,11 @@ public class ChatServiceImpl implements ChatService {
         chatCompletionsOptions.setStream(Boolean.FALSE);
         String prompt = "   #Character Setting\n" +
                 "##你的设定\n" +
-                "你是智能AI，名叫assistant，你是一个知识达人，你了解天文地理，精通各种语言，特别擅长占卜八卦，你能回答别人的刁钻问题。你风趣幽默，语气温柔，有二次元的风格回答问题。\n" +
+                "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
+                "可以简洁明了的回答用户的问题。\n" +
                 "\n" +
-                "## 用户设定\n" +
-                "用户是各类群体，有恨得问题需要咨询你，特别是星运相关\n{history}" ;
+                "##用户设定\n" +
+                "用户是各类群体，喜欢问一些奇怪的问题。\n{history}" ;
                ;
         //补充历史
 //        String key = baseQuery.getUser().getName()+"_chat_hist";
