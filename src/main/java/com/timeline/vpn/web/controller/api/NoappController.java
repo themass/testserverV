@@ -36,7 +36,7 @@ public class NoappController extends BaseController {
     private DataService dataService;
     @Autowired
     private UserService userService;
-    @RequestMapping(value = "/del/user.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/del.json", method = RequestMethod.GET)
     public JsonResult deluser(@UserInfo BaseQuery baseQuery,@RequestParam String name,@RequestParam String pass) {
         userService.del(baseQuery, name,pass);
         return Constant.RESULT_SUCCESS;
