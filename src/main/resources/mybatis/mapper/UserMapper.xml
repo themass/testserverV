@@ -19,6 +19,9 @@
 	<update id="score">
 	    update vpn.user set score=score+#{score} where name=#{name}
 	</update>
+	<update id="updatePass">
+		update vpn.user set pwd=#{pwd} where name=#{name}
+	</update>
 	<update id="updateLevel">
 	    update vpn.user
 	    <set>

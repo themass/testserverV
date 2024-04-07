@@ -1,7 +1,10 @@
 package com.timeline.vpn.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.ChatHistory;
@@ -22,7 +25,9 @@ import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.ai.openai.models.*;
 import com.azure.core.credential.AzureKeyCredential;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.timeline.vpn.service.impl.CacheServiceImpl.USERCACH_TIMEOUT;
@@ -59,7 +64,7 @@ public class ChatServiceImpl implements ChatService {
         String prompt = "   #Character Setting\n" +
                 "##你的设定\n" +
                 "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
-                "可以简洁明了的回答用户的问题。\n" +
+                "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！" +
                 "\n" +
                 "##用户设定\n" +
                 "用户是各类群体，喜欢问一些奇怪的问题。\n{history}" ;
@@ -115,15 +120,64 @@ public class ChatServiceImpl implements ChatService {
 //        return JsonUtil.readValue(msg,ChatVo.class);
     }
     private String appendHistory(List<SimpleMessage> history) {
+        if(history==null){
+            return "";
+        }
         String value = Optional.ofNullable(history).orElse(null).stream().map(role -> {
                     return role.getRole()+role.getText();
                 })
                 .collect(Collectors.joining("\n"));
         return value;
     }
-    public static void main(String[] args) throws Exception {
-        ChatServiceImpl chatService = new ChatServiceImpl();
-        Choice vo = chatService.chatWithGpt(null,"200字的小说","哈哈哈");
-        System.out.println(vo);
+//    public static void main(String[] args) throws Exception {
+//        String content = "{user:你好}";
+//        ChatServiceImpl chatService = new ChatServiceImpl();
+//        Choice vo = chatService.chatWithGpt(null,content,"哈哈哈");
+//        System.out.println(vo);
+//    }
+    private static Map<String, Object> getBody(String prompt, String content) {
+        Map<String, Object> body = Maps.newHashMap();
+        body.put("model", "photon-72b-sft-240117-exp");
+        body.put("temperature", 0.2);
+        body.put("top_p", 0.5);
+        body.put("max_tokens", 128);
+        body.put("stream", true);
+        Map<String, Object> regexMap = Maps.newHashMap();
+        String regex = "\\{\\s*\"FinishPhase\":\\s*(true|false),\\s*\"TeacherResponse\":\\s*\"(?:[^\"\\\\]|\\\\.)*\",\\s*\"StudentName\":\\s*\"(?:[^\"\\\\]|\\\\.)*\"\\s*\\}";
+        Pattern pattern = Pattern.compile(regex);
+        regexMap.put("regex", pattern);
+        body.put("extra_body", regexMap);
+
+        List<Map<String, String>> messages = Lists.newArrayList();
+        Map<String, String> sysMessage = Maps.newHashMap();
+        sysMessage.put("role", "system");
+        sysMessage.put("content", prompt);
+        messages.add(sysMessage);
+        Map<String, String> userMessage = Maps.newHashMap();
+        userMessage.put("role", "user");
+        userMessage.put("content", content);
+        messages.add(userMessage);
+        body.put("messages", messages);
+
+        return body;
+    }
+
+    public static void main(String[] args) throws IOException {
+        String url = "https://api.boson.ai/v1/chat/completions";
+        String apiKey = "Bearer bai-qhbdYmEgm4wlMGmeHpfQijwOdsqJd69lS1dHe6gwRUDCKs6E"; // 替换为你的OpenAI API密钥
+        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
+        okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, new Gson().toJson(getBody("你是一个诗人。", "写一个60个字的，关于冬天的短文，白雪、很冷、梅花")));
+        okhttp3.Request httpRequest = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", apiKey)
+                .addHeader("stream", "true")
+                .post(body)
+                .build();
+        okhttp3.Response response = client.newCall(httpRequest).execute();
+        String line;
+        while ((line = response.body().source().readUtf8Line()) != null) {
+            System.out.println(line);
+        }
     }
 }

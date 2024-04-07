@@ -18,7 +18,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quartz.version>2.2.1</quartz.version>
 		<springframework.version>4.3.2.RELEASE</springframework.version>
-		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.12</slf4j.version>
 		<org.slf4j-version>1.7.12</org.slf4j-version>
 		<hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
@@ -45,7 +44,7 @@
 		<pagehelper.version>4.1.0</pagehelper.version>
 		<apache.commons.lang.version>3.4</apache.commons.lang.version>
 		<commons-fileupload.version>1.3.1</commons-fileupload.version>
-
+		<log4j.version>2.20.0</log4j.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -228,11 +227,6 @@
 			<version>${slf4j.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
 		<!-- aes 加密 -->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
@@ -389,7 +383,57 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.14.3</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.9.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.9.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.nls</groupId>
+			<artifactId>nls-sdk-transcriber</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.28</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.83</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.java-websocket</groupId>
+			<artifactId>Java-WebSocket</artifactId>
+			<version>1.5.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>vpn-api</finalName>

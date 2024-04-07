@@ -196,6 +196,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void del(BaseQuery baseQuery, String name, String pwd) {
+        UserPo po = userDao.get(name,pwd);
+        if(po!=null){
+            userDao.updatePass(name, "uuuuuu");
+        }
+    }
+
+    @Override
     @Transactional
     public void reg(UserRegForm form, BaseQuery baseQuery) {
         if (!CommonUtil.isNumAndEnglish(form.getName())

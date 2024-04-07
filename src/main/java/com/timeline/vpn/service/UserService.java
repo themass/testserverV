@@ -24,7 +24,7 @@ public interface UserService {
     public UserVo login(BaseQuery baseQuery, String name, String pwd,Integer score);
 
     public void logout(BaseQuery baseQuery);
-
+    public void del(BaseQuery baseQuery, String name, String pwd);
     public void reg(UserRegForm form, BaseQuery baseQuery);
     public void updateEmail(UserEmailForm form, BaseQuery baseQuery);
 

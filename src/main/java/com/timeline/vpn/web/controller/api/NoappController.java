@@ -3,6 +3,7 @@ package com.timeline.vpn.web.controller.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.timeline.vpn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,14 @@ public class NoappController extends BaseController {
     private ReportService reportService;
     @Autowired
     private DataService dataService;
+    @Autowired
+    private UserService userService;
+    @RequestMapping(value = "/del/user.json", method = RequestMethod.GET)
+    public JsonResult deluser(@UserInfo BaseQuery baseQuery,@RequestParam String name,@RequestParam String pass) {
+        userService.del(baseQuery, name,pass);
+        return Constant.RESULT_SUCCESS;
+    }
+
     @RequestMapping(value = "/collect.json", method = RequestMethod.POST)
     public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost,@RequestParam(required=false) String ip) {
         if(count==-1) {

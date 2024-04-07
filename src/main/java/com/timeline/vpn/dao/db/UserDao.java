@@ -14,6 +14,7 @@ import com.timeline.vpn.model.po.UserPo;
  */
 public interface UserDao extends BaseDBDao<UserPo> {
     public UserPo get(@Param(value = "name") String name, @Param(value = "pwd") String pwd);
+    public UserPo updatePass(@Param(value = "name") String name, @Param(value = "pwd") String pwd);
 
     public UserPo exist(String name);
 
