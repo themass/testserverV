@@ -59,7 +59,6 @@ public class ChatServiceImpl implements ChatService {
     @Autowired
     private CacheService cacheService;
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
-        LOGGER.info(content);
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
@@ -84,7 +83,7 @@ public class ChatServiceImpl implements ChatService {
         String quest = prompt.replace("{history}",appHis);
         chatMessageList.add(new ChatMsg("user",quest));
         chatMessages.setMessages(chatMessageList);
-        LOGGER.info(JsonUtil.writeValueAsString(chatMessages));
+        LOGGER.info("输入："+JsonUtil.writeValueAsString(chatMessages));
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
         okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatMessages));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
@@ -94,9 +93,9 @@ public class ChatServiceImpl implements ChatService {
                 .post(body)
                 .build();
         okhttp3.Response response = httpClient.newCall(httpRequest).execute();
-
-        ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(response.body().string()),ChatVo.class);
-        LOGGER.info("chat 回复 : "+JsonUtil.writeValueAsString(vo));
+        String res = response.body().string();
+        ChatVo vo = JsonUtil.readValue(res,ChatVo.class);
+        LOGGER.info("chat 回复 : "+res);
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
             choice.setId(id);
