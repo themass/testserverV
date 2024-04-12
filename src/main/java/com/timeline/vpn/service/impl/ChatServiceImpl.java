@@ -56,7 +56,7 @@ public class ChatServiceImpl implements ChatService {
             LoggerFactory.getLogger(ChatServiceImpl.class);
     @Autowired
     private CacheService cacheService;
-    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
@@ -77,8 +77,8 @@ public class ChatServiceImpl implements ChatService {
         List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
         String appHis = appendHistory(msgs);
         String quest = prompt.replace("{history}",appHis);
-        chatMessages.add(new ChatRequestUserMessage("你好啊"));
-
+        chatMessages.add(new ChatRequestUserMessage(quest));
+        LOGGER.info(JsonUtil.writeValueAsString(chatCompletionsOptions));
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
         okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatCompletionsOptions));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
@@ -98,7 +98,7 @@ public class ChatServiceImpl implements ChatService {
         }
         return null;
     }
-    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
 
         LOGGER.info("content :" +content+"； id:"+id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
