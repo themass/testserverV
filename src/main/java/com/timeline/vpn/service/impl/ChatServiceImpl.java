@@ -57,6 +57,7 @@ public class ChatServiceImpl implements ChatService {
     @Autowired
     private CacheService cacheService;
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
+        LOGGER.info(content);
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
