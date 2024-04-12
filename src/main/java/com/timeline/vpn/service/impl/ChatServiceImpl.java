@@ -35,8 +35,15 @@ import static com.timeline.vpn.service.impl.CacheServiceImpl.USERCACH_TIMEOUT;
 @Service
 public class ChatServiceImpl implements ChatService {
 //    public static String chatGptUrl = "http://book.ok123find.top/v1/chat/completions";
+    //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
     private static final String chatGptUrl = "https://aitogether-japan.openai.azure.com/";
     public static String key = "c70302f0120b4a99b54886a3b1e12610";
+    public static String url = "https://api.openai.com/v1/chat/completions";
+    public static String apiKey = "Bearer sk";
+    public static String apiKey1 = "3TiIs5LyxJVCIU2wr";
+    public static String apiKey2 = "-IA5tH6GqUNfVxUJb0gyQT3BlbkFJVWa";
+
+    public static okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
     public static  Map<String, String> header = new HashMap<>();
     static {
         header.put("Authorization","Bearer "+key);
@@ -51,6 +58,47 @@ public class ChatServiceImpl implements ChatService {
     private CacheService cacheService;
     @Override
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
+        List<ChatRequestMessage> chatMessages = new ArrayList<>();
+        chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
+        ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
+        chatCompletionsOptions.setModel("gpt-3.5-turbo");
+        chatCompletionsOptions.setTopP(0.5);
+        chatCompletionsOptions.setMaxTokens(500);
+        chatCompletionsOptions.setTemperature(0.2);
+        chatCompletionsOptions.setStream(Boolean.FALSE);
+        String prompt = "   #Character Setting\n" +
+                "##你的设定\n" +
+                "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
+                "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！" +
+                "\n" +
+                "##用户设定\n" +
+                "用户是年龄、性别都不确定的群体，喜欢问一些奇怪的问题。对话内容如下。" +
+                "\n 你们的对话历史如下。\n{history}" ;
+        List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
+        String appHis = appendHistory(msgs);
+        String quest = prompt.replace("{history}",appHis);
+        chatMessages.add(new ChatRequestUserMessage(quest));
+
+        okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatCompletionsOptions));
+        okhttp3.Request httpRequest = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", apiKey+apiKey2+apiKey1)
+                .addHeader("stream", "false")
+                .post(body)
+                .build();
+        okhttp3.Response response = httpClient.newCall(httpRequest).execute();
+
+        ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(response.body().string()),ChatVo.class);
+        LOGGER.info("chat 回复 : "+JsonUtil.writeValueAsString(vo));
+        if(vo.getChoices()!=null&&vo.getChoices().size()>0){
+            Choice choice =  vo.getChoices().get(0);
+            choice.setId(id);
+            return choice;
+        }
+        return null;
+    }
+    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
 
         LOGGER.info("content :" +content+"； id:"+id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
@@ -67,28 +115,9 @@ public class ChatServiceImpl implements ChatService {
                 "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！" +
                 "\n" +
                 "##用户设定\n" +
-                "用户是各类群体，喜欢问一些奇怪的问题。\n{history}" ;
+                "用户是年龄、性别都不确定的群体，喜欢问一些奇怪的问题。对话内容如下。" +
+                "\n 你们的对话历史如下。\n{history}" ;
                ;
-        //补充历史
-//        String key = baseQuery.getUser().getName()+"_chat_hist";
-//        String his = cacheService.get(key);
-//        LOGGER.info("redis :" +his);
-//        String appHis = null;
-//        List<ChatHistory> chatHis = null;
-//        if(!StringUtils.isEmpty(his)){
-//            chatHis = JsonUtil.readValue(his, JsonUtil.getListType(ChatHistory.class));
-//            if(chatHis.size()>10){
-//                chatHis = chatHis.subList(chatHis.size()-10,chatHis.size()-1);
-//            }
-//        }else{
-//            chatHis = new ArrayList<>();
-//        }
-//        ChatHistory newMsg = new ChatHistory();
-//        newMsg.setRole("[用户]");
-//        newMsg.setContent(content);
-//        chatHis.add(newMsg);
-//        appHis = appendHistory(chatHis);
-        //发请求
         List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
         String appHis = appendHistory(msgs);
         String quest = prompt.replace("{history}",appHis);
@@ -98,26 +127,12 @@ public class ChatServiceImpl implements ChatService {
 
         ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions),ChatVo.class);
         LOGGER.info("chat 回复 : "+JsonUtil.writeValueAsString(chatCompletions));
-//        vo.setId(id);
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
             choice.setId(id);
-            //返回值写进历史
-//            ChatHistory newReMsg = new ChatHistory();
-//            newReMsg.setRole("[机器人]");
-//            newReMsg.setContent(choice.getMessage().getContent());
-//            chatHis.add(newReMsg);
-//            cacheService.put(key, JsonUtil.writeValueAsString(chatHis),USERCACH_TIMEOUT);
             return choice;
         }
         return null;
-//        Map<String, String> data = new HashMap<>();
-//        data.put("model", "gpt-3.5-turbo-16k");
-//        data.put("stream", "false");
-//        data.put("messages", content);
-//        String msg = HttpCommonUtil.sendPost(chatGptUrl,data,header);
-//        LOGGER.info(msg);
-//        return JsonUtil.readValue(msg,ChatVo.class);
     }
     private String appendHistory(List<SimpleMessage> history) {
         if(history==null){
@@ -129,25 +144,13 @@ public class ChatServiceImpl implements ChatService {
                 .collect(Collectors.joining("\n"));
         return value;
     }
-//    public static void main(String[] args) throws Exception {
-//        String content = "{user:你好}";
-//        ChatServiceImpl chatService = new ChatServiceImpl();
-//        Choice vo = chatService.chatWithGpt(null,content,"哈哈哈");
-//        System.out.println(vo);
-//    }
     private static Map<String, Object> getBody(String prompt, String content) {
         Map<String, Object> body = Maps.newHashMap();
-        body.put("model", "photon-72b-sft-240117-exp");
+        body.put("model", "gpt-3.5-turbo");
         body.put("temperature", 0.2);
         body.put("top_p", 0.5);
         body.put("max_tokens", 128);
-        body.put("stream", true);
-        Map<String, Object> regexMap = Maps.newHashMap();
-        String regex = "\\{\\s*\"FinishPhase\":\\s*(true|false),\\s*\"TeacherResponse\":\\s*\"(?:[^\"\\\\]|\\\\.)*\",\\s*\"StudentName\":\\s*\"(?:[^\"\\\\]|\\\\.)*\"\\s*\\}";
-        Pattern pattern = Pattern.compile(regex);
-        regexMap.put("regex", pattern);
-        body.put("extra_body", regexMap);
-
+        body.put("stream", false);
         List<Map<String, String>> messages = Lists.newArrayList();
         Map<String, String> sysMessage = Maps.newHashMap();
         sysMessage.put("role", "system");
@@ -158,26 +161,41 @@ public class ChatServiceImpl implements ChatService {
         userMessage.put("content", content);
         messages.add(userMessage);
         body.put("messages", messages);
-
         return body;
     }
-
     public static void main(String[] args) throws IOException {
-        String url = "https://api.boson.ai/v1/chat/completions";
-        String apiKey = "Bearer bai-qhbdYmEgm4wlMGmeHpfQijwOdsqJd69lS1dHe6gwRUDCKs6E"; // 替换为你的OpenAI API密钥
-        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
+
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
         okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, new Gson().toJson(getBody("你是一个诗人。", "写一个60个字的，关于冬天的短文，白雪、很冷、梅花")));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
                 .url(url)
                 .addHeader("Authorization", apiKey)
-                .addHeader("stream", "true")
+                .addHeader("stream", "false")
                 .post(body)
                 .build();
-        okhttp3.Response response = client.newCall(httpRequest).execute();
-        String line;
-        while ((line = response.body().source().readUtf8Line()) != null) {
-            System.out.println(line);
-        }
+        okhttp3.Response response = httpClient.newCall(httpRequest).execute();
+        System.out.println(response.body().string());
+
+        List<ChatRequestMessage> chatMessages = new ArrayList<>();
+        chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
+        ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
+        chatCompletionsOptions.setModel("gpt-3.5-turbo");
+        chatCompletionsOptions.setTopP(0.5);
+        chatCompletionsOptions.setMaxTokens(500);
+        chatCompletionsOptions.setTemperature(0.2);
+        chatCompletionsOptions.setStream(Boolean.FALSE);
+        String prompt = "   #Character Setting\n" +
+                "##你的设定\n" +
+                "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
+                "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！" +
+                "\n" +
+                "##用户设定\n" +
+                "用户是年龄、性别都不确定的群体，喜欢问一些奇怪的问题。对话内容如下。" +
+                "\n 你们的对话历史如下。\n{history}" ;
+        System.out.println(JsonUtil.writeValueAsString(chatCompletionsOptions));
+//        List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
+//        String appHis = appendHistory(msgs);
+//        String quest = prompt.replace("{history}",appHis);
+//        chatMessages.add(new ChatRequestUserMessage(quest));
     }
 }
