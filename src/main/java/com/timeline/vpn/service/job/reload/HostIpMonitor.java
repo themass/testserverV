@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.timeline.vpn.dao.db.LockJobDao;
-import com.timeline.vpn.metric.Measure;
-import com.timeline.vpn.metric.Metrics;
 import com.timeline.vpn.model.po.LockJobPo;
 import com.timeline.vpn.service.job.ReloadJob;
 import com.timeline.vpn.util.DateTimeUtils;
@@ -34,9 +32,6 @@ public class HostIpMonitor extends ReloadJob {
       po.setIp(IpLocalUtil.getHostIp());
      try {
       if(lockJobDao.insert(po)>0) {
-        for(String ip :HostCheck.allIp()){
-          Metrics.count(Measure.vpn_connect_live_all.name(),"IP-"+ip);
-        }
         LOGGER.info("HostIpMonitor  size="+HostCheck.allIp().size());
       }
      }catch (Exception e) {

@@ -21,8 +21,6 @@ import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author gqli
@@ -31,10 +29,8 @@ import io.swagger.annotations.ApiOperation;
  */
 @Controller
 @RequestMapping("/api/user")
-@Api(tags = "用户信息接口")
 public class UserController extends BaseController {
     
-    @ApiOperation(value = "注册用户")
     @RequestMapping(value = "/reg.json", method = RequestMethod.POST)
     public JsonResult reg(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserRegForm form) {
         userService.reg(form, baseQuery);

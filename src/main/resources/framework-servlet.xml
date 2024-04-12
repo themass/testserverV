@@ -51,9 +51,6 @@
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
 		<property name="order" value="0" />
 	</bean>
-	<bean id="fastJsonHttpMessageConverterEx"
-		  class="com.timeline.vpn.web.common.response.FastJsonHttpMessageConverterEx">
-	</bean>
 	<mvc:default-servlet-handler />
 	<!--CustomArgument support -->
 	<bean class="com.timeline.vpn.web.common.CustomMethodHandlerAdapter">

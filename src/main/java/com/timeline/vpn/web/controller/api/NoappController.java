@@ -18,7 +18,6 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.PingCheck;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.DataService;
-import com.timeline.vpn.service.ReportService;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 
@@ -30,8 +29,6 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/noapp")
 public class NoappController extends BaseController {
-    @Autowired
-    private ReportService reportService;
     @Autowired
     private DataService dataService;
     @Autowired
@@ -49,16 +46,13 @@ public class NoappController extends BaseController {
             LOGGER.error("ip 错误了，服务断了，快速处理吧"+localhost+"---"+ip);
             dataService.sendMsg("ip 错误了，服务断了，快速处理吧"+localhost+"---"+ip);
         }
-        reportService.collect(baseQuery, count,localhost,ip);
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/ping.json", method = RequestMethod.POST)
     public JsonResult ping(@UserInfo BaseQuery baseQuery,@RequestParam String pingCheck) {
         List<PingCheck> list = parse(pingCheck);
         LOGGER.info(" ping check count="+list.size());
-        for(PingCheck item:list)
-            reportService.pingCheck(baseQuery, item.getType(),item.getIp());
-        return Constant.RESULT_SUCCESS; 
+        return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/offerads/youmi.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult youmiOfferads(@UserInfo BaseQuery baseQuery,@RequestParam YoumiOffadsForm form) {

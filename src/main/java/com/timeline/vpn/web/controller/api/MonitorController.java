@@ -18,7 +18,6 @@ import com.timeline.vpn.model.form.CInfoForm;
 import com.timeline.vpn.model.form.ConnLogForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
-import com.timeline.vpn.service.ReportService;
 import com.timeline.vpn.util.AES2;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
@@ -31,8 +30,6 @@ import com.timeline.vpn.web.controller.BaseController;
 @Controller
 @RequestMapping("/api/monitor")
 public class MonitorController extends BaseController {
-    @Autowired
-    private ReportService reportService;
     @RequestMapping(value = "/leak.json", method = RequestMethod.POST)
     public JsonResult leak(@UserInfo BaseQuery baseQuery,@RequestParam List<MultipartFile> fileList) {
         return Constant.RESULT_SUCCESS;
@@ -40,7 +37,6 @@ public class MonitorController extends BaseController {
 
     @RequestMapping(value = "/bug.json", method = RequestMethod.POST)
     public JsonResult bug(@UserInfo BaseQuery baseQuery,@RequestParam List<MultipartFile> fileList) {
-        reportService.reportBug(baseQuery, fileList);
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/connlog.json", method = RequestMethod.POST)

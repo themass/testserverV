@@ -13,7 +13,6 @@ import com.timeline.vpn.Constant;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.exception.DataException;
 import com.timeline.vpn.model.param.DevApp;
-import com.timeline.vpn.service.impl.ReportServiceImpl;
 import com.timeline.vpn.web.common.DevAppContext;
 
 /**
@@ -25,7 +24,7 @@ public abstract class BaseMapServiceProxy<T extends IAppAgent> {
     @Autowired
     protected Map<String, T> serviceMap;
     protected Map<String, T> channelMap = Maps.newHashMap();
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseMapServiceProxy.class);
 
     @PostConstruct
     public void init() {

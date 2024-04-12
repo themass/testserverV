@@ -2,13 +2,11 @@ package com.timeline.vpn.util;
 
 import java.util.Date;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.po.UserPo;
-import com.timeline.vpn.service.impl.UserServiceImpl;
 
 /**
  * @author gqli

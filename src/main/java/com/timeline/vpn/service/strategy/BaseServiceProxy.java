@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
 import com.timeline.vpn.exception.DataException;
-import com.timeline.vpn.service.impl.ReportServiceImpl;
 import com.timeline.vpn.service.strategy.BaseServiceProxy.NameService;
 
 /**
@@ -23,7 +22,7 @@ public abstract class BaseServiceProxy<T extends NameService> {
     @Autowired
     protected List<T> serviceMap;
     protected Map<String, T> nameMap = Maps.newHashMap();
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseServiceProxy.class);
 
     @PostConstruct
     public void init() {
