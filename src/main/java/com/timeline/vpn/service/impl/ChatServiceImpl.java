@@ -43,7 +43,7 @@ public class ChatServiceImpl implements ChatService {
     public static String apiKey1 = "3TiIs5LyxJVCIU2wr";
     public static String apiKey2 = "-IA5tH6GqUNfVxUJb0gyQT3BlbkFJVWa";
 
-    public static okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
+//    public static okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
     public static  Map<String, String> header = new HashMap<>();
     static {
         header.put("Authorization","Bearer "+key);
@@ -56,8 +56,8 @@ public class ChatServiceImpl implements ChatService {
             LoggerFactory.getLogger(ChatServiceImpl.class);
     @Autowired
     private CacheService cacheService;
-    @Override
-    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
+        okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
@@ -98,7 +98,8 @@ public class ChatServiceImpl implements ChatService {
         }
         return null;
     }
-    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
+    @Override
+    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
 
         LOGGER.info("content :" +content+"； id:"+id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
@@ -164,7 +165,7 @@ public class ChatServiceImpl implements ChatService {
         return body;
     }
     public static void main(String[] args) throws IOException {
-
+        okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
         okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, new Gson().toJson(getBody("你是一个诗人。", "写一个60个字的，关于冬天的短文，白雪、很冷、梅花")));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
