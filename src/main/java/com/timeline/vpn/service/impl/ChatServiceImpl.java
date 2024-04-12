@@ -5,6 +5,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.timeline.vpn.model.chat.ChatMessages;
+import com.timeline.vpn.model.chat.ChatMsg;
 import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.ChatHistory;
@@ -59,14 +61,15 @@ public class ChatServiceImpl implements ChatService {
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
         LOGGER.info(content);
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
-        List<ChatRequestMessage> chatMessages = new ArrayList<>();
-        chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
-        ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
-        chatCompletionsOptions.setModel("gpt-3.5-turbo");
-        chatCompletionsOptions.setTopP(0.5);
-        chatCompletionsOptions.setMaxTokens(500);
-        chatCompletionsOptions.setTemperature(0.2);
-        chatCompletionsOptions.setStream(Boolean.FALSE);
+        List<ChatMsg> chatMessageList = new ArrayList<>();
+        chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
+
+        ChatMessages chatMessages = new ChatMessages();
+        chatMessages.setModel("gpt-3.5-turbo");
+        chatMessages.setTopP(0.5);
+        chatMessages.setMaxTokens(500);
+        chatMessages.setTemperature(0.2);
+        chatMessages.setStream(Boolean.FALSE);
         String prompt = "   #Character Setting\n" +
                 "##你的设定\n" +
                 "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
@@ -77,11 +80,13 @@ public class ChatServiceImpl implements ChatService {
                 "\n 你们的对话历史如下。\n{history}" ;
         List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
         String appHis = appendHistory(msgs);
+
         String quest = prompt.replace("{history}",appHis);
-        chatMessages.add(new ChatRequestUserMessage(quest));
-        LOGGER.info(JsonUtil.writeValueAsString(chatCompletionsOptions));
+        chatMessageList.add(new ChatMsg("user",quest));
+        chatMessages.setMessages(chatMessageList);
+        LOGGER.info(JsonUtil.writeValueAsString(chatMessages));
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatCompletionsOptions));
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatMessages));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
                 .url(url)
                 .addHeader("Authorization", apiKey+apiKey2+apiKey1)
