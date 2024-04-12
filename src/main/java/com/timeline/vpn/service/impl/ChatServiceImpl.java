@@ -56,7 +56,7 @@ public class ChatServiceImpl implements ChatService {
             LoggerFactory.getLogger(ChatServiceImpl.class);
     @Autowired
     private CacheService cacheService;
-    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
@@ -98,8 +98,7 @@ public class ChatServiceImpl implements ChatService {
         }
         return null;
     }
-    @Override
-    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
 
         LOGGER.info("content :" +content+"； id:"+id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
