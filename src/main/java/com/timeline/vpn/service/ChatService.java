@@ -11,7 +11,7 @@ import com.timeline.vpn.model.vo.*;
  */
 public interface ChatService {
     
-    public Choice chatWithGpt(BaseQuery baseQuery, String content,String id) throws Exception;
+    public Choice chatWithGpt(BaseQuery baseQuery, String content,String id, String charater) throws Exception;
     public InfoListVo<CharacterVo> getCharacter(BaseQuery baseQuery);
 
 

@@ -3,6 +3,8 @@ package com.timeline.vpn.model.form;
 public class ChatContentForm {
     private String content;
     private String id;
+    public String charater;
+
 
     public String getContent() {
         return content;
@@ -18,5 +20,13 @@ public class ChatContentForm {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCharater() {
+        return charater;
+    }
+
+    public void setCharater(String charater) {
+        this.charater = charater;
     }
 }

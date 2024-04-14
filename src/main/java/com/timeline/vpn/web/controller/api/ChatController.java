@@ -25,7 +25,7 @@ public class ChatController extends BaseController {
     @PostMapping(value = "/nostream.json")
     public JsonResult nostream(@UserInfo BaseQuery baseQuery,
                                @ModelAttribute @Valid PageBaseForm form,  @ModelAttribute @Valid ChatContentForm chatContent) throws Exception {
-        return new JsonResult(chatService.chatWithGpt(baseQuery, chatContent.getContent(),chatContent.getId()));
+        return new JsonResult(chatService.chatWithGpt(baseQuery, chatContent.getContent(),chatContent.getId(),chatContent.getCharater()));
     }
     @RequestMapping(value = "/stream.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult stream(@UserInfo BaseQuery baseQuery,

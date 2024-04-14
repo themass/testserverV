@@ -65,7 +65,7 @@ public class ChatServiceImpl implements ChatService {
             LoggerFactory.getLogger(ChatServiceImpl.class);
     @Autowired
     private CacheService cacheService;
-    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
@@ -76,15 +76,18 @@ public class ChatServiceImpl implements ChatService {
         chatMessages.setMaxTokens(500);
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
-        String tt="[{\"role\":\"user\",\"text\":\"你好\"},{\"role\":\"assistant\",\"text\":\"AI你好呀，有什么我可以帮助你的吗？\"},{\"role\":\"user\",\"text\":\"你用的什么模型\"},{\"role\":\"user\",\"text\":\"你哪年\"},{\"role\":\"user\",\"text\":\"北京今天天气怎么样\"},{\"role\":\"user\",\"text\":\"北京今天天气怎么样\"},{\"role\":\"user\",\"text\":\"你怎么还不回答我\"},{\"role\":\"user\",\"text\":\"刚刚\"},{\"role\":\"user\",\"text\":\"刚刚\"},{\"role\":\"assistant\",\"text\":\"assistant对不起，我刚刚在思考人生呢，哈哈。你问的问题有点多，让我一个个来回答吧。首先，我是基于GPT-3模型的AI助手。至于你问的年份，我是一个AI，没有出生年份哦。至于北京今天的天气，抱歉我无法提供实时天气信息，你可以查看一下最近的天气预报。\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"干活\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"还回去\"},{\"role\":\"user\",\"text\":\"你好\"},{\"role\":\"user\",\"text\":\"哈哈哈\"},{\"role\":\"user\",\"text\":\"哈哈哈\"},{\"role\":\"user\",\"text\":\"呵呵\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"哈哈\"}]";
-        String prompt = "   #Character Setting\n" +
+        String myprompt = "   #Character Setting\n" +
                 "##你的设定\n" +
                 "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
                 "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！" +
                 "\n" +
                 "##用户设定\n" +
                 "用户是年龄、性别都不确定的群体，喜欢问一些奇怪的问题。对话内容如下。" +
-                "\n 你们的对话历史如下。\n{history}" ;
+                "\n 你们的对话历史如下。";
+        if(!StringUtils.isEmpty(charater)){
+            myprompt = charater;
+        }
+        String prompt = myprompt+"\n{history}" ;
         List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
         String appHis = appendHistory(msgs);
 
@@ -118,7 +121,7 @@ public class ChatServiceImpl implements ChatService {
         return VoBuilder.buildListInfoVo(list,CharacterVo.class, null);
     }
 
-    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
 
         LOGGER.info("content :" +content+"； id:"+id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
