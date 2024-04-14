@@ -96,5 +96,9 @@ public class UserController extends BaseController {
         }
         return new JsonResult(userService.score(baseQuery, score));
     }
+    @RequestMapping(value = "/setting/character.json", method = RequestMethod.GET)
+    public JsonResult character(@UserInfo BaseQuery baseQuery) {
+        return new JsonResult(chatService.getCharacter(baseQuery));
+    }
 }
 

@@ -5,14 +5,19 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.timeline.vpn.VoBuilder;
+import com.timeline.vpn.dao.db.SettingCharacterDao;
 import com.timeline.vpn.model.chat.ChatMessages;
 import com.timeline.vpn.model.chat.ChatMsg;
 import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.po.CharacterPo;
 import com.timeline.vpn.model.po.ChatHistory;
 import com.timeline.vpn.model.po.ConnLogPo;
+import com.timeline.vpn.model.vo.CharacterVo;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
+import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.ChatService;
 import com.timeline.vpn.util.HttpCommonUtil;
@@ -44,6 +49,8 @@ public class ChatServiceImpl implements ChatService {
     public static String apiKey = "Bearer sk";
     public static String apiKey1 = "3TiIs5LyxJVCIU2wr";
     public static String apiKey2 = "-IA5tH6GqUNfVxUJb0gyQT3BlbkFJVWa";
+    @Autowired
+    private SettingCharacterDao settingCharacterDao;
 
 //    public static okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
     public static  Map<String, String> header = new HashMap<>();
@@ -58,7 +65,7 @@ public class ChatServiceImpl implements ChatService {
             LoggerFactory.getLogger(ChatServiceImpl.class);
     @Autowired
     private CacheService cacheService;
-    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
@@ -69,6 +76,7 @@ public class ChatServiceImpl implements ChatService {
         chatMessages.setMaxTokens(500);
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
+        String tt="[{\"role\":\"user\",\"text\":\"你好\"},{\"role\":\"assistant\",\"text\":\"AI你好呀，有什么我可以帮助你的吗？\"},{\"role\":\"user\",\"text\":\"你用的什么模型\"},{\"role\":\"user\",\"text\":\"你哪年\"},{\"role\":\"user\",\"text\":\"北京今天天气怎么样\"},{\"role\":\"user\",\"text\":\"北京今天天气怎么样\"},{\"role\":\"user\",\"text\":\"你怎么还不回答我\"},{\"role\":\"user\",\"text\":\"刚刚\"},{\"role\":\"user\",\"text\":\"刚刚\"},{\"role\":\"assistant\",\"text\":\"assistant对不起，我刚刚在思考人生呢，哈哈。你问的问题有点多，让我一个个来回答吧。首先，我是基于GPT-3模型的AI助手。至于你问的年份，我是一个AI，没有出生年份哦。至于北京今天的天气，抱歉我无法提供实时天气信息，你可以查看一下最近的天气预报。\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"干活\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"还回去\"},{\"role\":\"user\",\"text\":\"你好\"},{\"role\":\"user\",\"text\":\"哈哈哈\"},{\"role\":\"user\",\"text\":\"哈哈哈\"},{\"role\":\"user\",\"text\":\"呵呵\"},{\"role\":\"user\",\"text\":\"哈哈\"},{\"role\":\"user\",\"text\":\"哈哈\"}]";
         String prompt = "   #Character Setting\n" +
                 "##你的设定\n" +
                 "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
@@ -103,7 +111,14 @@ public class ChatServiceImpl implements ChatService {
         }
         return null;
     }
-    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id) throws Exception {
+
+    @Override
+    public InfoListVo<CharacterVo> getCharacter(BaseQuery baseQuery) {
+        List<CharacterPo> list = settingCharacterDao.getAll();
+        return VoBuilder.buildListInfoVo(list,CharacterVo.class, null);
+    }
+
+    public Choice chatWithGpt2(BaseQuery baseQuery, String content, String id) throws Exception {
 
         LOGGER.info("content :" +content+"； id:"+id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();

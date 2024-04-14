@@ -22,8 +22,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/api/chat")
 public class ChatController extends BaseController {
-    @Autowired
-    private ChatService chatService;
     @PostMapping(value = "/nostream.json")
     public JsonResult nostream(@UserInfo BaseQuery baseQuery,
                                @ModelAttribute @Valid PageBaseForm form,  @ModelAttribute @Valid ChatContentForm chatContent) throws Exception {
