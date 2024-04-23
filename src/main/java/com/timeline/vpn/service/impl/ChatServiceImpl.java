@@ -1,9 +1,7 @@
 package com.timeline.vpn.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.dao.db.SettingCharacterDao;
@@ -12,15 +10,12 @@ import com.timeline.vpn.model.chat.ChatMsg;
 import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.CharacterPo;
-import com.timeline.vpn.model.po.ChatHistory;
-import com.timeline.vpn.model.po.ConnLogPo;
 import com.timeline.vpn.model.vo.CharacterVo;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.ChatService;
-import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,7 +29,6 @@ import com.azure.core.credential.AzureKeyCredential;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.timeline.vpn.service.impl.CacheServiceImpl.USERCACH_TIMEOUT;
@@ -66,6 +60,13 @@ public class ChatServiceImpl implements ChatService {
     @Autowired
     private CacheService cacheService;
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
+        Random random = new Random();
+        int r = random.nextInt(10);
+        if(r<6) {
+            LOGGER.info("use chatWithGpt2");
+            return chatWithGpt2(baseQuery, content, id, charater);
+        }
+
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
@@ -73,7 +74,7 @@ public class ChatServiceImpl implements ChatService {
         ChatMessages chatMessages = new ChatMessages();
         chatMessages.setModel("gpt-3.5-turbo");
         chatMessages.setTopP(0.5);
-        chatMessages.setMaxTokens(500);
+        chatMessages.setMaxTokens(128);
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
         String myprompt = "   #Character Setting\n" +
@@ -129,7 +130,7 @@ public class ChatServiceImpl implements ChatService {
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
         chatCompletionsOptions.setModel("photon-72b-sft-240117-exp");
         chatCompletionsOptions.setTopP(0.5);
-        chatCompletionsOptions.setMaxTokens(500);
+        chatCompletionsOptions.setMaxTokens(128);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
         String prompt = "   #Character Setting\n" +
