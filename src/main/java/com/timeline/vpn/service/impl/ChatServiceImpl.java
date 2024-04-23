@@ -1,7 +1,9 @@
 package com.timeline.vpn.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.dao.db.SettingCharacterDao;
@@ -10,12 +12,15 @@ import com.timeline.vpn.model.chat.ChatMsg;
 import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.CharacterPo;
+import com.timeline.vpn.model.po.ChatHistory;
+import com.timeline.vpn.model.po.ConnLogPo;
 import com.timeline.vpn.model.vo.CharacterVo;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.service.ChatService;
+import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -29,6 +34,7 @@ import com.azure.core.credential.AzureKeyCredential;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.timeline.vpn.service.impl.CacheServiceImpl.USERCACH_TIMEOUT;
@@ -66,7 +72,6 @@ public class ChatServiceImpl implements ChatService {
             LOGGER.info("use chatWithGpt2");
             return chatWithGpt2(baseQuery, content, id, charater);
         }
-
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
@@ -74,13 +79,13 @@ public class ChatServiceImpl implements ChatService {
         ChatMessages chatMessages = new ChatMessages();
         chatMessages.setModel("gpt-3.5-turbo");
         chatMessages.setTopP(0.5);
-        chatMessages.setMaxTokens(128);
+        chatMessages.setMaxTokens(500);
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
         String myprompt = "   #Character Setting\n" +
                 "##你的设定\n" +
                 "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
-                "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！回答内容不需要出现assitantAI、assitant" +
+                "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！" +
                 "\n" +
                 "##用户设定\n" +
                 "用户是年龄、性别都不确定的群体，喜欢问一些奇怪的问题。对话内容如下。" +
@@ -130,10 +135,10 @@ public class ChatServiceImpl implements ChatService {
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
         chatCompletionsOptions.setModel("photon-72b-sft-240117-exp");
         chatCompletionsOptions.setTopP(0.5);
-        chatCompletionsOptions.setMaxTokens(128);
+        chatCompletionsOptions.setMaxTokens(500);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-        String myprompt = "   #Character Setting\n" +
+         String myprompt = "   #Character Setting\n" +
                 "##你的设定\n" +
                 "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
                 "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！回答内容不需要出现assitantAI、assitant" +
