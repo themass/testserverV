@@ -43,6 +43,7 @@ import static com.timeline.vpn.service.impl.CacheServiceImpl.USERCACH_TIMEOUT;
 public class ChatServiceImpl implements ChatService {
 //    public static String chatGptUrl = "http://book.ok123find.top/v1/chat/completions";
     //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
+    //sk-4zWTqK981p5ee3GByGxPGNnTgltorSAUDQAXTa4qNe5kTjJn；
     private static final String chatGptUrl = "https://aitogether-japan.openai.azure.com/";
     public static String key = "c70302f0120b4a99b54886a3b1e12610";
     public static String url = "https://api.openai.com/v1/chat/completions";
