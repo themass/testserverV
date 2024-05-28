@@ -39,7 +39,7 @@ public class ChatDoubaoHandler extends BaseChatHandle {
     }
     @Override
     public boolean support(Integer t) {
-        return t > 3;
+        return t == 3;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
@@ -62,14 +62,15 @@ public class ChatDoubaoHandler extends BaseChatHandle {
         String quest = prompt.replace("{history}", appHis);
         Api.ChatReq req = buildReq("你是一个智能AI小助手", quest);
         Api.ChatResp resp = maasService.chat(req);
+        LOGGER.info("输入："+quest);
         LOGGER.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
         LOGGER.info("豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
         if (resp.getChoice() != null) {
             Choice choice = new Choice();
             choice.setId(id);
             Message message = new Message();
-            message.setContent(resp.getChoice().getMessage().getContent());
-            message.setRole("user");
+            message.setContent(resp.getChoice().getMessage().getContent().replace("user","").replace("assistant",""));
+            message.setRole(resp.getChoice().getMessage().getRole());
             choice.setMessage(message);
             return choice;
         }
