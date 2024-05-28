@@ -45,26 +45,11 @@ public class ChatDoubaoHandler extends BaseChatHandle {
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
 
         LOGGER.info("ChatDoubaoHandler content :" + content + "； id:" + id);
-        String myprompt = "   #Character Setting\n" +
-                "##你的设定\n" +
-                "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
-                "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！回答内容不需要出现assitantAI、assitant" +
-                "\n" +
-                "##用户设定\n" +
-                "用户是年龄、性别都不确定的群体，喜欢问一些奇怪的问题。对话内容如下。" +
-                "\n 你们的对话历史如下。";
-        if (!StringUtils.isEmpty(charater)) {
-            myprompt = charater;
-        }
-        String prompt = myprompt + "\n{history}";
-        List<SimpleMessage> msgs = JsonUtil.readValue(content, JsonUtil.getListType(SimpleMessage.class));
-        String appHis = appendHistory(msgs);
-        String quest = prompt.replace("{history}", appHis);
-        Api.ChatReq req = buildReq("你是一个智能AI小助手", quest);
+        Api.ChatReq req = buildReq("你是一个智能AI小助手", getPromt(content, charater));
         Api.ChatResp resp = maasService.chat(req);
-        LOGGER.info("输入："+quest);
+        LOGGER.info("ChatDoubaoHandler 豆包 输入："+getPromt(content, charater));
         LOGGER.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
-        LOGGER.info("豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
+        LOGGER.info("ChatDoubaoHandler 豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
         if (resp.getChoice() != null) {
             Choice choice = new Choice();
             choice.setId(id);

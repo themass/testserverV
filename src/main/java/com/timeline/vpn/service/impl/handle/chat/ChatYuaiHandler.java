@@ -54,30 +54,17 @@ public class ChatYuaiHandler extends BaseChatHandle {
         chatCompletionsOptions.setMaxTokens(2048);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-        String myprompt = "   #Character Setting\n" +
-                "##你的设定\n" +
-                "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
-                "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！回答内容不需要出现assitantAI、assitant" +
-                "\n" +
-                "##用户设定\n" +
-                "用户是年龄、性别都不确定的群体，喜欢问一些奇怪的问题。对话内容如下。" +
-                "\n 你们的对话历史如下。";
-        if (!StringUtils.isEmpty(charater)) {
-            myprompt = charater;
-        }
-        String prompt = myprompt + "\n{history}";
-        List<SimpleMessage> msgs = JsonUtil.readValue(content, JsonUtil.getListType(SimpleMessage.class));
-        String appHis = appendHistory(msgs);
-        String quest = prompt.replace("{history}", appHis);
-        chatMessages.add(new ChatRequestUserMessage(quest));
-        LOGGER.info("chat 请求 : " + quest);
+        String prompt = getPromt(content, charater);
+        chatMessages.add(new ChatRequestUserMessage(prompt));
+        LOGGER.info("ChatYuaiHandler 与爱 chat 请求 : " + prompt);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4", chatCompletionsOptions);
 
         ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions), ChatVo.class);
-        LOGGER.info("chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
+        LOGGER.info("ChatYuaiHandler 与爱 chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
         if (vo.getChoices() != null && vo.getChoices().size() > 0) {
             Choice choice = vo.getChoices().get(0);
             choice.setId(id);
+            choice.getMessage().setContent(choice.getMessage().getContent().replace("user","").replace("assistant",""));
             return choice;
         }
         return null;

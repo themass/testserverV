@@ -44,25 +44,10 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
         chatMessages.setMaxTokens(1800);
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
-        String myprompt = "   #Character Setting\n" +
-                "##你的设定\n" +
-                "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
-                "可以简洁明了的回答用户的问题。\n 当用户问一些你不懂或者乱七八糟的问题时，你可以用幽默的语气提示用户要认真欧！！！" +
-                "\n" +
-                "##用户设定\n" +
-                "用户是年龄、性别都不确定的群体，喜欢问一些奇怪的问题。对话内容如下。" +
-                "\n 你们的对话历史如下。";
-        if(!StringUtils.isEmpty(charater)){
-            myprompt = charater;
-        }
-        String prompt = myprompt+"\n{history}" ;
-        List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
-        String appHis = appendHistory(msgs);
 
-        String quest = prompt.replace("{history}",appHis);
-        chatMessageList.add(new ChatMsg("user",quest));
+        chatMessageList.add(new ChatMsg("user",getPromt(content, charater)));
         chatMessages.setMessages(chatMessageList);
-        LOGGER.info("输入："+JsonUtil.writeValueAsString(chatMessages));
+        LOGGER.info("chatWithGpt 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
         okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatMessages));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
@@ -74,7 +59,7 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
         okhttp3.Response response = httpClient.newCall(httpRequest).execute();
         String res = response.body().string();
         ChatVo vo = JsonUtil.readValue(res,ChatVo.class);
-        LOGGER.info("chat 回复 : "+res);
+        LOGGER.info("chatWithGpt 我的gpt  chat 回复 : "+res);
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
             choice.setId(id);
