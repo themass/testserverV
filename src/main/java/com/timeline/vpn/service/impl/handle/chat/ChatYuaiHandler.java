@@ -40,7 +40,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
 
     @Override
     public boolean support(Integer t) {
-        return t > 3;
+        return t >= 3;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
