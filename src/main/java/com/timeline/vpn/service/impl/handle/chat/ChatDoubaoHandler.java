@@ -4,6 +4,7 @@ import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
+import com.timeline.vpn.model.vo.Message;
 import com.timeline.vpn.util.JsonUtil;
 import com.volcengine.model.maas.api.Api;
 import com.volcengine.service.maas.MaasService;
@@ -38,7 +39,7 @@ public class ChatDoubaoHandler extends BaseChatHandle {
     }
     @Override
     public boolean support(Integer t) {
-        return t >= 3;
+        return t > 3;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
@@ -62,11 +63,14 @@ public class ChatDoubaoHandler extends BaseChatHandle {
         Api.ChatReq req = buildReq("你是一个智能AI小助手", quest);
         Api.ChatResp resp = maasService.chat(req);
         LOGGER.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
-        ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(resp.getChoice().getMessage().getContent()), ChatVo.class);
-        LOGGER.info("chat 回复 : " + JsonUtil.writeValueAsString(resp.getChoice().getMessage().getContent()));
-        if (vo.getChoices() != null && vo.getChoices().size() > 0) {
-            Choice choice = vo.getChoices().get(0);
+        LOGGER.info("豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
+        if (resp.getChoice() != null) {
+            Choice choice = new Choice();
             choice.setId(id);
+            Message message = new Message();
+            message.setContent(resp.getChoice().getMessage().getContent());
+            message.setRole("user");
+            choice.setMessage(message);
             return choice;
         }
         return null;
