@@ -1,21 +1,18 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
-import com.azure.ai.openai.OpenAIClient;
-import com.azure.ai.openai.OpenAIClientBuilder;
-import com.azure.ai.openai.models.*;
-import com.azure.core.credential.AzureKeyCredential;
 import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.util.JsonUtil;
+import com.volcengine.model.maas.api.Api;
+import com.volcengine.service.maas.MaasService;
+import com.volcengine.service.maas.impl.MaasServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author gqli
@@ -24,36 +21,29 @@ import java.util.Map;
  * @date 2018年7月31日 下午4:25:18
  */
 @Component
-public class ChatYuaiHandler extends BaseChatHandle {
-    private static final String chatGptUrl = "https://aitogether-japan.openai.azure.com/";
-    public static String key = "c70302f0120b4a99b54886a3b1e12610";
-    public static Map<String, String> header = new HashMap<>();
+public class ChatDoubaoHandler extends BaseChatHandle {
+    private static String host = "maas-api.ml-platform-cn-beijing.volces.com";
+    private static String region = "cn-beijing";
+    private static String  appKey = "AKLTZmU4MTUyMDI3MjFhNDU1Njhj";
+    private static String  appKey2 = "OWYxOWVlN2UxMTBlY2Q";
+    private static String  secretKey =  "T0dFMk5qUmxaamRoTXpsak5HVXhNamh";
+    private static String  secretKey2 =  "oTmpBNU56bGhaakEzWWpCa1ltSQ==";
 
-    static {
-        header.put("Authorization", "Bearer " + key);
+    MaasService maasService;
+    @PostConstruct
+    private void init() {
+        maasService = new MaasServiceImpl(host, region);
+        maasService.setAccessKey(appKey+appKey2);
+        maasService.setSecretKey(secretKey+secretKey2);
     }
-
-    private static OpenAIClient client = new OpenAIClientBuilder()
-            .credential(new AzureKeyCredential(key))
-            .endpoint(chatGptUrl)
-            .buildClient();
-
     @Override
     public boolean support(Integer t) {
-        return t == 3;
+        return t >= 3;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
 
-        LOGGER.info("ChatYuaiHandler content :" + content + "； id:" + id);
-        List<ChatRequestMessage> chatMessages = new ArrayList<>();
-        chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
-        ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
-        chatCompletionsOptions.setModel("gpt-4-32k");
-        chatCompletionsOptions.setTopP(0.5);
-        chatCompletionsOptions.setMaxTokens(2048);
-        chatCompletionsOptions.setTemperature(0.2);
-        chatCompletionsOptions.setStream(Boolean.FALSE);
+        LOGGER.info("ChatDoubaoHandler content :" + content + "； id:" + id);
         String myprompt = "   #Character Setting\n" +
                 "##你的设定\n" +
                 "你是智能AI，是一个通用大模型，你是一个知识达人，你了解天文地理，精通各种语言，你能回答别人的刁钻问题。\n你风趣幽默，语气温柔，是个可爱的小女孩，" +
@@ -69,18 +59,29 @@ public class ChatYuaiHandler extends BaseChatHandle {
         List<SimpleMessage> msgs = JsonUtil.readValue(content, JsonUtil.getListType(SimpleMessage.class));
         String appHis = appendHistory(msgs);
         String quest = prompt.replace("{history}", appHis);
-        chatMessages.add(new ChatRequestUserMessage(quest));
-        LOGGER.info("chat 请求 : " + quest);
-        ChatCompletions chatCompletions = client.getChatCompletions("gpt-4", chatCompletionsOptions);
-
-        ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions), ChatVo.class);
-        LOGGER.info("chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
+        Api.ChatReq req = buildReq("你是一个智能AI小助手", quest);
+        Api.ChatResp resp = maasService.chat(req);
+        LOGGER.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
+        ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(resp.getChoice().getMessage().getContent()), ChatVo.class);
+        LOGGER.info("chat 回复 : " + JsonUtil.writeValueAsString(resp.getChoice().getMessage().getContent()));
         if (vo.getChoices() != null && vo.getChoices().size() > 0) {
             Choice choice = vo.getChoices().get(0);
             choice.setId(id);
             return choice;
         }
         return null;
+    }
+    private Api.ChatReq buildReq(String systemMessage, String userMessage) {
+        Api.ChatReq req = Api.ChatReq.newBuilder()
+                .setModel(Api.Model.newBuilder().setName("skylark-chat"))
+                .setParameters(Api.Parameters.newBuilder()
+                        .setMaxNewTokens(128)
+                        .setTemperature(0.2f)
+                        .setTopP(0.9f)
+                )
+                .addMessages(Api.Message.newBuilder().setRole("user").setContent(userMessage))
+                .build();
+        return req;
     }
 
 }
