@@ -47,7 +47,7 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
 
         chatMessageList.add(new ChatMsg("user",getPromt(content, charater)));
         chatMessages.setMessages(chatMessageList);
-        LOGGER.info("chatWithGpt 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
+        LOGGER.info("ChatMyGpt4Handler 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
         okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatMessages));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
@@ -59,7 +59,7 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
         okhttp3.Response response = httpClient.newCall(httpRequest).execute();
         String res = response.body().string();
         ChatVo vo = JsonUtil.readValue(res,ChatVo.class);
-        LOGGER.info("chatWithGpt 我的gpt  chat 回复 : "+res);
+        LOGGER.info("ChatMyGpt4Handler 我的gpt  chat 回复 : "+res);
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
             choice.setId(id);

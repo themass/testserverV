@@ -50,7 +50,7 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
         if(!StringUtils.isEmpty(charater)){
             myprompt = charater;
         }
-        String prompt = myprompt+"\n 你们的对话历史如下。\n{history}\n 其中：user代表用户的输入，assistant代表你的回答。\n 你的回答里不要出现user、assistant等歧义的话语" ;
+        String prompt = myprompt+"\n 你们的对话历史如下。\n{history}\n 其中,user代表用户的输入，assistant代表你的回答。\n 你的回答的开始不要user、assistant和各种标点符号等歧义的话语" ;
         List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
         String appHis = appendHistory(msgs);
 
