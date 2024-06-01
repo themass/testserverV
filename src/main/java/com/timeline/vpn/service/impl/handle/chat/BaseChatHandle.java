@@ -34,7 +34,7 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
             return "";
         }
         String value = Optional.ofNullable(history).orElse(null).stream().map(role -> {
-                    return role.getRole() +":"+ role.getText();
+                    return "["+role.getRole()+"]" +":"+ role.getText();
                 })
                 .collect(Collectors.joining("\n"));
         return value;
