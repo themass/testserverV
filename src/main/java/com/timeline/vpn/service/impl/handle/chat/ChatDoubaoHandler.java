@@ -54,7 +54,7 @@ public class ChatDoubaoHandler extends BaseChatHandle {
             Choice choice = new Choice();
             choice.setId(id);
             Message message = new Message();
-            message.setContent(resp.getChoice().getMessage().getContent().replace("user","").replace("assistant",""));
+            message.setContent(resp.getChoice().getMessage().getContent().replace("user","").replace("assistant","").replace("[]:",""));
             message.setRole(resp.getChoice().getMessage().getRole());
             choice.setMessage(message);
             return choice;
