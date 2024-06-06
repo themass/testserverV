@@ -176,6 +176,9 @@ public class DataServiceImpl implements DataService {
         vo.setVpnUrl(vpnVer.getUrl());
         vo.setCheckChina(false);
         vo.setUserIp(baseQuery.getAppInfo().getUserIp());
+        vo.setAppId(Constant.APPID);
+        vo.setAsrDefaultCluster(Constant.ASR_DEFAULT_CLUSTER);
+        vo.setToken(Constant.TOKEN);
 //        if(!channel.contains(Constant.VPN)){
 //            AppVersion vpnVer = versionDao.getLast(platform,Constant.VPN);
 //            vo.setVpnUrl(vpnVer.getUrl());

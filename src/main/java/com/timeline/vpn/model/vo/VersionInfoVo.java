@@ -26,6 +26,9 @@ public class VersionInfoVo {
     private Boolean chinaUser = false;
     private String userIp;
     private Boolean checkChina = true;
+    public String asrDefaultCluster;
+    public String appId;
+    public String token;
     public String getVersion() {
         return version;
     }
@@ -192,6 +195,30 @@ public class VersionInfoVo {
 
     public void setCheckChina(Boolean checkChina) {
         this.checkChina = checkChina;
+    }
+
+    public String getAsrDefaultCluster() {
+        return asrDefaultCluster;
+    }
+
+    public void setAsrDefaultCluster(String asrDefaultCluster) {
+        this.asrDefaultCluster = asrDefaultCluster;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override
