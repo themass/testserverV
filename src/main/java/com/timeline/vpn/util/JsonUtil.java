@@ -57,7 +57,7 @@ public class JsonUtil {
 
   public static <T> JavaType getMapType(Class<T> clz) {
     JavaType javaType =
-        mapper.getTypeFactory().constructParametrizedType(HashMap.class, String.class, clz);
+        mapper.getTypeFactory().constructParametrizedType(HashMap.class,HashMap.class, String.class, clz);
     return javaType;
   }
 
