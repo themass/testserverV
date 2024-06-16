@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.DevUseinfoDao">
+	<resultMap id="DevUseinfoMap" type="DevUseinfoPo">
+		<id column="devId" property="devId" />
+	</resultMap>
+	<insert id="insert">
+		insert into
+		vpn.devuseinfo(devId,platform,version,creatTime,lastUpdate,userName,latitude,longitude,channel,uHist,ext,ip)
+		values
+		(#{devId},#{platform},#{version},#{creatTime},#{lastUpdate},#{userName},#{latitude},#{longitude},#{channel},#{uHist},#{ext},#{ip})
+	</insert>
+	<select id="get" resultMap="DevUseinfoMap">
+		select devId,version,userName,channel,uHist,ref from vpn.devuseinfo where devId=#{devId}
+	</select>
+	<select id="getAll" resultMap="DevUseinfoMap">
+		select * from vpn.devuseinfo
+	</select>
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*) from vpn.devuseinfo where userName=#{name}
+	</select>
+	<update id="update">
+	    update vpn.devuseinfo 
+			<set>
+				<if test="lastUpdate != null">
+					lastUpdate = #{lastUpdate},
+				</if>
+				<if test="version != null">
+					version = #{version},
+				</if> 
+				<if test="userName != null">
+					userName = #{userName},
+				</if> 
+				<if test="ext != null">
+					ext = #{ext},
+				</if> 
+				<if test="uHist != null">
+					uHist = #{uHist},
+				</if> 
+				<if test="ip != null">
+					ip = #{ip},
+				</if> 
+			</set>
+			where devId = #{devId}
+	</update>
+	<update id="updateRef">
+		update vpn.devuseinfo set ref=#{ref} where devId = #{devId}
+	</update>
+	<select id="getRefCount" resultType="java.lang.Integer">
+		select count(devId) from vpn.devuseinfo where ref=#{ref}
+	</select>
+</mapper>

@@ -1,0 +1,89 @@
+package vpn.service.impl;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.timeline.vpn.VoBuilder;
+import com.timeline.vpn.dao.db.TextChannelDao;
+import com.timeline.vpn.exception.DataException;
+import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.param.PageBaseParam;
+import com.timeline.vpn.model.po.TextChannelPo;
+import com.timeline.vpn.model.po.TextItemPo;
+import com.timeline.vpn.model.po.TextItemsPo;
+import com.timeline.vpn.model.vo.InfoListVo;
+import com.timeline.vpn.model.vo.RecommendVo;
+import com.timeline.vpn.model.vo.TextItemVo;
+import com.timeline.vpn.model.vo.TextItemsVo;
+import com.timeline.vpn.service.DataTextService;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @author gqli
+ * @date 2016年3月10日 下午4:45:36
+ * @version V1.0
+ */
+@Service
+public class DataTextServiceImpl implements DataTextService {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(DataTextServiceImpl.class);
+    @Autowired
+    private TextChannelDao textChannelDao;
+
+    @Override
+    public InfoListVo<RecommendVo> getAllTextChannel(BaseQuery baseQuery, PageBaseParam param) {
+        List<TextChannelPo> list = textChannelDao.getAll();
+        return VoBuilder.buildListInfoVo(list, RecommendVo.class,new VoBuilder.BuildAction<TextChannelPo,RecommendVo>(){
+            @Override
+            public void action(TextChannelPo i, RecommendVo t) {
+                t.setActionUrl(i.getName());
+                t.setTitle(i.getName());
+                t.setAdsPopShow(true);
+                t.setAdsShow(true);
+                t.setParam(i.getName());
+                t.setShowLogo(i.getCount()+"篇文章");
+            }
+        });
+    }
+
+    @Override
+    public InfoListVo<TextItemsVo> getTextItems(final BaseQuery baseQuery, PageBaseParam param,
+            String channel,String keyword) {
+        PageHelper.startPage(param.getStart(), param.getLimit());
+        LOGGER.info("channel="+channel);
+        if(!StringUtils.isEmpty(keyword)) {
+            channel = null;
+        }
+        List<TextItemsPo> poList = textChannelDao.getByChannel(channel,keyword);
+        return VoBuilder.buildPageInfoVo((Page<TextItemsPo>) poList, TextItemsVo.class,new VoBuilder.BuildAction<TextItemsPo,TextItemsVo>(){
+
+            @Override
+            public void action(TextItemsPo i, TextItemsVo t) {
+                t.setFileUrl(CdnChooseUtil.getBookWebBaseUrl(baseQuery.getAppInfo().getUserIp())+"?id="+i.getId());
+            }
+        }
+        );
+    }
+
+    @Override
+    public TextItemVo getTextItem(BaseQuery baseQuery, Integer id) {
+        TextItemsPo po = textChannelDao.getItemById(id);
+        if(po==null){
+            LOGGER.error("没找到 TextItemsPo id= "+id);
+            throw new DataException();
+        }
+        TextItemPo itemPo = textChannelDao.getFile(po.getUrl());
+        if(itemPo==null){
+            LOGGER.error("没找到 TextItemPo fileUrl= "+po.toString());
+            throw new DataException();
+        }
+        return VoBuilder.buildVo(itemPo, TextItemVo.class, null);
+    }
+
+}
+

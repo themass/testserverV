@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.RadacctDao">
+	<resultMap id="RadacctStateMap" type="RadacctState">
+		<result column="acctSessionTime" property="acctSessionTime" />
+		<result column="accData" property="accData" />
+	</resultMap>
+	<resultMap id="RadacctMap" type="Radacct">
+		<id column="radacctid" property="radacctid" />
+		<result column="fromAddr" property="from" />
+		<result column="toAddr" property="to" />
+		<result column="nasipaddress" property="nasipaddress" />
+		<result column="callingstationid" property="callingstationid" />
+		<result column="status" property="status" />
+	</resultMap>
+	<select id="dateState" resultMap="RadacctStateMap">
+		select sum(acctsessiontime)
+		acctSessionTime,sum(acctinputoctets+acctoutputoctets)accData
+		from radius.radacct where
+		username  in
+		<foreach collection="names" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="selectIpLocal" resultMap="RadacctMap">
+		select
+		radacctid,nasipaddress,callingstationid,fromAddr,toAddr,status
+		from
+		radius.radacct where status=0 LIMIT 50
+	</select>
+	
+	<delete id="deleteHistoryAcce">
+	    delete from radius.radacct where acctstarttime &lt; #{time} and acctstoptime is null
+	</delete>
+	
+	<delete id="deleteHistoryAuth">
+	    delete from radius.radpostauth where authdate &lt; #{time}
+	</delete>
+	
+	<update id="updateIpLocal" parameterType="java.util.List">
+		update radius.radacct set
+		fromAddr=
+		<foreach collection="list" item="item" index="index"
+			separator=" " open="case radacctid" close="end">
+			when #{item.radacctid} then #{item.from}
+		</foreach>
+		,toAddr=
+		<foreach collection="list" item="item" index="index"
+			separator=" " open="case radacctid" close="end">
+			when #{item.radacctid} then #{item.to}
+		</foreach>
+		,status=1 
+		where radacctid in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.radacctid}
+		</foreach>
+	</update>
+</mapper>

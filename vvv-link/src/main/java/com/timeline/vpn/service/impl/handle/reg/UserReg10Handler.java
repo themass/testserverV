@@ -1,0 +1,29 @@
+package vpn.service.impl.handle.reg;
+
+import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.po.UserPo;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Description: 5-10; vip3 15天
+ * @author gqli
+ * @date 2018年7月31日 下午4:25:18
+ * @version V1.0
+ */
+@Component
+public class UserReg10Handler extends BaseUserRegHandle {
+
+  @Override
+  public boolean support(Integer t) {
+    return t==10;
+  }
+
+  @Override
+  public void handeRef(Integer count, UserPo ref,BaseQuery baseQuery) {
+      handleUserVip3(ref,30);
+      String content = "@"+ref.getName()+" 恭喜你,获得VIP3-30天使用权";
+      dataService.addIwannaScore(baseQuery, content);
+  }
+
+}
+

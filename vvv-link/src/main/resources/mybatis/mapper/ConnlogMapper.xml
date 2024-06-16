@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.ConnLogDao">
+	<resultMap id="ConnLogMap" type="ConnLogPo">
+		<id column="id" property="id" />
+	</resultMap>
+	<insert id="insertAll">
+		insert into
+		vpn.connlog(name,host,userIp,status,time,curIp)
+		values
+		 <foreach collection="list" item="item" index="index" open=""
+                 close="" separator=",">
+            (#{item.name},#{item.host},#{item.userIp},#{item.status},#{item.time},#{item.curIp})
+        </foreach>
+	</insert>
+</mapper>

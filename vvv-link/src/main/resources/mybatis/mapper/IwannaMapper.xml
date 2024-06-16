@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.IWannaDao">
+	<resultMap id="IWannaMap" type="IWannaPo">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="likes" property="likes" />
+		<result column="like_users" property="likeUsers" />
+		<result column="create_time" property="createTime" />
+		<result column="content" property="content" />
+		<result column="finished" property="finished" />
+		<result column="ip" property="ip" />
+		<result column="ip_local" property="ipLocal" />
+		<result column="app_name" property="appName" />
+	</resultMap>
+	<insert id="insert">
+		insert into
+		vpn.iwanna(name,likes,like_users,create_time,content,finished,ip,app_name)
+		values
+		(#{name},#{likes},#{likeUsers},#{createTime},#{content},#{finished},#{ip},#{appName})
+	</insert>
+	<select id="getAll" resultMap="IWannaMap">
+		select * from vpn.iwanna where enable=1  order by create_time desc
+	</select>
+	<select id="getPage" resultMap="IWannaMap">
+		select * from vpn.iwanna where enable=1  and app_name=#{channel}  and name in ("themass" ,#{name})
+		
+		order by create_time desc
+	</select>
+	<select id="get" resultMap="IWannaMap">
+		select * from vpn.iwanna where id = #{id}
+	</select>
+	<update id="like" >
+		update vpn.iwanna set likes=#{likes} , like_users = #{likeUsers} where id=#{id}
+	</update>
+	
+	<insert id="insertFeed">
+		insert into
+		vpn.score_feed(name,likes,like_users,create_time,content,finished,ip,app_name)
+		values
+		(#{name},#{likes},#{likeUsers},#{createTime},#{content},#{finished},#{ip},#{appName})
+	</insert>
+	<select id="getAllFeed" resultMap="IWannaMap">
+		select * from vpn.score_feed where enable=1  order by create_time desc
+	</select>
+	<select id="getPageFeed" resultMap="IWannaMap">
+		select * from vpn.score_feed where enable=1 and app_name=#{channel} and name in ("themass" ,#{name})
+		
+		 order by create_time desc
+	</select>
+	<select id="getFeed" resultMap="IWannaMap">
+		select * from vpn.score_feed where id = #{id}
+	</select>
+	<update id="likeFeed" >
+		update vpn.score_feed set likes=#{likes} , like_users = #{likeUsers} where id=#{id}
+	</update>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.HostDao">
+	<resultMap id="HostMap" type="HostPo">
+	</resultMap>
+	<insert id="insert">
+		insert into
+		vpn.host(gateway,port,location,cert)
+		values
+		(#{gateway},#{port},#{location},#{cert})
+	</insert>
+	<select id="get" resultMap="HostMap">
+		select * from vpn.host where id=#{id} and enable=1 
+	</select>
+	<select id="getAll" resultMap="HostMap">
+		select * from vpn.host where enable=1 order by type asc ,id asc
+	</select>
+	<select id="getRandom" resultMap="HostMap">
+		select * from vpn.host where cname!='中国' and type=0 and enable=1 
+	</select>
+	<select id="getByLocation" resultMap="HostMap">
+		select * from vpn.host where location=#{location} and enable=1
+	</select>
+	
+</mapper>

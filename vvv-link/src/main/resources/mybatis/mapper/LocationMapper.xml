@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.LocationDao">
+	<resultMap id="LocationMap" type="LocationPo">
+		<id column="id" property="id" />
+	</resultMap>
+
+	<select id="getAll" resultMap="LocationMap">
+		select * from vpn.location  where enable=1
+	</select>
+	<select id="getAllInfo" resultMap="LocationMap">
+		select l.*,h.id hostId,h.gateway,h.port ,h.weight from vpn.location l join vpn.host h  on l.id=h.location  and h.enable=1 where l.enable=1 and l.channel='VPN';
+	</select>
+	<select id="getAllInfoVpnb" resultMap="LocationMap">
+		select l.*,h.id hostId,h.gateway,h.port ,h.weight from vpn.location l join vpn.host h  on l.id=h.location  and h.enable=1 where l.enable=1 and l.channel='VPNB';
+	</select>
+	<select id="get" resultMap="LocationMap">
+		select * from vpn.location where id = #{id} and enable=1
+	</select>
+</mapper>

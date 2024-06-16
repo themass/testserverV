@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.VersionDao">
+	<resultMap id="VersionMap" type="Version">
+		<id column="id" property="id" />
+		<result column="version" property="version" />
+		<result column="minBuild" property="minBuild" />
+		<result column="maxBuild" property="maxBuild" />
+		<result column="platform" property="platform" />
+		<result column="content" property="content" />
+		<result column="time" property="time" />
+		<result column="url" property="url" />
+		<result column="channel" property="channel" />
+	</resultMap>
+
+	<select id="getAll" resultMap="VersionMap">
+		select * from vpn.version
+	</select>
+	<select id="getLast" resultMap="VersionMap">
+		select * from vpn.version where
+		platform=#{platform} and channel=#{channel}order by maxBuild desc limit 1
+	</select>
+	
+</mapper>
