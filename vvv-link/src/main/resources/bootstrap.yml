@@ -1,0 +1,38 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: vpn-api
+  profiles:
+    active: local
+  pid:
+    file: ${user.dir}/application.pid
+  threads:
+    virtual:
+      enabled: true
+
+  main:
+    allow-circular-references: true
+logging:
+  config: classpath:log4j2/log4j2-${spring.profiles.active}.xml
+  level:
+    root: info
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
+  distribution:
+    sla:
+      http:
+        server:
+          requests: 1ms,5ms,10ms,50ms,100ms,200ms,500ms,1s,5s
+

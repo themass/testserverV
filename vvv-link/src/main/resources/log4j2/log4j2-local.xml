@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
+        <Property name="LOG_LEVEL_PATTERN">%5p</Property>
+        <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd HH:mm:ss.SSS</Property>
+        <property name="baseLogDir">./logs</property>
+        <property name="consolePattern">%clr{%d{${sys:LOG_DATEFORMAT_PATTERN}}}{faint} %clr{${sys:LOG_LEVEL_PATTERN}}
+            [TraceId: %X{X-B3-TraceId}, SpanId: %X{X-B3-SpanId}] %clr{---}{faint} %clr{[%10.10t]}{faint}
+            %clr{%-30.30c{1.}}{cyan} %clr{:}{faint}[%L] %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}
+        </property>
+        <property name="logPattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %pid [%thread] [TraceId: %X{X-B3-TraceId},
+            SpanId: %X{X-B3-SpanId}] %logger{36} [%L]-- %msg%n
+        </property>
+        <property name="simpleLogPattern">%msg%n</property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${consolePattern}"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <logger name="druid.sql" level="debug"/>
+        <Logger name="org.apache.kafka.clients.consumer.internals.ConsumerCoordinator" level="warn"/>
+        <logger name="com.yuaiweiwu.live.signal.sdk.consumer.V5LiveMessageConsumer" level="info"/>
+
+        <AsyncRoot level="info" includeLocation="true">
+            <AppenderRef ref="console"/>
+        </AsyncRoot>
+
+        <Logger name="taskStatistics" level="info">
+            <appender-ref ref="taskStatistics" level="info"/>
+        </Logger>
+
+        <Logger name="threadPoolMonitor" level="info">
+            <appender-ref ref="threadPoolMonitor" level="info"/>
+        </Logger>
+
+        <Logger name="heartBeat" level="info">
+            <appender-ref ref="heartBeat" level="info"/>
+        </Logger>
+
+        <Logger name="ack" level="info">
+            <appender-ref ref="ack" level="info"/>
+        </Logger>
+    </Loggers>
+</Configuration>

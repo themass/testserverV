@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
+        <Property name="LOG_LEVEL_PATTERN">%5p</Property>
+        <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd HH:mm:ss.SSS</Property>
+        <property name="baseLogDir">./logs</property>
+        <property name="consolePattern">%clr{%d{${sys:LOG_DATEFORMAT_PATTERN}}}{faint} %clr{${sys:LOG_LEVEL_PATTERN}}
+            [TraceId: %X{X-B3-TraceId}, SpanId: %X{X-B3-SpanId}] %clr{---}{faint} %clr{[%10.10t]}{faint}
+            %clr{%-30.30c{1.}}{cyan} %clr{:}{faint} [%L] %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}
+        </property>
+        <property name="logPattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %pid [%thread] [TraceId: %X{X-B3-TraceId},
+            SpanId: %X{X-B3-SpanId}] %logger{36} [%L] -- %msg%n
+        </property>
+        <property name="simpleLogPattern">%msg%n</property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${consolePattern}"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+
+        <RollingFile name="business" fileName="${baseLogDir}/app.log"
+                     filePattern="${baseLogDir}/app.log.%d{yyyy-MM-dd}">
+            <PatternLayout pattern="${logPattern}"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseLogDir}" maxDepth="2">
+                    <IfFileName glob="app.log.20*"/>
+                    <IfLastModified age="30d"/>
+                </Delete>
+                <GzCompressAction/>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="taskStatistics" fileName="${baseLogDir}/taskStatistics.log"
+                     filePattern="${baseLogDir}/taskStatistics.log.%d{yyyy-MM-dd}">
+            <PatternLayout pattern="${logPattern}"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseLogDir}" maxDepth="2">
+                    <IfFileName glob="taskStatistics.log.20*"/>
+                    <IfLastModified age="3d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="threadPoolMonitor" fileName="${baseLogDir}/threadPoolMonitor.log"
+                     filePattern="${baseLogDir}/threadPoolMonitor.log.%d{yyyy-MM-dd}">
+            <PatternLayout pattern="${logPattern}"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseLogDir}" maxDepth="2">
+                    <IfFileName glob="threadPoolMonitor.log.20*"/>
+                    <IfLastModified age="3d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="heartBeat" fileName="${baseLogDir}/heartBeat.log"
+                     filePattern="${baseLogDir}/heartBeat.log.%d{yyyy-MM-dd}">
+            <PatternLayout pattern="${logPattern}"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseLogDir}" maxDepth="2">
+                    <IfFileName glob="heartBeat.log.20*"/>
+                    <IfLastModified age="3d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="ack" fileName="${baseLogDir}/ack.log"
+                     filePattern="${baseLogDir}/ack.log.%d{yyyy-MM-dd}">
+            <PatternLayout pattern="${logPattern}"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseLogDir}" maxDepth="2">
+                    <IfFileName glob="ack.log.20*"/>
+                    <IfLastModified age="3d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="error" fileName="${baseLogDir}/error.log"
+                     filePattern="${baseLogDir}/error.log.%d{yyyy-MM-dd}">
+            <PatternLayout pattern="${logPattern}"/>
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseLogDir}" maxDepth="2">
+                    <IfFileName glob="error.log.20*"/>
+                    <IfLastModified age="30d"/>
+                </Delete>
+                <GzCompressAction/>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <logger name="druid.sql" level="INFO"/>
+        <Logger name="org.apache.kafka.clients.consumer.internals.ConsumerCoordinator" level="warn"/>
+        <logger name="com.yuaiweiwu.live.signal.sdk.consumer.V5LiveMessageConsumer" level="warn"/>
+
+        <AsyncRoot level="info" includeLocation="true">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="business"/>
+            <AppenderRef ref="error"/>
+        </AsyncRoot>
+
+        <Logger name="taskStatistics" level="info">
+            <appender-ref ref="taskStatistics" level="info"/>
+        </Logger>
+
+        <Logger name="threadPoolMonitor" level="info">
+            <appender-ref ref="threadPoolMonitor" level="info"/>
+        </Logger>
+
+        <Logger name="heartBeat" level="info">
+            <appender-ref ref="heartBeat" level="info"/>
+        </Logger>
+
+        <Logger name="ack" level="info">
+            <appender-ref ref="ack" level="info"/>
+        </Logger>
+
+    </Loggers>
+</Configuration>
