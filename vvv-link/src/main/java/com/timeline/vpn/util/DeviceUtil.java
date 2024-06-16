@@ -1,14 +1,14 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -127,7 +127,6 @@ public class DeviceUtil {
             }
 
         }
-        LOGGER.error("ua或者版本不对，有可能抓取数据:{}", HttpCommonUtil.getHeaderStr(webRequest));
         return null;
     }
     public static void parsLoc(HttpServletRequest webRequest,DevApp app){

@@ -1,22 +1,22 @@
-package vpn.web.common.resolver;
+package com.timeline.vpn.web.common.resolver;
 
 import com.timeline.vpn.exception.ParamException;
 import com.timeline.vpn.model.param.BaseQuery;
+import jakarta.servlet.ServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-
-import javax.servlet.ServletRequest;
 
 /**
  * 通用参数解析
  * 
  * @author gqli
  */
-
+@Service
 public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
     @Autowired
     private UserInfoResolver userInfoResolver;

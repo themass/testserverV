@@ -1,4 +1,4 @@
-package vpn.model.form;
+package com.timeline.vpn.model.form;
 
 /**
  * Created by liguoqing on 2019/5/31.

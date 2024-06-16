@@ -1,4 +1,4 @@
-package vpn.model.form;
+package com.timeline.vpn.model.form;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.util.Md5;

@@ -1,4 +1,4 @@
-package vpn.web.controller.api;
+package com.timeline.vpn.web.controller.api;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.form.CustomeAddForm;
@@ -9,16 +9,12 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 
 /**
@@ -26,7 +22,7 @@ import javax.validation.Valid;
  * @date 2016年3月10日 上午10:28:07
  * @version V1.0
  */
-@Controller
+@RestController
 @RequestMapping("/api/user")
 public class UserController extends BaseController {
     
@@ -67,13 +63,13 @@ public class UserController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/custome/del.json", method = RequestMethod.POST)
-    public JsonResult customeDel(@UserInfo(required = true) BaseQuery baseQuery,@RequestParam int id) {
+    public JsonResult customeDel(@UserInfo(required = true) BaseQuery baseQuery,@RequestParam(name="id") int id) {
         userService.delCustome(baseQuery,id);
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/ads/score.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult adsFabClick(@UserInfo(required = true) BaseQuery baseQuery,
-            @RequestParam int score) {
+            @RequestParam(name="score") int score) {
 //          return new JsonResult(userService.score(baseQuery, score));
         LOGGER.info(baseQuery.getUser().getName()+"------"+score);
         if (score == Constant.ADS_CLICK_SCORE) {
@@ -82,7 +78,7 @@ public class UserController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/ads/check.json", method = RequestMethod.POST)
-    public JsonResult adsFabcheck(ServletRequest servletRequest,@UserInfo(required = true) BaseQuery baseQuery) {
+    public JsonResult adsFabcheck(ServletRequest servletRequest, @UserInfo(required = true) BaseQuery baseQuery) {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String key = request.getHeader("CookieCache");
         int score = 0;

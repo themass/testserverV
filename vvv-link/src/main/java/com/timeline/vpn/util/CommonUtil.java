@@ -1,4 +1,4 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.LoginException;

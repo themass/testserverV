@@ -1,4 +1,4 @@
-package vpn.model.param;
+package com.timeline.vpn.model.param;
 
 import com.timeline.vpn.model.po.UserPo;
 

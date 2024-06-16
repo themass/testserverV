@@ -1,4 +1,4 @@
-package vpn.model.vo;
+package com.timeline.vpn.model.vo;
 
 public class Choice {
     private String id;

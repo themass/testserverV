@@ -1,4 +1,4 @@
-package vpn.service.strategy;
+package com.timeline.vpn.service.strategy;
 
 import com.google.common.collect.Maps;
 import com.timeline.vpn.exception.DataException;

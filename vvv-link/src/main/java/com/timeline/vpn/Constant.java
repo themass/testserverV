@@ -1,10 +1,10 @@
-package vpn;
-
-import java.util.Arrays;
-import java.util.List;
+package com.timeline.vpn;
 
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.model.vo.RetInfoVo;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Constant {
     public static class ResultMsg {

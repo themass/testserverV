@@ -1,4 +1,4 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

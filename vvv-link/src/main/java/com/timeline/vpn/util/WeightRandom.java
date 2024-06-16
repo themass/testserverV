@@ -1,4 +1,4 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import com.google.common.base.Preconditions;
 import com.timeline.vpn.model.po.HostPo;

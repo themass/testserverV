@@ -1,10 +1,10 @@
-package vpn.model.form;
+package com.timeline.vpn.model.form;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.PageBaseParam;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.BeanUtils;
 
-import javax.validation.constraints.Min;
 
 /**
  * @author gqli

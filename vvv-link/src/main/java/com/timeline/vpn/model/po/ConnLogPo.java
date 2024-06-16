@@ -1,4 +1,4 @@
-package vpn.model.po;
+package com.timeline.vpn.model.po;
 /**
  * @author gqli
  * @date 2018年8月3日 下午2:09:11

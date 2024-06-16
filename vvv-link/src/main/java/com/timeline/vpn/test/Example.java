@@ -1,4 +1,4 @@
-package vpn.test;//package com.timeline.vpn.test;
+package com.timeline.vpn.test;//package com.timeline.vpn.test;
 //
 //import com.google.cloud.language.v1.Client;
 //import com.google.cloud.language.v1.Document;

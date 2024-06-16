@@ -1,4 +1,4 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import javax.mail.Authenticator;
 import javax.mail.Message.RecipientType;

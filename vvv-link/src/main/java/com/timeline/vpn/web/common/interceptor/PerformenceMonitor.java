@@ -1,4 +1,4 @@
-package vpn.web.common.interceptor;
+package com.timeline.vpn.web.common.interceptor;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

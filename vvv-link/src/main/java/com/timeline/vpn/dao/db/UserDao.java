@@ -1,7 +1,8 @@
-package vpn.dao.db;
+package com.timeline.vpn.dao.db;
 
 import com.timeline.vpn.dao.BaseDBDao;
 import com.timeline.vpn.model.po.UserPo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Date;
  * @date 2016年8月9日 上午11:22:16
  * @version V1.0
  */
+@Mapper
 public interface UserDao extends BaseDBDao<UserPo> {
     public UserPo get(@Param(value = "name") String name, @Param(value = "pwd") String pwd);
     public UserPo updatePass(@Param(value = "name") String name, @Param(value = "pwd") String pwd);

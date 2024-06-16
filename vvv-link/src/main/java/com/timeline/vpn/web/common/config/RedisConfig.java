@@ -1,4 +1,4 @@
-package com.aitogether.athena.link.config;
+package com.timeline.vpn.web.common.config;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;

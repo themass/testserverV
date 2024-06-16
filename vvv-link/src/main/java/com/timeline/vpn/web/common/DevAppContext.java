@@ -1,4 +1,4 @@
-package vpn.web.common;
+package com.timeline.vpn.web.common;
 
 import com.timeline.vpn.model.param.DevApp;
 import org.springframework.core.NamedThreadLocal;

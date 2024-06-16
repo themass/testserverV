@@ -1,4 +1,4 @@
-package vpn.model.po;
+package com.timeline.vpn.model.po;
 
 public class ChatHistory {
     private String role;

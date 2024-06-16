@@ -1,10 +1,11 @@
-package vpn.dao.db;
+package com.timeline.vpn.dao.db;
 
 import com.timeline.vpn.dao.BaseDBDao;
 import com.timeline.vpn.model.po.VideoChannelPo;
 import com.timeline.vpn.model.po.VideoPo;
 import com.timeline.vpn.model.po.VideoUserItemPo;
 import com.timeline.vpn.model.po.VideoUserPo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * @date 2016年12月14日 下午12:32:29
  * @version V1.0
  */
+@Mapper
 public interface VideoDao extends BaseDBDao<VideoPo> {
     public List<VideoPo> getPage();
     public VideoChannelPo getOneChannel(@Param("channel")String channel);

@@ -1,4 +1,4 @@
-package vpn.service.strategy;
+package com.timeline.vpn.service.strategy;
 /**
  * @author gqli
  * @date 2017年11月28日 下午6:07:30

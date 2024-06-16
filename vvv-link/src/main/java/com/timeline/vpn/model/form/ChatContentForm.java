@@ -1,4 +1,4 @@
-package vpn.model.form;
+package com.timeline.vpn.model.form;
 
 public class ChatContentForm {
     private String content;

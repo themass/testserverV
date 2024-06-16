@@ -1,4 +1,4 @@
-package vpn.service.job;
+package com.timeline.vpn.service.job;
 /**
  * @author gqli
  * @date 2016年6月17日 上午10:57:37

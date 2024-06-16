@@ -1,4 +1,4 @@
-package vpn.model.param;
+package com.timeline.vpn.model.param;
 
 public class PageBaseParam {
 

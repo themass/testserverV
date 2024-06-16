@@ -1,4 +1,4 @@
-package vpn.web.common.interceptor;
+package com.timeline.vpn.web.common.interceptor;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.MonitorException;
@@ -10,10 +10,8 @@ import com.timeline.vpn.web.common.DevAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * 
@@ -23,14 +21,15 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2015年8月12日 下午8:19:53
  *
  */
-public class VersionHandlerInterceptor extends HandlerInterceptorAdapter {
+@Service
+public class VersionHandlerInterceptor implements HandlerInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(VersionHandlerInterceptor.class);
     @Autowired
     private DataService dataService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-            Object handler) throws Exception {
+    public boolean preHandle(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, Object handler)
+            throws Exception {
         DevApp app = DevAppContext.get();
         if(app.isTest()){
             return true;

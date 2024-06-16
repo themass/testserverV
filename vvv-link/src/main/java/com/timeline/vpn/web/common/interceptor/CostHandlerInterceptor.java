@@ -1,18 +1,18 @@
 package com.timeline.vpn.web.common.interceptor;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.util.HttpCommonUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NamedThreadLocal;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.timeline.vpn.model.vo.JsonResult;
-import com.timeline.vpn.util.HttpCommonUtil;
+import java.util.Map;
 
 /**
  * 
@@ -22,14 +22,15 @@ import com.timeline.vpn.util.HttpCommonUtil;
  * @date 2015年8月12日 下午8:19:53
  *
  */
-public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
+@Service
+public class CostHandlerInterceptor implements HandlerInterceptor {
     private NamedThreadLocal<Long> startTimeThreadLocal =
             new NamedThreadLocal<Long>("costTimeThreadLocal");
     private static final Logger LOGGER = LoggerFactory.getLogger(CostHandlerInterceptor.class);
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-            Object handler) throws Exception {
+    public boolean preHandle(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, Object handler)
+            throws Exception {
         long startTime = System.currentTimeMillis();
         startTimeThreadLocal.set(startTime);
 //        LOGGER.info(request.getServletPath() + "--start; "+HttpCommonUtil.getHeaderStr(request));
@@ -37,8 +38,8 @@ public class CostHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-            ModelAndView modelAndView) throws Exception {
+    public  void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+                            @Nullable ModelAndView modelAndView) throws Exception {
 //        Metrics.count(Measure.http.name(),);
         LOGGER.info(request.getServletPath()+"?"+request.getQueryString() + " -ua=-"+HttpCommonUtil.getHeaderStr(request));
         if (modelAndView != null && modelAndView.getModel() != null) {

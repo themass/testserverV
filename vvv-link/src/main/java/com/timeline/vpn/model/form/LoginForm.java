@@ -1,8 +1,7 @@
-package vpn.model.form;
-
-import org.hibernate.validator.constraints.NotBlank;
+package com.timeline.vpn.model.form;
 
 import com.timeline.vpn.Constant;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author gqli

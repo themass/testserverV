@@ -1,4 +1,4 @@
-package vpn.service.job.reload;
+package com.timeline.vpn.service.job.reload;
 
 import com.timeline.vpn.dao.db.LocationDao;
 import com.timeline.vpn.model.po.LocationPo;

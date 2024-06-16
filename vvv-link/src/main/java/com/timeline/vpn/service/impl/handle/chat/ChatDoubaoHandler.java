@@ -1,4 +1,4 @@
-package vpn.service.impl.handle.chat;
+package com.timeline.vpn.service.impl.handle.chat;
 
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;

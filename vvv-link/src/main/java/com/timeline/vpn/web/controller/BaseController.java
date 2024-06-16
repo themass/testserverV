@@ -1,4 +1,4 @@
-package vpn.web.controller;
+package com.timeline.vpn.web.controller;
 
 import com.timeline.vpn.service.*;
 import org.slf4j.Logger;

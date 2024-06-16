@@ -1,4 +1,4 @@
-package vpn.dao;
+package com.timeline.vpn.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.BaseTypeHandler;

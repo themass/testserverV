@@ -1,4 +1,4 @@
-package vpn.service;
+package com.timeline.vpn.service;
 /**
  * @Title: ScoreService.java
  * @Package com.timeline.vpn.service.impl

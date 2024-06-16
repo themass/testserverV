@@ -1,4 +1,4 @@
-package vpn.model.vo;
+package com.timeline.vpn.model.vo;
 /**
  * @author gqli
  * @date 2016年12月27日 下午12:17:09

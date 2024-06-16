@@ -1,4 +1,4 @@
-package com.timeline.vpn.web.common;
+package com.timeline.vpn.web.common.resolver;
 
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.format.support.DefaultFormattingConversionService;

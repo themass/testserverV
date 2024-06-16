@@ -1,7 +1,7 @@
 /**
  * 
  */
-package vpn.util;
+package com.timeline.vpn.util;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;

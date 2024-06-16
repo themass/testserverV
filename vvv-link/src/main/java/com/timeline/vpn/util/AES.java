@@ -1,4 +1,4 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;

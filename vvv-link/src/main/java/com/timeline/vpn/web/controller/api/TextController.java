@@ -1,4 +1,4 @@
-package vpn.web.controller.api;
+package com.timeline.vpn.web.controller.api;
 
 import com.timeline.vpn.model.form.ChannelItemsForm;
 import com.timeline.vpn.model.form.PageBaseForm;
@@ -6,20 +6,16 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 /**
  * @author gqli
  * @date 2015年7月24日 下午3:16:25
  * @version V1.0
  */
-@Controller
+@RestController
 @RequestMapping("/api/text")
 public class TextController extends BaseController {
     @RequestMapping(value = {"/channel.json"}, method = {RequestMethod.POST,RequestMethod.GET})
@@ -33,7 +29,7 @@ public class TextController extends BaseController {
         return new JsonResult(dataTextService.getTextItems(baseQuery, form.toParam(),form.getChannel(),form.getKeyword()));
     }
     @RequestMapping(value = "/item.json", method = {RequestMethod.POST,RequestMethod.GET})
-    public JsonResult items(@UserInfo BaseQuery baseQuery,@RequestParam Integer id) {
+    public JsonResult items(@UserInfo BaseQuery baseQuery,@RequestParam(name="id") Integer id) {
         return new JsonResult(dataTextService.getTextItem(baseQuery, id));
     }
     

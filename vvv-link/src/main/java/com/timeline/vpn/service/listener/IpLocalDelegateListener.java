@@ -1,4 +1,4 @@
-package vpn.service.listener;
+package com.timeline.vpn.service.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

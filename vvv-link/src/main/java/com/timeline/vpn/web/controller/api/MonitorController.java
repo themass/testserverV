@@ -1,4 +1,4 @@
-package vpn.web.controller.api;
+package com.timeline.vpn.web.controller.api;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.LoginException;
@@ -9,14 +9,10 @@ import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.util.AES2;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -24,7 +20,7 @@ import java.util.List;
  * @date 2015年7月24日 下午3:16:25
  * @version V1.0
  */
-@Controller
+@RestController
 @RequestMapping("/api/monitor")
 public class MonitorController extends BaseController {
     @RequestMapping(value = "/leak.json", method = RequestMethod.POST)
@@ -42,7 +38,7 @@ public class MonitorController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/emulator.json", method = RequestMethod.POST)
-    public JsonResult emulator(@UserInfo BaseQuery baseQuery,@RequestParam String dev) {
+    public JsonResult emulator(@UserInfo BaseQuery baseQuery,@RequestParam(name="dev") String dev) {
 //        reportService.connlog(baseQuery, logs);
         LOGGER.error("这是一个模拟器："+dev);
         throw new LoginException(Constant.ResultMsg.RESULT_ERROR_DEV);

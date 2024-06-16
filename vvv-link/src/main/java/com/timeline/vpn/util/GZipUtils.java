@@ -1,4 +1,4 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import java.io.*;
 import java.util.zip.GZIPInputStream;

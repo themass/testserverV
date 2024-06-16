@@ -1,4 +1,4 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;

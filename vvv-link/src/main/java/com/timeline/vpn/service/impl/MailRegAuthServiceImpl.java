@@ -1,4 +1,4 @@
-package vpn.service.impl;
+package com.timeline.vpn.service.impl;
 
 import com.timeline.vpn.exception.RegCodeException;
 import com.timeline.vpn.service.CacheService;

@@ -1,11 +1,10 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import com.timeline.vpn.Constant;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UrlPathHelper;
-import org.springframework.web.util.WebUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Enumeration;
@@ -98,13 +97,6 @@ public class UrlUtil {
         return request.getHeader(Constant.HTTP_UA);
     }
 
-    @SuppressWarnings("deprecation")
-    public static boolean isJsonRequest(HttpServletRequest request) {
-        String filename = WebUtils.extractFullFilenameFromUrlPath(getRequestUri(request));
-        String extension = StringUtils.getFilenameExtension(filename);
-        // 后缀为json或为空时，表示是ajax请求
-        return "json".equals(extension) || org.apache.commons.lang.StringUtils.isBlank(extension);
-    }
 
     public static String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");

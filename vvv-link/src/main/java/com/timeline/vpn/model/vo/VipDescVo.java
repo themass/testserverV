@@ -1,4 +1,4 @@
-package vpn.model.vo;
+package com.timeline.vpn.model.vo;
 
 /**
  * Created by themass on 2018/3/8.

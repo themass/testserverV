@@ -1,4 +1,4 @@
-package vpn.model.form;
+package com.timeline.vpn.model.form;
 
 public class SimpleMessage {
     private String text;

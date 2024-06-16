@@ -1,11 +1,11 @@
-package vpn.web.common.annotation;
+package com.timeline.vpn.web.common.annotation;
 
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.web.common.DevAppContext;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *

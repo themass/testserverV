@@ -1,4 +1,4 @@
-package vpn.service.strategy;
+package com.timeline.vpn.service.strategy;
 
 /**
  * @author gqli

@@ -1,4 +1,4 @@
-package vpn.web.common.interceptor;
+package com.timeline.vpn.web.common.interceptor;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.ParamException;
@@ -8,15 +8,16 @@ import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.CacheService;
 import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.web.common.DevAppContext;
-import org.apache.commons.lang.StringUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 
@@ -26,14 +27,15 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2015年8月12日 下午8:19:53
  *
  */
-public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
+@Component
+public class UserCheckHandlerInterceptor implements HandlerInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCheckHandlerInterceptor.class);
 
     @Autowired
     private CacheService cacheService;
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-            Object handler) throws Exception {
+    public boolean preHandle(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, Object handler)
+            throws Exception {
         DevApp app = DevAppContext.get();
         if(app==null) {
             throw new RuntimeException("welcome");
@@ -62,16 +64,13 @@ public class UserCheckHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-            ModelAndView modelAndView) throws Exception {
-        super.postHandle(request, response, handler, modelAndView);
+    public  void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+                            @Nullable ModelAndView modelAndView) throws Exception {
         Integer ret = (Integer) request.getAttribute(Constant.HTTP_ATTR_RET);
         if (ret != null) {
             JsonResult result = (JsonResult) modelAndView.getModel().get(JsonResult.MODEL_KEY);
             result.setErrno(ret);
         }
     }
-
-
 
 }

@@ -1,4 +1,4 @@
-package vpn.web.controller.api;
+package com.timeline.vpn.web.controller.api;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.form.PageBaseForm;
@@ -6,17 +6,16 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
-import org.springframework.stereotype.Controller;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 /**
  * @author gqli
  * @date 2015年7月24日 下午3:16:25
  * @version V1.0
  */
-@Controller
+@RestController
 @RequestMapping("/api/data")
 public class DataController extends BaseController {
     @RequestMapping(value = "/recommend.json", method = {RequestMethod.POST,RequestMethod.GET})
@@ -82,11 +81,11 @@ public class DataController extends BaseController {
     }
 
     @RequestMapping(value = "/feed/wanna.json", method = RequestMethod.POST)
-    public JsonResult wanna(@UserInfo(required=true) BaseQuery baseQuery, @RequestParam String content) {
+    public JsonResult wanna(@UserInfo(required=true) BaseQuery baseQuery, @RequestParam(name="content") String content) {
        return new JsonResult(dataService.addIwanna(baseQuery, content));
     }
     @RequestMapping(value = "/feed/wanna/{id}.json", method = RequestMethod.POST)
-    public JsonResult wannaLike(@UserInfo BaseQuery baseQuery, @PathVariable long id) {
+    public JsonResult wannaLike(@UserInfo BaseQuery baseQuery, @PathVariable("id") long id) {
         dataService.addIwannaLike(baseQuery, id);
         return Constant.RESULT_SUCCESS;
     }
@@ -97,11 +96,11 @@ public class DataController extends BaseController {
         return new JsonResult(dataService.getIwannaScorePage(baseQuery, form.toParam()));
     }
     @RequestMapping(value = "/feed/score.json", method = RequestMethod.POST)
-    public JsonResult wannaScore(@UserInfo(required=true) BaseQuery baseQuery, @RequestParam String content) {
+    public JsonResult wannaScore(@UserInfo(required=true) BaseQuery baseQuery, @RequestParam(name="content") String content) {
        return new JsonResult(dataService.addIwannaScore(baseQuery, content));
     }
     @RequestMapping(value = "/feed/score/{id}.json", method = RequestMethod.POST)
-    public JsonResult wannaScoreLike(@UserInfo BaseQuery baseQuery, @PathVariable long id) {
+    public JsonResult wannaScoreLike(@UserInfo BaseQuery baseQuery, @PathVariable("id") long id) {
         dataService.addIwannaScoreLike(baseQuery, id);
         return Constant.RESULT_SUCCESS;
     }

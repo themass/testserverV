@@ -1,12 +1,11 @@
 package com.timeline.vpn.web.common.resolver;
 
-import java.lang.annotation.Annotation;
-import java.util.Map;
-
+import com.timeline.vpn.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -15,14 +14,15 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.timeline.vpn.util.JsonUtil;
+import java.lang.annotation.Annotation;
+import java.util.Map;
 
 /**
  * 通用参数解析
  *
  * @author gqli
  */
-
+@Component
 public class RequestFormParamArgumentResolver implements HandlerMethodArgumentResolver {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(RequestFormParamArgumentResolver.class);

@@ -1,4 +1,4 @@
-package vpn.web.common.resolver;
+package com.timeline.vpn.web.common.resolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

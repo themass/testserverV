@@ -1,5 +1,6 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
-import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;

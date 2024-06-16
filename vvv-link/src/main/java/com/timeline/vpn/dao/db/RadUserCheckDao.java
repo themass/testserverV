@@ -1,7 +1,8 @@
-package vpn.dao.db;
+package com.timeline.vpn.dao.db;
 
 import com.timeline.vpn.model.po.RadCheck;
 import com.timeline.vpn.model.po.RadUserGroup;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -9,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
  * @date 2016年12月14日 下午12:12:26
  * @version V1.0
  */
+@Mapper
 public interface RadUserCheckDao {
     public void replaceUserGroup(RadUserGroup group);
     public void replaceUserPass(RadCheck check);

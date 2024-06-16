@@ -1,4 +1,4 @@
-package vpn.model.po;
+package com.timeline.vpn.model.po;
 public class IpLocalItem {
         private String country;
         private String country_id;

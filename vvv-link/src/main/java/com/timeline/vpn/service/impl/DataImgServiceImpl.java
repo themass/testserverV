@@ -1,4 +1,4 @@
-package vpn.service.impl;
+package com.timeline.vpn.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -15,7 +15,7 @@ import com.timeline.vpn.model.vo.ImgItemsVo;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.service.DataImgService;
-import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -142,7 +142,7 @@ public class DataImgServiceImpl implements DataImgService {
                 t.setAdsPopShow(false);
                 t.setAdsShow(false);
                 t.setImg(i.getPicUrl().trim());
-                float r =(float)RandomUtils.nextInt(5);
+                float r =(float) RandomUtils.nextInt(0,5);
                 float l = 1+(r/10l);
                 t.setRate(l);
                 t.setTitle("");

@@ -1,4 +1,4 @@
-package vpn.model.po;
+package com.timeline.vpn.model.po;
 
 import com.timeline.vpn.util.DateTimeUtils;
 

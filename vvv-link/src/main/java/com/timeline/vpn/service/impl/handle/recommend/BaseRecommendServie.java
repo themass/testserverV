@@ -1,4 +1,4 @@
-package vpn.service.impl.handle.recommend;
+package com.timeline.vpn.service.impl.handle.recommend;
 
 import com.timeline.vpn.service.IRecommendService;
 import com.timeline.vpn.service.strategy.IAppAgent;

@@ -1,4 +1,4 @@
-package vpn.service;
+package com.timeline.vpn.service;
 
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;

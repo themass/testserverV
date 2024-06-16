@@ -1,5 +1,6 @@
-package com.timeline.vpn.web.common;
+package com.timeline.vpn.web.common.config;
 
+import com.timeline.vpn.web.common.CommonHandlerExceptionResolver;
 import com.timeline.vpn.web.common.interceptor.BlackdevHandlerInterceptor;
 import com.timeline.vpn.web.common.interceptor.CostHandlerInterceptor;
 import com.timeline.vpn.web.common.interceptor.UserCheckHandlerInterceptor;
@@ -70,6 +71,7 @@ public class WebConfig implements WebMvcConfigurer {
         // 添加自定义参数解析器
         resolvers.add(userInfoArgumentResolver);
         resolvers.add(requestFormParamArgumentResolver);
+//        resolvers.add(0,new MyRequestParamMethodArgumentResolver(getb));
     }
     @Override
     public void addFormatters(FormatterRegistry registry) {
@@ -79,4 +81,13 @@ public class WebConfig implements WebMvcConfigurer {
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
         exceptionResolvers.add(commonHandlerExceptionResolver);
     }
+
+//
+//    @Primary
+//    @Order(0)
+//    @Bean
+//    public CustomRequestMappingHandlerAdapter customRequestMappingHandlerAdapter() {
+//        return new CustomRequestMappingHandlerAdapter();
+//    }
+
 }

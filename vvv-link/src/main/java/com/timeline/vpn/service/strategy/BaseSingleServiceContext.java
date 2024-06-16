@@ -1,4 +1,4 @@
-package vpn.service.strategy;
+package com.timeline.vpn.service.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

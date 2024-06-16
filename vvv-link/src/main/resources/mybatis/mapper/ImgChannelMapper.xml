@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.timeline.vpn.dao.db.ImgChannelDao">
-	<resultMap id="ImgChannelMap" type="ImgChannelPo">
-	<result column="pic" property="pic" typeHandler="imgHandle"/>
+	<resultMap id="ImgChannelMap" type="com.timeline.vpn.model.po.ImgChannelPo">
+	<result column="pic" property="pic" typeHandler="com.timeline.vpn.dao.ImgSourceHandler"/>
 	</resultMap>
-	<resultMap id="ImgItemsMap" type="ImgItemsPo">
-	<result column="pic" property="pic" typeHandler="imgHandle"/>
+	<resultMap id="ImgItemsMap" type="com.timeline.vpn.model.po.ImgItemsPo">
+	<result column="pic" property="pic" typeHandler="com.timeline.vpn.dao.ImgSourceHandler"/>
 	</resultMap>
-	<resultMap id="ImgItemsItemMap" type="ImgItemsItemPo">
-	<result column="picUrl" property="picUrl" typeHandler="imgHandle"/>
+	<resultMap id="ImgItemsItemMap" type="com.timeline.vpn.model.po.ImgItemsItemPo">
+	<result column="picUrl" property="picUrl" typeHandler="com.timeline.vpn.dao.ImgSourceHandler"/>
 	</resultMap>
 	<select id="getAll" resultMap="ImgChannelMap">
 	    select * from vpn.imgchannel where enable=1 group by name order by id desc

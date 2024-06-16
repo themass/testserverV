@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.timeline.vpn.dao.db.RadUserCheckDao">
-	<resultMap id="RadCheckMap" type="RadCheck">
+	<resultMap id="RadCheckMap" type="com.timeline.vpn.model.po.RadCheck">
 		<id column="id" property="id" />
 		<result column="username" property="userName" />
 		<result column="attribute" property="attribute" />
 		<result column="op" property="op" />
 		<result column="value" property="value" />
 	</resultMap>
-	<resultMap id="RadUserGroupMap" type="RadUserGroup">
+	<resultMap id="RadUserGroupMap" type="com.timeline.vpn.model.po.RadUserGroup">
 		<id column="username" property="userName" />
 		<result column="groupname" property="groupName" />
 		<result column="priority" property="priority" />

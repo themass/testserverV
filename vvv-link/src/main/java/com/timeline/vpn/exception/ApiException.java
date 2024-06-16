@@ -1,4 +1,4 @@
-package vpn.exception;
+package com.timeline.vpn.exception;
 
 public class ApiException extends RuntimeException {
 

@@ -1,7 +1,9 @@
-package vpn.service;
+package com.timeline.vpn.service;
 
 import com.timeline.vpn.model.param.BaseQuery;
-import com.timeline.vpn.model.vo.*;
+import com.timeline.vpn.model.vo.CharacterVo;
+import com.timeline.vpn.model.vo.Choice;
+import com.timeline.vpn.model.vo.InfoListVo;
 
 /**
  * @author gqli

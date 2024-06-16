@@ -1,7 +1,7 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 /**
  * @author gqli

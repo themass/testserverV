@@ -1,4 +1,4 @@
-package vpn.web.common;
+package com.timeline.vpn.web.common;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.ApiException;
@@ -8,12 +8,14 @@ import com.timeline.vpn.exception.TokenException;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.ResponseUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DelegatingMessageSource;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -21,11 +23,10 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UrlPathHelper;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Locale;
 
+@Component
 public class CommonHandlerExceptionResolver implements HandlerExceptionResolver {
 
     private static final Logger LOGGER =
@@ -33,10 +34,10 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
 
     private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
     @Autowired
-    private DelegatingMessageSource messagesource;
+    private MessageSource messagesource;
     @Override
-    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
-            Object handler, Exception ex) {
+    public ModelAndView resolveException(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, Object handler, Exception ex) {
+        LOGGER.error("",ex);
         String ua = HttpCommonUtil.getUA(request.getHeader(Constant.HTTP_UA));
         String requestUrl = urlPathHelper.getRequestUri(request) + "?" + request.getQueryString()
                 + "[" + ua + "]";

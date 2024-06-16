@@ -1,4 +1,4 @@
-package vpn.test;
+package com.timeline.vpn.test;
 
 import java.util.concurrent.Executor;
 

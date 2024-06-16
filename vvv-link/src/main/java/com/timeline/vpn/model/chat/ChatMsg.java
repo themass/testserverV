@@ -1,4 +1,4 @@
-package vpn.model.chat;
+package com.timeline.vpn.model.chat;
 
 /**
  * @Author： liguoqing

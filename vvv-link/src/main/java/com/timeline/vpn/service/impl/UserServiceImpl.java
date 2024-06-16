@@ -1,4 +1,4 @@
-package vpn.service.impl;
+package com.timeline.vpn.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -26,19 +26,20 @@ import com.timeline.vpn.service.impl.handle.reg.UserRegContext;
 import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.util.DateTimeUtils;
 import com.timeline.vpn.util.DeviceUtil;
-import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author gqli
@@ -67,8 +68,8 @@ public class UserServiceImpl implements UserService {
     private RecommendServiceProxy recommendServiceProxy;
     @Autowired
     private UserRegContext userRegContext;
-    @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    @Resource(name = "dhumanHeartbeatExecutor")
+    private ExecutorService taskExecutor;
 
     public void updateDevUseinfo(final DevApp appInfo, final String userName) {
         taskExecutor.execute(new Runnable() {

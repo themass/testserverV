@@ -1,4 +1,4 @@
-package vpn.web.common.resolver;
+package com.timeline.vpn.web.common.resolver;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.LoginException;
@@ -6,10 +6,9 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.web.common.DevAppContext;
 import com.timeline.vpn.web.common.annotation.BaseResolver;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class UserInfoResolver extends BaseResolver {

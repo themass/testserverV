@@ -1,4 +1,4 @@
-package vpn.exception;
+package com.timeline.vpn.exception;
 
 import com.timeline.vpn.Constant;
 

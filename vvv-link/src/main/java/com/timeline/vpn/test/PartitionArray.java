@@ -1,4 +1,4 @@
-package vpn.test;
+package com.timeline.vpn.test;
 
 public class PartitionArray {
     public int minPartitionDifference(int[] nums) {

@@ -1,4 +1,4 @@
-package com.aitogether.athena.link.config;
+package com.timeline.vpn.web.common.config;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -22,13 +22,13 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI springShopOpenAPI() {
         OpenAPI openAPI = new OpenAPI()
-                .info(new Info().title("Athena API")
-                        .description("AI学科")
+                .info(new Info().title("vvv API")
+                        .description("vvv")
                         .version("v0.0.1")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("AI学科 Documentation")
-                        .url("https://alidocs.dingtalk.com/i/nodes/14dA3GK8gjkdyBzdsjoEKaQBJ9ekBD76?doc_type=wiki_doc"));
+                        .description("vvv Documentation")
+                        .url(""));
         // 手动配置服务地址列表
         if (serverList != null && serverList.size() > 0) {
             List<Server> servers = new ArrayList<>();

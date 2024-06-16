@@ -1,4 +1,4 @@
-package vpn.service.impl;
+package com.timeline.vpn.service.impl;
 
 import com.google.common.base.Function;
 import com.timeline.vpn.BeanBuilder;

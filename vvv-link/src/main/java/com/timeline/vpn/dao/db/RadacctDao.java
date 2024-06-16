@@ -1,7 +1,8 @@
-package vpn.dao.db;
+package com.timeline.vpn.dao.db;
 
 import com.timeline.vpn.model.po.Radacct;
 import com.timeline.vpn.model.po.RadacctState;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.List;
  * @date 2016年12月14日 下午12:12:26
  * @version V1.0
  */
+@Mapper
 public interface RadacctDao {
     public RadacctState dateState(@Param("names")List<String> name);
     public List<Radacct> selectIpLocal();

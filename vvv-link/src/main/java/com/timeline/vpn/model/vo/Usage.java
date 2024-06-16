@@ -1,4 +1,4 @@
-package vpn.model.vo;
+package com.timeline.vpn.model.vo;
 
 public class Usage {
     private int prompt_tokens;

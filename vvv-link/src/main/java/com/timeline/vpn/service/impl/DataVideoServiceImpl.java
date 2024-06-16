@@ -1,4 +1,4 @@
-package vpn.service.impl;
+package com.timeline.vpn.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

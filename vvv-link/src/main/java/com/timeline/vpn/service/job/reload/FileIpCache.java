@@ -1,4 +1,4 @@
-package vpn.service.job.reload;
+package com.timeline.vpn.service.job.reload;
 
 import com.google.common.collect.HashMultimap;
 import com.timeline.vpn.dao.db.FileIpDao;

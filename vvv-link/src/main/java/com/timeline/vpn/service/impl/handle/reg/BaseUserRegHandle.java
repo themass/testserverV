@@ -1,4 +1,4 @@
-package vpn.service.impl.handle.reg;
+package com.timeline.vpn.service.impl.handle.reg;
 
 import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.model.param.BaseQuery;

@@ -1,4 +1,4 @@
-package vpn;
+package com.timeline.vpn;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ArrayListMultimap;

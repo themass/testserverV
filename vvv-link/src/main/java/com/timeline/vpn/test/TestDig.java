@@ -1,8 +1,8 @@
-package vpn.test;
+package com.timeline.vpn.test;
 
+import cn.hutool.core.net.URLEncodeUtil;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.JsonUtil;
-import org.mortbay.util.UrlEncoded;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class TestDig {
             action.setE_plan(JsonUtil.writeValueAsString(digVDetail));
             digv.setAction(action);
             System.out.println(JsonUtil.writeValueAsString(digv));
-            String dString = UrlEncoded.encodeString(JsonUtil.writeValueAsString(digv));
+            String dString = URLEncodeUtil.encode(JsonUtil.writeValueAsString(digv));
             String url = String.format("https://dig.lianjia.com/t.gif?r=%s&d=%s",  ts,dString);
             Map<String, String> headers = new HashMap<>();
             headers.put("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Mobile Safari/537.36");
@@ -70,7 +70,7 @@ public class TestDig {
             action.setE_plan(JsonUtil.writeValueAsString(digVDetail));
             digv.setAction(action);
             System.out.println(JsonUtil.writeValueAsString(digv));
-            String dString = UrlEncoded.encodeString(JsonUtil.writeValueAsString(digv));
+            String dString = URLEncodeUtil.encode(JsonUtil.writeValueAsString(digv));
             String url = String.format("https://dig.lianjia.com/t.gif?r=%s&d=%s",ts,dString);
             Map<String, String> headers = new HashMap<>();
             headers.put("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Mobile Safari/537.36");
@@ -100,7 +100,7 @@ public class TestDig {
             action.setE_plan(JsonUtil.writeValueAsString(digVDetail));
             digv.setAction(action);
             System.out.println(JsonUtil.writeValueAsString(digv));
-            String dString = UrlEncoded.encodeString(JsonUtil.writeValueAsString(digv));
+            String dString = URLEncodeUtil.encode(JsonUtil.writeValueAsString(digv));
             String url = String.format("https://dig.lianjia.com/t.gif?r=%s&d=%s",ts,dString);
             Map<String, String> headers = new HashMap<>();
             headers.put("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Mobile Safari/537.36");

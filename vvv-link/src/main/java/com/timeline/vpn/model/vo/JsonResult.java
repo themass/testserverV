@@ -1,17 +1,17 @@
-package vpn.model.vo;
+package com.timeline.vpn.model.vo;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.util.AES2;
 import com.timeline.vpn.util.JsonUtil;
 import com.timeline.vpn.web.common.DevAppContext;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.support.RequestContext;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public class JsonResult {

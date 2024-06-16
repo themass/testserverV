@@ -1,4 +1,4 @@
-package vpn.service.impl.handle.chat;
+package com.timeline.vpn.service.impl.handle.chat;
 
 import com.azure.ai.openai.OpenAIClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
@@ -6,6 +6,7 @@ import com.azure.ai.openai.models.*;
 import com.azure.core.credential.AzureKeyCredential;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.ChatVo;
+import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.util.JsonUtil;
 import org.springframework.stereotype.Component;
 

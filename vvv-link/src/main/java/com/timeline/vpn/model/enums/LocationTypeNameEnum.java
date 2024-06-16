@@ -1,4 +1,4 @@
-package vpn.model.enums;
+package com.timeline.vpn.model.enums;
 
 import java.io.Serializable;
 

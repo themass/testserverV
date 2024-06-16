@@ -1,7 +1,7 @@
-package vpn.util;
+package com.timeline.vpn.util;
 
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 电话号加*

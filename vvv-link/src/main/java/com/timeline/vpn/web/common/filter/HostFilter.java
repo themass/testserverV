@@ -1,13 +1,13 @@
-package vpn.web.common.filter;
+package com.timeline.vpn.web.common.filter;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.util.DeviceUtil;
 import com.timeline.vpn.util.UrlUtil;
 import com.timeline.vpn.web.common.DevAppContext;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -15,15 +15,14 @@ import java.io.IOException;
  * @date 2016年12月12日 下午7:04:16
  * @version V1.0
  */
-public class HostFilter implements Filter{
+public class HostFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse response, FilterChain chain) throws IOException, ServletException{
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String uri = request.getRequestURI();
         String test = request.getHeader("testtesttest");
@@ -46,7 +45,7 @@ public class HostFilter implements Filter{
             DevAppContext.set(app);
         }
         
-        chain.doFilter(request, response);
+        chain.doFilter(servletRequest, response);
     }
 
     @Override

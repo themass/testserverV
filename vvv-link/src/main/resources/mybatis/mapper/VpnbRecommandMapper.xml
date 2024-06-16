@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.timeline.vpn.dao.db.VpnbRecommendDao">
-	<resultMap id="RecommendMap" type="RecommendPo">
+	<resultMap id="RecommendMap" type="com.timeline.vpn.model.po.RecommendPo">
 		<id column="id" property="id" />
 		<result column="title" property="title" />
 		<result column="actionUrl" property="actionUrl" />
@@ -15,7 +15,7 @@
 		<result column="adsPopShow" property="adsPopShow" />
 		<result column="showType" property="showType" />
 	</resultMap>
-	<resultMap id="RecommendCustomeMap" type="RecommendPo">
+	<resultMap id="RecommendCustomeMap" type="com.timeline.vpn.model.po.RecommendPo">
 		<id column="id" property="id" />
 		<result column="title" property="title" />
 		<result column="actionUrl" property="actionUrl" />

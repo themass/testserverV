@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.timeline.vpn.dao.db.RadacctDao">
-	<resultMap id="RadacctStateMap" type="RadacctState">
+	<resultMap id="RadacctStateMap" type="com.timeline.vpn.model.po.RadacctState">
 		<result column="acctSessionTime" property="acctSessionTime" />
 		<result column="accData" property="accData" />
 	</resultMap>
-	<resultMap id="RadacctMap" type="Radacct">
+	<resultMap id="RadacctMap" type="com.timeline.vpn.model.po.Radacct">
 		<id column="radacctid" property="radacctid" />
 		<result column="fromAddr" property="from" />
 		<result column="toAddr" property="to" />

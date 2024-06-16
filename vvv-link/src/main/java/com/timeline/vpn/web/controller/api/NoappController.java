@@ -1,4 +1,4 @@
-package vpn.web.controller.api;
+package com.timeline.vpn.web.controller.api;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.TokenException;
@@ -12,10 +12,10 @@ import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
  * @date 2015年7月24日 下午3:16:25
  * @version V1.0
  */
-@Controller
+@RestController
 @RequestMapping("/api/noapp")
 public class NoappController extends BaseController {
     @Autowired
@@ -34,13 +34,13 @@ public class NoappController extends BaseController {
     private UserService userService;
 
     @RequestMapping(value = "/repass.json", method = {RequestMethod.POST,RequestMethod.GET})
-    public JsonResult delUser(@UserInfo BaseQuery baseQuery,@RequestParam String name, @RequestParam String pass) {
+    public JsonResult delUser(@UserInfo BaseQuery baseQuery,@RequestParam(name="name") String name, @RequestParam(name="pass") String pass) {
         userService.del(baseQuery, name,pass);
         return Constant.RESULT_SUCCESS;
     }
 
     @RequestMapping(value = "/collect.json", method = RequestMethod.POST)
-    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam Integer count,@RequestParam String localhost,@RequestParam(required=false) String ip) {
+    public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam(name="count") Integer count,@RequestParam(name="localhost") String localhost,@RequestParam(required=false,name="ip") String ip) {
         if(count==-1) {
             LOGGER.error("ip 错误了，服务断了，快速处理吧"+localhost+"---"+ip);
             dataService.sendMsg("ip 错误了，服务断了，快速处理吧"+localhost+"---"+ip);
@@ -48,7 +48,7 @@ public class NoappController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/ping.json", method = RequestMethod.POST)
-    public JsonResult ping(@UserInfo BaseQuery baseQuery,@RequestParam String pingCheck) {
+    public JsonResult ping(@UserInfo BaseQuery baseQuery,@RequestParam(name="pingCheck") String pingCheck) {
         List<PingCheck> list = parse(pingCheck);
         LOGGER.info(" ping check count="+list.size());
         return Constant.RESULT_SUCCESS;
