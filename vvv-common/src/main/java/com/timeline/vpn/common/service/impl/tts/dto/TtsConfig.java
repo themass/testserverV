@@ -12,8 +12,8 @@ import lombok.ToString;
 @ToString
 public class TtsConfig {
     private String appid;
-    private String aKey;
-    private String aKeySt;
+    private String appKey;
+    private String appKeySt;
     private String token;
     private String cluster;
     private String uid;
