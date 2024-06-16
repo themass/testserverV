@@ -25,7 +25,6 @@
     <Loggers>
         <logger name="druid.sql" level="debug"/>
         <Logger name="org.apache.kafka.clients.consumer.internals.ConsumerCoordinator" level="warn"/>
-        <logger name="com.yuaiweiwu.live.signal.sdk.consumer.V5LiveMessageConsumer" level="info"/>
 
         <AsyncRoot level="info" includeLocation="true">
             <AppenderRef ref="console"/>

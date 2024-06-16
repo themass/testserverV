@@ -105,7 +105,6 @@
     <Loggers>
         <logger name="druid.sql" level="INFO"/>
         <Logger name="org.apache.kafka.clients.consumer.internals.ConsumerCoordinator" level="warn"/>
-        <logger name="com.yuaiweiwu.live.signal.sdk.consumer.V5LiveMessageConsumer" level="warn"/>
 
         <AsyncRoot level="info" includeLocation="true">
             <AppenderRef ref="console"/>
