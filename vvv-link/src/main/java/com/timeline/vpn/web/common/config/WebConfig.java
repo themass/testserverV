@@ -34,8 +34,6 @@ public class WebConfig implements WebMvcConfigurer {
     private UserInfoArgumentResolver userInfoArgumentResolver;
     @Autowired
     private RequestFormParamArgumentResolver requestFormParamArgumentResolver;
-    @Autowired
-    private CommonHandlerExceptionResolver commonHandlerExceptionResolver;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -77,10 +75,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new StringToDateConverter());
     }
-    @Override
-    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-        exceptionResolvers.add(commonHandlerExceptionResolver);
-    }
+//    @Override
+//    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+//        exceptionResolvers.add(commonHandlerExceptionResolver);
+//    }
 
 //
 //    @Primary

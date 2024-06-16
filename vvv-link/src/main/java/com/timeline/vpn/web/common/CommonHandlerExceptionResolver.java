@@ -9,6 +9,7 @@ import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.util.HttpCommonUtil;
 import com.timeline.vpn.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +20,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UrlPathHelper;
-
+import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Locale;
+import org.springframework.http.*;
 
-@Component
-public class CommonHandlerExceptionResolver implements HandlerExceptionResolver {
+@ControllerAdvice
+public class CommonHandlerExceptionResolver {
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger(CommonHandlerExceptionResolver.class);
@@ -35,8 +39,9 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
     private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
     @Autowired
     private MessageSource messagesource;
-    @Override
-    public ModelAndView resolveException(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, Object handler, Exception ex) {
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public JsonResult resolveException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
         LOGGER.error("",ex);
         String ua = HttpCommonUtil.getUA(request.getHeader(Constant.HTTP_UA));
         String requestUrl = urlPathHelper.getRequestUri(request) + "?" + request.getQueryString()
@@ -84,7 +89,7 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
         LOGGER.error("",ex);
 //        result.setError("系统正在进行升级，请稍等再用");
         // result.setData(new Object());
-        return new ModelAndView("", JsonResult.MODEL_KEY, result);
+        return result;
     }
 
     private String getMessage(String key, HttpServletRequest request) {

@@ -7,14 +7,14 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 
 import java.util.Locale;
 
-@Configuration
-public class MessageSourceConfig {
-
-    @Bean
-    public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultLocale(Locale.US);
-        return messageSource;
-    }
-}
+//@Configuration
+//public class MessageSourceConfig {
+//
+//    @Bean
+//    public MessageSource messageSource() {
+//        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+//        messageSource.setBasename("classpath:message");
+//        messageSource.setDefaultLocale(Locale.US);
+//        return messageSource;
+//    }
+//}
