@@ -38,7 +38,7 @@ public class BytedanceTtsServiceImpl implements TtsService {
         bytedanceTtsRequest.getUser().setUid(ttsConfig.getUid());
         bytedanceTtsRequest.getApp().setAppid(ttsConfig.getAppid());
         bytedanceTtsRequest.getApp().setCluster(ttsConfig.getCluster());
-        bytedanceTtsRequest.getApp().setToken(ttsConfig.getaKey());
+        bytedanceTtsRequest.getApp().setToken(ttsConfig.getAppKey());
 
         bytedanceTtsRequest.getAudio().setEmotion(ttsConfig.getEmotion());
         bytedanceTtsRequest.getAudio().setEncoding(ttsConfig.getEncoding());

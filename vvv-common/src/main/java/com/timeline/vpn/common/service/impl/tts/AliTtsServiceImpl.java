@@ -68,7 +68,7 @@ public class AliTtsServiceImpl implements TtsService {
         aliTtsRequest.setVoice(ttsConfig.getUid());
         aliTtsRequest.setFormat(ttsConfig.getEncoding());
         aliTtsRequest.setAppkey(ttsConfig.getAppid());
-        aliTtsRequest.setToken(getToken(ttsConfig.getaKey(), ttsConfig.getaKeySecret()));
+        aliTtsRequest.setToken(getToken(ttsConfig.getAppKey(), ttsConfig.getAppKeySt()));
         aliTtsRequest.setSampleRate(ttsConfig.getSampleRate());
         aliTtsRequest.setVoice(ttsConfig.getUid());
         log.info("tts 厂商：{}; 声音:{}; name:{}; 请求：{}", ttSsupplierConfig.getActive(), ttsVolcengineConfig.getActive(), name, JacksonJsonUtil.toJsonStr(aliTtsRequest));
