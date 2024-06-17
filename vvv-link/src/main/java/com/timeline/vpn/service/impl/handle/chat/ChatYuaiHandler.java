@@ -38,7 +38,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
 
     @Override
     public boolean support(Integer t) {
-        return t > 3;
+        return t > 5;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
@@ -55,7 +55,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
         String prompt = getPromt(content, charater);
         chatMessages.add(new ChatRequestUserMessage(prompt));
         LOGGER.info("ChatYuaiHandler 与爱 chat 请求 : " + prompt);
-        ChatCompletions chatCompletions = client.getChatCompletions("gpt-4", chatCompletionsOptions);
+        ChatCompletions chatCompletions = client.getChatCompletions("gpt-4-32k", chatCompletionsOptions);
 
         ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions), ChatVo.class);
         LOGGER.info("ChatYuaiHandler 与爱 chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
