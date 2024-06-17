@@ -23,8 +23,8 @@ import java.util.Map;
  */
 @Component
 public class ChatYuaiHandler extends BaseChatHandle {
-    private static final String chatGptUrl = "https://aitogether-japan.openai.azure.com/";
-    public static String key = "c70302f0120b4a99b54886a3b1e12610";
+    private static final String chatGptUrl = "https://yuaiweiwu-gpt4o.openai.azure.com/";
+    public static String key = "702acd8694634c4abce4223479d0bcf8";
     public static Map<String, String> header = new HashMap<>();
 
     static {
@@ -47,7 +47,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
-        chatCompletionsOptions.setModel("gpt-4-32k");
+        chatCompletionsOptions.setModel("gpt-4o");
         chatCompletionsOptions.setTopP(0.5);
         chatCompletionsOptions.setMaxTokens(2048);
         chatCompletionsOptions.setTemperature(0.2);
@@ -55,7 +55,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
         String prompt = getPromt(content, charater);
         chatMessages.add(new ChatRequestUserMessage(prompt));
         LOGGER.info("ChatYuaiHandler 与爱 chat 请求 : " + prompt);
-        ChatCompletions chatCompletions = client.getChatCompletions("gpt-4-32k", chatCompletionsOptions);
+        ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o", chatCompletionsOptions);
 
         ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions), ChatVo.class);
         LOGGER.info("ChatYuaiHandler 与爱 chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
