@@ -246,15 +246,13 @@ public class DataVideoServiceImpl implements DataVideoService {
                 header.put("Referer",item.getBaseurl());
 //                header.put("Accept-Encoding","gzip, deflate, br");
                 header.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
-                header.put("Cookie","_ga=GA1.1.795572755.1697563920; hid=ltaq2vrr0id0rvcs0p0ossslj7; "
-                        + "cf_clearance=Z2ttErQF2v95ZMNSedXdrrvNKSdOap_xP_9kzqjHJVk-1698859152-0-1-55aea47.8ed5e39"
-                        + ".525bb5a7-0.2.1698859152; _ga_XDTWVRMJNJ=GS1.1.1698858493.3.1.1698859169.42.0.0; "
-                        + "bnState_1871751={\"impressions\":18,\"delayStarted\":0}");
-                Connection conn = Jsoup.connect(item.getBaseurl()).headers(header);
+                header.put("Cookie","_ga=GA1.1.611983894.1716478735; __PPU_puid=7372220048289729256; hid=cbkm6uorvbmeh348cgn185djnu; _ga_ECF2QFGQ9G=GS1.1.1719290265.4.1.1719290310.0.0.0; cf_clearance=Klgi2MXwBvF3ciqpz0_llNe8Drn.3w0WRrkua2yAyYw-1719290310-1.0.1.1-f.7uK_dANtOM9rnXse7yE_nJ8bClaPjdOuxV78YJrGTJifJyX4U5oh_IWrT0.X9_5AwivVSOKpsES4.NMKSPEw; bnState_1871751={\"impressions\":2,\"delayStarted\":0}");
+                Connection conn = Jsoup.connect(item.getPath()).headers(header);
                 Document doc = conn.get();
                 Elements links = doc.select("source");
-                LOGGER.info("url---"+item.getBaseurl());
+                LOGGER.info("url---"+item.getPath());
                 LOGGER.info("title------"+doc.title());
+                LOGGER.info("linksize---"+links.size());
                 for (Element link : links) {
                     LOGGER.info("links---"+link.html());
                     String url = link.attr("src");

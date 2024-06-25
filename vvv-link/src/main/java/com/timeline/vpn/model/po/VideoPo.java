@@ -19,6 +19,7 @@ public class VideoPo {
     private String videoType;
     private String baseurl;
     private Integer type;
+    private String path;
     
     public Integer getType() {
         return type;
@@ -86,6 +87,13 @@ public class VideoPo {
     public void setBaseurl(String baseurl) {
         this.baseurl = baseurl;
     }
-    
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }
 
