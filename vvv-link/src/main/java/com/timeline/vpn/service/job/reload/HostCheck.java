@@ -4,6 +4,7 @@ import com.timeline.vpn.dao.db.HostV2Dao;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.service.job.ReloadJob;
 import com.timeline.vpn.util.HttpCommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class HostCheck extends ReloadJob {
     }
 
     public void reload() {
-      LOGGER.error("ping start");
+      LOGGER.info("ping start");
         init();
         List<String> errorList = new ArrayList<>();
         for(String ip :myIpList){
@@ -68,7 +69,11 @@ public class HostCheck extends ReloadJob {
             }
            // LOGGER.info("check {} finish",ip);
         }
-        LOGGER.error("异常的服务器:"+errorList);
+        if(CollectionUtils.isEmpty(errorList)){
+            LOGGER.info("无异常ip:"+errorList);
+        }else{
+            LOGGER.error("异常的服务器:"+errorList);
+        }
         errorIp.clear();
         errorIp.addAll(errorList);
         

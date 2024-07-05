@@ -75,7 +75,6 @@ public class CommonHandlerExceptionResolver {
         }else {
             result.setErrno(Constant.ResultErrno.ERRNO_SYSTEM);
             result.setError("System error，please try again");
-//            LOGGER.error(requestUrl, ex);
         }
         if (ex instanceof ApiException) {
             if (ex instanceof LoginException) {
@@ -83,10 +82,8 @@ public class CommonHandlerExceptionResolver {
             }else {
                 LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
             }
-        }else {
-            LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
         }
-        LOGGER.error("",ex);
+        LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString(), ex);
 //        result.setError("系统正在进行升级，请稍等再用");
         // result.setData(new Object());
         return result;
