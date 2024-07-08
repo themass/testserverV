@@ -54,6 +54,7 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
                 "    2.[user]代表用户的输入\n" +
                 "    3.[assistant]代表你的回答。\n" +
                 "    4.你的回答的开始不要 user、assistant 和各种标点符号等歧义的话语\n" +
+                "    5.NOTE!!! 根据用户的问题的语言来决定你回答问题的语言。\n" +
                 "#以下是对话历史：";
         String useSet = "   #Character Setting\n" +
                 "# 角色设定\n" +
@@ -67,6 +68,7 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
                 "    2.[user]代表用户的输入\n" +
                 "    3.[assistant]代表你的回答。\n" +
                 "    4.你回复的内容不要包含 [user]、[assistant] 和各种标点符号等歧义的话语\n" +
+                "    5.NOTE!!! 根据用户的问题的语言来决定你回答问题的语。\n" +
                 "#以下是对话历史：";
         if(!StringUtils.isEmpty(charater)){
             myprompt = useSet.replace("{userSetting}",charater);

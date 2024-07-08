@@ -44,7 +44,7 @@ public class HostCheck extends ReloadJob {
     }
 
     public void reload() {
-      LOGGER.info("ping start");
+//      LOGGER.info("ping start");
         init();
         List<String> errorList = new ArrayList<>();
         for(String ip :myIpList){
@@ -70,7 +70,7 @@ public class HostCheck extends ReloadJob {
            // LOGGER.info("check {} finish",ip);
         }
         if(CollectionUtils.isEmpty(errorList)){
-            LOGGER.info("无异常ip:"+errorList);
+//            LOGGER.info("无异常ip:"+errorList);
         }else{
             LOGGER.error("异常的服务器:"+errorList);
         }

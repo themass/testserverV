@@ -40,7 +40,7 @@ public class HostIpCacheV2 extends ReloadJob {
             }
         }
         try {
-            LOGGER.info("locationOk = "+locationOk.size());
+//            LOGGER.info("locationOk = "+locationOk.size());
             lock.writeLock().lock();
             locationList = locationOk;
         } finally {

@@ -39,11 +39,11 @@ public class ChatDoubaoHandler extends BaseChatHandle {
 
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
 
-        LOGGER.info("ChatDoubaoHandler content :" + content + "； id:" + id);
+//        LOGGER.info("ChatDoubaoHandler content :" + content + "； id:" + id);
         Api.ChatReq req = buildReq("你是一个智能AI小助手", getPromt(content, charater));
         Api.ChatResp resp = maasService.chat(req);
         LOGGER.info("ChatDoubaoHandler 豆包 输入："+getPromt(content, charater));
-        LOGGER.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
+//        LOGGER.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
         LOGGER.info("ChatDoubaoHandler 豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
         if (resp.getChoice() != null) {
             Choice choice = new Choice();
