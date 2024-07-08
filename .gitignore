@@ -39,3 +39,4 @@ pom.xml.versionsBackup
 .sonar
 */.sonar
 /logs/
+application.pid
