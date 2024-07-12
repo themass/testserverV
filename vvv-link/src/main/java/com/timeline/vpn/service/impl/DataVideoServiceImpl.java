@@ -244,22 +244,22 @@ public class DataVideoServiceImpl implements DataVideoService {
 //                'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html）Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
 //                        'Cookie':'Hm_lvt_a7dbcd0d5fd2dbdc43e5060c94acaa09=1527844837; PHPSESSID=g8ueibtojgjuub262ae109m2j1; Hm_lvt_c0060128b5e4b5b38a10be83f06960fd=1530951178; msvod_from_url=CXHdyI37jSHtNtnU%2FGBkOiMfjYp75b9bAMxJauXJEbCph8pO90GzNwM; msvod_user_id=sTLyUSP2KKex0l%2FenE0; msvod_user_login=0BUv%2FRmatXLtwy8ku6E2s8cfhsoQfkASdur2QcWy8wZb0twm3WRbkA; msvod_pl_token=A_FO9jJ79ZZkyVFTBxw1KLmX; Hm_lpvt_c0060128b5e4b5b38a10be83f06960fd=1530951284; msvod_token=_pF0%2FpHf%2FPEKXfOFQGGwSyOE'
 //                        ,"Referer": baseurl}
-                ChromeDriver driver = new ChromeDriver();
-                driver.get(item.getPath());
-// 定位到需要点击的元素并执行点击操作
-                // 定位复选框元素（这里需要根据实际页面的元素定位）
-                WebElement checkBox = driver.findElement(By.cssSelector("input[type='checkbox'][role='checkbox']"));
-                // 模拟点击复选框
-                if(checkBox!=null){
-                    if (!checkBox.isSelected()) {
-                        checkBox.click();
-                    }
-                    checkBox.click();
-                }else{
-                    LOGGER.equals("checkbox is null");
-                }
-
-                driver.quit();
+//                ChromeDriver driver = new ChromeDriver();
+//                driver.get(item.getPath());
+//// 定位到需要点击的元素并执行点击操作
+//                // 定位复选框元素（这里需要根据实际页面的元素定位）
+//                WebElement checkBox = driver.findElement(By.cssSelector("input[type='checkbox'][role='checkbox']"));
+//                // 模拟点击复选框
+//                if(checkBox!=null){
+//                    if (!checkBox.isSelected()) {
+//                        checkBox.click();
+//                    }
+//                    checkBox.click();
+//                }else{
+//                    LOGGER.equals("checkbox is null");
+//                }
+//
+//                driver.quit();
                 Map<String ,String > header = new HashMap<>();
                 header.put("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
                 header.put("Referer",item.getBaseurl());
