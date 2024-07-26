@@ -20,10 +20,10 @@ import javax.annotation.PostConstruct;
 public class ChatDoubaoHandler extends BaseChatHandle {
     private static String host = "maas-api.ml-platform-cn-beijing.volces.com";
     private static String region = "cn-beijing";
-    private static String  appKey = "AKLTZmU4MTUyMDI3MjFhNDU1Njhj";
-    private static String  appKey2 = "OWYxOWVlN2UxMTBlY2Q";
-    private static String  secretKey =  "T0dFMk5qUmxaamRoTXpsak5HVXhNamh";
-    private static String  secretKey2 =  "oTmpBNU56bGhaakEzWWpCa1ltSQ==";
+    private static String  appKey = "AKLTMDIwMGZjZWE2OTU1NGFjOWE3";
+    private static String  appKey2 = "MDI5NTRjNTY0NGUyNmE";
+    private static String  secretKey =  "T0RBMll6bGlOR0l5T0RCaE5HVmxObUpp";
+    private static String  secretKey2 =  "TW1JeVpEZzNOMkUxTVRVeU5qYw==";
 
     MaasService maasService;
     @PostConstruct

@@ -20,6 +20,7 @@ import java.util.List;
 @Component
 public class ChatMyGpt4Handler extends BaseChatHandle {
     public static String url = "https://api.openai.com/v1/chat/completions";
+//    public static String url = "http://openapi2.ok123find.top";
     public static String apiKey = "Bearer sk";
     public static String apiKey1 = "3TiIs5LyxJVCIU2wr";
     public static String apiKey2 = "-IA5tH6GqUNfVxUJb0gyQT3BlbkFJVWa";
