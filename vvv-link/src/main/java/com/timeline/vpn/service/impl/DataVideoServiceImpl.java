@@ -7,13 +7,12 @@ import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.dao.db.VideoDao;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.PageBaseParam;
-import com.timeline.vpn.model.po.VideoChannelPo;
-import com.timeline.vpn.model.po.VideoPo;
-import com.timeline.vpn.model.po.VideoUserItemPo;
-import com.timeline.vpn.model.po.VideoUserPo;
+import com.timeline.vpn.model.po.*;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.RecommendVo;
 import com.timeline.vpn.service.DataVideoService;
+import com.timeline.vpn.util.HttpCommonUtil;
+import com.timeline.vpn.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -22,15 +21,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,7 +138,9 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 if(i.getBaseurl()!=null && i.getBaseurl().contains("hsex")){
                     t.setNeedLazyUrl(true);
-                }else {
+                }else if(i.getBaseurl()!=null && i.getBaseurl().contains("rou.video")){
+                    t.setNeedLazyUrl(true);
+                }else{
                     t.setNeedLazyUrl(false);
                 }
             }
@@ -243,23 +241,22 @@ public class DataVideoServiceImpl implements DataVideoService {
     @Override
     public RecommendVo getVideoUrl(BaseQuery baseQuery, PageBaseParam param, long id) {
             VideoPo item = videoDao.getOneItem(id);
+            if(item.getBaseurl().contains("rou.")){
+                String data = HttpCommonUtil.sendGet(item.getPath());
+                RouVideoBean rouVideoBean = JsonUtil.readValue(data, RouVideoBean.class);
+                RecommendVo vo = new RecommendVo();
+                vo.setActionUrl(rouVideoBean.getVideo().getVideoUrl());
+                vo.setTitle(item.getName());
+                vo.setImg(item.getPic());
+                vo.setAdsPopShow(false);
+                vo.setAdsShow(true);
+                vo.setParam(item.getBaseurl());
+                vo.setExtra(item.getVideoType());
+                vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
+                return vo;
+            }
+            //hsex
             try {
-//                ChromeDriver driver = new ChromeDriver();
-//                driver.get(item.getPath());
-//// 定位到需要点击的元素并执行点击操作
-//                // 定位复选框元素（这里需要根据实际页面的元素定位）
-//                WebElement checkBox = driver.findElement(By.cssSelector("input[type='checkbox'][role='checkbox']"));
-//                // 模拟点击复选框
-//                if(checkBox!=null){
-//                    if (!checkBox.isSelected()) {
-//                        checkBox.click();
-//                    }
-//                    checkBox.click();
-//                }else{
-//                    LOGGER.equals("checkbox is null");
-//                }
-//
-//                driver.quit();
                 Map<String ,String > header = new HashMap<>();
 //                header.put("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
 //                header.put("Referer",item.getBaseurl());
