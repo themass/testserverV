@@ -261,7 +261,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 header.put("Referer",item.getBaseurl());
                 header.put("Accept-Encoding","gzip, deflate, br");
                 header.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
-                header.put("Cookie","_ga=GA1.1.611983894.1716478735; __PPU_puid=7372220048289729256; hid=4q2b8ltdm7e22pr8r4l8vrj4gc; cf_clearance=svHkqV0BU7zw.468RAsDlYwa_BSSiFmG3jJIParXwtg-1720801627-1.0.1.1-LtDFdp5_WRuj3ReSLfOKqLNb6rtwASHl6PfSvrEB4ClRVUbptcdSo7whkcKW3euLQ8M7Jg3xdMpOqmGGkZe9TQ; bnState_1871751={\"impressions\":5,\"delayStarted\":0}; _ga_ECF2QFGQ9G=GS1.1.1720801627.5.1.1720801636.0.0.0");
+                header.put("Cookie","_ga=GA1.1.611983894.1716478735; __PPU_puid=7372220048289729256; __PPU_CAIFRQ=AC3I8gAAAAAAAAAB; __PPU_CAIFRT=AC3I8gAAAABmkgnQ; hid=pe23b18i9rui36af8tlct1hac4; cf_clearance=qXy7LEl8vOIYqy0owpkqfAJYKf7QKaH.9HOiHUVDlg0-1722351879-1.0.1.1-k8PaqqzEipqOUQdwV2p3JevlLcWdIBzw.b1E4LmRgp7dmucl076.09HpcxPE_8jJ3XqSJNSh1B5mrVpLlPqtQQ; UGVyc2lzdFN0b3JhZ2U=%7B%7D; bnState_1871751={\"impressions\":11,\"delayStarted\":0}; _ga_ECF2QFGQ9G=GS1.1.1722351875.8.1.1722353472.0.0.0");
                 Connection conn = Jsoup.connect(item.getPath()).headers(header);
                 Document doc = conn.get();
                 Elements links = doc.select("source");
