@@ -138,7 +138,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 if(i.getBaseurl()!=null && i.getBaseurl().contains("hsex")){
                     t.setNeedLazyUrl(true);
-                }else if(i.getBaseurl()!=null && i.getBaseurl().contains("rou.video")){
+                }else if(i.getBaseurl()!=null && i.getBaseurl().contains("rou")){
                     t.setNeedLazyUrl(true);
                 }else{
                     t.setNeedLazyUrl(false);
