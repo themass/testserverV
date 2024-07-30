@@ -275,6 +275,8 @@ public class DataVideoServiceImpl implements DataVideoService {
                 for (Element link : links) {
                     LOGGER.info("links---"+link.html());
                     String url = link.attr("src");
+                    LOGGER.info("links---url="+url);
+
                     RecommendVo vo = new RecommendVo();
                     vo.setActionUrl(url.replace("https://hsex.tv/","https://dp.bigcloud.click/"));
                     vo.setTitle(item.getName());
