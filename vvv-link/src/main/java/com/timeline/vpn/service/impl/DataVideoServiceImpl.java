@@ -240,26 +240,26 @@ public class DataVideoServiceImpl implements DataVideoService {
     public RecommendVo getVideoUrl(BaseQuery baseQuery, PageBaseParam param, long id) {
             VideoPo item = videoDao.getOneItem(id);
             try {
-                ChromeDriver driver = new ChromeDriver();
-                driver.get(item.getPath());
-// 定位到需要点击的元素并执行点击操作
-                // 定位复选框元素（这里需要根据实际页面的元素定位）
-                WebElement checkBox = driver.findElement(By.cssSelector("input[type='checkbox'][role='checkbox']"));
-                // 模拟点击复选框
-                if(checkBox!=null){
-                    if (!checkBox.isSelected()) {
-                        checkBox.click();
-                    }
-                    checkBox.click();
-                }else{
-                    LOGGER.equals("checkbox is null");
-                }
-
-                driver.quit();
+//                ChromeDriver driver = new ChromeDriver();
+//                driver.get(item.getPath());
+//// 定位到需要点击的元素并执行点击操作
+//                // 定位复选框元素（这里需要根据实际页面的元素定位）
+//                WebElement checkBox = driver.findElement(By.cssSelector("input[type='checkbox'][role='checkbox']"));
+//                // 模拟点击复选框
+//                if(checkBox!=null){
+//                    if (!checkBox.isSelected()) {
+//                        checkBox.click();
+//                    }
+//                    checkBox.click();
+//                }else{
+//                    LOGGER.equals("checkbox is null");
+//                }
+//
+//                driver.quit();
                 Map<String ,String > header = new HashMap<>();
                 header.put("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
                 header.put("Referer",item.getBaseurl());
-//                header.put("Accept-Encoding","gzip, deflate, br");
+                header.put("Accept-Encoding","gzip, deflate, br");
                 header.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
                 header.put("Cookie","_ga=GA1.1.611983894.1716478735; __PPU_puid=7372220048289729256; hid=4q2b8ltdm7e22pr8r4l8vrj4gc; cf_clearance=svHkqV0BU7zw.468RAsDlYwa_BSSiFmG3jJIParXwtg-1720801627-1.0.1.1-LtDFdp5_WRuj3ReSLfOKqLNb6rtwASHl6PfSvrEB4ClRVUbptcdSo7whkcKW3euLQ8M7Jg3xdMpOqmGGkZe9TQ; bnState_1871751={\"impressions\":5,\"delayStarted\":0}; _ga_ECF2QFGQ9G=GS1.1.1720801627.5.1.1720801636.0.0.0");
                 Connection conn = Jsoup.connect(item.getPath()).headers(header);
