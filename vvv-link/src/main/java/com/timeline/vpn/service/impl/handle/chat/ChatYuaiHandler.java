@@ -23,16 +23,17 @@ import java.util.Map;
  */
 @Component
 public class ChatYuaiHandler extends BaseChatHandle {
-    private static final String chatGptUrl = "https://yuaiweiwu-gpt4o.openai.azure.com/";
-    public static String key = "702acd8694634c4abce4223479d0bcf8";
+    private static final String chatGptUrl = "https://aitogehter-ailesson.openai.azure.com/";
+    public static String key = "8d3eb3e0779b4537";
+    public static String key2 = "b143232b40b8645e";
     public static Map<String, String> header = new HashMap<>();
 
     static {
-        header.put("Authorization", "Bearer " + key);
+        header.put("Authorization", "Bearer " + key+key2);
     }
 
     private static OpenAIClient client = new OpenAIClientBuilder()
-            .credential(new AzureKeyCredential(key))
+            .credential(new AzureKeyCredential(key+key2))
             .endpoint(chatGptUrl)
             .buildClient();
 
