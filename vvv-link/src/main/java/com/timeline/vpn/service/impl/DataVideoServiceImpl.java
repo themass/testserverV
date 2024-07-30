@@ -318,7 +318,7 @@ public class DataVideoServiceImpl implements DataVideoService {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                LOGGER.info(line);
             }
             process.waitFor();
         } catch (Exception e) {
