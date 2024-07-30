@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author gqli
@@ -278,7 +280,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                     LOGGER.info("links---url="+url);
 
                     RecommendVo vo = new RecommendVo();
-                    vo.setActionUrl(url.replace("https://hsex.tv/","https://dp.bigcloud.click/"));
+                    vo.setActionUrl(url.replace("https://cdn.hsex.tv/","https://dp.bigcloud.click/"));
                     vo.setTitle(item.getName());
                     vo.setImg(item.getPic());
                     vo.setAdsPopShow(false);
@@ -294,26 +296,6 @@ public class DataVideoServiceImpl implements DataVideoService {
             return new RecommendVo();
     }
 
-    public static void main(String[] args) throws IOException {
-//        Map<String ,String > header = new HashMap<>();
-//        header.put("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
-//        header.put("Referer","https://baidu.com");
-//        header.put("Accept-Encoding","gzip, deflate, br");
-//        header.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
-//        header.put("Cookie","_ga=GA1.1.795572755.1697563920; hid=ltaq2vrr0id0rvcs0p0ossslj7; "
-//                + "cf_clearance=Z2ttErQF2v95ZMNSedXdrrvNKSdOap_xP_9kzqjHJVk-1698859152-0-1-55aea47.8ed5e39"
-//                + ".525bb5a7-0.2.1698859152; _ga_XDTWVRMJNJ=GS1.1.1698858493.3.1.1698859169.42.0.0; "
-//                + "bnState_1871751={\"impressions\":18,\"delayStarted\":0}");
-//        Document doc = Jsoup.connect("https://hsex.men").headers(header).get();
-//        Elements links = doc.select("source");
-//        System.out.println(doc.html());
-//        System.out.println(doc.title());
-//        LOGGER.info(doc.data());
-//        LOGGER.info(links.html());
-        String str = "，spa";
-        System.out.println(str.startsWith(Constant.commaCH));
-        System.out.println(str.replace(Constant.commaCH,""));
-    }
     private String fetch(String url){
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("curl", url);
@@ -329,6 +311,26 @@ public class DataVideoServiceImpl implements DataVideoService {
         } catch (Exception e) {
             LOGGER.error("fetch error url={}",url,e);
             return null;
+        }
+    }
+    public static void main(String[] args) {
+        // 输入的字符串
+        String input = "111dada<source id=\"video-source\" src=\"https://www.example.com/video.mp4\">Example Video</source>实打实大时代";
+
+        // 定义正则表达式
+        String regex = "<source id=\"video-source\".*?</source>";
+
+        // 创建 Pattern 对象
+        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+
+        // 创建 matcher 对象
+        Matcher matcher = pattern.matcher(input);
+
+        // 检查是否匹配
+        if (matcher.find()) {
+            System.out.println("Match found: " + matcher.group());
+        } else {
+            System.out.println("Match not found");
         }
     }
 }
