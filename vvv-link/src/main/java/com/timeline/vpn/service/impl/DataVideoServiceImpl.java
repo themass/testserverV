@@ -264,9 +264,10 @@ public class DataVideoServiceImpl implements DataVideoService {
 //                header.put("Accept-Encoding","gzip, deflate, br");
 //                header.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
 //                header.put("Cookie","_ga=GA1.1.611983894.1716478735; __PPU_puid=7372220048289729256; __PPU_CAIFRQ=AC3I8gAAAAAAAAAB; __PPU_CAIFRT=AC3I8gAAAABmkgnQ; hid=pe23b18i9rui36af8tlct1hac4; cf_clearance=qXy7LEl8vOIYqy0owpkqfAJYKf7QKaH.9HOiHUVDlg0-1722351879-1.0.1.1-k8PaqqzEipqOUQdwV2p3JevlLcWdIBzw.b1E4LmRgp7dmucl076.09HpcxPE_8jJ3XqSJNSh1B5mrVpLlPqtQQ; UGVyc2lzdFN0b3JhZ2U=%7B%7D; bnState_1871751={\"impressions\":11,\"delayStarted\":0}; _ga_ECF2QFGQ9G=GS1.1.1722351875.8.1.1722353472.0.0.0");
-                test(item.getPath());
+                String data = fetch(item.getPath());
                 Connection conn = Jsoup.connect(item.getPath()).headers(header);
-                Document doc = conn.get();
+//                Document doc = conn.get();
+                Document doc = Jsoup.parse(data);
                 Elements links = doc.select("source");
                 LOGGER.info("url---"+item.getPath());
                 LOGGER.info("title------"+doc.title());
@@ -311,18 +312,21 @@ public class DataVideoServiceImpl implements DataVideoService {
         System.out.println(str.startsWith(Constant.commaCH));
         System.out.println(str.replace(Constant.commaCH,""));
     }
-    private void test(String url){
+    private String fetch(String url){
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("curl", url);
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                LOGGER.info(line);
+                sb.append(line).append("\n");
             }
             process.waitFor();
+            return sb.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("fetch error url={}",url,e);
+            return null;
         }
     }
 }
