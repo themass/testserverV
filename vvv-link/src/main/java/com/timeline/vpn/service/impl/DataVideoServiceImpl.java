@@ -242,10 +242,22 @@ public class DataVideoServiceImpl implements DataVideoService {
     public RecommendVo getVideoUrl(BaseQuery baseQuery, PageBaseParam param, long id) {
             VideoPo item = videoDao.getOneItem(id);
             if(item.getBaseurl().contains("rou.")){
-                String data = HttpCommonUtil.sendGet(item.getPath());
+                String data = HttpCommonUtil.sendGet(item.getPath().replace("https://rou.video","https://rou.video/api"));
                 RouVideoBean rouVideoBean = JsonUtil.readValue(data, RouVideoBean.class);
+                String urlData = HttpCommonUtil.sendGet(rouVideoBean.getVideo().getVideoUrl());
+                String regex = "^https.*$";
+                // 创建 Pattern 对象
+                Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+                // 创建 matcher 对象
+                Matcher matcher = pattern.matcher(urlData);
+                // 检查是否匹配
+                String url= "";
+                if (matcher.find()) {
+                    url = matcher.group();
+                }
+                LOGGER.info("data={},url={}",data,url);
                 RecommendVo vo = new RecommendVo();
-                vo.setActionUrl(rouVideoBean.getVideo().getVideoUrl());
+                vo.setActionUrl(url);
                 vo.setTitle(item.getName());
                 vo.setImg(item.getPic());
                 vo.setAdsPopShow(false);
