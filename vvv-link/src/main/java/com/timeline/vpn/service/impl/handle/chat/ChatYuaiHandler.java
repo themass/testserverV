@@ -2,6 +2,7 @@ package com.timeline.vpn.service.impl.handle.chat;
 
 import com.azure.ai.openai.OpenAIClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
+import com.azure.ai.openai.OpenAIServiceVersion;
 import com.azure.ai.openai.models.*;
 import com.azure.core.credential.AzureKeyCredential;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -35,6 +36,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
     private static OpenAIClient client = new OpenAIClientBuilder()
             .credential(new AzureKeyCredential(key+key2))
             .endpoint(chatGptUrl)
+            .serviceVersion(OpenAIServiceVersion.V2024_05_01_PREVIEW)
             .buildClient();
 
     @Override
