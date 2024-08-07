@@ -35,11 +35,14 @@ public class VideoController extends BaseController {
     } 
     @RequestMapping(value = "/user.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult user(@UserInfo BaseQuery baseQuery,
-            @ModelAttribute @Valid PageBaseForm form,@RequestParam(required=false,name="channel") String channel) {
+            @ModelAttribute @Valid PageBaseForm form,@RequestParam(required=false,name="channel") String channel,@RequestParam(required=false,name="keyword") String keyword) {
         if(StringUtils.isEmpty(channel)) {
             channel = "人气女优";
         }
-        return new JsonResult(dataVideoService.getVideoUserPage(baseQuery, form.toParam(),channel));
+        if (StringUtils.isBlank(keyword)) {
+            keyword = null;
+        }
+        return new JsonResult(dataVideoService.getVideoUserPage(baseQuery, form.toParam(),channel, keyword));
     } 
     @RequestMapping(value = "/user/items.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult userItems(@UserInfo BaseQuery baseQuery,

@@ -43,7 +43,11 @@
 	    order by sortType desc,id desc
 	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
-	    select * from vpn.video_user_1 where channel=#{channel} order by count desc
+	    select * from vpn.video_user_1 where channel=#{channel}
+		<if test="keyword!=null">
+			and LOWER(name) like CONCAT('%',#{keyword},'%')
+		</if>
+		order by count desc
 	</select>
 	<select id="getUserByUserId" resultMap="VideoUserMap">
 	    select * from vpn.video_user_1 where userId=#{userId} limit 1

@@ -148,9 +148,9 @@ public class DataVideoServiceImpl implements DataVideoService {
     }
 
     @Override
-    public InfoListVo<RecommendVo> getVideoUserPage(BaseQuery baseQuery, PageBaseParam param,String channel) {
+    public InfoListVo<RecommendVo> getVideoUserPage(BaseQuery baseQuery, PageBaseParam param,String channel, String keyword) {
         PageHelper.startPage(param.getStart(), param.getLimit());
-        List<VideoUserPo> list = videoDao.getUsers(channel);
+        List<VideoUserPo> list = videoDao.getUsers(channel, keyword);
         return VoBuilder.buildPageInfoVo((Page<VideoUserPo>)list, RecommendVo.class,new VoBuilder.BuildAction<VideoUserPo,RecommendVo>(){
             @Override
             public void action(VideoUserPo i, RecommendVo t) {
