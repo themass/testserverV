@@ -13,6 +13,8 @@ import com.timeline.vpn.model.vo.InfoListVo;
 public interface ChatService {
     
     public Choice chatWithGpt(BaseQuery baseQuery, String content,String id, String charater) throws Exception;
+    public Choice transWord(BaseQuery baseQuery, String content,String id) throws Exception;
+
     public InfoListVo<CharacterVo> getCharacter(BaseQuery baseQuery);
 
 

@@ -24,5 +24,10 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
         int r = random.nextInt(10);
         return getService(r).chatWithGpt(baseQuery, content, id, charater);
     }
+    public Choice transWord(BaseQuery baseQuery, String content, String id) throws Exception {
+        Random random = new Random();
+        int r = random.nextInt(10);
+        return getService(r).transWord(baseQuery, content, id);
+    }
 }
 

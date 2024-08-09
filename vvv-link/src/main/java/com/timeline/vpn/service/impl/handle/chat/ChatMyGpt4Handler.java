@@ -65,5 +65,43 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
         return null;
     }
 
+    @Override
+    public Choice transWord(BaseQuery baseQuery, String content, String id) throws Exception {
+        LOGGER.info("ChatMyGpt4Handler content :" + content + "； id:" + id);
+
+        okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
+        List<ChatMsg> chatMessageList = new ArrayList<>();
+        chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
+
+        ChatMessages chatMessages = new ChatMessages();
+        chatMessages.setModel("gpt-3.5-turbo");
+        chatMessages.setTopP(0.5);
+        chatMessages.setMaxTokens(1800);
+        chatMessages.setTemperature(0.2);
+        chatMessages.setStream(Boolean.FALSE);
+
+        chatMessageList.add(new ChatMsg("user",getTransPrompt(content)));
+        chatMessages.setMessages(chatMessageList);
+        LOGGER.info("ChatMyGpt4Handler 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
+        okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatMessages));
+        okhttp3.Request httpRequest = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", apiKey+apiKey2+apiKey1)
+                .addHeader("stream", "false")
+                .post(body)
+                .build();
+        okhttp3.Response response = httpClient.newCall(httpRequest).execute();
+        String res = response.body().string();
+        ChatVo vo = JsonUtil.readValue(res,ChatVo.class);
+        LOGGER.info("ChatMyGpt4Handler 我的gpt  chat 回复 : "+res);
+        if(vo.getChoices()!=null&&vo.getChoices().size()>0){
+            Choice choice =  vo.getChoices().get(0);
+            choice.setId(id);
+            return choice;
+        }
+        return null;
+    }
+
 }
 

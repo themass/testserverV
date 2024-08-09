@@ -56,6 +56,26 @@ public class ChatDoubaoHandler extends BaseChatHandle {
         }
         return null;
     }
+
+    @Override
+    public Choice transWord(BaseQuery baseQuery, String content, String id) throws Exception {
+        Api.ChatReq req = buildReq("你是一个智能AI小助手", getTransPrompt(content));
+        Api.ChatResp resp = maasService.chat(req);
+//        LOGGER.info("ChatDoubaoHandler 豆包 输入："+getPromt(content, charater));
+//        LOGGER.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
+        LOGGER.info("ChatDoubaoHandler 豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
+        if (resp.getChoice() != null) {
+            Choice choice = new Choice();
+            choice.setId(id);
+            Message message = new Message();
+            message.setContent(resp.getChoice().getMessage().getContent().replace("user","").replace("assistant","").replace("[]:",""));
+            message.setRole(resp.getChoice().getMessage().getRole());
+            choice.setMessage(message);
+            return choice;
+        }
+        return null;
+    }
+
     private Api.ChatReq buildReq(String systemMessage, String userMessage) {
         Api.ChatReq req = Api.ChatReq.newBuilder()
                 .setModel(Api.Model.newBuilder().setName("skylark-chat"))

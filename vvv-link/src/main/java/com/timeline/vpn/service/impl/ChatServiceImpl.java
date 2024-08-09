@@ -31,6 +31,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public Choice transWord(BaseQuery baseQuery, String content, String id) throws Exception {
+        return chatContext.transWord(baseQuery, content, id);
+    }
+
+    @Override
     public InfoListVo<CharacterVo> getCharacter(BaseQuery baseQuery) {
         List<CharacterPo> list = settingCharacterDao.getAll();
         return VoBuilder.buildListInfoVo(list, CharacterVo.class, null);

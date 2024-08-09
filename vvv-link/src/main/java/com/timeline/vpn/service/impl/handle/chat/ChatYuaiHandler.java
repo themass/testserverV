@@ -41,7 +41,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
 
     @Override
     public boolean support(Integer t) {
-        return t > 8;
+        return t >= 8;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
@@ -56,6 +56,33 @@ public class ChatYuaiHandler extends BaseChatHandle {
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
         String prompt = getPromt(content, charater);
+        chatMessages.add(new ChatRequestUserMessage(prompt));
+        LOGGER.info("ChatYuaiHandler 与爱 chat 请求 : " + prompt);
+        ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o", chatCompletionsOptions);
+
+        ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions), ChatVo.class);
+        LOGGER.info("ChatYuaiHandler 与爱 chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
+        if (vo.getChoices() != null && vo.getChoices().size() > 0) {
+            Choice choice = vo.getChoices().get(0);
+            choice.setId(id);
+            choice.getMessage().setContent(choice.getMessage().getContent().replace("user","").replace("assistant",""));
+            return choice;
+        }
+        return null;
+    }
+
+    @Override
+    public Choice transWord(BaseQuery baseQuery, String content, String id) throws Exception {
+        LOGGER.info("ChatYuaiHandler content :" + content + "； id:" + id);
+        List<ChatRequestMessage> chatMessages = new ArrayList<>();
+        chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
+        ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
+        chatCompletionsOptions.setModel("gpt-4o");
+        chatCompletionsOptions.setTopP(0.5);
+        chatCompletionsOptions.setMaxTokens(2048);
+        chatCompletionsOptions.setTemperature(0.2);
+        chatCompletionsOptions.setStream(Boolean.FALSE);
+        String prompt = getTransPrompt(content);
         chatMessages.add(new ChatRequestUserMessage(prompt));
         LOGGER.info("ChatYuaiHandler 与爱 chat 请求 : " + prompt);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o", chatCompletionsOptions);
