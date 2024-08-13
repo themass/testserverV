@@ -23,7 +23,7 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
             LoggerFactory.getLogger(BaseChatHandle.class);
 
     public abstract Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception;
-    public abstract Choice transWord(BaseQuery baseQuery, String content, String id) throws Exception;
+    public abstract Choice transWord(BaseQuery baseQuery, String content, String id, String charater) throws Exception;
 
     @Override
     public boolean isDefault() {
@@ -80,7 +80,7 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
 
         return prompt.replace("{history}",appHis);
     }
-    public static String getTransPrompt(String content){
+    public static String getTransPrompt(String content,String lang){
         String tmp = "# 角色\n" +
                 "\n" +
                 "你是一名中英文双语教育专家，拥有帮助将中文视为母语的用户理解和记忆英语单词的专长，请根据用户提供的英语单词完成下列任务。\n" +
@@ -124,8 +124,9 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
                 "- 要求使用简单的词汇，100 个单词以内。\n" +
                 "- 英文故事后面附带对应的中文翻译。\n" +
                 "请帮我分析一下“%s”这个单词\n" +
-                "# 不要有任何其他内容，直接分析";
-            return String.format(tmp,content);
+                "# 不要有任何其他内容，直接分析, 你回答的语言请根据用户的设置来判断\n" +
+                "# 用户使用的语言：%s ";
+            return String.format(tmp,content,lang);
     }
 }
 

@@ -4,6 +4,7 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.CharacterVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.InfoListVo;
+import com.timeline.vpn.model.vo.Sessions;
 
 /**
  * @author gqli
@@ -13,9 +14,10 @@ import com.timeline.vpn.model.vo.InfoListVo;
 public interface ChatService {
     
     public Choice chatWithGpt(BaseQuery baseQuery, String content,String id, String charater) throws Exception;
-    public Choice transWord(BaseQuery baseQuery, String content,String id) throws Exception;
+    public Choice transWord(BaseQuery baseQuery, String content,String id, String charater) throws Exception;
 
     public InfoListVo<CharacterVo> getCharacter(BaseQuery baseQuery);
+    public InfoListVo<Sessions> sessions(BaseQuery baseQuery);
 
 
 }

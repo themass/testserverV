@@ -66,7 +66,7 @@ public class KimiHandler extends BaseChatHandle {
     }
 
     @Override
-    public Choice transWord(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice transWord(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
         LOGGER.info("KimiHandler content :" + content + "； id:" + id);
 
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
@@ -80,7 +80,7 @@ public class KimiHandler extends BaseChatHandle {
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
 
-        chatMessageList.add(new ChatMsg("user",getTransPrompt(content)));
+        chatMessageList.add(new ChatMsg("user",getTransPrompt(content, baseQuery.getAppInfo().getLang())));
         chatMessages.setMessages(chatMessageList);
         LOGGER.info("KimiHandler 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");

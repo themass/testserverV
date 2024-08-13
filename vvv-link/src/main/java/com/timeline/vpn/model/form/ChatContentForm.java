@@ -6,6 +6,7 @@ public class ChatContentForm {
     public String charater;
 
 
+
     public String getContent() {
         return content;
     }

@@ -72,7 +72,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
     }
 
     @Override
-    public Choice transWord(BaseQuery baseQuery, String content, String id) throws Exception {
+    public Choice transWord(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
         LOGGER.info("ChatYuaiHandler content :" + content + "； id:" + id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
@@ -82,7 +82,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
         chatCompletionsOptions.setMaxTokens(2048);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-        String prompt = getTransPrompt(content);
+        String prompt = getTransPrompt(content, baseQuery.getAppInfo().getLang());
         chatMessages.add(new ChatRequestUserMessage(prompt));
         LOGGER.info("ChatYuaiHandler 与爱 chat 请求 : " + prompt);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o", chatCompletionsOptions);
