@@ -42,7 +42,6 @@ public class CommonHandlerExceptionResolver {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public JsonResult resolveException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
-        LOGGER.error("",ex);
         String ua = HttpCommonUtil.getUA(request.getHeader(Constant.HTTP_UA));
         String requestUrl = urlPathHelper.getRequestUri(request) + "?" + request.getQueryString()
                 + "[" + ua + "]";
@@ -83,7 +82,7 @@ public class CommonHandlerExceptionResolver {
                 LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
             }
         }
-        LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString(), ex);
+        LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
 //        result.setError("系统正在进行升级，请稍等再用");
         // result.setData(new Object());
         return result;
