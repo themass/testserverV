@@ -6,8 +6,10 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.util.JsonUtil;
+import okhttp3.OkHttpClient;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,8 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
     public static String apiKey = "Bearer sk";
     public static String apiKey1 = "3TiIs5LyxJVCIU2wr";
     public static String apiKey2 = "-IA5tH6GqUNfVxUJb0gyQT3BlbkFJVWa";
+    okhttp3.OkHttpClient httpClient = new OkHttpClient.Builder().connectTimeout(Duration.ofSeconds(10)).callTimeout(Duration.ofSeconds(15)).readTimeout(Duration.ofSeconds(15)).build();
+    ;
   @Override
   public boolean support(Integer t) {
     return t<3;
@@ -31,7 +35,6 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
         LOGGER.info("ChatMyGpt4Handler content :" + content + "； id:" + id);
 
-        okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
 
