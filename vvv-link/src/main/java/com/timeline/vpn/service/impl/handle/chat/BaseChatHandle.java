@@ -69,7 +69,7 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
                 "    2.[user]代表用户的输入\n" +
                 "    3.[assistant]代表你的回答。\n" +
                 "    4.你回复的内容不要包含 [user]、[assistant] 和各种标点符号等歧义的话语\n" +
-                "    NOTE!!! \n根据用户的问题的语言来决定你回答问题的语。\n" +
+                "    NOTE!!! \n根据用户的问题的语言来决定你回答问题的语。\n不要有任何其他多余的内容。\n返回内容不要有```\n" +
                 "#以下是对话历史：";
         if(!StringUtils.isEmpty(charater)){
             myprompt = useSet.replace("{userSetting}",charater);
@@ -124,8 +124,9 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
                 "- 要求使用简单的词汇，100 个单词以内。\n" +
                 "- 英文故事后面附带对应的中文翻译。\n" +
                 "请帮我分析一下“%s”这个单词\n" +
-                "# 不要有任何其他内容，直接分析, 你回答的语言请根据用户的设置来判断\n" +
-                "# 用户使用的语言：%s ";
+                "# 不要有任何其他多余的内容，直接分析, 你回答的语言请根据用户的设置来判断\n" +
+                "# 用户使用的语言：%s " +
+                "# 返回内容不要有```";
             return String.format(tmp,content,lang);
     }
 }

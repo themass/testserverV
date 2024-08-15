@@ -22,12 +22,22 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
         Random random = new Random();
         int r = random.nextInt(10);
-        return getService(r).chatWithGpt(baseQuery, content, id, charater);
+        try {
+            return getService(r).chatWithGpt(baseQuery, content, id, charater);
+        }catch (Exception e){
+            LOGGER.error("大语言模型调用失败",e);
+            throw  e;
+        }
     }
     public Choice transWord(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
         Random random = new Random();
         int r = random.nextInt(10);
-        return getService(r).transWord(baseQuery, content, id, charater);
+        try {
+            return getService(r).transWord(baseQuery, content, id, charater);
+        }catch (Exception e){
+            LOGGER.error("大语言模型调用失败",e);
+            throw  e;
+        }
     }
 }
 
