@@ -30,7 +30,7 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
     ;
   @Override
   public boolean support(Integer t) {
-    return t<3;
+    return t<2;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
         LOGGER.info("ChatMyGpt4Handler content :" + content + "； id:" + id);

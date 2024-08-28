@@ -25,7 +25,7 @@ public class KimiHandler extends BaseChatHandle {
     public static String apiKey2 = "pUheyg1PFqMmCv0wM";
   @Override
   public boolean support(Integer t) {
-    return t>6&&t<8;
+    return t>4&&t<=6;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
         LOGGER.info("KimiHandler content :" + content + "； id:" + id);
