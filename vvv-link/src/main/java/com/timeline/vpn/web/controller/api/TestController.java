@@ -4,6 +4,7 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.impl.handle.chat.ChatMyGpt4Handler;
+import com.timeline.vpn.service.impl.handle.chat.KimiHandler;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import java.util.Map;
 @RequestMapping("/api/test")
 public class TestController extends BaseController {
     @Autowired
-    private ChatMyGpt4Handler chatMyGpt4Handler;
+    private KimiHandler chatMyGpt4Handler;
     @RequestMapping(value = "/test.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery) {
         Map<String, String> map = new HashMap<>();

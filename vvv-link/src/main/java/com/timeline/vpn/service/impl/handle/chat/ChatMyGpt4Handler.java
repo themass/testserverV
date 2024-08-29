@@ -26,7 +26,6 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
     public static String apiKey = "Bearer sk";
     public static String apiKey1 = "3TiIs5LyxJVCIU2wr";
     public static String apiKey2 = "-IA5tH6GqUNfVxUJb0gyQT3BlbkFJVWa";
-    okhttp3.OkHttpClient httpClient = new OkHttpClient.Builder().connectTimeout(Duration.ofSeconds(10)).callTimeout(Duration.ofSeconds(15)).readTimeout(Duration.ofSeconds(15)).build();
     ;
   @Override
   public boolean support(Integer t) {

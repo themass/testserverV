@@ -6,10 +6,12 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.util.JsonUtil;
+import okhttp3.OkHttpClient;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description: 5-10; vip3 15天
@@ -23,14 +25,14 @@ public class KimiHandler extends BaseChatHandle {
     public static String apiKey = "Bearer sk-V2MfUM1";
     public static String apiKey1 = "uRUGaqENzTwkZDqiBpTe3uur";
     public static String apiKey2 = "pUheyg1PFqMmCv0wM";
-  @Override
+
+    @Override
   public boolean support(Integer t) {
     return t>4&&t<=6;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
         LOGGER.info("KimiHandler content :" + content + "； id:" + id);
 
-        okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
 
