@@ -41,7 +41,7 @@ public class ChatYuaiminHandler extends BaseChatHandle {
 
     @Override
     public boolean support(Integer t) {
-        return t > 6 && t <= 8 ;
+        return (t > 6 && t <= 8)||(t>=2&&t<=4) ;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
