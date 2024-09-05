@@ -50,7 +50,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
-        chatCompletionsOptions.setModel("gpt-4o");
+        chatCompletionsOptions.setModel("gpt-4o-mini");
         chatCompletionsOptions.setTopP(0.5);
         chatCompletionsOptions.setMaxTokens(2048);
         chatCompletionsOptions.setTemperature(0.2);
