@@ -47,7 +47,6 @@ public class ChatYuaiHandler extends BaseChatHandle {
 
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
 
-        LOGGER.info("ChatYuaiHandler content :" + content + "； id:" + id);
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
@@ -58,9 +57,8 @@ public class ChatYuaiHandler extends BaseChatHandle {
         chatCompletionsOptions.setStream(Boolean.FALSE);
         String prompt = getPromt(content, charater);
         chatMessages.add(new ChatRequestUserMessage(prompt));
-        LOGGER.info("ChatYuaiHandler 与爱 chat 请求 : " + prompt);
+        LOGGER.info("ChatYuaiHandler 与爱 chat 输入 : " + prompt);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o", chatCompletionsOptions);
-
         ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions), ChatVo.class);
         LOGGER.info("ChatYuaiHandler 与爱 chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
         if (vo.getChoices() != null && vo.getChoices().size() > 0) {
@@ -85,7 +83,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
         chatCompletionsOptions.setStream(Boolean.FALSE);
         String prompt = getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName());
         chatMessages.add(new ChatRequestUserMessage(prompt));
-        LOGGER.info("ChatYuaiHandler 与爱 chat 请求 : " + prompt);
+        LOGGER.info("ChatYuaiHandler 与爱 chat  输入: " + prompt);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o", chatCompletionsOptions);
 
         ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions), ChatVo.class);

@@ -33,8 +33,6 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
     return t<2;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
-        LOGGER.info("ChatMyGpt4Handler content :" + content + "； id:" + id);
-
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
 
@@ -70,8 +68,6 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
 
     @Override
     public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
-        LOGGER.info("ChatMyGpt4Handler content :" + chatContentForm.getContent() + "； id:" + chatContentForm.getId());
-
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));

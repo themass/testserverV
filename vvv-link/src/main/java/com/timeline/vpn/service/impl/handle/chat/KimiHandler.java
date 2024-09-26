@@ -87,7 +87,8 @@ public class KimiHandler extends BaseChatHandle {
         chatMessages.setMessages(chatMessageList);
         LOGGER.info("KimiHandler 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatMessages));
+        okhttp3.RequestBody body = okhttp3.RequestBody
+                .create(mediaType, JsonUtil.writeValueAsString(chatMessages));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
                 .url(url)
                 .addHeader("Authorization", apiKey+apiKey2+apiKey1)

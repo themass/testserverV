@@ -44,7 +44,6 @@ public class ChatDoubaoHandler extends BaseChatHandle {
         Api.ChatReq req = buildReq("你是一个智能AI小助手", getPromt(content, charater));
         Api.ChatResp resp = maasService.chat(req);
         LOGGER.info("ChatDoubaoHandler 豆包 输入："+getPromt(content, charater));
-//        LOGGER.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
         LOGGER.info("ChatDoubaoHandler 豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
         if (resp.getChoice() != null) {
             Choice choice = new Choice();
@@ -60,10 +59,10 @@ public class ChatDoubaoHandler extends BaseChatHandle {
 
     @Override
     public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
-        Api.ChatReq req = buildReq("你是一个智能AI小助手", getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName()));
+        String input = getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName());
+        Api.ChatReq req = buildReq("你是一个智能AI小助手", input);
         Api.ChatResp resp = maasService.chat(req);
-//        LOGGER.info("ChatDoubaoHandler 豆包 输入："+getPromt(content, charater));
-//        LOGGER.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
+        LOGGER.info("ChatDoubaoHandler 豆包 输入："+input);
         LOGGER.info("ChatDoubaoHandler 豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
         if (resp.getChoice() != null) {
             Choice choice = new Choice();

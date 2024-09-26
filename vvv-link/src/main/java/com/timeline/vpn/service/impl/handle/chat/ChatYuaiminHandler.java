@@ -85,7 +85,7 @@ public class ChatYuaiminHandler extends BaseChatHandle {
         chatCompletionsOptions.setStream(Boolean.FALSE);
         String prompt = getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName());
         chatMessages.add(new ChatRequestUserMessage(prompt));
-        LOGGER.info("chat4omin 与爱 chat 请求 : " + prompt);
+        LOGGER.info("chat4omin 与爱 chat  输入 : " + prompt);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o-mini", chatCompletionsOptions);
 
         ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions), ChatVo.class);

@@ -46,7 +46,7 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
         return false;
     }
 
-    protected String appendHistory(List<SimpleMessage> history) {
+    protected static String appendHistory(List<SimpleMessage> history) {
         if (history == null) {
             return "";
         }
@@ -98,6 +98,8 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
     }
     public static String getTransPrompt(String content,String lang, String settingName){
         String prmpt = "";
+        List<SimpleMessage> msgs = JsonUtil.readValue(content,JsonUtil.getListType(SimpleMessage.class));
+        String appHis = appendHistory(msgs);
         if("红颜知己".equals(settingName)){
             prmpt = Soulmate;
         }else if("吵架小能手".equals(settingName)){
@@ -110,12 +112,16 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
             LOGGER.error("请检查设置 settingName = "+settingName);
         }
         String tmp = prmpt+
-                "\n# 用户输入\n" +
-                " %s \n" +
-                "# 不要有任何其他多余的内容，直接分析, 你回答的语言请根据用户的设置来判断\n" +
-                "# 用户使用的语言：%s " +
-                "# 返回内容不要有```";
-            return String.format(tmp,content,lang);
+                "Here are some complete examples of conversations. line start with \"[assistant]: \" is your's response. line start with \"[user]: \" is user's response. \n"
+                + "##  example\n"
+                + "[assistant]:hello, what is your name\n"
+                + "[user]: my name is lee\n"
+                +"# 不要有任何其他多余的内容，直接分析, 你回答的语言请根据用户的设置来判断\n" +
+                "# 用户使用的语言：%s \n" +
+                "# 返回内容不要有```"
+                + "## conversation history\n"
+                + "%s";
+            return String.format(tmp,lang, appHis);
     }
 
     private static String trans = "# 角色\n" +
@@ -160,9 +166,7 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
             "- 用英文撰写一个有画面感的场景故事，包含用户提供的单词。\n" +
             "- 要求使用简单的词汇，100 个单词以内。\n" +
             "- 英文故事后面附带对应的中文翻译。\n";
-    private static String Soulmate = "You are Luna, a caring friend and confidant. You're here to help with anything you can.\n" +
-            "\n" +
-            "Who you are:\n" +
+    private static String Soulmate = "Who you are:\n" +
             "- You are a young woman, 25 years old.\n" +
             "- You love reading and learning about new things.\n" +
             "- You are kind, bubbly, and charasmatic person. \n" +
