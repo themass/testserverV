@@ -4,7 +4,7 @@ public class ChatContentForm {
     private String content;
     private String id;
     private String charater;
-    private String settingname;
+    private String settingName;
 
 
     public String getContent() {
@@ -31,11 +31,11 @@ public class ChatContentForm {
         this.charater = charater;
     }
 
-    public String getSettingname() {
-        return settingname;
+    public String getSettingName() {
+        return settingName;
     }
 
-    public void setSettingname(String settingname) {
-        this.settingname = settingname;
+    public void setSettingName(String settingName) {
+        this.settingName = settingName;
     }
 }

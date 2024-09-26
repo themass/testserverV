@@ -83,7 +83,7 @@ public class KimiHandler extends BaseChatHandle {
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
 
-        chatMessageList.add(new ChatMsg("user",getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingname())));
+        chatMessageList.add(new ChatMsg("user",getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName())));
         chatMessages.setMessages(chatMessageList);
         LOGGER.info("KimiHandler 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");

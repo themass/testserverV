@@ -83,7 +83,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
         chatCompletionsOptions.setMaxTokens(2048);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-        String prompt = getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingname());
+        String prompt = getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName());
         chatMessages.add(new ChatRequestUserMessage(prompt));
         LOGGER.info("ChatYuaiHandler 与爱 chat 请求 : " + prompt);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o", chatCompletionsOptions);
