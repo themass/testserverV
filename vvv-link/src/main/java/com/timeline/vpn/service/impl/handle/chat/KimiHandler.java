@@ -2,6 +2,7 @@ package com.timeline.vpn.service.impl.handle.chat;
 
 import com.timeline.vpn.model.chat.ChatMessages;
 import com.timeline.vpn.model.chat.ChatMsg;
+import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
@@ -68,8 +69,8 @@ public class KimiHandler extends BaseChatHandle {
     }
 
     @Override
-    public Choice transWord(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
-        LOGGER.info("KimiHandler content :" + content + "； id:" + id);
+    public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
+        LOGGER.info("KimiHandler content :" + chatContentForm.getContent() + "； id:" + chatContentForm.getId());
 
         okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient();
         List<ChatMsg> chatMessageList = new ArrayList<>();
@@ -82,7 +83,7 @@ public class KimiHandler extends BaseChatHandle {
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
 
-        chatMessageList.add(new ChatMsg("user",getTransPrompt(content, baseQuery.getAppInfo().getLang())));
+        chatMessageList.add(new ChatMsg("user",getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingname())));
         chatMessages.setMessages(chatMessageList);
         LOGGER.info("KimiHandler 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
@@ -100,7 +101,7 @@ public class KimiHandler extends BaseChatHandle {
         LOGGER.info("KimiHandler 我的gpt  chat 回复 : "+res);
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
-            choice.setId(id);
+            choice.setId(chatContentForm.getId());
             return choice;
         }
         return null;

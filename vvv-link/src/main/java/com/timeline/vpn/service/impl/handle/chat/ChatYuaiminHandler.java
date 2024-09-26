@@ -5,6 +5,7 @@ import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.ai.openai.OpenAIServiceVersion;
 import com.azure.ai.openai.models.*;
 import com.azure.core.credential.AzureKeyCredential;
+import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
@@ -72,8 +73,8 @@ public class ChatYuaiminHandler extends BaseChatHandle {
     }
 
     @Override
-    public Choice transWord(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
-        LOGGER.info("chat4omin content :" + content + "； id:" + id);
+    public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
+        LOGGER.info("chat4omin content :" + chatContentForm.getContent() + "； id:" + chatContentForm.getId());
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
         ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
@@ -82,7 +83,7 @@ public class ChatYuaiminHandler extends BaseChatHandle {
         chatCompletionsOptions.setMaxTokens(2048);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-        String prompt = getTransPrompt(content, baseQuery.getAppInfo().getLang());
+        String prompt = getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingname());
         chatMessages.add(new ChatRequestUserMessage(prompt));
         LOGGER.info("chat4omin 与爱 chat 请求 : " + prompt);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o-mini", chatCompletionsOptions);
@@ -91,7 +92,7 @@ public class ChatYuaiminHandler extends BaseChatHandle {
         LOGGER.info("chat4omin 与爱 chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
         if (vo.getChoices() != null && vo.getChoices().size() > 0) {
             Choice choice = vo.getChoices().get(0);
-            choice.setId(id);
+            choice.setId(chatContentForm.getId());
             choice.getMessage().setContent(choice.getMessage().getContent().replace("user","").replace("assistant",""));
             return choice;
         }

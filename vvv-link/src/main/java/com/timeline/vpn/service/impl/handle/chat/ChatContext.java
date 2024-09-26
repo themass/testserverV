@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.service.strategy.BaseSingleServiceContext;
@@ -33,11 +34,11 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
         }
         throw new RuntimeException("重试3次失败");
     }
-    public Choice transWord(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
+    public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
         Random random = new Random();
         int r = random.nextInt(10);
         try {
-            return getService(r).transWord(baseQuery, content, id, charater);
+            return getService(r).transWord(baseQuery, chatContentForm);
         }catch (Exception e){
             LOGGER.error("大语言模型调用失败",e);
             throw  e;

@@ -26,7 +26,7 @@ public class ChatController extends BaseController {
     @PostMapping(value = "/transword.json")
     public JsonResult transword(@UserInfo BaseQuery baseQuery,
                                @ModelAttribute @Valid PageBaseForm form, @ModelAttribute @Valid ChatContentForm chatContent) throws Exception {
-        return new JsonResult(chatService.transWord(baseQuery, chatContent.getContent(),chatContent.getId(),chatContent.getCharater()));
+        return new JsonResult(chatService.transWord(baseQuery, chatContent));
     }
     @RequestMapping(value = "/sessions.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult sessions(@UserInfo BaseQuery baseQuery) {
