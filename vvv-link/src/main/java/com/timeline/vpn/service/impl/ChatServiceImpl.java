@@ -36,12 +36,18 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
 
     @Override
     public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
-        return chatContext.chatWithGpt(baseQuery, content, id, charater);
+        Choice choice =  chatContext.chatWithGpt(baseQuery, content, id, charater);
+        choice.getMessage().getContent().replace("[assistant]:","");
+        choice.getMessage().getContent().replace("[assistant]","");
+        return choice;
     }
 
     @Override
     public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
-        return chatContext.transWord(baseQuery, chatContentForm);
+        Choice choice =   chatContext.transWord(baseQuery, chatContentForm);
+        choice.getMessage().getContent().replace("[assistant]:","");
+        choice.getMessage().getContent().replace("[assistant]","");
+        return choice;
     }
 
     @Override
