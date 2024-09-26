@@ -36,13 +36,16 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
     }
     public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
         Random random = new Random();
-        int r = random.nextInt(10);
-        try {
-            return getService(r).transWord(baseQuery, chatContentForm);
-        }catch (Exception e){
-            LOGGER.error("大语言模型调用失败",e);
-            throw  e;
+        for(int i =0; i<3;i++) {
+            try {
+                int r = random.nextInt(10);
+                return getService(r).transWord(baseQuery, chatContentForm);
+            } catch (Exception e) {
+                LOGGER.error("大语言模型调用失败-"+i, e);
+                throw e;
+            }
         }
+        throw new RuntimeException("重试3次失败");
     }
 }
 

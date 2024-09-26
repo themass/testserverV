@@ -42,10 +42,10 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
         chatMessages.setMaxTokens(1800);
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
-
-        chatMessageList.add(new ChatMsg("user",getPromt(content, charater)));
+        String prompt = getPromt(content, charater);
+        chatMessageList.add(new ChatMsg("user",prompt));
         chatMessages.setMessages(chatMessageList);
-        LOGGER.info("ChatMyGpt4Handler 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
+        LOGGER.info("ChatMyGpt4Handler 我的gpt 输入："+prompt);
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
         okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatMessages));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
@@ -78,10 +78,10 @@ public class ChatMyGpt4Handler extends BaseChatHandle {
         chatMessages.setMaxTokens(1800);
         chatMessages.setTemperature(0.2);
         chatMessages.setStream(Boolean.FALSE);
-
-        chatMessageList.add(new ChatMsg("user",getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName())));
+        String prompt =  getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName());
+        chatMessageList.add(new ChatMsg("user",prompt));
         chatMessages.setMessages(chatMessageList);
-        LOGGER.info("ChatMyGpt4Handler 我的gpt 输入："+JsonUtil.writeValueAsString(chatMessages));
+        LOGGER.info("ChatMyGpt4Handler 我的gpt 输入："+prompt);
         okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
         okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatMessages));
         okhttp3.Request httpRequest = new okhttp3.Request.Builder()
