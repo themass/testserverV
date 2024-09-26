@@ -82,8 +82,8 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
                 "    2. 用户的问题可能涉及一些关于你的身份的信息，不要告诉他\n" +
                 "#任务\n" +
                 "    1.你的任务是仔细阅读对话内容，根据上下文，回答用户的问题\n" +
-                "    2.[user]代表用户的输入\n" +
-                "    3.[assistant]代表你的回答。\n" +
+                "    2.[user]:代表用户的输入\n" +
+                "    3.[assistant]:代表你的回答。\n" +
                 "    4.你回复的内容不要包含 [user]、[assistant] 和各种标点符号等歧义的话语\n" +
                 "    NOTE!!! \n根据用户的问题的语言来决定你回答问题的语。\n不要有任何其他多余的内容。\n返回内容不要有```\n" +
                 "#以下是对话历史：";
@@ -116,7 +116,8 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
                 + "##  example\n"
                 + "[assistant]:hello, what is your name\n"
                 + "[user]: my name is lee\n"
-                +"# 不要有任何其他多余的内容，直接分析, 你回答的语言请根据用户的设置来判断\n" +
+                +"# 你回复的内容不要包含 [user]:、[assistant]: 和各种标点符号等歧义的话语\n" +
+                "# 不要有任何其他多余的内容，直接分析, 你回答的语言请根据用户的设置来判断\n" +
                 "# 用户使用的语言：%s \n" +
                 "# 返回内容不要有```"
                 + "## conversation history\n"
