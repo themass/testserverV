@@ -37,7 +37,7 @@ public class ChatMyGpt4Handler extends BaseChatHandleProxy {
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
 
         ChatMessages chatMessages = new ChatMessages();
-        chatMessages.setModel("gpt-3.5-turbo");
+        chatMessages.setModel("gpt-4o-mini");
         chatMessages.setTopP(0.5);
         chatMessages.setMaxTokens(1800);
         chatMessages.setTemperature(0.2);
