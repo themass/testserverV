@@ -29,7 +29,7 @@ public class KimiHandler extends BaseChatHandleProxy {
 
     @Override
   public boolean support(Integer t) {
-    return t>4&&t<6;
+    return t>=4&&t<6;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
 
