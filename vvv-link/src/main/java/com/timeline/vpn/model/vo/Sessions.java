@@ -1,5 +1,7 @@
 package com.timeline.vpn.model.vo;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -7,32 +9,12 @@ import java.util.Date;
  * @Date： 2024/8/13 20:24
  * @Describe：
  */
+@Data
 public class Sessions {
     public String name;
     public String setting = "";
     public int type;
+    public long id;
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSetting() {
-        return setting;
-    }
-
-    public void setSetting(String setting) {
-        this.setting = setting;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
 }
