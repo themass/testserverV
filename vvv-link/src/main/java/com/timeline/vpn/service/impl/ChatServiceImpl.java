@@ -60,25 +60,25 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
         sessions2.setName("星座检测");
         sessions2.setType(0);
         sessions2.setSetting("星座检测");
-        sessions1.setId(1001l);
+        sessions2.setId(1001l);
 
         Sessions sessions3 = new Sessions();
         sessions3.setName("红颜知己(Soulmate)");
         sessions3.setType(0);
         sessions3.setSetting("红颜知己");
-        sessions1.setId(1002l);
+        sessions3.setId(1002l);
 
         Sessions sessions4 = new Sessions();
         sessions4.setName("吵架小能手(DebateMaster)");
         sessions4.setType(0);
         sessions4.setSetting("吵架小能手");
-        sessions1.setId(1003l);
+        sessions4.setId(1003l);
 
         Sessions sessions5 = new Sessions();
         sessions5.setName("夸夸怪");
         sessions5.setType(0);
         sessions5.setSetting("夸夸怪");
-        sessions1.setId(1004l);
+        sessions5.setId(1004l);
 
         sessions.add(sessions1);
         sessions.add(sessions2);
