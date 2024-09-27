@@ -76,7 +76,7 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
         sessions5.setSetting("夸夸怪");
 
         sessions.add(sessions1);
-//        sessions.add(sessions2);
+        sessions.add(sessions2);
         sessions.add(sessions3);
         sessions.add(sessions4);
         sessions.add(sessions5);
