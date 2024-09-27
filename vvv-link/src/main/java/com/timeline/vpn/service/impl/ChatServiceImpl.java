@@ -65,10 +65,10 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
         sessions1.setType(0);
         sessions1.setSetting("单词翻译");
 
-//        Sessions sessions2 = new Sessions();
-//        sessions2.setName("星座检测");
-//        sessions2.setType(0);
-//        sessions2.setSetting("星座检测");
+        Sessions sessions2 = new Sessions();
+        sessions2.setName("星座检测");
+        sessions2.setType(0);
+        sessions2.setSetting("星座检测");
 
         Sessions sessions3 = new Sessions();
         sessions3.setName("红颜知己(Soulmate)");
