@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/chat")
 public class ChatController extends BaseController {
     @PostMapping(value = "/nostream.json")
-    public JsonResult nostream(@UserInfo BaseQuery baseQuery,
+    public JsonResult nostream(@UserInfo(required = true) BaseQuery baseQuery,
                                @ModelAttribute @Valid PageBaseForm form, @ModelAttribute @Valid ChatContentForm chatContent) throws Exception {
-        return new JsonResult(chatService.chatWithGpt(baseQuery, chatContent.getContent(),chatContent.getId(),chatContent.getCharater()));
+        return new JsonResult(chatService.chatWithGpt(baseQuery, chatContent));
     }
     @PostMapping(value = "/transword.json")
-    public JsonResult transword(@UserInfo BaseQuery baseQuery,
+    public JsonResult transword(@UserInfo(required = true) BaseQuery baseQuery,
                                @ModelAttribute @Valid PageBaseForm form, @ModelAttribute @Valid ChatContentForm chatContent) throws Exception {
-        return new JsonResult(chatService.transWord(baseQuery, chatContent));
+        return new JsonResult(chatService.chatWithGpt(baseQuery, chatContent));
     }
     @RequestMapping(value = "/sessions.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult sessions(@UserInfo BaseQuery baseQuery) {

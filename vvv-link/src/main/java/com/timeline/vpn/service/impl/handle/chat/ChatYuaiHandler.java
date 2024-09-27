@@ -24,7 +24,7 @@ import java.util.Map;
  * @date 2018年7月31日 下午4:25:18
  */
 @Component
-public class ChatYuaiHandler extends BaseChatHandle {
+public class ChatYuaiHandler extends BaseChatHandleProxy {
     private static final String chatGptUrl = "https://aitogehter-ailesson.openai.azure.com/";
     public static String key = "8d3eb3e0779b4537";
     public static String key2 = "b143232b40b8645e";
@@ -45,7 +45,7 @@ public class ChatYuaiHandler extends BaseChatHandle {
         return t > 8;
     }
 
-    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
+    public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
 
         List<ChatRequestMessage> chatMessages = new ArrayList<>();
         chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
@@ -55,7 +55,6 @@ public class ChatYuaiHandler extends BaseChatHandle {
         chatCompletionsOptions.setMaxTokens(2048);
         chatCompletionsOptions.setTemperature(0.2);
         chatCompletionsOptions.setStream(Boolean.FALSE);
-        String prompt = getPromt(content, charater);
         chatMessages.add(new ChatRequestUserMessage(prompt));
         LOGGER.info("ChatYuaiHandler 与爱 chat 输入 : " + prompt);
         ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o", chatCompletionsOptions);
@@ -63,34 +62,6 @@ public class ChatYuaiHandler extends BaseChatHandle {
         LOGGER.info("ChatYuaiHandler 与爱 chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
         if (vo.getChoices() != null && vo.getChoices().size() > 0) {
             Choice choice = vo.getChoices().get(0);
-            choice.setId(id);
-            choice.getMessage().setContent(choice.getMessage().getContent().replace("user","").replace("assistant",""));
-            return choice;
-        }
-        return null;
-    }
-
-    @Override
-    public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
-        LOGGER.info("ChatYuaiHandler content :" + chatContentForm.getContent() + "； id:" + chatContentForm.getId());
-        List<ChatRequestMessage> chatMessages = new ArrayList<>();
-        chatMessages.add(new ChatRequestSystemMessage("你是一个智能AI小助手"));
-        ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions(chatMessages);
-        chatCompletionsOptions.setModel("gpt-4o");
-        chatCompletionsOptions.setTopP(0.5);
-        chatCompletionsOptions.setMaxTokens(2048);
-        chatCompletionsOptions.setTemperature(0.2);
-        chatCompletionsOptions.setStream(Boolean.FALSE);
-        String prompt = getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName());
-        chatMessages.add(new ChatRequestUserMessage(prompt));
-        LOGGER.info("ChatYuaiHandler 与爱 chat  输入: " + prompt);
-        ChatCompletions chatCompletions = client.getChatCompletions("gpt-4o", chatCompletionsOptions);
-
-        ChatVo vo = JsonUtil.readValue(JsonUtil.writeValueAsString(chatCompletions), ChatVo.class);
-        LOGGER.info("ChatYuaiHandler 与爱 chat 回复 : " + JsonUtil.writeValueAsString(chatCompletions));
-        if (vo.getChoices() != null && vo.getChoices().size() > 0) {
-            Choice choice = vo.getChoices().get(0);
-            choice.setId(chatContentForm.getId());
             choice.getMessage().setContent(choice.getMessage().getContent().replace("user","").replace("assistant",""));
             return choice;
         }

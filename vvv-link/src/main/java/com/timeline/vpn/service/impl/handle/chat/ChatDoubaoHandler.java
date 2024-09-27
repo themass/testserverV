@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
  * @date 2018年7月31日 下午4:25:18
  */
 @Component
-public class ChatDoubaoHandler extends BaseChatHandle {
+public class ChatDoubaoHandler extends BaseChatHandleProxy {
     private static String host = "maas-api.ml-platform-cn-beijing.volces.com";
     private static String region = "cn-beijing";
     private static String  appKey = "AKLTMDIwMGZjZWE2OTU1NGFjOWE3";
@@ -38,35 +38,13 @@ public class ChatDoubaoHandler extends BaseChatHandle {
         return t==4;
     }
 
-    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
-
-//        LOGGER.info("ChatDoubaoHandler content :" + content + "； id:" + id);
-        Api.ChatReq req = buildReq("你是一个智能AI小助手", getPromt(content, charater));
+    public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
+        Api.ChatReq req = buildReq("你是一个智能AI小助手", prompt);
         Api.ChatResp resp = maasService.chat(req);
-        LOGGER.info("ChatDoubaoHandler 豆包 输入："+getPromt(content, charater));
+        LOGGER.info("ChatDoubaoHandler 豆包 输入："+prompt);
         LOGGER.info("ChatDoubaoHandler 豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
         if (resp.getChoice() != null) {
             Choice choice = new Choice();
-            choice.setId(id);
-            Message message = new Message();
-            message.setContent(resp.getChoice().getMessage().getContent().replace("user","").replace("assistant","").replace("[]:",""));
-            message.setRole(resp.getChoice().getMessage().getRole());
-            choice.setMessage(message);
-            return choice;
-        }
-        return null;
-    }
-
-    @Override
-    public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
-        String input = getTransPrompt(chatContentForm.getContent(), baseQuery.getAppInfo().getLang(), chatContentForm.getSettingName());
-        Api.ChatReq req = buildReq("你是一个智能AI小助手", input);
-        Api.ChatResp resp = maasService.chat(req);
-        LOGGER.info("ChatDoubaoHandler 豆包 输入："+input);
-        LOGGER.info("ChatDoubaoHandler 豆包 chat 回复 : " + resp.getChoice().getMessage().getContent());
-        if (resp.getChoice() != null) {
-            Choice choice = new Choice();
-            choice.setId(chatContentForm.getId());
             Message message = new Message();
             message.setContent(resp.getChoice().getMessage().getContent().replace("user","").replace("assistant","").replace("[]:",""));
             message.setRole(resp.getChoice().getMessage().getRole());

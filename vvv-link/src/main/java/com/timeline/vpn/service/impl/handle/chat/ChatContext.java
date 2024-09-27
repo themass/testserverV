@@ -20,29 +20,15 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
     private static final Logger LOGGER =
             LoggerFactory.getLogger(ChatContext.class);
 
-    public Choice chatWithGpt(BaseQuery baseQuery, String content, String id, String charater) throws Exception {
+    public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
         Random random = new Random();
 
         for(int i =0; i<3;i++) {
             try {
                 int r = random.nextInt(10);
-                return getService(r).chatWithGpt(baseQuery, content, id, charater);
+                return getService(r).chatWithGptBase(baseQuery, chatContentForm);
             } catch (Exception e) {
                 LOGGER.error("大语言模型调用失败-"+i, e);
-                throw e;
-            }
-        }
-        throw new RuntimeException("重试3次失败");
-    }
-    public Choice transWord(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
-        Random random = new Random();
-        for(int i =0; i<3;i++) {
-            try {
-                int r = random.nextInt(10);
-                return getService(r).transWord(baseQuery, chatContentForm);
-            } catch (Exception e) {
-                LOGGER.error("大语言模型调用失败-"+i, e);
-                throw e;
             }
         }
         throw new RuntimeException("重试3次失败");

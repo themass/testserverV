@@ -32,10 +32,5 @@ public class TestController extends BaseController {
         map.put("key", "test");
         return new JsonResult(map);
     }
-    @RequestMapping(value = "/testmychat.json", method = {RequestMethod.POST,RequestMethod.GET})
-    public JsonResult testmychat(@UserInfo BaseQuery baseQuery, @RequestParam(name = "content") String content) throws Exception {
-        Choice choice = chatMyGpt4Handler.chatWithGpt(baseQuery, content,"0","");
-        return new JsonResult(choice);
-    }
 }
 
