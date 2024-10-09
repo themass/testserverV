@@ -4,6 +4,7 @@ import cn.hutool.log.Log;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.service.impl.handle.chat.BaseChatHandleProxy;
 import com.timeline.vpn.service.impl.handle.chat.ChatDoubaoHandler;
 import com.timeline.vpn.service.impl.handle.chat.ChatMyGpt4Handler;
 import com.timeline.vpn.service.impl.handle.chat.KimiHandler;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +35,8 @@ public class TestController extends BaseController {
     private KimiHandler chatMyGpt4Handler;
     @Autowired
     private ChatDoubaoHandler chatDoubaoHandler;
+    @Autowired
+    private List<BaseChatHandleProxy> list;
     @RequestMapping(value = "/test.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery) {
         Map<String, String> map = new HashMap<>();
@@ -41,11 +45,21 @@ public class TestController extends BaseController {
     }
     @RequestMapping(value = "/testmychat.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult testmychat(@UserInfo BaseQuery baseQuery, @RequestParam(name = "content") String content) throws Exception {
-        Choice choice = chatMyGpt4Handler.chatWithGpt(baseQuery, content);
-        log.info("kimi="+ JsonUtil.writeValueAsString(choice));
-        choice = chatDoubaoHandler.chatWithGpt(baseQuery, content);
-        log.info("doubao="+ JsonUtil.writeValueAsString(choice));
-        return new JsonResult(choice);
+        list.stream().forEach(o -> {
+            Choice choice = null;
+            try {
+                choice = o.chatWithGpt(baseQuery, content);
+                log.info("实例="+o.getClass().getSimpleName()+" ;content="+ JsonUtil.writeValueAsString(choice));
+            } catch (Exception e) {
+                log.error("实例="+o.getClass().getSimpleName(),e);
+            }
+
+        });
+//        Choice choice = chatMyGpt4Handler.chatWithGpt(baseQuery, content);
+//        log.info("kimi="+ JsonUtil.writeValueAsString(choice));
+//        choice = chatDoubaoHandler.chatWithGpt(baseQuery, content);
+//        log.info("doubao="+ JsonUtil.writeValueAsString(choice));
+        return new JsonResult();
     }
 }
 
