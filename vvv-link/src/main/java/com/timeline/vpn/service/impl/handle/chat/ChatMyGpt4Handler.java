@@ -30,7 +30,7 @@ public class ChatMyGpt4Handler extends BaseChatHandleProxy {
     ;
   @Override
   public boolean support(Integer t) {
-        return  t >= 6 && t <= 8 ;
+        return  t >= 6 && t < 8 ;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
         List<ChatMsg> chatMessageList = new ArrayList<>();
@@ -62,6 +62,11 @@ public class ChatMyGpt4Handler extends BaseChatHandleProxy {
             return choice;
         }
         return null;
+    }
+
+    @Override
+    public boolean isDefault() {
+        return true;
     }
 }
 

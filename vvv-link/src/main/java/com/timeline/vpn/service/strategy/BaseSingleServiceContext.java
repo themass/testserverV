@@ -30,7 +30,7 @@ public abstract class BaseSingleServiceContext<O,T extends BaseSupportHandle<O>>
     }
     public T getService(O support) {
         for (T handle : handles) {
-            if(handle.support(support)&&!handle.isDefault()){
+            if(handle.support(support)){
                 LOGGER.info("获取handle ：{}",handle.getClass().getName());
                 return handle;
             }
