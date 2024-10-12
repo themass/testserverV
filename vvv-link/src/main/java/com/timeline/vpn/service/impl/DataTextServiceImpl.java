@@ -82,6 +82,7 @@ public class DataTextServiceImpl implements DataTextService {
             LOGGER.error("没找到 TextItemPo fileUrl= "+po.toString());
             throw new DataException();
         }
+        itemPo.setFile(itemPo.getFile().replace("book18.org",""));
         return VoBuilder.buildVo(itemPo, TextItemVo.class, null);
     }
 
