@@ -54,12 +54,14 @@ public class ChatQwenHandler extends BaseChatHandleProxy {
         try {
             gen = aliLlmGenericObjectPool.borrowObject();
             GenerationResult result = gen.call(param);
+            LOGGER.info("ChatQwenHandler ali 输入："+prompt);
             for (GenerationOutput.Choice choices : result.getOutput().getChoices()) {
                 Choice choice = new Choice();
                 com.timeline.vpn.model.vo.Message message = new com.timeline.vpn.model.vo.Message();
                 message.setContent(choices.getMessage().getContent().toString().replace("user", "").replace("assistant", "").replace("[]:", ""));
                 message.setRole(choices.getMessage().getRole().toString());
                 choice.setMessage(message);
+                LOGGER.info("ChatQwenHandler ali chat 回复 : " + message.getContent());
                 return choice;
             }
         } catch (Exception e) {
