@@ -4,10 +4,7 @@ import cn.hutool.log.Log;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.JsonResult;
-import com.timeline.vpn.service.impl.handle.chat.BaseChatHandleProxy;
-import com.timeline.vpn.service.impl.handle.chat.ChatDoubaoHandler;
-import com.timeline.vpn.service.impl.handle.chat.ChatMyGpt4Handler;
-import com.timeline.vpn.service.impl.handle.chat.KimiHandler;
+import com.timeline.vpn.service.impl.handle.chat.*;
 import com.timeline.vpn.util.JsonUtil;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
@@ -36,6 +33,8 @@ public class TestController extends BaseController {
     @Autowired
     private ChatDoubaoHandler chatDoubaoHandler;
     @Autowired
+    private ChatGeminiHandler chatGeminiHandler;
+    @Autowired
     private List<BaseChatHandleProxy> list;
     @RequestMapping(value = "/test.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery) {
@@ -45,18 +44,18 @@ public class TestController extends BaseController {
     }
     @RequestMapping(value = "/testmychat.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult testmychat(@UserInfo BaseQuery baseQuery, @RequestParam(name = "content") String content) throws Exception {
-        list.stream().forEach(o -> {
-            Choice choice = null;
-            try {
-                choice = o.chatWithGpt(baseQuery, content);
-                log.info("实例="+o.getClass().getSimpleName()+" ;content="+ JsonUtil.writeValueAsString(choice));
-            } catch (Exception e) {
-                log.error("实例="+o.getClass().getSimpleName(),e);
-            }
-
-        });
-//        Choice choice = chatMyGpt4Handler.chatWithGpt(baseQuery, content);
-//        log.info("kimi="+ JsonUtil.writeValueAsString(choice));
+//        list.stream().forEach(o -> {
+//            Choice choice = null;
+//            try {
+//                choice = o.chatWithGpt(baseQuery, content);
+//                log.info("实例="+o.getClass().getSimpleName()+" ;content="+ JsonUtil.writeValueAsString(choice));
+//            } catch (Exception e) {
+//                log.error("实例="+o.getClass().getSimpleName(),e);
+//            }
+//
+//        });
+        Choice choice = chatGeminiHandler.chatWithGpt(baseQuery, content);
+        log.info("kimi="+ JsonUtil.writeValueAsString(choice));
 //        choice = chatDoubaoHandler.chatWithGpt(baseQuery, content);
 //        log.info("doubao="+ JsonUtil.writeValueAsString(choice));
         return new JsonResult();

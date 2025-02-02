@@ -59,7 +59,7 @@ public class JsonUtil {
     try {
       return getMapper().readValue(info, t);
     } catch (Exception e) {
-      LOGGER.error("json util error:" + info + "->" + t.getName());
+      LOGGER.error("json util error:" + info + "->" + t.getName(),e);
       return null;
     }
   }
