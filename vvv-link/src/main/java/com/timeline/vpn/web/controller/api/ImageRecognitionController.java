@@ -21,7 +21,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/ai")
+@RequestMapping("/api/chat/ai")
 @Slf4j
 public class ImageRecognitionController extends BaseController {
 

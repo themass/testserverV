@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
                         po.setUserName(userName);
                         po.setLongitude(appInfo.getLon());
                         po.setLatitude(appInfo.getLat());
-                        po.setuHist(userName + ",");
+                        po.setuHist("--");
                         po.setExt(appInfo.getUa().substring(0,
                                 Math.min(2000, appInfo.getUa().length())));
                         if (StringUtils.isEmpty(appInfo.getNetType())) {
@@ -104,8 +104,8 @@ public class UserServiceImpl implements UserService {
                         po.setVersion(appInfo.getVersion());
                         if (!StringUtils.isEmpty(userName)) {
                             po.setUserName(userName);
-                            po.setuHist(po.getuHist().replace(userName + ",", ""));
-                            po.setuHist(po.getuHist() + userName + ",");
+                            po.setuHist("--");
+                            po.setuHist("--");
                             // LOGGER.warn(userName+"->"+po.getuHist()+"->"+appInfo.getUa());
                         }
                         po.setLongitude(appInfo.getLon());
