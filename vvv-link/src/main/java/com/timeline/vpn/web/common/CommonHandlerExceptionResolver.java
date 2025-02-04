@@ -82,7 +82,7 @@ public class CommonHandlerExceptionResolver {
                 LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
             }
         }
-        LOGGER.error("error url=" + requestUrl+"; error ="+ex.toString());
+        LOGGER.error("error url=" + requestUrl, ex);
 //        result.setError("系统正在进行升级，请稍等再用");
         // result.setData(new Object());
         return result;

