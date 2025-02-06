@@ -49,7 +49,7 @@ public class CostHandlerInterceptor implements HandlerInterceptor {
                 long costTime = endTime - startTimeThreadLocal.get();
                 JsonResult result = (JsonResult) map.get(JsonResult.MODEL_KEY);
                 result.setCost(costTime);
-//                LOGGER.info(String.format(request.getServletPath()+"[%s],[ua=%s]cost:%s", request.getQueryString(),HttpCommonUtil.getHeaderStr(request),costTime));
+                LOGGER.info(String.format(request.getServletPath()+"[%s],[ua=%s]cost:%s", request.getQueryString(),HttpCommonUtil.getHeaderStr(request),costTime));
 //                String uri=request.getRequestURI();
 //                Metrics.time(MetricsName.http(uri),
 //                        costTime);

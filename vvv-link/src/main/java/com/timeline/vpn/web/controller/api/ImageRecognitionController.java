@@ -26,7 +26,8 @@ public class ImageRecognitionController extends BaseController {
     private VisionContext visionContext;
     @PostMapping(value = "/recognize.json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public JsonResult recognizeImage(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam("image") MultipartFile file) {
-            Choice choice = visionContext.chatWithGpt(baseQuery, chatContent, file);
+        log.info("请求参数"+JsonUtil.writeValueAsString(chatContent));
+        Choice choice = visionContext.chatWithGpt(baseQuery, chatContent, file);
             return new JsonResult(choice);
     }
 
