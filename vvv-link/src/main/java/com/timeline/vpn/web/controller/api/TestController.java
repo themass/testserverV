@@ -29,7 +29,7 @@ import java.util.Map;
 @Slf4j
 public class TestController extends BaseController {
     @Autowired
-    private KimiHandler chatMyGpt4Handler;
+    private ChatDeepseekHandler chatDeepseekHandler;
     @Autowired
     private ChatDoubaoHandler chatDoubaoHandler;
     @Autowired
@@ -54,11 +54,11 @@ public class TestController extends BaseController {
 //            }
 //
 //        });
-        Choice choice = chatGeminiHandler.chatWithGpt(baseQuery, content);
+        Choice choice = chatDeepseekHandler.chatWithGpt(baseQuery, content);
         log.info("kimi="+ JsonUtil.writeValueAsString(choice));
 //        choice = chatDoubaoHandler.chatWithGpt(baseQuery, content);
 //        log.info("doubao="+ JsonUtil.writeValueAsString(choice));
-        return new JsonResult();
+        return new JsonResult(choice);
     }
 }
 

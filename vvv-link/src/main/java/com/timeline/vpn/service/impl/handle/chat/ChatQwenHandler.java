@@ -32,7 +32,7 @@ public class ChatQwenHandler extends BaseChatHandleProxy {
     private GenericObjectPool<Generation> aliLlmGenericObjectPool;
     @Override
     public boolean support(Integer t) {
-        return  t > 8;
+        return  t > 8 & t<10;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
