@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl.handle.picversion;
 
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.chat.ChatPicMessages;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -46,13 +47,16 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
         builder.connectionPool(new okhttp3.ConnectionPool(maxIdleConnections, keepAliveDuration, TimeUnit.SECONDS));
         httpClient = builder.build();
     }
+    private String zhText = "请描述图片的内容。";
+    private String enText = "What is in this image?";
 
     public Choice chatWithGptBase(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file) throws Exception {
         savePic(baseQuery, file);
-        return chatWithGpt(baseQuery, chatContentForm, file);
+        String text = Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())?zhText:enText;
+        return chatWithGpt(baseQuery, chatContentForm, file, text);
     }
 
-    public abstract Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file) throws Exception;
+    public abstract Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file, String text) throws Exception;
 
     @Override
     public boolean isDefault() {

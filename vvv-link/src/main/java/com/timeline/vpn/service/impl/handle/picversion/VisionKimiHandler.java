@@ -29,8 +29,8 @@ public class VisionKimiHandler extends BaseVisionHandleProxy {
         return t < 5;
     }
 
-    public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file) throws Exception {
-        Choice choice = process(file, url, model, apiKey + apiKey2 + apiKey1, "请描述图片的内容。");
+    public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file, String text) throws Exception {
+        Choice choice = process(file, url, model, apiKey + apiKey2 + apiKey1, text);
         choice.setId(chatContentForm.getId());
         log.info("VisionKimiHandler");
         return choice;
