@@ -25,7 +25,7 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
 
         for(int i =0; i<3;i++) {
             try {
-                int r = random.nextInt(12);
+                int r = random.nextInt(10);
                 return getService(r).chatWithGptBase(baseQuery, chatContentForm);
             } catch (Exception e) {
                 LOGGER.error("大语言模型调用失败-"+i, e);
