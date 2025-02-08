@@ -60,6 +60,7 @@ public class KimiHandler extends BaseChatHandleProxy {
         LOGGER.info("KimiHandler 我的gpt  chat 回复 : "+res);
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
+            choice.setProd("KimiHandler");
             return choice;
         }
         return null;

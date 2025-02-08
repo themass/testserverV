@@ -56,6 +56,7 @@ public class ChatDevctoDeepSeekHandler extends BaseChatHandleProxy {
         LOGGER.info("ChatDevctoDeepSeekHandler Devcto-deepseek  chat 回复 : "+vo.getChoices());
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
+            choice.setProd("ChatDevctoDeepSeekHandler");
             return choice;
         }
         return null;

@@ -56,6 +56,7 @@ public class ChatDoubaoHandler extends BaseChatHandleProxy {
             message.setContent(choices.getMessage().getContent().toString().replace("user","").replace("assistant","").replace("[]:",""));
             message.setRole(choices.getMessage().getRole().toString());
             choice.setMessage(message);
+            choice.setProd("ChatDoubaoHandler");
             return choice;
 
         }

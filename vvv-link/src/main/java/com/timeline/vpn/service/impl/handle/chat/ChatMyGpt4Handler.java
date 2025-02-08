@@ -59,6 +59,7 @@ public class ChatMyGpt4Handler extends BaseChatHandleProxy {
         LOGGER.info("ChatMyGpt4Handler 我的gpt  chat 回复 : "+vo.getChoices());
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
+            choice.setProd("ChatMyGpt4Handler");
             return choice;
         }
         return null;

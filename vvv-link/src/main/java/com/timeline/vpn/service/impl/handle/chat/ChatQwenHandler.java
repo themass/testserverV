@@ -62,6 +62,7 @@ public class ChatQwenHandler extends BaseChatHandleProxy {
                 message.setRole(choices.getMessage().getRole().toString());
                 choice.setMessage(message);
                 LOGGER.info("ChatQwenHandler ali chat 回复 : " + message.getContent());
+                choice.setProd("ChatQwenHandler");
                 return choice;
             }
         } catch (Exception e) {

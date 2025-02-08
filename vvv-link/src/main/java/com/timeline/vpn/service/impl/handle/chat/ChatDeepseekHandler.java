@@ -56,6 +56,7 @@ public class ChatDeepseekHandler extends BaseChatHandleProxy {
         LOGGER.info("ChatDeepseekHandler 我的gpt  chat 回复 : "+vo.getChoices());
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
+            choice.setProd("ChatDeepseekHandler");
             return choice;
         }
         return null;

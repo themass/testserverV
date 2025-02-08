@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,21 +45,22 @@ public class TestController extends BaseController {
     }
     @RequestMapping(value = "/testmychat.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult testmychat(@UserInfo BaseQuery baseQuery, @RequestParam(name = "content") String content) throws Exception {
-//        list.stream().forEach(o -> {
-//            Choice choice = null;
-//            try {
-//                choice = o.chatWithGpt(baseQuery, content);
-//                log.info("实例="+o.getClass().getSimpleName()+" ;content="+ JsonUtil.writeValueAsString(choice));
-//            } catch (Exception e) {
-//                log.error("实例="+o.getClass().getSimpleName(),e);
-//            }
-//
-//        });
-        Choice choice = chatDeepseekHandler.chatWithGpt(baseQuery, content);
-        log.info("kimi="+ JsonUtil.writeValueAsString(choice));
+        List<Choice> listC = new ArrayList<>();
+        list.stream().forEach(o -> {
+            try {
+                Choice  choice = o.chatWithGpt(baseQuery, content);
+                listC.add(choice);
+                log.info("实例="+o.getClass().getSimpleName()+" ;content="+ JsonUtil.writeValueAsString(choice));
+            } catch (Exception e) {
+                log.error("实例="+o.getClass().getSimpleName(),e);
+            }
+
+        });
+//        Choice choice = chatDeepseekHandler.chatWithGpt(baseQuery, content);
+//        log.info("kimi="+ JsonUtil.writeValueAsString(choice));
 //        choice = chatDoubaoHandler.chatWithGpt(baseQuery, content);
 //        log.info("doubao="+ JsonUtil.writeValueAsString(choice));
-        return new JsonResult(choice);
+        return new JsonResult(listC);
     }
 }
 

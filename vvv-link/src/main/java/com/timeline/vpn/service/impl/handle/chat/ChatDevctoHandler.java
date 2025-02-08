@@ -56,6 +56,7 @@ public class ChatDevctoHandler extends BaseChatHandleProxy {
         LOGGER.info("ChatDevctoHandler Devcto  chat 回复 : "+vo.getChoices());
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);
+            choice.setProd("ChatDevctoHandler");
             return choice;
         }
         return null;

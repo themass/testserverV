@@ -1,12 +1,15 @@
 package com.timeline.vpn.model.vo;
 
+import lombok.ToString;
+
+@ToString
 public class Choice {
     private String id;
     private int index;
     private Message message;
     private String logprobs;
     private String finish_reason;
-
+    private String prod;
     public Choice() {
     }
 
@@ -57,13 +60,12 @@ public class Choice {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "Choice{" +
-                "index=" + index +
-                ", message=" + message +
-                ", logprobs='" + logprobs + '\'' +
-                ", finish_reason='" + finish_reason + '\'' +
-                '}';
+    public String getProd() {
+        return prod;
     }
+
+    public void setProd(String prod) {
+        this.prod = prod;
+    }
+
 }

@@ -59,6 +59,7 @@ public class ChatGeminiHandler extends BaseChatHandleProxy {
             message.setContent(text.getText());
             choice.setMessage(message);
             LOGGER.info("ChatGeminiHandler Gemini  chat 回复 : "+text.getText());
+            choice.setProd("ChatGeminiHandler");
             return choice;
         }
         return null;
