@@ -22,7 +22,7 @@ public class BytedanceAsrService extends BaseAsrHandleProxy {
     String appid = "4319026663";  // 项目的 appid
     String token = "YJYBl-jGgkv-AZfQrwObHWfbwa5w3aAX";  // 项目的 token
     String cluster = "volcengine_input_common";  // 请求的集群
-    String audio_format = "mp3";  // wav 或者 mp3, 根据音频类型设置
+    String audio_format = "wav";  // wav 或者 mp3, 根据音频类型设置
 
     @Override
     public AsrResponseVo asrHandler(BaseQuery baseQuery, AsrContentForm asrContentForm) throws Exception {
