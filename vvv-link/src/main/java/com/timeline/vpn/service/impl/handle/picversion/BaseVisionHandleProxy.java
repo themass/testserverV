@@ -32,7 +32,7 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
     protected static final Logger LOGGER =
             LoggerFactory.getLogger(BaseVisionHandleProxy.class);
 
-    private static final String UPLOAD_DIR = "/home/web/webroot/files";
+
     static OkHttpClient.Builder builder = new OkHttpClient.Builder();
     public static okhttp3.OkHttpClient httpClient;
 
@@ -66,9 +66,9 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
     public static void savePic(BaseQuery baseQuery, MultipartFile file) {
         try {
             String fileName = baseQuery.getUser().getName() + "_" + UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR, fileName);
+            Path filePath = Paths.get(Constant.UPLOAD_DIR, fileName);
             // 创建上传目录（如果不存在）
-            File uploadDir = new File(UPLOAD_DIR);
+            File uploadDir = new File(Constant.UPLOAD_DIR);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }

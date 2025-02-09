@@ -172,4 +172,6 @@ public class Constant {
     public static final String APPID = "4966581804";
     public static final String TOKEN = "Bearer;yT2m2hVfJjhy79G6MfTB4Jv3X7JRpGs7";
     public static final String ASR_DEFAULT_CLUSTER = "volcengine_input_common";
+
+    public static final String UPLOAD_DIR = "/home/web/webroot/files";
 }
