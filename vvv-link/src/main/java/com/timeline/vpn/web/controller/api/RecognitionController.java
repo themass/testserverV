@@ -33,7 +33,7 @@ public class RecognitionController extends BaseController {
         Choice choice = visionContext.chatWithGpt(baseQuery, chatContent, file);
             return new JsonResult(choice);
     }
-    @PostMapping(value = "/asr.json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/asr.json")
     public JsonResult recognizeVoice(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid AsrContentForm asrContentForm) {
         log.info("请求参数 :"+asrContentForm.getId()+";"+asrContentForm.getContent().length());
         AsrResponseVo asrResponseVo = asrContext.asrHandler(baseQuery, asrContentForm);
