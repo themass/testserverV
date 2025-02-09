@@ -1,10 +1,9 @@
-package com.timeline.vpn.common.service.impl.tts;
+package com.timeline.vpn.service.impl.handle.tts;
 
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.common.config.OssConfig;
 import com.timeline.vpn.common.exception.BusinessException;
-import com.timeline.vpn.common.service.OssService;
-import com.timeline.vpn.common.service.impl.tts.dto.OssRequest;
+import com.timeline.vpn.service.impl.handle.tts.dto.OssRequest;
 import com.volcengine.tos.TOSV2;
 import com.volcengine.tos.TOSV2ClientBuilder;
 import com.volcengine.tos.model.object.PutObjectInput;

@@ -1,18 +1,21 @@
-package com.timeline.vpn.common.service.impl.tts;
+package com.timeline.vpn.service.impl.handle.tts;
 
 import com.timeline.vpn.common.annotation.MethodTimed;
-import com.timeline.vpn.common.config.TtsSupplierConfig;
-import com.timeline.vpn.common.config.TtsVolcengineConfig;
 import com.timeline.vpn.common.constant.GlobalConstant;
 import com.timeline.vpn.common.exception.BusinessException;
-import com.timeline.vpn.common.service.TtsService;
-import com.timeline.vpn.common.service.impl.tts.dto.BytedanceTtsRequest;
-import com.timeline.vpn.common.service.impl.tts.dto.TtsConfig;
-import com.timeline.vpn.common.service.impl.tts.dto.TtsVolcResponse;
+import com.timeline.vpn.common.utils.Base64Util;
+import com.timeline.vpn.model.form.AsrContentForm;
+import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.vo.TtsResponseVo;
+import com.timeline.vpn.service.impl.handle.tts.dto.BytedanceTtsRequest;
+import com.timeline.vpn.service.impl.handle.tts.dto.TtsConfig;
+import com.timeline.vpn.service.impl.handle.tts.dto.TtsVolcResponse;
 import com.timeline.vpn.common.utils.JacksonJsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 /**
  * @Author： liguoqing
@@ -22,18 +25,26 @@ import org.springframework.stereotype.Service;
 @Service("bytedanceTtsService")
 @Slf4j
 @MethodTimed
-public class BytedanceTtsServiceImpl implements TtsService {
+public class BytedanceTtsServiceImpl extends BaseTtsHandleProxy {
     @Autowired
     private BytedanceOpenSpeechApi bytedanceOpenSpeechApi;
-    @Autowired
-    private TtsSupplierConfig ttSsupplierConfig;
     private static int VOLCENGINE_SUCCESS = 3000;
-
+    private static TtsConfig ttsConfig = new TtsConfig();
+    static {
+        ttsConfig.setAppid("4319026663");
+        ttsConfig.setTextType("plain");
+        ttsConfig.setEncoding("wav");
+        ttsConfig.setSampleRate(48000);
+        ttsConfig.setUid("388808087185088");
+        ttsConfig.setVoiceType("BV001_streaming");
+        ttsConfig.setCluster("volcano_tts");
+        ttsConfig.setToken("YJYBl-jGgkv-AZfQrwObHWfbwa5w3aAX");
+        ttsConfig.setEmotion("happy");
+    }
     @Override
-    public TtsVolcResponse textToVideo(String name, String text) {
-
-        TtsVolcengineConfig ttsVolcengineConfig = ttSsupplierConfig.getActiveConfig();
-        TtsConfig ttsConfig = ttsVolcengineConfig.getActiveConfig();
+    public TtsResponseVo textToVideo(BaseQuery baseQuery, AsrContentForm asrContentForm){
+        String name = baseQuery.getUser().getName()+"_"+ UUID.randomUUID()+".wav";
+        String text = asrContentForm.getContent();
         BytedanceTtsRequest bytedanceTtsRequest = new BytedanceTtsRequest();
         bytedanceTtsRequest.getUser().setUid(ttsConfig.getUid());
         bytedanceTtsRequest.getApp().setAppid(ttsConfig.getAppid());
@@ -56,14 +67,17 @@ public class BytedanceTtsServiceImpl implements TtsService {
         if (GlobalConstant.SSML.equals(ttsConfig.getTextType())) { //ssml协议
             text = textToSSML(text);
         }
-        log.info("tts 厂商：{}; 声音:{}; name:{}; 请求：{}", ttSsupplierConfig.getActive(), ttsVolcengineConfig.getActive(), name, text);
         log.info(JacksonJsonUtil.toJsonStr(bytedanceTtsRequest));
         TtsVolcResponse response = bytedanceOpenSpeechApi.getTts("Bearer;" + bytedanceTtsRequest.getToken(), bytedanceTtsRequest);
-        log.info("tts 厂商：{}; 声音:{}; name:{}; 返回值：{}", ttSsupplierConfig.getActive(), ttsVolcengineConfig.getActive(), name, response.getCode());
         if (VOLCENGINE_SUCCESS != response.getCode()) {
             throw new BusinessException("字节语音合成失败");
         }
-        return response;
+        TtsResponseVo ttsResponseVo = new TtsResponseVo();
+        ttsResponseVo.setId(asrContentForm.getId());
+        ttsResponseVo.setLang(baseQuery.getAppInfo().getLang());
+        ttsResponseVo.setFileName(name);
+        ttsResponseVo.setData(response.getData());
+        return ttsResponseVo;
     }
 
     @Override
@@ -76,5 +90,10 @@ public class BytedanceTtsServiceImpl implements TtsService {
                 "  </prosody>\n" +
                 "</speak>";
         return ssmltemp.replace("#{mytext}", text);
+    }
+
+    @Override
+    public boolean support(Integer integer) {
+        return true;
     }
 }

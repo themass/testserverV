@@ -1,4 +1,4 @@
-package com.timeline.vpn.common.service.impl.tts;
+package com.timeline.vpn.service.impl.handle.tts;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -11,14 +11,14 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.http.ProtocolType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.timeline.vpn.common.annotation.MethodTimed;
-import com.timeline.vpn.common.config.TtsSupplierConfig;
-import com.timeline.vpn.common.config.TtsVolcengineConfig;
 import com.timeline.vpn.common.constant.GlobalConstant;
 import com.timeline.vpn.common.exception.BusinessException;
-import com.timeline.vpn.common.service.TtsService;
-import com.timeline.vpn.common.service.impl.tts.dto.AliTtsRequest;
-import com.timeline.vpn.common.service.impl.tts.dto.TtsConfig;
-import com.timeline.vpn.common.service.impl.tts.dto.TtsVolcResponse;
+import com.timeline.vpn.model.form.AsrContentForm;
+import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.vo.TtsResponseVo;
+import com.timeline.vpn.service.impl.handle.tts.dto.AliTtsRequest;
+import com.timeline.vpn.service.impl.handle.tts.dto.TtsConfig;
+import com.timeline.vpn.service.impl.handle.tts.dto.TtsVolcResponse;
 import com.timeline.vpn.common.utils.Base64Util;
 import com.timeline.vpn.common.utils.JacksonJsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +28,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service("aliTtsService")
 @Slf4j
 @MethodTimed
-public class AliTtsServiceImpl implements TtsService {
+public class AliTtsServiceImpl extends BaseTtsHandleProxy {
     // 您的地域ID
     private static final String REGIONID = "cn-shanghai";
     // 获取Token服务域名
@@ -46,20 +47,24 @@ public class AliTtsServiceImpl implements TtsService {
     private static final String KEY_TOKEN = "Token";
     private static final String KEY_ID = "Id";
     private static final String KEY_EXPIRETIME = "ExpireTime";
-    @Autowired
-    private TtsSupplierConfig ttSsupplierConfig;
     private static String AI_LSESSION_ALI_TTS_TOKEN = "AI_LSESSION:ALI_TTS_TOKEN";
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
+    private static TtsConfig ttsConfig = new TtsConfig();
+    static {
+        ttsConfig.setAppid("");
+        ttsConfig.setTextType("plain");
+        ttsConfig.setEncoding("wav");
+        ttsConfig.setSampleRate(48000);
+        ttsConfig.setUid("sambert-chatonemen-ft-202404171553-07a7");
+    }
     /**
      * HTTPS POST 请求
      */
     @Override
-    public TtsVolcResponse textToVideo(String name, String text) {
-        TtsVolcengineConfig ttsVolcengineConfig = ttSsupplierConfig.getActiveConfig();
-        TtsConfig ttsConfig = ttsVolcengineConfig.getActiveConfig();
+    public TtsResponseVo textToVideo(BaseQuery baseQuery, AsrContentForm chatContentForm){
+        String text = chatContentForm.getContent();
         if (GlobalConstant.SSML.equals(ttsConfig.getTextType())) { //ssml协议
             text = textToSSML(text);
         }
@@ -71,7 +76,6 @@ public class AliTtsServiceImpl implements TtsService {
         aliTtsRequest.setToken(getToken(ttsConfig.getAppKey(), ttsConfig.getAppKeySt()));
         aliTtsRequest.setSampleRate(ttsConfig.getSampleRate());
         aliTtsRequest.setVoice(ttsConfig.getUid());
-        log.info("tts 厂商：{}; 声音:{}; name:{}; 请求：{}", ttSsupplierConfig.getActive(), ttsVolcengineConfig.getActive(), name, JacksonJsonUtil.toJsonStr(aliTtsRequest));
         RequestBody reqBody = RequestBody.create(MediaType.parse("application/json"), JacksonJsonUtil.toJsonStr(aliTtsRequest));
         Request request = new Request.Builder()
                 .url(ttsConfig.getUrl())
@@ -84,10 +88,12 @@ public class AliTtsServiceImpl implements TtsService {
             response = client.newCall(request).execute();
             String contentType = response.header("Content-Type");
             if ("audio/mpeg".equals(contentType)) {
-                TtsVolcResponse ttsVolcResponse = new TtsVolcResponse();
-                ttsVolcResponse.setData(Base64Util.encodeBase64(response.body().bytes()));
-                log.info("tts 厂商：{}; 声音:{}; name:{}; 返回值：{}", ttSsupplierConfig.getActive(), ttsVolcengineConfig.getActive(), name, contentType);
-                return ttsVolcResponse;
+                TtsResponseVo ttsResponseVo = new TtsResponseVo();
+                ttsResponseVo.setId(chatContentForm.getId());
+                ttsResponseVo.setLang(baseQuery.getAppInfo().getLang());
+                ttsResponseVo.setFileName(baseQuery.getUser().getName()+"_"+ UUID.randomUUID()+".wav");
+                ttsResponseVo.setData(Base64Util.encodeBase64(response.body().bytes()));
+                return ttsResponseVo;
             } else {
                 // ContentType 为 null 或者为 "application/json"
                 String errorMessage = response.body().string();
@@ -150,4 +156,8 @@ public class AliTtsServiceImpl implements TtsService {
         }
     }
 
+    @Override
+    public boolean support(Integer integer) {
+        return false;
+    }
 }

@@ -7,19 +7,21 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.AsrResponseVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.model.vo.TtsResponseVo;
 import com.timeline.vpn.service.impl.handle.asr.AsrContext;
 import com.timeline.vpn.service.impl.handle.chat.*;
+import com.timeline.vpn.service.impl.handle.tts.TtsContext;
+import com.timeline.vpn.test.java.demo.TtsVolcResponse;
 import com.timeline.vpn.util.JsonUtil;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -42,6 +44,8 @@ public class TestController extends BaseController {
     private List<BaseChatHandleProxy> list;
     @Autowired
     private AsrContext asrContext;
+    @Autowired
+    private TtsContext ttsContext;
     @RequestMapping(value = "/test.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery) {
         Map<String, String> map = new HashMap<>();
@@ -82,6 +86,19 @@ public class TestController extends BaseController {
         asrContentForm.setContent(Base64Util.encodeBase64(data));
         AsrResponseVo asrResponseVo = asrContext.asrHandler(baseQuery, asrContentForm);
         return new JsonResult(asrResponseVo);
+    }
+    @RequestMapping(value = "/testtts.json")
+    public JsonResult tts(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid AsrContentForm asrContentForm) {
+        log.info("请求参数 :"+asrContentForm.getId()+";"+asrContentForm.getContent().length());
+        TtsResponseVo ttsResponseVo = ttsContext.ttsHandler(baseQuery, asrContentForm);
+        String filePath = "/Users/liguoqing/Downloads/test/example.mp3";
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            fos.write(Base64Util.decodeBase64(ttsResponseVo.getData())); // 写入数据
+            System.out.println("Data written to file successfully.");
+        } catch (IOException e) {
+            e.printStackTrace(); // 打印异常信息
+        }
+        return new JsonResult(ttsResponseVo);
     }
 }
 

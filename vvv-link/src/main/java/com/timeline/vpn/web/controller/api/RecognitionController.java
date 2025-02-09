@@ -6,8 +6,10 @@ import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.AsrResponseVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.model.vo.TtsResponseVo;
 import com.timeline.vpn.service.impl.handle.asr.AsrContext;
 import com.timeline.vpn.service.impl.handle.picversion.VisionContext;
+import com.timeline.vpn.service.impl.handle.tts.TtsContext;
 import com.timeline.vpn.util.JsonUtil;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
@@ -27,6 +29,8 @@ public class RecognitionController extends BaseController {
     private VisionContext visionContext;
     @Autowired
     private AsrContext asrContext;
+    @Autowired
+    private TtsContext ttsContext;
     @PostMapping(value = "/recognize.json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public JsonResult recognizeImage(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam("image") MultipartFile file) {
         log.info("请求参数"+JsonUtil.writeValueAsString(chatContent));
@@ -38,5 +42,11 @@ public class RecognitionController extends BaseController {
         log.info("请求参数 :"+asrContentForm.getId()+";"+asrContentForm.getContent().length());
         AsrResponseVo asrResponseVo = asrContext.asrHandler(baseQuery, asrContentForm);
         return new JsonResult(asrResponseVo);
+    }
+    @PostMapping(value = "/tts.json")
+    public JsonResult tts(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid AsrContentForm asrContentForm) {
+        log.info("请求参数 :"+asrContentForm.getId()+";"+asrContentForm.getContent().length());
+        TtsResponseVo ttsResponseVo = ttsContext.ttsHandler(baseQuery, asrContentForm);
+        return new JsonResult(ttsResponseVo);
     }
 }

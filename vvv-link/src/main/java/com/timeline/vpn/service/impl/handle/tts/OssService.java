@@ -1,6 +1,6 @@
-package com.timeline.vpn.common.service;
+package com.timeline.vpn.service.impl.handle.tts;
 
-import com.timeline.vpn.common.service.impl.tts.dto.OssRequest;
+import com.timeline.vpn.service.impl.handle.tts.dto.OssRequest;
 
 /**
  * @Author： liguoqing

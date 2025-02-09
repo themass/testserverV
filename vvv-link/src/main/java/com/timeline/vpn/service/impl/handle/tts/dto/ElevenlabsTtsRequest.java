@@ -1,4 +1,4 @@
-package com.timeline.vpn.common.service.impl.tts.dto;
+package com.timeline.vpn.service.impl.handle.tts.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
