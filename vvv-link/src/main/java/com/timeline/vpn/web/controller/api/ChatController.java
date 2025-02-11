@@ -36,6 +36,5 @@ public class ChatController extends BaseController {
     public JsonResult sessions(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(chatService.sessions(baseQuery));
     }
-
 }
 

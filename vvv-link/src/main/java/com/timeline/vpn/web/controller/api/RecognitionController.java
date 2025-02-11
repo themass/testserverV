@@ -2,6 +2,7 @@ package com.timeline.vpn.web.controller.api;
 
 import com.timeline.vpn.model.form.AsrContentForm;
 import com.timeline.vpn.model.form.ChatContentForm;
+import com.timeline.vpn.model.form.FeedbackContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.AsrResponseVo;
 import com.timeline.vpn.model.vo.Choice;
@@ -48,5 +49,10 @@ public class RecognitionController extends BaseController {
         log.info("请求参数 :"+asrContentForm.getId()+";"+asrContentForm.getContent().length());
         TtsResponseVo ttsResponseVo = ttsContext.ttsHandler(baseQuery, asrContentForm);
         return new JsonResult(ttsResponseVo);
+    }
+    @PostMapping(value = "/feedback.json")
+    public JsonResult feedback(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid FeedbackContentForm form) {
+        log.info("用户反馈 :"+form);
+        return new JsonResult();
     }
 }
