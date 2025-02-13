@@ -1,10 +1,7 @@
 package com.timeline.vpn.web.controller.api;
 
 import com.timeline.vpn.Constant;
-import com.timeline.vpn.model.form.CustomeAddForm;
-import com.timeline.vpn.model.form.LoginForm;
-import com.timeline.vpn.model.form.UserEmailForm;
-import com.timeline.vpn.model.form.UserRegForm;
+import com.timeline.vpn.model.form.*;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.web.common.resolver.UserInfo;
@@ -35,6 +32,12 @@ public class UserController extends BaseController {
     public JsonResult findpass(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserEmailForm form) {
 //        userService.reg(form, baseQuery.getAppInfo());
         //TODO 找回密码 发送邮件
+        return Constant.RESULT_SUCCESS;
+    }
+    @RequestMapping(value = "/del.json", method = RequestMethod.POST)
+    public JsonResult del(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserDelForm form) {
+//        userService.reg(form, baseQuery.getAppInfo());
+        userService.del(baseQuery, form.getName(), form.getPwd());
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/setemail.json", method = RequestMethod.POST)
