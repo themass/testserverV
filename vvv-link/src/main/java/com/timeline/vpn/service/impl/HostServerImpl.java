@@ -94,8 +94,10 @@ public class HostServerImpl implements HostService {
     @Override
     public InfoListVo<LocationVo> getAllLocationCacheV2(BaseQuery baseQuery,Integer type) {
         List<LocationPo> list = new ArrayList<>();
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
 //            list = HostIpCacheV2Vpnb.getLocationList();
+          }else if(Constant.VPND.equals(baseQuery.getAppInfo().getNetType())){
+//              list = HostIpCacheV2Vpnd.getLocationList();
           }else {
             list = HostIpCacheV2.getLocationList();
           }
@@ -161,7 +163,7 @@ public class HostServerImpl implements HostService {
 //                throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
 //            }
 //        }
-        if(hostList.get(0).getType()==0 &&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008024) {
+        if(hostList.get(0).getType()==0 && Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())&&Constant.LANG_ZH.equals(baseQuery.getAppInfo().getLang())&&Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008024) {
             throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
         }
         if(loc==null){
@@ -188,8 +190,10 @@ public class HostServerImpl implements HostService {
     @Override
     public InfoListVo<VipLocationVo> getAllLocationVipCacheV2(BaseQuery baseQuery) {
         List<LocationPo> list = null;
-        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())) {
+        if(Constant.VPNB.equals(baseQuery.getAppInfo().getNetType())||Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
 //          list = HostIpCacheV2Vpnb.getLocationList();
+        }else if (Constant.VPND.equals(baseQuery.getAppInfo().getNetType())){
+//            list = HostIpCacheV2Vpnd.getLocationList();
         }else {
           list = HostIpCacheV2.getLocationList();
         }

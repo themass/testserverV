@@ -98,6 +98,15 @@ public class DeviceUtil {
                 if(Constant.VPN.equals((matcher.group(1)))){
                     app.setTokenHeader(Constant.HTTP_TOKEN_KEY);
                     app.setChannel(Constant.VPN);
+                }else if(Constant.LIFE.equals(matcher.group(1))){
+                    app.setTokenHeader(Constant.HTTP_TOKEN_LIFE_KEY);
+                    app.setChannel(Constant.LIFE);
+                }else if(Constant.SEX.equals(matcher.group(1))){
+                    app.setTokenHeader(Constant.HTTP_TOKEN_SEX_KEY);
+                    app.setChannel(Constant.SEX);
+                }else if(Constant.SEX_TEMP.equals(matcher.group(1))){
+                    app.setTokenHeader(Constant.HTTP_TOKEN_SEX_KEY);
+                    app.setChannel(Constant.SEX_TEMP);
                 }else{
                     return null;
                 }

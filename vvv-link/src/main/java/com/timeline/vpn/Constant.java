@@ -102,7 +102,11 @@ public class Constant {
     public static final String HTTP_UA = "user-agent";
     public static final String VPN = "VVV";
     public static final String VPNB = "VVVB";
+    public static final String VPNC = "VVVC";
+    public static final String VPND = "VVVD";
+    public static final String LIFE = "LIFE";
     public static final String SEX = "SEX";
+    public static final String SEX_TEMP = "SEX_TEMP";
     public static final String LANG_ZH="zh";
     
     public static final String VIDEO_EXT="avi,rmvb,3gp,wmv,flv";

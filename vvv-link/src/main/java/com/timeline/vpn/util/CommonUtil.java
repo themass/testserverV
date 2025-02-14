@@ -32,7 +32,8 @@ public class CommonUtil {
     public static boolean isDog(BaseQuery baseQuery) {
         if((baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName())) 
                 || Constant.userNodogDiv.contains(baseQuery.getAppInfo().getDevId())) {
-            if(Constant.VPN.equals(baseQuery.getAppInfo().getChannel())){
+            if(Constant.VPN.equals(baseQuery.getAppInfo().getChannel()) || 
+                    (Constant.VPNC.equals(baseQuery.getAppInfo().getNetType()) && Integer.valueOf(baseQuery.getAppInfo().getVersion())<1000008025)) {
                 throw new LoginException(Constant.ResultMsg.RESULT_VERSION_ERROR);
             }else if(StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
                 throw new ParamException(Constant.ResultMsg.RESULT_DENGTA_ERROR);
@@ -48,7 +49,8 @@ public class CommonUtil {
         }
     }
     public static boolean isWhite(BaseQuery baseQuery) {
-        if(Constant.VPN.equals(baseQuery.getAppInfo().getChannel())) {
+        if(Constant.VPN.equals(baseQuery.getAppInfo().getChannel()) || 
+                Constant.VPNC.equals(baseQuery.getAppInfo().getNetType())) {
             if(baseQuery.getUser()!=null && baseQuery.getUser().getLevel()>0) {
                 return true;
             }else {
