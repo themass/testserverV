@@ -25,9 +25,10 @@ public class ChatDevctoHandler extends BaseChatHandleProxy {
     public static String apiKey2 = "-qEUviQYzaIGm9f3r";
     public static String apiKey1 = "AQmj5hFtFyWazicdfECcMOhMo7pRPKWS";
     ;
+    //t>=3&&t<5
   @Override
   public boolean support(Integer t) {
-        return  t>=3&&t<5;
+        return  false;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
         List<ChatMsg> chatMessageList = new ArrayList<>();

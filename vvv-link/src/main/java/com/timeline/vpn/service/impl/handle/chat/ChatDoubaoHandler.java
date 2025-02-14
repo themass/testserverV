@@ -31,10 +31,9 @@ public class ChatDoubaoHandler extends BaseChatHandleProxy {
     private void init() {
         service = ArkService.builder().apiKey(appKey+appKey2).baseUrl(endPoint).build();
     }
-
     @Override
     public boolean support(Integer t) {
-        return t<3;
+        return t<4;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
