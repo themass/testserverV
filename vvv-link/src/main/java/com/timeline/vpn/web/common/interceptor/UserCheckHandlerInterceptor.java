@@ -48,11 +48,13 @@ public class UserCheckHandlerInterceptor implements HandlerInterceptor {
             UserPo po = userDao.get("themass","111111");
             request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
         }
+        String token = request.getHeader(app.getTokenHeader());
         if( app.getNetType().equals(Constant.VPNB)){
             UserPo po = userDao.get("qqqq","uuuuuu");
+            po.setName(po.getName()+token);
             request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
         }
-        String token = request.getHeader(app.getTokenHeader());
+
         if (StringUtils.isEmpty(token)) {
             return true;
         }
