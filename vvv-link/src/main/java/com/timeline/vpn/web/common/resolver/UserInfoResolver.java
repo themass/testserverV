@@ -7,9 +7,11 @@ import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.web.common.DevAppContext;
 import com.timeline.vpn.web.common.annotation.BaseResolver;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
+@Slf4j
 @Component
 public class UserInfoResolver extends BaseResolver {
     @Override
@@ -19,6 +21,7 @@ public class UserInfoResolver extends BaseResolver {
 //        po = new UserPo();
 //        po.setId(1);
 //        token="1111";
+        log.info("token:"+token);
         if (required && (StringUtils.isEmpty(token) || po == null)) {
             throw new LoginException(Constant.ResultMsg.RESULT_TOKEN_EXPIRE);
         }
