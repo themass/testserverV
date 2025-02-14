@@ -28,7 +28,7 @@ public class DeviceUtil {
     public static final String ANDROID = "android";
     public static final String IOS = "ios";
     private static final String FORMAT = "000";
-    private static final String VPNVERSION = "(VVV|LIFE|SEX|SEX_TEMP|NETHELP)/(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
+    private static final String VPNVERSION = "(VVV|VVVB|LIFE|SEX|SEX_TEMP|NETHELP)/(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))";
     private static final String VPNVERSION_VPN_POOL = ",channel=(MYPOOL),";
     private static final String VPNVERSION_NETTYPE= ",NETTYPE=(NETTYPEA|VVVB|VVVC|VVVD|SEXPLAY),";
     private static final String DEVID = "devid";
