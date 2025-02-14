@@ -48,6 +48,10 @@ public class UserCheckHandlerInterceptor implements HandlerInterceptor {
             UserPo po = userDao.get("themass","111111");
             request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
         }
+        if(Constant.VPNB.equals(app.getNetType())){
+            UserPo po = userDao.get("qqqq","uuuuuu");
+            request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
+        }
         String token = request.getHeader(app.getTokenHeader());
         if (StringUtils.isEmpty(token)) {
             return true;
@@ -56,11 +60,6 @@ public class UserCheckHandlerInterceptor implements HandlerInterceptor {
           UserPo po = cacheService.getUser(token);
           if (po != null) {
               request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);
-              if(CommonUtil.isDog(app,po.getName())) {
-                  if(Constant.VPNC.equals(app.getNetType()) && Integer.valueOf(app.getVersion())<1000008025) {
-                      throw new ParamException(Constant.ResultMsg.RESULT_VERSION_ERROR);
-                  }
-              }
           } else {
 //              LOGGER.error("没找到user信息：app={}",app.getTokenHeader());
           }
