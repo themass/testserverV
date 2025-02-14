@@ -98,6 +98,9 @@ public class DeviceUtil {
                 if(Constant.VPN.equals((matcher.group(1)))){
                     app.setTokenHeader(Constant.HTTP_TOKEN_KEY);
                     app.setChannel(Constant.VPN);
+                }if(Constant.VPNB.equals((matcher.group(1)))){
+                    app.setTokenHeader(Constant.HTTP_TOKEN_KEY);
+                    app.setChannel(Constant.VPN);
                 }else if(Constant.LIFE.equals(matcher.group(1))){
                     app.setTokenHeader(Constant.HTTP_TOKEN_LIFE_KEY);
                     app.setChannel(Constant.LIFE);
