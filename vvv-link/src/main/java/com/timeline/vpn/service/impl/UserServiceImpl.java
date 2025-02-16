@@ -198,10 +198,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void reg(UserRegForm form, BaseQuery baseQuery) {
-        if (!CommonUtil.isNumAndEnglish(form.getName())
-                || !CommonUtil.isNumAndEnglish(form.getPwd())) {
-            throw new LoginException(Constant.ResultMsg.RESULT_LOGIN_PATTER);
-        }
         if (form.getPwd().equals(form.getRePwd())) {
             UserPo po = userDao.exist(form.getName());
             if (po == null) {
