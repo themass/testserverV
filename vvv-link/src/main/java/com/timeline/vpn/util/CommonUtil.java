@@ -22,12 +22,8 @@ public class CommonUtil {
             LoggerFactory.getLogger(CommonUtil.class);
     private static final int CODE_START = 1000;
     private static final int CODE_END = 9999;
-    private static final Pattern pattern = Pattern.compile("[0-9A-Za-z]*");
     public static String generateCode() {
         return String.valueOf(RandomUtils.nextInt(CODE_START, CODE_END));
-    }
-    public static boolean isNumAndEnglish(String str){
-        return pattern.matcher(str).matches();
     }
     public static boolean isDog(BaseQuery baseQuery) {
         if((baseQuery.getUser()!=null && Constant.userNodog.contains(baseQuery.getUser().getName())) 
