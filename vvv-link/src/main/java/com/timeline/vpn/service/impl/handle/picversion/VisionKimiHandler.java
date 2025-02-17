@@ -26,7 +26,7 @@ public class VisionKimiHandler extends BaseVisionHandleProxy {
 
     @Override
     public boolean support(Integer t) {
-        return t < 5;
+        return true;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file, String text) throws Exception {

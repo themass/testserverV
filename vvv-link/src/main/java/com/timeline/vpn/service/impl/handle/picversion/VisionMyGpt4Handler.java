@@ -26,7 +26,7 @@ public class VisionMyGpt4Handler extends BaseVisionHandleProxy {
 
     @Override
     public boolean support(Integer t) {
-        return t >= 5;
+        return false;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file, String text) throws Exception {

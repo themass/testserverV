@@ -30,7 +30,8 @@ public class ChatMyGpt4Handler extends BaseChatHandleProxy {
     ;
   @Override
   public boolean support(Integer t) {
-        return  t >= 4 && t < 7 ;
+//        return  t >= 4 && t < 7 ;
+      return false;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
         List<ChatMsg> chatMessageList = new ArrayList<>();
