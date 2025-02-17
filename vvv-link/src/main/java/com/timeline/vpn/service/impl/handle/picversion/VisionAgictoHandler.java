@@ -15,24 +15,23 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @Component
-public class VisionKimiHandler extends BaseVisionHandleProxy {
-    public static String url = "https://api.moonshot.cn/v1/chat/completions";
-    public static String model = "moonshot-v1-8k-vision-preview";
-    //    public static String url = "http://openapi2.ok123find.top";
-    public static String apiKey = "Bearer sk";
-    public static String apiKey1 = "U9YZRxr6hW5vqZfirRiFUlS";
-    public static String apiKey2 = "-it18PatDDjE3U68z1qsOrkeyb";
-    ;
+public class VisionAgictoHandler extends BaseVisionHandleProxy {
 
+    public static String modle = "gpt-4o-mini";
+
+    public static String url = "https://api.agicto.cn/v1/chat/completions";
+    public static String apiKey = "Bearer sk";
+    public static String apiKey2 = "-2ObAVaicEFICVaGs";
+    public static String apiKey1 = "vMiC7x3XTFa3LAKXG45zdNnGpE83prHv";
     @Override
     public boolean support(Integer t) {
-        return t < 5;
+        return t>5;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file, String text) throws Exception {
-        Choice choice = process(file, url, model, apiKey + apiKey2 + apiKey1, text);
+        Choice choice = process(file, url, modle, apiKey + apiKey2 + apiKey1, text);
         choice.setId(chatContentForm.getId());
-        log.info("VisionKimiHandler");
+        log.info("VisionMyGpt4Handler");
         return choice;
     }
 
