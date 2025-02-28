@@ -25,24 +25,29 @@ public class DeepgramAsrService extends BaseAsrHandleProxy {
     String url = "https://api.deepgram.com/v1/listen?model=nova-3&smart_format=true";// 项目的 token
     @Override
     public AsrResponseVo asrHandler(BaseQuery baseQuery, AsrContentForm asrContentForm) throws Exception {
-        okhttp3.MediaType mediaType = okhttp3.MediaType.parse("audio/wav");
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, Base64Util.decodeBase64(asrContentForm.getContent()));
-        okhttp3.Request httpRequest = new okhttp3.Request.Builder()
-                .url(url)
-                .addHeader("Authorization", token)
-                .addHeader("Content-Type", "audio/wav")
-                .post(body)
-                .build();
-        okhttp3.Response response = httpClient.newCall(httpRequest).execute();
-        String res = response.body().string();
-        SpeechRecognitionResponse response1 = JsonUtil.readValue(res, SpeechRecognitionResponse.class);
-        AsrResponseVo asrResponseVo = new AsrResponseVo();
-        asrResponseVo.setProd("deepgram_asr");
-        if(response1!=null && response1.getResults()!=null&& response1.getResults().getChannels()!=null && response1.getResults().getChannels().size()>0 && response1.getResults().getChannels().get(0).getAlternatives()!=null && response1.getResults().getChannels().get(0).getAlternatives().size()>0){
-            asrResponseVo.setText(response1.getResults().getChannels().get(0).getAlternatives().get(0).getTranscript());
-
+        try {
+            okhttp3.MediaType mediaType = okhttp3.MediaType.parse("audio/wav");
+            okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, Base64Util.decodeBase64(asrContentForm.getContent()));
+            okhttp3.Request httpRequest = new okhttp3.Request.Builder()
+                    .url(url)
+                    .addHeader("Authorization", token)
+                    .addHeader("Content-Type", "audio/wav")
+                    .post(body)
+                    .build();
+            okhttp3.Response response = httpClient.newCall(httpRequest).execute();
+            String res = response.body().string();
+            SpeechRecognitionResponse response1 = JsonUtil.readValue(res, SpeechRecognitionResponse.class);
+            AsrResponseVo asrResponseVo = new AsrResponseVo();
+            LOGGER.info("deepgram asr 识别："+res);
+            asrResponseVo.setProd("deepgram_asr");
+            if (response1 != null && response1.getResults() != null && response1.getResults().getChannels() != null && response1.getResults().getChannels().size() > 0 && response1.getResults().getChannels().get(0).getAlternatives() != null && response1.getResults().getChannels().get(0).getAlternatives().size() > 0) {
+                asrResponseVo.setText(response1.getResults().getChannels().get(0).getAlternatives().get(0).getTranscript());
+            }
+            return asrResponseVo;
+        }catch (Exception e){
+            LOGGER.error("", e);
         }
-        return asrResponseVo;
+        return  new AsrResponseVo();
     }
 
     @Override

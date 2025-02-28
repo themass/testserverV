@@ -44,7 +44,6 @@ public class BytedanceAsrService extends BaseAsrHandleProxy {
             AsrResponse asr_response = new AsrResponse();
             while ((len = byteArrayInputStream.read(b)) > 0) {
                 count += 1;
-                logger.info("send data pack length: {}, count {}, is_last {}", len, count, byteArrayInputStream.available() == 0);
                 asr_response = asr_client.asr_send(Arrays.copyOfRange(b, 0, len), byteArrayInputStream.available() == 0);
             }
 
