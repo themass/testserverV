@@ -28,9 +28,9 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
     public static okhttp3.OkHttpClient httpClient;
     static {
         // 设置超时时间
-        builder.connectTimeout(10, TimeUnit.SECONDS);  // 连接超时
-        builder.readTimeout(10, TimeUnit.SECONDS);     // 读取超时
-        builder.writeTimeout(10, TimeUnit.SECONDS);    // 写入超时
+        builder.connectTimeout(25, TimeUnit.SECONDS);  // 连接超时
+        builder.readTimeout(25, TimeUnit.SECONDS);     // 读取超时
+        builder.writeTimeout(25, TimeUnit.SECONDS);    // 写入超时
         // 设置长连接保持
         int maxIdleConnections = 15; // 最大空闲连接数
         long keepAliveDuration = 30; // 最大空闲时间（秒）
