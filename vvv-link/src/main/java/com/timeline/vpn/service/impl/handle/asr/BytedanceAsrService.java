@@ -72,6 +72,6 @@ public class BytedanceAsrService extends BaseAsrHandleProxy {
 
     @Override
     public boolean support(Integer t) {
-        return t<5;
+        return true;
     }
 }

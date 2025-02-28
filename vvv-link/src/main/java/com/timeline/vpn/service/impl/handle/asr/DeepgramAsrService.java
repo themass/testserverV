@@ -22,12 +22,12 @@ import java.util.List;
 public class DeepgramAsrService extends BaseAsrHandleProxy {
     private static final Logger logger = LoggerFactory.getLogger(DeepgramAsrService.class);
     String token = "Token c855a267d26e553c5b8e48f58114e9ad88bd460f";
-    String url = "https://api.deepgram.com/v1/listen?model=nova-3&smart_format=true";// 项目的 token
+    String url = "https://api.deepgram.com/v1/listen?model=nova-2-general&smart_format=true";// 项目的 token
     @Override
     public AsrResponseVo asrHandler(BaseQuery baseQuery, AsrContentForm asrContentForm) throws Exception {
         try {
             okhttp3.MediaType mediaType = okhttp3.MediaType.parse("audio/wav");
-            okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, Base64Util.decodeBase64(asrContentForm.getContent()));
+            okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType,Base64Util.decodeBase64(asrContentForm.getContent()));
             okhttp3.Request httpRequest = new okhttp3.Request.Builder()
                     .url(url)
                     .addHeader("Authorization", token)
@@ -52,7 +52,7 @@ public class DeepgramAsrService extends BaseAsrHandleProxy {
 
     @Override
     public boolean support(Integer t) {
-        return t>=5;
+        return false;
     }
 
 }
