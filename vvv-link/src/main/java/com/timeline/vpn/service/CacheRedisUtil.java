@@ -24,11 +24,15 @@ public class CacheRedisUtil {
     private static StringRedisTemplate stringRedisTemplate = SpringUtils.getStringRedisTemplate();
     private static String CHAT_HISTORY = "chat_record_%s";
     public static void appendRecod(BaseQuery baseQuery, LlmRecord record){
-        if(StringUtils.isBlank(record.getText())){
-            return;
+        try {
+            if (StringUtils.isBlank(record.getText())) {
+                return;
+            }
+            String chatHistory = String.format(CHAT_HISTORY, baseQuery.getUser().getId());
+            stringRedisTemplate.opsForList().rightPush(chatHistory, JacksonJsonUtil.toJsonStr(record));
+        }catch (Exception e){
+
         }
-        String chatHistory = String.format(CHAT_HISTORY, baseQuery.getUser().getId());
-        stringRedisTemplate.opsForList().rightPush(chatHistory, JacksonJsonUtil.toJsonStr(record));
     }
     public static List<LlmRecord> getRecod(BaseQuery baseQuery, long sessionId){
         String chatHistory = String.format(CHAT_HISTORY, baseQuery.getUser().getId());
