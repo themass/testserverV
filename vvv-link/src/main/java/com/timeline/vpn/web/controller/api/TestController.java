@@ -72,10 +72,10 @@ public class TestController extends BaseController {
         return new JsonResult(listC);
     }
     @RequestMapping(value = "/testasr.json", method = {RequestMethod.POST,RequestMethod.GET})
-    public JsonResult testAsr(@UserInfo BaseQuery baseQuery, @RequestParam(name = "content") String content) throws Exception {
-        String filePath = "/Users/liguoqing/Downloads/test/voice_1739113889844.mp3"; // 定义文件路径
+    public JsonResult testAsr(@UserInfo BaseQuery baseQuery) throws Exception {
+        String filePath = "/Users/liguoqing/Downloads/test/example.mp3"; // 定义文件路径
         byte[] data = new byte[0];
-        try (FileInputStream fis = new FileInputStream(content)) {
+        try (FileInputStream fis = new FileInputStream(filePath)) {
             data = new byte[fis.available()]; // 创建一个足够大的字节数组
             fis.read(data); // 读取文件内容到字节数组
         } catch (IOException e) {
