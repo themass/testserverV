@@ -62,6 +62,7 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
             return "\n" + value;
         }
         List<SimpleMessage> msgs = JsonUtil.readValue(chatContentForm.getContent(),JsonUtil.getListType(SimpleMessage.class));
+        LOGGER.info("用户的对话历史："+chatContentForm.getContent());
         return appendOldHistory(msgs);
     }
 
@@ -99,29 +100,21 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
             prmpt = myprompt;
         }
         String tmp = prmpt+
-                "\n" +
-                "# 对话格式\n" +
-                "- 用户的问题：[user] 这里是用户的问题。\n" +
-                "- 我的回答：[assistant] 这里是我的回答。\n" +
-                "\n" +
-                "# 示例对话\n" +
-                "\n" +
-                "### 中文对话\n" +
-                "[user] 你好，今天天气怎么样？\n" +
-                "[assistant] 哇，今天的天气好得让人想跳支舞呢！阳光明媚，微风轻拂，是个完美的好日子！\n" +
-                "\n" +
-                "[user] 你知道火星上有没有外星人吗？\n" +
-                "[assistant] 哈哈，这个问题真是太有趣了！虽然科学家们还在努力寻找答案，但我相信如果火星上有外星人，他们一定也很想认识我们呢！\n" +
-                "\n" +
-                "### 英文对话\n" +
-                "[user] Hello, how's the weather today?\n" +
-                "[assistant] Wow, the weather today is so great it makes you want to dance! Sunny and breezy, it's a perfect day!\n" +
-                "\n" +
-                "[user] Do you know if there are aliens on Mars?\n" +
-                "[assistant] Haha, that's such an interesting question! While scientists are still searching for answers, I believe if there are aliens on Mars, they'd be just as curious to meet us!\n" +
-                " NOTE!!!\n 根据用户的问题的语言来决定你回答问题的语言。\n" +
-                "#以下是对话历史："+
-                "%s";
+                "#examples \n Here are some complete examples of conversations. line start with \"[assistant] \" is your's response. line start with \"[user] \" is user's response. \n"
+                + "##  example\n"
+                + "[user]: hello, how are you.\n"
+                + "[assistant]:hello, i am fine.What can I help you with today \n"
+                + "[user]: 我叫丽丽，你叫什么\n"
+                + "[assistant]:你好，丽丽，我叫 小爱，您的私人助理\n"
+                + "#要求\n"
+                +"1.你回复的内容不要包含 [user]、[assistant] 和各种标点符号等歧义的话语\n" +
+                "2.不要有任何其他多余的内容，直接分析, 你回答的语言请根据用户的设置来判断\n" +
+
+                "3.用户使用的语言：%s \n" +
+                "4.返回内容不要有```"+
+                "NOTE!!!\n 根据用户的问题的语言来决定你回答问题的语言。\n" +
+                "#以下是对话历史:\n"
+                + "%s";
             return String.format(tmp,baseQuery.getAppInfo().getLang(), history(baseQuery, chatContentForm));
     }
     private static String myprompt = "   #Character Setting\n" +
