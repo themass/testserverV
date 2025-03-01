@@ -27,8 +27,7 @@ public class ChatDevctoDeepSeekHandler extends BaseChatHandleProxy {
     ;
   @Override
   public boolean support(Integer t) {
-        return  false;
-        //t==3
+        return  t==3;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
         List<ChatMsg> chatMessageList = new ArrayList<>();
