@@ -79,11 +79,13 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
         sessions5.setType(0);
         sessions5.setSetting("夸夸怪");
         sessions5.setId(1004l);
+
         Sessions sessions6 = new Sessions();
-        sessions6.setName("夸夸怪");
+        sessions6.setName("文字冒险游戏");
         sessions6.setType(0);
         sessions6.setSetting("文字冒险游戏");
         sessions6.setId(1005l);
+
         sessions.add(sessions1);
         sessions.add(sessions2);
         sessions.add(sessions3);
