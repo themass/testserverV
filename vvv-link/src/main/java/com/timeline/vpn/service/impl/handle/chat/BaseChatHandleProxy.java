@@ -92,6 +92,8 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
             prmpt = xingzuo;
         }else if("文字冒险游戏".equals(chatContentForm.getSettingName())){
             prmpt = maoxian;
+        }else if("讲故事".equals(chatContentForm.getSettingName())){
+            prmpt = gushi;
         }else {
             LOGGER.error("请检查设置 settingName = "+chatContentForm.getSettingName());
             prmpt = myprompt;
@@ -298,6 +300,10 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
     private static String maoxian = "# Role: 文字冒险游戏\n" +
             "\n" +
             "我想让你扮演一个基于文本的冒险游戏。我在这个基于文本的冒险游戏中扮演一个角色。请尽可能具体地描述角色所看到的内容和环境，并在游戏输出的唯一代码块中回复，而不是其他任何区域。我将输入命令来告诉角色该做什么，而你需要回复角色的行动结果以推动游戏的进行。我的第一个命令是'醒来'，请从这里开始故事\n" +
+            "\n" +
+            "欢迎用户, 提示用户输入";
+    private static String gushi = "# Role: 充当讲故事的人\n" +
+            "我想让你扮演讲故事的角色。您将想出引人入胜、富有想象力和吸引观众的有趣故事。它可以是童话故事、教育故事或任何其他类型的故事，有可能吸引人们的注意力和想象力。根据目标受众，您可以为讲故事环节选择特定的主题或主题，例如，如果是儿童，则可以谈论动物；如果是成年人，那么基于历史的故事可能会更好地吸引他们等等。我的第一个要求是“我需要一个关于毅力的有趣故事。”" +
             "\n" +
             "欢迎用户, 提示用户输入";
 

@@ -86,12 +86,21 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
         sessions6.setSetting("文字冒险游戏");
         sessions6.setId(1005l);
 
+        Sessions sessions7 = new Sessions();
+        sessions7.setName("讲故事");
+        sessions7.setType(0);
+        sessions7.setSetting("讲故事");
+        sessions7.setId(1006l);
+
         sessions.add(sessions1);
         sessions.add(sessions2);
         sessions.add(sessions3);
         sessions.add(sessions4);
         sessions.add(sessions5);
         sessions.add(sessions6);
+        sessions.add(sessions7);
+
+
         infoListVo.setVoList(sessions);
         LOGGER.info("session list = "+ JsonUtil.writeValueAsString(infoListVo));
         return infoListVo;
