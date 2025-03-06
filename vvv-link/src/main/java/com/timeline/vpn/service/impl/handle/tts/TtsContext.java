@@ -28,13 +28,13 @@ public class TtsContext extends BaseSingleServiceContext<Integer, BaseTtsHandle>
         for(int i =0; i<3;i++) {
             try {
                 int r = random.nextInt(10);
-                LOGGER.info("tts识别 ："+r);
+                LOGGER.info("tts合成 ："+r);
                 return getService(r).textToVideo(baseQuery, asrContentForm);
             } catch (Exception e) {
-                LOGGER.error("tts 识别错误-"+i, e);
+                LOGGER.error("tts 合成错误-"+i, e);
             }
         }
-        throw new RuntimeException("asr 识别重试3次失败");
+        throw new RuntimeException("tts合成 重试3次失败");
     }
 }
 

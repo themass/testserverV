@@ -3,6 +3,7 @@ package com.timeline.vpn.web.controller.api;
 import cn.hutool.log.Log;
 import com.timeline.vpn.common.utils.Base64Util;
 import com.timeline.vpn.model.form.AsrContentForm;
+import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.AsrResponseVo;
 import com.timeline.vpn.model.vo.Choice;
@@ -55,9 +56,12 @@ public class TestController extends BaseController {
     @RequestMapping(value = "/testmychat.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult testmychat(@UserInfo BaseQuery baseQuery, @RequestParam(name = "content") String content) throws Exception {
         List<Choice> listC = new ArrayList<>();
+        ChatContentForm chatContentForm = new ChatContentForm();
+        chatContentForm.setContent(content);
+        chatContentForm.setId("1111");
         list.stream().forEach(o -> {
             try {
-                Choice  choice = o.chatWithGpt(baseQuery, content);
+                Choice  choice = o.chatWithGptBase(baseQuery, chatContentForm);
                 listC.add(choice);
                 log.info("实例="+o.getClass().getSimpleName()+" ;content="+ JsonUtil.writeValueAsString(choice));
             } catch (Exception e) {

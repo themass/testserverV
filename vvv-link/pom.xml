@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.livekit</groupId>
+            <artifactId>livekit-server</artifactId>
+            <version>0.8.5</version>
+        </dependency>
+        <dependency>
             <groupId>com.timeline</groupId>
             <artifactId>vvv-common</artifactId>
             <exclusions>
