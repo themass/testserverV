@@ -57,6 +57,23 @@ public class LiveKitController extends BaseController {
         assToken.setRoomName(baseQuery.getUser().getName()+"_room");
         return new JsonResult(assToken);
     }
+    @PostMapping(value = "/token_new.json")
+    public JsonResult tokenNew(@UserInfo(required = true) BaseQuery baseQuery) throws Exception {
+//1oW0oznixZcJAAijg60Us02JNRjO3QiHQ2WnnMRvYjL
+        AccessToken token = new AccessToken("APISANNmEGBQxfY", "1oW0oznixZcJAAijg60Us02JNRjO3QiHQ2WnnMRvYjL");
+        String tokenNanme = baseQuery.getUser().getName()+"_"+System.currentTimeMillis();
+        token.setName("name");
+        token.setIdentity("identity");
+        token.setMetadata("metadata");
+        token.addGrants(new RoomJoin(true), new RoomName(tokenNanme));
+        System.out.println("New access token: " + token.toJwt());
+        Token assToken = new Token();
+        assToken.setToken(token.toJwt());
+        assToken.setUrl("wss://testvoice-b8y35yvd.livekit.cloud");
+        assToken.setRoomId(baseQuery.getUser().getName());
+        assToken.setRoomName(tokenNanme);
+        return new JsonResult(assToken);
+    }
 
 }
 
