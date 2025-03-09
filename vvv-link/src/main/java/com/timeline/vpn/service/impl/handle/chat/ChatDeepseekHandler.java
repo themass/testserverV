@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.chat.ChatMessages;
 import com.timeline.vpn.model.chat.ChatMsg;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -18,6 +19,7 @@ import java.util.List;
  * @version V1.0
  */
 @Component
+@MethodTimed
 public class ChatDeepseekHandler extends BaseChatHandleProxy {
     public static String url = "https://api.deepseek.com/chat/completions";
 //    public static String url = "http://openapi2.ok123find.top";

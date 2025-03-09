@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.chat.ChatMessages;
 import com.timeline.vpn.model.chat.ChatMsg;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -22,6 +23,7 @@ import java.util.List;
  * @version V1.0
  */
 @Component
+@MethodTimed
 public class ChatGeminiHandler extends BaseChatHandleProxy {
     public static String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
     public static String apiKey = "AIzaSyCD3x9";

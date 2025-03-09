@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl.handle.tts;
 
+import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.form.AsrContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.AsrResponseVo;
@@ -18,6 +19,7 @@ import java.util.Random;
  * @date 2018年7月31日 下午5:01:15
  */
 @Component
+@MethodTimed
 public class TtsContext extends BaseSingleServiceContext<Integer, BaseTtsHandle> {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(TtsContext.class);

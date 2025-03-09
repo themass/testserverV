@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.picversion;
 
+import com.timeline.vpn.common.annotation.MethodTimed;
+import com.timeline.vpn.model.chat.ChatPicMessages;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @Component
+@MethodTimed
 public class VisionMyGpt4Handler extends BaseVisionHandleProxy {
     public static String url = "https://api.openai.com/v1/chat/completions";
     public static String modle = "gpt-4o-mini";
@@ -30,9 +33,10 @@ public class VisionMyGpt4Handler extends BaseVisionHandleProxy {
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file, String text) throws Exception {
-        Choice choice = process(file, url, modle, apiKey + apiKey2 + apiKey1, text);
-        choice.setId(chatContentForm.getId());
         log.info("VisionMyGpt4Handler");
+        ChatPicMessages chatPicMessages = getChatPicMessages(file, modle,  text);
+        Choice choice = process(chatPicMessages, url, apiKey + apiKey2 + apiKey1);
+        choice.setId(chatContentForm.getId());
         return choice;
     }
 

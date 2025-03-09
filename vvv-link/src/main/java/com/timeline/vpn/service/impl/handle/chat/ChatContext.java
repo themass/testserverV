@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
@@ -16,6 +17,7 @@ import java.util.Random;
  * @date 2018年7月31日 下午5:01:15
  */
 @Component
+@MethodTimed
 public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandle> {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(ChatContext.class);

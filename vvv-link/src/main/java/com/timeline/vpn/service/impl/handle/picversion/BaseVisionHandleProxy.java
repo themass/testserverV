@@ -79,7 +79,7 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
         }
     }
 
-    public Choice process(MultipartFile file, String url, String modle, String key, String text) {
+    public ChatPicMessages getChatPicMessages(MultipartFile file, String modle, String text) {
         try {
             // 读取文件内容到字节数组
             byte[] imageBytes = file.getBytes();
@@ -119,30 +119,37 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
             ChatPicMessages picMessages = new ChatPicMessages();
             picMessages.setMessages(messages);
             picMessages.setModel(modle);
-
-            okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
-            okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(picMessages));
-            okhttp3.Request httpRequest = new okhttp3.Request.Builder()
-                    .url(url)
-                    .addHeader("Authorization", key)
-                    .addHeader("stream", "false")
-                    .post(body)
-                    .build();
-            okhttp3.Response response = httpClient.newCall(httpRequest).execute();
-            String res = response.body().string();
-            log.info(res);
-            ChatVo vo = JsonUtil.readValue(res, ChatVo.class);
-            if (vo.getChoices() != null && vo.getChoices().size() > 0) {
-                Choice choice = vo.getChoices().get(0);
-                return choice;
-            }
-        } catch (IOException e) {
-            log.error("", e);
+            return picMessages;
+        }catch (Exception e){
+            return null;
         }
+
+    }
+    public Choice process(ChatPicMessages picMessages, String url, String key) {
+            try{
+                okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+                okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(picMessages));
+                okhttp3.Request httpRequest = new okhttp3.Request.Builder()
+                        .url(url)
+                        .addHeader("Authorization", key)
+                        .addHeader("stream", "false")
+                        .post(body)
+                        .build();
+                okhttp3.Response response = httpClient.newCall(httpRequest).execute();
+                String res = response.body().string();
+                log.info(res);
+                ChatVo vo = JsonUtil.readValue(res, ChatVo.class);
+                if (vo.getChoices() != null && vo.getChoices().size() > 0) {
+                    Choice choice = vo.getChoices().get(0);
+                    return choice;
+                }
+            } catch (IOException e) {
+                log.error("", e);
+            }
         return new Choice();
     }
 
-    // 获取文件扩展名的方法
+        // 获取文件扩展名的方法
     public static String getFileExtension(String fileName) {
         if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
             return fileName.substring(fileName.lastIndexOf(".") + 1);

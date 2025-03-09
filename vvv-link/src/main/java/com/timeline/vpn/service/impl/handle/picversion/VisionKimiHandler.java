@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.picversion;
 
+import com.timeline.vpn.common.annotation.MethodTimed;
+import com.timeline.vpn.model.chat.ChatPicMessages;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @Component
+@MethodTimed
 public class VisionKimiHandler extends BaseVisionHandleProxy {
     public static String url = "https://api.moonshot.cn/v1/chat/completions";
     public static String model = "moonshot-v1-8k-vision-preview";
@@ -26,13 +29,14 @@ public class VisionKimiHandler extends BaseVisionHandleProxy {
 
     @Override
     public boolean support(Integer t) {
-        return t < 5;
+        return t>=6;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file, String text) throws Exception {
-        Choice choice = process(file, url, model, apiKey + apiKey2 + apiKey1, text);
-        choice.setId(chatContentForm.getId());
         log.info("VisionKimiHandler");
+        ChatPicMessages chatPicMessages = getChatPicMessages(file,  model,  text);
+        Choice choice = process(chatPicMessages, url, apiKey + apiKey2 + apiKey1);
+        choice.setId(chatContentForm.getId());
         return choice;
     }
 

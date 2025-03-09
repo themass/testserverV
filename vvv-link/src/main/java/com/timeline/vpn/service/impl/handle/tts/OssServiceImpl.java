@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
  */
 @Service
 @Slf4j
+@MethodTimed
 public class OssServiceImpl implements OssService {
     @Autowired
     private OssConfig ossConfig;

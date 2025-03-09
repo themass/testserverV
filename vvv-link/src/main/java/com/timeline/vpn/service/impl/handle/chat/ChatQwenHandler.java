@@ -6,6 +6,7 @@ import com.alibaba.dashscope.aigc.generation.GenerationParam;
 import com.alibaba.dashscope.aigc.generation.GenerationResult;
 import com.alibaba.dashscope.common.Message;
 import com.alibaba.dashscope.common.Role;
+import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.Arrays;
  */
 @Slf4j
 @Component
+@MethodTimed
 public class ChatQwenHandler extends BaseChatHandleProxy {
     public static String key = "sk";
     public static String key2 = "-2a8e45f1b5c8";
