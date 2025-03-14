@@ -56,8 +56,11 @@ public class AliTtsServiceImpl extends BaseTtsHandleProxy {
         ttsConfig.setAppid("");
         ttsConfig.setTextType("plain");
         ttsConfig.setEncoding("wav");
-        ttsConfig.setSampleRate(48000);
-        ttsConfig.setUid("sambert-chatonemen-ft-202404171553-07a7");
+        ttsConfig.setSampleRate(16000);
+        ttsConfig.setAccessKey("");
+        ttsConfig.setAccessKeySecret("");
+        ttsConfig.setUid("betty");
+        ttsConfig.setUrl("https://nls-gateway.cn-shanghai.aliyuncs.com/stream/v1/tts");
     }
     /**
      * HTTPS POST 请求
@@ -65,15 +68,12 @@ public class AliTtsServiceImpl extends BaseTtsHandleProxy {
     @Override
     public TtsResponseVo textToVideo(BaseQuery baseQuery, AsrContentForm chatContentForm){
         String text = chatContentForm.getContent();
-        if (GlobalConstant.SSML.equals(ttsConfig.getTextType())) { //ssml协议
-            text = textToSSML(text);
-        }
         AliTtsRequest aliTtsRequest = new AliTtsRequest();
         aliTtsRequest.setText(text);
         aliTtsRequest.setVoice(ttsConfig.getUid());
         aliTtsRequest.setFormat(ttsConfig.getEncoding());
         aliTtsRequest.setAppkey(ttsConfig.getAppid());
-        aliTtsRequest.setToken(getToken(ttsConfig.getAppKey(), ttsConfig.getAppKeySt()));
+        aliTtsRequest.setToken(this.getToken(ttsConfig.getAccessKey(), ttsConfig.getAccessKeySecret()));
         aliTtsRequest.setSampleRate(ttsConfig.getSampleRate());
         aliTtsRequest.setVoice(ttsConfig.getUid());
         RequestBody reqBody = RequestBody.create(MediaType.parse("application/json"), JacksonJsonUtil.toJsonStr(aliTtsRequest));

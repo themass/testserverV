@@ -12,20 +12,22 @@ import lombok.ToString;
 @ToString
 public class TtsConfig {
     private String appid;
-    private String appKey;
-    private String appKeySt;
+    private String accessKey;
+    private String accessKeySecret;
     private String token;
     private String cluster;
     private String uid;
     private String url;
     private String voiceType;
     private String encoding = "wav";
-    private float speedRatio = 1.0f;
-    private float volumeRatio = 10;
-    private float pitchRatio = 1;
+    private float speedRatio = 1.0F;
+    private float volumeRatio = 10.0F;
+    private Integer pitchRatio = 1;
     private String emotion = "happy";
-    private Integer sampleRate = 24000;
+    private Integer sampleRate = 16000;
     private String textType = "plain";
     private String operation = "query";
+    private String language = "EN";
+    private Boolean enableIpa = true;
 
 }

@@ -11,6 +11,7 @@ import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.model.vo.TtsResponseVo;
 import com.timeline.vpn.service.impl.handle.asr.AsrContext;
 import com.timeline.vpn.service.impl.handle.chat.*;
+import com.timeline.vpn.service.impl.handle.tts.AliTtsServiceImpl;
 import com.timeline.vpn.service.impl.handle.tts.TtsContext;
 import com.timeline.vpn.test.java.demo.TtsVolcResponse;
 import com.timeline.vpn.util.JsonUtil;
@@ -47,6 +48,8 @@ public class TestController extends BaseController {
     private AsrContext asrContext;
     @Autowired
     private TtsContext ttsContext;
+    @Autowired
+    private AliTtsServiceImpl aliTtsService;
     @RequestMapping(value = "/test.json", method = {RequestMethod.POST,RequestMethod.GET})
     public JsonResult recommendList(@UserInfo BaseQuery baseQuery) {
         Map<String, String> map = new HashMap<>();
@@ -94,8 +97,8 @@ public class TestController extends BaseController {
     @RequestMapping(value = "/testtts.json")
     public JsonResult tts(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid AsrContentForm asrContentForm) {
         log.info("请求参数 :"+asrContentForm.getId()+";"+asrContentForm.getContent().length());
-        TtsResponseVo ttsResponseVo = ttsContext.ttsHandler(baseQuery, asrContentForm);
-        String filePath = "/Users/liguoqing/Downloads/test/example.mp3";
+        TtsResponseVo ttsResponseVo = aliTtsService.textToVideo(baseQuery, asrContentForm);
+        String filePath = "/Users/gqli/Downloads/test/example.mp3";
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             fos.write(Base64Util.decodeBase64(ttsResponseVo.getData())); // 写入数据
             System.out.println("Data written to file successfully.");

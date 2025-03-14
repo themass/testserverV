@@ -32,8 +32,11 @@ public class AliTtsCloneServiceImpl extends BaseTtsHandleProxy {
         ttsConfig.setAppid("");
         ttsConfig.setTextType("plain");
         ttsConfig.setEncoding("wav");
-        ttsConfig.setSampleRate(48000);
-        ttsConfig.setUid("sambert-chatonemen-ft-202404171553-07a7");
+        ttsConfig.setSampleRate(16000);
+        ttsConfig.setPitchRatio(10);
+        ttsConfig.setSpeedRatio(1.2f);
+        ttsConfig.setUid("sambert-encvtonem-ft-202406202241-c830");
+
     }
     @Override
     public TtsResponseVo textToVideo(BaseQuery baseQuery, AsrContentForm chatContentForm){

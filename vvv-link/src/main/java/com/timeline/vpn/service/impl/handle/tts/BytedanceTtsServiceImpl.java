@@ -49,7 +49,7 @@ public class BytedanceTtsServiceImpl extends BaseTtsHandleProxy {
         bytedanceTtsRequest.getUser().setUid(ttsConfig.getUid());
         bytedanceTtsRequest.getApp().setAppid(ttsConfig.getAppid());
         bytedanceTtsRequest.getApp().setCluster(ttsConfig.getCluster());
-        bytedanceTtsRequest.getApp().setToken(ttsConfig.getAppKey());
+        bytedanceTtsRequest.getApp().setToken(ttsConfig.getAccessKey());
 
         bytedanceTtsRequest.getAudio().setEmotion(ttsConfig.getEmotion());
         bytedanceTtsRequest.getAudio().setEncoding(ttsConfig.getEncoding());
@@ -67,7 +67,10 @@ public class BytedanceTtsServiceImpl extends BaseTtsHandleProxy {
         if (GlobalConstant.SSML.equals(ttsConfig.getTextType())) { //ssml协议
             text = textToSSML(text);
         }
-        log.info(JacksonJsonUtil.toJsonStr(bytedanceTtsRequest));
+        if(text.length()>1024){
+            throw new BusinessException("字节语音合成失败 -- 字符太长"+text.length());
+        }
+        log.info("tts合成请求："+JacksonJsonUtil.toJsonStr(bytedanceTtsRequest));
         TtsVolcResponse response = bytedanceOpenSpeechApi.getTts("Bearer;" + bytedanceTtsRequest.getToken(), bytedanceTtsRequest);
         if (VOLCENGINE_SUCCESS != response.getCode()) {
             throw new BusinessException("字节语音合成失败");
