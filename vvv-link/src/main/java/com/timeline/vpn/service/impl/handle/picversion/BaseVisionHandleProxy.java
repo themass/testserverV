@@ -74,6 +74,7 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
             }
             // 将上传的图片保存到指定路径
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            log.info("save file:"+fileName);
         } catch (Exception e) {
             log.error("", e);
         }

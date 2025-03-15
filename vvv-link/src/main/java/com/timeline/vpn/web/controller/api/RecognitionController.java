@@ -9,6 +9,7 @@ import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.model.vo.TtsResponseVo;
 import com.timeline.vpn.service.impl.handle.asr.AsrContext;
+import com.timeline.vpn.service.impl.handle.picversion.BaseVisionHandleProxy;
 import com.timeline.vpn.service.impl.handle.picversion.VisionContext;
 import com.timeline.vpn.service.impl.handle.tts.TtsContext;
 import com.timeline.vpn.util.JsonUtil;
@@ -20,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.volcengine.model.maas.Base.form;
 
 
 @RestController
@@ -53,6 +56,12 @@ public class RecognitionController extends BaseController {
     @PostMapping(value = "/feedback.json")
     public JsonResult feedback(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid FeedbackContentForm form) {
         log.info("用户反馈 :"+form);
+        return new JsonResult();
+    }
+    @PostMapping(value = "/file.json")
+    public JsonResult file(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam("file") MultipartFile file) {
+        log.info("file :"+form);
+        BaseVisionHandleProxy.savePic(baseQuery,file);
         return new JsonResult();
     }
 }
