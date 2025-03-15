@@ -65,6 +65,6 @@ public class RecognitionController extends BaseController {
         message.setContent("hello!");
         message.setRole("assistant");
         choice.setMessage(message);
-        return new JsonResult();
+        return new JsonResult(choice);
     }
 }
