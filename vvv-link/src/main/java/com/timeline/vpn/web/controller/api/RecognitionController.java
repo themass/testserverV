@@ -4,10 +4,7 @@ import com.timeline.vpn.model.form.AsrContentForm;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.form.FeedbackContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
-import com.timeline.vpn.model.vo.AsrResponseVo;
-import com.timeline.vpn.model.vo.Choice;
-import com.timeline.vpn.model.vo.JsonResult;
-import com.timeline.vpn.model.vo.TtsResponseVo;
+import com.timeline.vpn.model.vo.*;
 import com.timeline.vpn.service.impl.handle.asr.AsrContext;
 import com.timeline.vpn.service.impl.handle.picversion.BaseVisionHandleProxy;
 import com.timeline.vpn.service.impl.handle.picversion.VisionContext;
@@ -62,6 +59,12 @@ public class RecognitionController extends BaseController {
     public JsonResult file(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam("file") MultipartFile file) {
         log.info("file :"+form);
         BaseVisionHandleProxy.savePic(baseQuery,file);
+        Choice choice = new Choice();
+        choice.setId(chatContent.getId());
+        Message message = new Message();
+        message.setContent("hello!");
+        message.setRole("assistant");
+        choice.setMessage(message);
         return new JsonResult();
     }
 }
