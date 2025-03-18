@@ -1,7 +1,7 @@
 package com.timeline.vpn.test;
 
 import cn.hutool.core.net.URLEncodeUtil;
-import com.timeline.vpn.util.HttpCommonUtil;
+import com.timeline.vpn.common.utils.HttpCommonUtil;
 import com.timeline.vpn.util.JsonUtil;
 
 import java.util.HashMap;

@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl.handle.picversion;
 
+import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @version V1.0
  * @date 2017年11月28日 下午6:32:52
  */
+@MethodTimed
 public abstract class BaseVisionHandle implements BaseSupportHandle<Integer> {
     protected static final Logger LOGGER =
             LoggerFactory.getLogger(BaseVisionHandle.class);

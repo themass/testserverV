@@ -3,7 +3,7 @@ package com.timeline.vpn.service.job.reload;
 import com.timeline.vpn.dao.db.HostV2Dao;
 import com.timeline.vpn.model.po.HostPo;
 import com.timeline.vpn.service.job.ReloadJob;
-import com.timeline.vpn.util.HttpCommonUtil;
+import com.timeline.vpn.common.utils.HttpCommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

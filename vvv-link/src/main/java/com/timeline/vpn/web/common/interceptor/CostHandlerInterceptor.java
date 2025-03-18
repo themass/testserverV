@@ -1,7 +1,7 @@
 package com.timeline.vpn.web.common.interceptor;
 
 import com.timeline.vpn.model.vo.JsonResult;
-import com.timeline.vpn.util.HttpCommonUtil;
+import com.timeline.vpn.common.utils.HttpCommonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class CostHandlerInterceptor implements HandlerInterceptor {
     public  void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                             @Nullable ModelAndView modelAndView) throws Exception {
 //        Metrics.count(Measure.http.name(),);
-        LOGGER.info(request.getServletPath()+"?"+request.getQueryString() + " -ua=-"+HttpCommonUtil.getHeaderStr(request));
+        LOGGER.info(request.getServletPath()+"?"+request.getQueryString() + " -ua=-"+request.getHeader("User-Agent"));
         if (modelAndView != null && modelAndView.getModel() != null) {
             Map<String, Object> map = modelAndView.getModel();
             if (map.get(JsonResult.MODEL_KEY) != null) {
@@ -49,7 +49,7 @@ public class CostHandlerInterceptor implements HandlerInterceptor {
                 long costTime = endTime - startTimeThreadLocal.get();
                 JsonResult result = (JsonResult) map.get(JsonResult.MODEL_KEY);
                 result.setCost(costTime);
-                LOGGER.info(String.format(request.getServletPath()+"[%s],[ua=%s]cost:%s", request.getQueryString(),HttpCommonUtil.getHeaderStr(request),costTime));
+                LOGGER.info(String.format(request.getServletPath()+"[%s],[ua=%s]cost:%s", request.getQueryString(),request.getHeader("User-Agent"),costTime));
 //                String uri=request.getRequestURI();
 //                Metrics.time(MetricsName.http(uri),
 //                        costTime);

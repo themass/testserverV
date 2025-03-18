@@ -3,7 +3,7 @@ package com.timeline.vpn.service.job.reload;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.timeline.vpn.service.job.ReloadJob;
-import com.timeline.vpn.util.HttpCommonUtil;
+import com.timeline.vpn.common.utils.HttpCommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

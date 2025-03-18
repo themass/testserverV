@@ -1,5 +1,6 @@
 package com.timeline.vpn.util;
 
+import com.timeline.vpn.common.utils.HttpCommonUtil;
 import com.timeline.vpn.model.po.IpLocalPo;
 import org.springframework.util.StringUtils;
 

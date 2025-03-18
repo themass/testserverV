@@ -6,7 +6,7 @@ import com.timeline.vpn.exception.LoginException;
 import com.timeline.vpn.exception.MonitorException;
 import com.timeline.vpn.exception.TokenException;
 import com.timeline.vpn.model.vo.JsonResult;
-import com.timeline.vpn.util.HttpCommonUtil;
+import com.timeline.vpn.common.utils.HttpCommonUtil;
 import com.timeline.vpn.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,19 +16,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Locale;
-import org.springframework.http.*;
 
 @ControllerAdvice
 public class CommonHandlerExceptionResolver {

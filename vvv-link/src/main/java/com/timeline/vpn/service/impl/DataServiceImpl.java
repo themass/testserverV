@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.VoBuilder.BuildAction;
+import com.timeline.vpn.common.utils.HttpCommonUtil;
 import com.timeline.vpn.dao.db.AppInfoDao;
 import com.timeline.vpn.dao.db.DomainDao;
 import com.timeline.vpn.dao.db.IWannaDao;

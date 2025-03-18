@@ -2,21 +2,19 @@ package com.timeline.vpn.service.impl.handle.tts;
 
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.common.exception.BusinessException;
+import com.timeline.vpn.common.utils.HttpCommonUtil;
 import com.timeline.vpn.model.form.AsrContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.TtsResponseVo;
 import com.timeline.vpn.service.impl.handle.tts.dto.ElevenlabsTtsRequest;
 import com.timeline.vpn.service.impl.handle.tts.dto.TtsConfig;
-import com.timeline.vpn.service.impl.handle.tts.dto.TtsVolcResponse;
 import com.timeline.vpn.common.utils.Base64Util;
-import com.timeline.vpn.common.utils.HttpCommonUtil;
 import com.timeline.vpn.common.utils.JacksonJsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

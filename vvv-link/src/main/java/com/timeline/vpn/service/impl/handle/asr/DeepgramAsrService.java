@@ -1,22 +1,14 @@
 package com.timeline.vpn.service.impl.handle.asr;
 
 import com.timeline.vpn.common.utils.Base64Util;
-import com.timeline.vpn.common.utils.HttpCommonUtil;
 import com.timeline.vpn.model.chat.SpeechRecognitionResponse;
 import com.timeline.vpn.model.form.AsrContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.AsrResponseVo;
-import com.timeline.vpn.service.impl.handle.asr.bean.AsrResponse;
-import com.timeline.vpn.service.impl.handle.asr.bean.BytedanceAsrClient;
 import com.timeline.vpn.util.JsonUtil;
-import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.io.ByteArrayInputStream;
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class DeepgramAsrService extends BaseAsrHandleProxy {

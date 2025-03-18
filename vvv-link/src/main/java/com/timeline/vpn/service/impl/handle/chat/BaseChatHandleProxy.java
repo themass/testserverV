@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.chat.LlmRecord;
 import com.timeline.vpn.model.chat.UserRole;
 import com.timeline.vpn.model.form.ChatContentForm;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
  * @version V1.0
  * @date 2017年11月28日 下午6:32:52
  */
+@MethodTimed
 public abstract class BaseChatHandleProxy extends BaseChatHandle {
     protected static final Logger LOGGER =
             LoggerFactory.getLogger(BaseChatHandleProxy.class);

@@ -1,5 +1,7 @@
 package com.timeline.vpn.web.controller.api;
 
+import com.timeline.vpn.common.utils.HttpCommonUtil;
+import com.timeline.vpn.model.chat.FileResponsVo;
 import com.timeline.vpn.model.form.AsrContentForm;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.form.FeedbackContentForm;
@@ -10,10 +12,12 @@ import com.timeline.vpn.service.impl.handle.picversion.BaseVisionHandleProxy;
 import com.timeline.vpn.service.impl.handle.picversion.VisionContext;
 import com.timeline.vpn.service.impl.handle.tts.TtsContext;
 import com.timeline.vpn.util.JsonUtil;
+import com.timeline.vpn.util.UnicodeToChinese;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -56,15 +60,34 @@ public class RecognitionController extends BaseController {
         return new JsonResult();
     }
     @PostMapping(value = "/file.json")
-    public JsonResult file(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam("file") MultipartFile file) {
-        log.info("file :"+form);
-        BaseVisionHandleProxy.savePic(baseQuery,file);
-        Choice choice = new Choice();
-        choice.setId(chatContent.getId());
-        Message message = new Message();
-        message.setContent("hello!");
-        message.setRole("assistant");
-        choice.setMessage(message);
-        return new JsonResult(choice);
+    public JsonResult file(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam(value = "file") MultipartFile file) {
+        try {
+            BaseVisionHandleProxy.savePic(baseQuery, file);
+            Choice choice = new Choice();
+            choice.setId(chatContent.getId());
+            Message message = new Message();
+            message.setContent("hello!");
+            message.setRole("assistant");
+            choice.setMessage(message);
+
+            // 调用上传文件的接口
+            CloseableHttpResponse response = HttpCommonUtil.sendPostWithMultipartFile("http://127.0.0.1:5000/upload", file, null);
+            try {
+                String content = HttpCommonUtil.responseToString(response);
+                log.info("Response from upload: {}", UnicodeToChinese.convertUnicode(content));
+                FileResponsVo fileResponsVo = JsonUtil.readValue(content, FileResponsVo.class);
+                // 处理响应内容
+                // 例如，解析 JSON 响应并设置到 choice 中
+                message.setContent(fileResponsVo.getSummary());
+            } finally {
+                response.close();
+            }
+
+            return new JsonResult(choice);
+        } catch (Exception e) {
+            log.error("Error processing file upload", e);
+            return new JsonResult();
+        }
     }
+
 }

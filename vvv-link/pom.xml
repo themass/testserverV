@@ -22,32 +22,18 @@
             <version>0.8.5</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.1.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.timeline</groupId>
             <artifactId>vvv-common</artifactId>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
                     <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-<!--        &lt;!&ndash; WebSocket 依赖 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-websocket</artifactId>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>4.4.0</version> <!-- 请使用最新的版本号 -->
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-reactor-netty</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>reactor-netty</artifactId>
-                    <groupId>io.projectreactor.netty</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -62,11 +48,7 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
-        <!--spring web相关包-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+
         <!-- validation框架 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -107,15 +89,7 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
         </dependency>
-        <!-- openfeign -->
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-micrometer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.volcengine</groupId>
             <artifactId>volcengine-java-sdk-ark-runtime</artifactId>
@@ -145,19 +119,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--docker镜像build插件-->
-            <!--            <plugin>-->
-            <!--                <groupId>com.spotify</groupId>-->
-            <!--                <artifactId>dockerfile-maven-plugin</artifactId>-->
-            <!--                <configuration>-->
-            <!--                    <repository>${dockerhub.repository}/${project.name}</repository>-->
-            <!--                    <tag>${project.version}</tag>-->
-            <!--                    <dockerfile>src/main/docker/Dockerfile</dockerfile>-->
-            <!--                    <buildArgs>-->
-            <!--                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>-->
-            <!--                    </buildArgs>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

@@ -1,6 +1,7 @@
 package com.timeline.vpn.util;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.common.utils.HttpCommonUtil;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import jakarta.servlet.http.HttpServletRequest;
