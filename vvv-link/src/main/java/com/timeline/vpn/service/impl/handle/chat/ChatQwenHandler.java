@@ -27,9 +27,9 @@ import java.util.Arrays;
 @Component
 @MethodTimed
 public class ChatQwenHandler extends BaseChatHandleProxy {
-    public static String key = "sk";
-    public static String key2 = "-2a8e45f1b5c8";
-    public static String key1 = "4f04a9b10d85e81633bf";
+    public static String key = "sk-";
+    public static String key2 = "48f6b106605e49f9";
+    public static String key1 = "a3058b32f633797f";
     @Resource(name = "aliLlmGenericObjectPool")
     private GenericObjectPool<Generation> aliLlmGenericObjectPool;
     @Override
