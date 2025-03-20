@@ -18,6 +18,7 @@ import com.timeline.vpn.web.controller.BaseController;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +107,7 @@ public class RecognitionController extends BaseController {
             choice.setMessage(message);
             Map<String,String> hashMap = new HashMap<>();
             hashMap.put("path",path);
-            HttpEntity entity = new StringEntity(JsonUtil.writeValueAsString(hashMap));
+            HttpEntity entity = new StringEntity(JsonUtil.writeValueAsString(hashMap), ContentType.APPLICATION_JSON);
             // 调用上传文件的接口
             CloseableHttpResponse response = HttpCommonUtil.sendPostWithEntity("http://127.0.0.1:5000/upload1/file", entity, null);
             try {
@@ -138,7 +139,7 @@ public class RecognitionController extends BaseController {
             choice.setMessage(message);
             Map<String,String> hashMap = new HashMap<>();
             hashMap.put("path",path);
-            HttpEntity entity = new StringEntity(JsonUtil.writeValueAsString(hashMap));
+            HttpEntity entity = new StringEntity(JsonUtil.writeValueAsString(hashMap), ContentType.APPLICATION_JSON);
             // 调用上传文件的接口
             CloseableHttpResponse response = HttpCommonUtil.sendPostWithEntity("http://127.0.0.1:5000/upload1/ocr", entity, null);
             try {
@@ -157,5 +158,15 @@ public class RecognitionController extends BaseController {
             log.error("Error processing file upload", e);
             return new JsonResult();
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        Map<String,String> hashMap = new HashMap<>();
+        hashMap.put("path","/Users/liguoqing/Downloads/使用说明（必读）.pdf");
+        HttpEntity entity = new StringEntity(JsonUtil.writeValueAsString(hashMap), ContentType.APPLICATION_JSON);
+        CloseableHttpResponse response = HttpCommonUtil.sendPostWithEntity("http://127.0.0.1:5000/upload1/file", entity, null);
+            String content = HttpCommonUtil.responseToString(response);
+        System.out.println(UnicodeToChinese.convertUnicode(content));
+            log.info("Response from upload: {}", UnicodeToChinese.convertUnicode(content));
     }
 }

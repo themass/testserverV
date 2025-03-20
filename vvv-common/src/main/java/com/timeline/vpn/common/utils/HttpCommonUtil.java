@@ -54,8 +54,8 @@ public class HttpCommonUtil {
     private static final String UA =
             "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
     private static RequestConfig config = RequestConfig.custom()
-            .setConnectTimeout(Timeout.ofSeconds(10))
-            .setConnectionRequestTimeout(Timeout.ofSeconds(10))
+            .setConnectTimeout(Timeout.ofSeconds(15))
+            .setConnectionRequestTimeout(Timeout.ofSeconds(30))
             .setResponseTimeout(Timeout.ofSeconds(30)) // 添加套接字超时
             .build();
     private static HttpClientBuilder httpClientBuilder = null;
