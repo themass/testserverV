@@ -63,7 +63,7 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
         return false;
     }
 
-    public static void savePic(BaseQuery baseQuery, MultipartFile file) {
+    public static String savePic(BaseQuery baseQuery, MultipartFile file) {
         try {
             String fileName = baseQuery.getUser().getName() + "_" + UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path filePath = Paths.get(Constant.UPLOAD_DIR, fileName);
@@ -75,9 +75,11 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
             // 将上传的图片保存到指定路径
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             log.info("save file:"+fileName);
+            return Constant.UPLOAD_DIR+"/"+ fileName;
         } catch (Exception e) {
             log.error("", e);
         }
+        return null;
     }
 
     public ChatPicMessages getChatPicMessages(MultipartFile file, String modle, String text) {

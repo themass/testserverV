@@ -18,10 +18,15 @@ import com.timeline.vpn.web.controller.BaseController;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.volcengine.model.maas.Base.form;
 
@@ -89,19 +94,53 @@ public class RecognitionController extends BaseController {
             return new JsonResult();
         }
     }
-    @PostMapping(value = "/ocr.json")
-    public JsonResult ocr(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam(value = "file") MultipartFile file) {
+    @PostMapping(value = "/local/file.json")
+    public JsonResult localFile(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam(value = "file") MultipartFile file) {
         try {
-            BaseVisionHandleProxy.savePic(baseQuery, file);
+            String path = BaseVisionHandleProxy.savePic(baseQuery, file);
             Choice choice = new Choice();
             choice.setId(chatContent.getId());
             Message message = new Message();
             message.setContent("hello!");
             message.setRole("assistant");
             choice.setMessage(message);
-
+            Map<String,String> hashMap = new HashMap<>();
+            hashMap.put("path",path);
+            HttpEntity entity = new StringEntity(JsonUtil.writeValueAsString(hashMap));
             // 调用上传文件的接口
-            CloseableHttpResponse response = HttpCommonUtil.sendPostWithMultipartFile("http://127.0.0.1:5000/ocr", file, null);
+            CloseableHttpResponse response = HttpCommonUtil.sendPostWithEntity("http://127.0.0.1:5000/upload1/file", entity, null);
+            try {
+                String content = HttpCommonUtil.responseToString(response);
+                log.info("Response from upload: {}", UnicodeToChinese.convertUnicode(content));
+                FileResponsVo fileResponsVo = JsonUtil.readValue(content, FileResponsVo.class);
+                // 处理响应内容
+                // 例如，解析 JSON 响应并设置到 choice 中
+                message.setContent(fileResponsVo.getSummary());
+            } finally {
+                response.close();
+            }
+
+            return new JsonResult(choice);
+        } catch (Exception e) {
+            log.error("Error processing file upload", e);
+            return new JsonResult();
+        }
+    }
+    @PostMapping(value = "/local/ocr.json")
+    public JsonResult localOcr(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam(value = "file") MultipartFile file) {
+        try {
+            String path = BaseVisionHandleProxy.savePic(baseQuery, file);
+            Choice choice = new Choice();
+            choice.setId(chatContent.getId());
+            Message message = new Message();
+            message.setContent("hello!");
+            message.setRole("assistant");
+            choice.setMessage(message);
+            Map<String,String> hashMap = new HashMap<>();
+            hashMap.put("path",path);
+            HttpEntity entity = new StringEntity(JsonUtil.writeValueAsString(hashMap));
+            // 调用上传文件的接口
+            CloseableHttpResponse response = HttpCommonUtil.sendPostWithEntity("http://127.0.0.1:5000/upload1/ocr", entity, null);
             try {
                 String content = HttpCommonUtil.responseToString(response);
                 log.info("Response from upload: {}", UnicodeToChinese.convertUnicode(content));

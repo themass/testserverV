@@ -312,6 +312,7 @@ public class HttpCommonUtil {
 
         return sendPostWithEntity(url, multipart, headerMap);
     }
+
     public static CloseableHttpResponse sendPostWithMultipartFile(String url, MultipartFile file, Map<String, String> headerMap) throws Exception {
         org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder builder = org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder.create();
         builder.addBinaryBody("file", file.getInputStream(), ContentType.APPLICATION_OCTET_STREAM, file.getOriginalFilename());
