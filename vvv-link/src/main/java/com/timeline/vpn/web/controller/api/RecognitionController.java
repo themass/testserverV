@@ -89,5 +89,34 @@ public class RecognitionController extends BaseController {
             return new JsonResult();
         }
     }
+    @PostMapping(value = "/ocr.json")
+    public JsonResult ocr(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam(value = "file") MultipartFile file) {
+        try {
+            BaseVisionHandleProxy.savePic(baseQuery, file);
+            Choice choice = new Choice();
+            choice.setId(chatContent.getId());
+            Message message = new Message();
+            message.setContent("hello!");
+            message.setRole("assistant");
+            choice.setMessage(message);
 
+            // 调用上传文件的接口
+            CloseableHttpResponse response = HttpCommonUtil.sendPostWithMultipartFile("http://127.0.0.1:5000/ocr", file, null);
+            try {
+                String content = HttpCommonUtil.responseToString(response);
+                log.info("Response from upload: {}", UnicodeToChinese.convertUnicode(content));
+                FileResponsVo fileResponsVo = JsonUtil.readValue(content, FileResponsVo.class);
+                // 处理响应内容
+                // 例如，解析 JSON 响应并设置到 choice 中
+                message.setContent(fileResponsVo.getSummary());
+            } finally {
+                response.close();
+            }
+
+            return new JsonResult(choice);
+        } catch (Exception e) {
+            log.error("Error processing file upload", e);
+            return new JsonResult();
+        }
+    }
 }
