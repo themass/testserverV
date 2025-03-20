@@ -128,9 +128,9 @@ public class RecognitionController extends BaseController {
         }
     }
     @PostMapping(value = "/local/ocr.json")
-    public JsonResult localOcr(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam(value = "file") MultipartFile file) {
+    public JsonResult localOcr(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam(value = "image") MultipartFile image) {
         try {
-            String path = BaseVisionHandleProxy.savePic(baseQuery, file);
+            String path = BaseVisionHandleProxy.savePic(baseQuery, image);
             Choice choice = new Choice();
             choice.setId(chatContent.getId());
             Message message = new Message();
