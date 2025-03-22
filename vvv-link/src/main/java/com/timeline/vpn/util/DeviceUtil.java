@@ -76,6 +76,7 @@ public class DeviceUtil {
         String ua = HttpCommonUtil.getUA(webRequest.getHeader(Constant.HTTP_UA));
         String devId = webRequest.getHeader(DEVID);
         String language = webRequest.getHeader(Constant.LANG);
+        String  locallang = webRequest.getHeader(Constant.LOCAL_LANG);
         if (ua != null) {
             Matcher matcher = pattern.matcher(ua);
             if (matcher.find()) {
@@ -87,6 +88,7 @@ public class DeviceUtil {
                 int len = String.valueOf(now).length();
                 String auth = ua.substring(ua.length()-16,ua.length());
                 app.setLang(language);
+                app.setUserLang(StringUtils.hasLength(locallang)?locallang:language);
                 app.setAuthKey(auth);
               //TODO 暂时注释;
                 app.setSign(timeSign.substring(len, timeSign.length()));

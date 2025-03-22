@@ -28,6 +28,7 @@ public class DevApp {
     private String lat;
     private String tokenHeader;
     private String channel;
+    private String userLang;
     private String pool;
     private String netType;
     private String ua;
@@ -192,6 +193,15 @@ public class DevApp {
     public void setUa(String ua) {
         this.ua = ua;
     }
+
+    public String getUserLang() {
+        return userLang;
+    }
+
+    public void setUserLang(String userLang) {
+        this.userLang = userLang;
+    }
+
     @Override
     public String toString() {
         return "DevApp [devId=" + devId + ", versionName=" + versionName + ", version=" + version

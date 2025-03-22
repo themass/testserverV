@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -41,7 +42,13 @@ public class CostHandlerInterceptor implements HandlerInterceptor {
     public  void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                             @Nullable ModelAndView modelAndView) throws Exception {
 //        Metrics.count(Measure.http.name(),);
-        LOGGER.info(request.getServletPath()+"?"+request.getQueryString() + " -ua=-"+request.getHeader("User-Agent"));
+        Iterator<String> it = request.getHeaderNames().asIterator();
+        StringBuilder sb = new StringBuilder();
+        while(it.hasNext()){
+            String header = it.next();
+            sb.append(header+"="+request.getHeader(header)+"&");
+        }
+        LOGGER.info(request.getServletPath()+"?"+request.getQueryString() + " -ua："+request.getHeader("User-Agent")+" \n  -header："+sb);
         if (modelAndView != null && modelAndView.getModel() != null) {
             Map<String, Object> map = modelAndView.getModel();
             if (map.get(JsonResult.MODEL_KEY) != null) {

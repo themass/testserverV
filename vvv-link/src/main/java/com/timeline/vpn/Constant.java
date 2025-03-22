@@ -121,7 +121,7 @@ public class Constant {
     public static final String HTTP_ATTR_TOKEN = "token_key";
     public static final String HTTP_ATTR_RET = "ret_key";
     public static final String LANG = "Accept-Language";
-    
+    public static final String LOCAL_LANG = "userLang";
     public static final String YOUMI_OFFADS="29abff90a29bc419";
     public static final int LOCATION_ALL = 0;
     public static final long FREE_TIME = 20 * 24 * 60 * 60;
