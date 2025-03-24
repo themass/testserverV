@@ -232,6 +232,7 @@ public class UserServiceImpl implements UserService {
                 throw new LoginException(Constant.ResultMsg.RESULT_EXIST_ERROR);
             }
         } else {
+            LOGGER.error("注册用户已存在："+form.toString());
             throw new DataException(Constant.ResultMsg.RESULT_DATA_ERROR);
         }
 

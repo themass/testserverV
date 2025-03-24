@@ -1,6 +1,8 @@
 package com.timeline.vpn.model.form;
 
 import com.timeline.vpn.Constant;
+import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -8,6 +10,8 @@ import org.hibernate.validator.constraints.NotBlank;
  * @date 2016年8月9日 上午10:56:12
  * @version V1.0
  */
+@ToString
+@Data
 public class UserRegForm {
     @NotBlank(message = Constant.ResultMsg.RESULT_DATA_EMPETY_ERROR)
     private String name;
@@ -21,69 +25,6 @@ public class UserRegForm {
     private String channel;
     private String email;
     private String ref;
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    public String getRePwd() {
-        return rePwd;
-    }
-
-    public void setRePwd(String rePwd) {
-        this.rePwd = rePwd;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRef() {
-      return ref;
-    }
-
-    public void setRef(String ref) {
-      this.ref = ref;
-    }
-    
 }
 
