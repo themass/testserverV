@@ -143,8 +143,10 @@ public class RecognitionController extends BaseController {
             CloseableHttpResponse response = HttpCommonUtil.sendPostWithEntity("http://127.0.0.1:5000/upload1/ocr", entity, null);
             try {
                 String content = HttpCommonUtil.responseToString(response);
-                log.info("Response from upload: {}", UnicodeToChinese.convertUnicode(content));
+                content = UnicodeToChinese.convertUnicode(content);
+                log.info("Response from upload 原数据: {}", content);
                 content = LaTeXFormulaReplacer.replaceBrackets(content);
+                log.info("Response from upload 转换后: {}", content);
                 FileResponsVo fileResponsVo = JsonUtil.readValue(content, FileResponsVo.class);
                 // 处理响应内容
                 // 例如，解析 JSON 响应并设置到 choice 中
