@@ -12,6 +12,7 @@ import com.timeline.vpn.service.impl.handle.picversion.BaseVisionHandleProxy;
 import com.timeline.vpn.service.impl.handle.picversion.VisionContext;
 import com.timeline.vpn.service.impl.handle.tts.TtsContext;
 import com.timeline.vpn.util.JsonUtil;
+import com.timeline.vpn.util.LaTeXFormulaReplacer;
 import com.timeline.vpn.util.UnicodeToChinese;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
@@ -28,8 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.volcengine.model.maas.Base.form;
 
 
 @RestController
@@ -145,6 +144,7 @@ public class RecognitionController extends BaseController {
             try {
                 String content = HttpCommonUtil.responseToString(response);
                 log.info("Response from upload: {}", UnicodeToChinese.convertUnicode(content));
+                content = LaTeXFormulaReplacer.replaceBrackets(content);
                 FileResponsVo fileResponsVo = JsonUtil.readValue(content, FileResponsVo.class);
                 // 处理响应内容
                 // 例如，解析 JSON 响应并设置到 choice 中

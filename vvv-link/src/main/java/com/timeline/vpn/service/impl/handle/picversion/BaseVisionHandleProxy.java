@@ -47,8 +47,8 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
         builder.connectionPool(new okhttp3.ConnectionPool(maxIdleConnections, keepAliveDuration, TimeUnit.SECONDS));
         httpClient = builder.build();
     }
-    private String zhText = "请描述图片的内容。";
-    private String enText = "What is in this image?";
+    private String zhText = "请描述图片的内容，并使用markdown格式返回";
+    private String enText = "What is in this image?\nAnd use Markdown format to return.";
 
     public Choice chatWithGptBase(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file) throws Exception {
         savePic(baseQuery, file);

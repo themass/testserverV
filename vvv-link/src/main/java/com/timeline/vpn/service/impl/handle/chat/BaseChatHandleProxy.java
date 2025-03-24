@@ -111,6 +111,8 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
 
                 "3.用户使用的语言：%s \n" +
                 "4.返回内容不要有```"+
+                "5.生成内容使用markdown格式"+
+                "6.如果需要返回katex数学公式，使用$ 符，不要\\(和\\["+
                 "NOTE!!!\n 根据用户的问题的语言来决定你回答问题的语言。\n" +
                 "#以下是对话历史:\n"
                 + "%s";
