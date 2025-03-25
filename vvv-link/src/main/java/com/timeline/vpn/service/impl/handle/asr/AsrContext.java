@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl.handle.asr;
 
+import com.timeline.vpn.common.utils.JacksonJsonUtil;
 import com.timeline.vpn.model.form.AsrContentForm;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -28,8 +29,9 @@ public class AsrContext extends BaseSingleServiceContext<Integer, BaseAsrHandle>
         for(int i =0; i<3;i++) {
             try {
                 int r = random.nextInt(10);
-                LOGGER.info("asr识别 ："+r);
-                return getService(r).asrHandlerBase(baseQuery, asrContentForm);
+                AsrResponseVo asrResponseVo = getService(r).asrHandlerBase(baseQuery, asrContentForm);
+                LOGGER.info("asr识别结果r={} ：{}",r, JacksonJsonUtil.toJsonStr(asrResponseVo));
+                return asrResponseVo;
             } catch (Exception e) {
                 LOGGER.error("asr 识别错误-"+i, e);
             }

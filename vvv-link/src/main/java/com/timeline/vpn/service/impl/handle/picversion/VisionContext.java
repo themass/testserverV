@@ -4,7 +4,10 @@ import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
+import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.service.strategy.BaseSingleServiceContext;
+import com.timeline.vpn.util.JsonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import java.util.Random;
  */
 @Component
 @MethodTimed
+@Slf4j
 public class VisionContext extends BaseSingleServiceContext<Integer, BaseVisionHandle> {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(VisionContext.class);
@@ -31,6 +35,7 @@ public class VisionContext extends BaseSingleServiceContext<Integer, BaseVisionH
                 int r = random.nextInt(10);
                 Choice choice = getService(r).chatWithGptBase(baseQuery, chatContentForm, file);
                 choice.setId(chatContentForm.getId());
+                log.info("图片识别结果r ={}：{}",r, JsonUtil.writeValueAsString(choice));
                 return choice;
             } catch (Exception e) {
                 LOGGER.error("大语言模型调用失败-" + i, e);

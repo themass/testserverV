@@ -36,7 +36,7 @@ public class HostFilter implements Filter {
             app.setDevId("androidimei82892812384933941456");
             app.setChannel(Constant.VPN);
             app.setPool("MYPOOL");
-            app.setLang("en");
+            app.setLang("zh");
             app.setPlatform("android"); 
             DevAppContext.set(app);
         }else{

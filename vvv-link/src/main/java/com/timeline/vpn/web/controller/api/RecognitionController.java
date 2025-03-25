@@ -45,7 +45,12 @@ public class RecognitionController extends BaseController {
     public JsonResult recognizeImage(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam("image") MultipartFile file) {
         log.info("请求参数"+JsonUtil.writeValueAsString(chatContent));
         Choice choice = visionContext.chatWithGpt(baseQuery, chatContent, file);
-            return new JsonResult(choice);
+        try {
+            choice.getMessage().setContent(LaTeXFormulaReplacer.replaceBrackets(choice.getMessage().getContent()));
+        }catch (Exception e){
+            log.error("latex转换失败:"+choice,e);
+        }
+        return new JsonResult(choice);
     }
     @PostMapping(value = "/asr.json")
     public JsonResult recognizeVoice(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid AsrContentForm asrContentForm) {
@@ -67,16 +72,18 @@ public class RecognitionController extends BaseController {
     @PostMapping(value = "/file.json")
     public JsonResult file(@UserInfo BaseQuery baseQuery, @ModelAttribute @Valid ChatContentForm chatContent, @RequestParam(value = "file") MultipartFile file) {
         try {
-            BaseVisionHandleProxy.savePic(baseQuery, file);
+            String path = BaseVisionHandleProxy.savePic(baseQuery, file);
             Choice choice = new Choice();
             choice.setId(chatContent.getId());
             Message message = new Message();
             message.setContent("hello!");
             message.setRole("assistant");
             choice.setMessage(message);
-
+            Map<String,String> hashMap = new HashMap<>();
+            hashMap.put("path",path);
+            HttpEntity entity = new StringEntity(JsonUtil.writeValueAsString(hashMap), ContentType.APPLICATION_JSON);
             // 调用上传文件的接口
-            CloseableHttpResponse response = HttpCommonUtil.sendPostWithMultipartFile("http://127.0.0.1:5000/upload", file, null);
+            CloseableHttpResponse response = HttpCommonUtil.sendPostWithEntity("http://127.0.0.1:5000/upload1/file", entity, null);
             try {
                 String content = HttpCommonUtil.responseToString(response);
                 log.info("Response from upload: {}", UnicodeToChinese.convertUnicode(content));

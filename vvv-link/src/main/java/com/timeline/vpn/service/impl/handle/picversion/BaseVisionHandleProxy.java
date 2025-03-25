@@ -47,8 +47,31 @@ public abstract class BaseVisionHandleProxy extends BaseVisionHandle {
         builder.connectionPool(new okhttp3.ConnectionPool(maxIdleConnections, keepAliveDuration, TimeUnit.SECONDS));
         httpClient = builder.build();
     }
-    private String zhText = "请描述图片的内容，并使用markdown格式返回";
-    private String enText = "What is in this image?\nAnd use Markdown format to return.";
+    private String zhText = "请根据以下要求描述图片内容：\n" +
+            "\n" +
+            "**任务要求**：\n" +
+            "1. **内容描述**：详细描述图片中的内容，包括主要元素、场景、色彩、布局等，确保描述清晰、准确且完整。\n" +
+            "2. **格式规范**：\n" +
+            "   - 使用标准 Markdown 格式返回描述内容。\n" +
+            "   - 描述中避免使用非标准格式（如代码块、HTML 标签等）。\n" +
+            "   - 如果描述中包含数学公式，请使用 `$$...$$` 包裹的完整 LaTeX 表达式。\n" +
+            "   - 不要添加任何无关内容，如“用 Markdown 格式表示如下”或“```markdown```”等。\n" +
+            "3. **语言风格**：\n" +
+            "   - 描述应简洁明了，避免冗余。\n" +
+            "   - 使用自然语言，确保描述通顺易懂。";
+    private String enText = "Please describe the content of the image according to the following requirements:\n" +
+            "\n" +
+            "**Task Requirements**:\n" +
+            "1. **Content Description**:\n" +
+            "   - Provide a detailed description of the image, including the main elements, scene, colors, layout, etc. Ensure that the description is clear, accurate, and comprehensive.\n" +
+            "2. **Format Specifications**:\n" +
+            "   - Return the description in standard Markdown format.\n" +
+            "   - Avoid using non-standard formats (such as code blocks, HTML tags, etc.).\n" +
+            "   - If the description includes mathematical formulas, use `$$...$$` to enclose complete LaTeX expressions.\n" +
+            "   - Do not include any irrelevant content, such as \"Displayed in Markdown format below\" or \"```markdown```\".\n" +
+            "3. **Language Style**:\n" +
+            "   - The description should be concise and clear, avoiding redundancy.\n" +
+            "   - Use natural language to ensure the description is smooth and understandable.";
 
     public Choice chatWithGptBase(BaseQuery baseQuery, ChatContentForm chatContentForm, MultipartFile file) throws Exception {
         savePic(baseQuery, file);
