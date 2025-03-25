@@ -53,7 +53,7 @@ public class ChatGeminiHandler extends BaseChatHandleProxy {
         okhttp3.Response response = httpClient.newCall(httpRequest).execute();
         String res = response.body().string();
         GeminiContentResp vo = JsonUtil.readValue(res,GeminiContentResp.class);
-        LOGGER.info("ChatGeminiHandler Gemini  chat 回复 : "+res);
+//        LOGGER.info("ChatGeminiHandler Gemini  chat 回复 : "+res);
         if(vo.getCandidates()!=null&&vo.getCandidates().size()>0 && vo.getCandidates().getFirst().getContent()!=null){
             GeminiContentPartsText text = vo.getCandidates().getFirst().getContent().getParts().getFirst();
             Choice choice =  new Choice();
