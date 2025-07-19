@@ -42,6 +42,25 @@
 		    </if>
 	    order by sortType desc,id desc
 	</select>
+	<select id="getChannelItemsAsc" resultMap="VideoMap">
+		select * from vpn.videoitems_1
+		where 1=1
+		<choose>
+			<when test="channelType!=null">
+				and channelType=#{channelType}
+			</when>
+			<otherwise>
+				and channelType !='movie'
+			</otherwise>
+		</choose>
+		<if test="channel!=null">
+			and channel=#{channel}
+		</if>
+		<if test="keyword!=null">
+			and LOWER(name) like CONCAT('%',#{keyword},'%')
+		</if>
+		order by id asc
+	</select>
 	<select id="getUsers" resultMap="VideoUserMap">
 	    select * from vpn.video_user_1 where channel=#{channel}
 		<if test="keyword!=null">

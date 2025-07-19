@@ -144,6 +144,7 @@ public class Constant {
     public static final String fen = ";";
     public static final String mao = ":";
     public static final String line = "-";
+    public static final String asc = "asc";
     public static final String PLAYTYPE = "SEXPLAY";
 
     public static final int dataType_RECOMMENT = 2;
