@@ -1,5 +1,6 @@
 package com.timeline.vpn.service.impl;
 
+import cn.hutool.core.codec.Base64Encoder;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.timeline.vpn.Constant;
@@ -143,7 +144,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 t.setExtra(i.getVideoType());
                 t.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 if(i.getBaseurl()!=null && i.getBaseurl().contains("hsex")){
-                    t.setNeedLazyUrl(false);
+                    t.setNeedLazyUrl(true);
                 }else if(i.getBaseurl()!=null && i.getBaseurl().contains("rou")){
                     t.setNeedLazyUrl(true);
                 }else{
@@ -313,16 +314,18 @@ public class DataVideoServiceImpl implements DataVideoService {
 
     private String fetch(String url){
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("curl", url);
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            process.waitFor();
-            return sb.toString();
+            String httpUrl= "104.160.191.19:5003/scrape?url="+ Base64Encoder.encode(url);
+            return HttpCommonUtil.sendGet(httpUrl,"utf-8");
+//            ProcessBuilder processBuilder = new ProcessBuilder("curl", url);
+//            Process process = processBuilder.start();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            StringBuilder sb = new StringBuilder();
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                sb.append(line).append("\n");
+//            }
+//            process.waitFor();
+//            return sb.toString();
         } catch (Exception e) {
             LOGGER.error("fetch error url={}",url,e);
             return null;

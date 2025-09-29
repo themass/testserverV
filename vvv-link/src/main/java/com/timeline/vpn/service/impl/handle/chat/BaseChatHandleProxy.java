@@ -101,21 +101,21 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
             LOGGER.error("请检查设置 settingName = "+chatContentForm.getSettingName());
             prmpt = myprompt;
         }
-        String tmp = prmpt+
-                "#  example\n"
-                + "[user]: 我叫丽丽，你叫什么\n"
-                + "[assistant]:你好，丽丽，我叫 小爱，您的私人助理\n"
-                + "#要求\n"
-                +"1.你回复的内容不要包含 [user]、[assistant] 和各种标点符号等歧义的话语\n" +
-                "2.不要有任何其他多余的内容，直接分析, 你回答的语言请根据用户的设置来判断\n" +
-
-                "3.用户使用的语言：%s \n" +
-                "4.返回内容不要有```\n"+
-                "5.生成内容使用markdown格式\n"+
-                "6.如果需要返回katex数学公式，使用$ 符，不要\\(和\\[ \n\n"+
-                "NOTE!!!\n 根据用户的问题的语言来决定你回答问题的语言。\n" +
-                "#以下是对话历史:\n"
-                + "%s";
+        String tmp = prmpt +
+                "# Example\n" +
+                "[user]: 我叫丽丽，你叫什么\n" +
+                "[assistant]: 你好，丽丽，我叫小爱，您的私人助理\n" +
+                "# Requirements\n" +
+                "1. 回复中不包含 [user]、[assistant] 或其他标点符号等可能产生歧义的内容。\n" +
+                "2. 回复应简洁明了，直接分析问题，不添加多余内容。\n" +
+                "3. 根据用户设置的语言进行回复。\n" +
+                "4. 不使用代码块（```）。\n" +
+                "5. 使用 Markdown 格式。\n" +
+                "6. 如果需要返回数学公式，使用单 `$` 符号，避免使用 `\\(` 和 `\\[`。\n\n" +
+                "NOTE!!!\n" +
+                "根据用户问题的语言决定回答的语言。\n" +
+                "# Conversation History:\n" +
+                "%s";
             return String.format(tmp,baseQuery.getAppInfo().getLang(), history(baseQuery, chatContentForm));
     }
     private static String myprompt = "   #Character Setting\n" +
