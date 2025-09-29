@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -314,7 +315,7 @@ public class DataVideoServiceImpl implements DataVideoService {
 
     private String fetch(String url){
         try {
-            String httpUrl= "104.160.191.19:5003/scrape?url="+ Base64Encoder.encode(url);
+            String httpUrl= "104.160.191.19:5003/scrape?url="+ URLEncoder.encode(url);
             return HttpCommonUtil.sendGet(httpUrl,"utf-8");
 //            ProcessBuilder processBuilder = new ProcessBuilder("curl", url);
 //            Process process = processBuilder.start();
