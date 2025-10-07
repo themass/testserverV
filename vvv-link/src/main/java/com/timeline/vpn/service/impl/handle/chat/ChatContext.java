@@ -26,12 +26,15 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
         Random random = new Random();
 
         for(int i =0; i<3;i++) {
+            BaseChatHandle handle =null;
+            int r = 0;
             try {
-                int r = random.nextInt(11);
+                r = random.nextInt(11);
                 LOGGER.info("生成的数字 ："+r);
-                return getService(r).chatWithGptBase(baseQuery, chatContentForm);
+                handle = getService(r);
+                return handle.chatWithGptBase(baseQuery, chatContentForm);
             } catch (Exception e) {
-                LOGGER.error("大语言模型调用失败-"+i, e);
+                LOGGER.error("大语言模型调用失败-count:"+i+";rondem:"+r+"; handle:"+handle, e);
             }
         }
         throw new RuntimeException("重试3次失败");
