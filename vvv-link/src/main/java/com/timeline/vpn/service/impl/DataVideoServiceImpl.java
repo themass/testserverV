@@ -315,18 +315,18 @@ public class DataVideoServiceImpl implements DataVideoService {
 
     private String fetch(String url){
         try {
-            String httpUrl= "104.160.191.19:5003/scrape?url="+ URLEncoder.encode(url);
-            return HttpCommonUtil.sendGet(httpUrl,"utf-8");
-//            ProcessBuilder processBuilder = new ProcessBuilder("curl", url);
-//            Process process = processBuilder.start();
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//            StringBuilder sb = new StringBuilder();
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                sb.append(line).append("\n");
-//            }
-//            process.waitFor();
-//            return sb.toString();
+//            String httpUrl= "104.160.191.19:5003/scrape?url="+ URLEncoder.encode(url);
+//            return HttpCommonUtil.sendGet(httpUrl,"utf-8");
+            ProcessBuilder processBuilder = new ProcessBuilder("curl", url);
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            process.waitFor();
+            return sb.toString();
         } catch (Exception e) {
             LOGGER.error("fetch error url={}",url,e);
             return null;
