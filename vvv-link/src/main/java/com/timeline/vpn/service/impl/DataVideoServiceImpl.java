@@ -35,7 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 /**
  * @author gqli
  * @date 2016年3月10日 下午4:45:36
@@ -287,17 +288,17 @@ public class DataVideoServiceImpl implements DataVideoService {
                 Connection conn = Jsoup.connect(item.getPath()).headers(header);
 //                Document doc = conn.get();
                 Document doc = Jsoup.parse(data);
-                Elements links = doc.select("source");
+                Elements links = doc.select("iframe");
                 LOGGER.info("url---"+item.getPath());
                 LOGGER.info("title------"+doc.title());
-                LOGGER.info("linksize---"+links.size());
+//                LOGGER.info("linksize---"+links.size());
                 for (Element link : links) {
                     LOGGER.info("links---"+link.html());
                     String url = link.attr("src");
                     LOGGER.info("links---url="+url);
 
                     RecommendVo vo = new RecommendVo();
-                    vo.setActionUrl(url.replace("https://cdn.hsex.tv/","https://cdn.hdcdn.online/"));
+                    vo.setActionUrl(extractVideoUrlFromIframe(url));
                     vo.setTitle(item.getName());
                     vo.setImg(item.getPic());
                     vo.setAdsPopShow(false);
@@ -332,25 +333,27 @@ public class DataVideoServiceImpl implements DataVideoService {
             return null;
         }
     }
-    public static void main(String[] args) {
-        // 输入的字符串
-        String input = "111dada<source id=\"video-source\" src=\"https://www.example.com/video.mp4\">Example Video</source>实打实大时代";
+    public static String extractVideoUrlFromIframe(String iframeHtml) {
+        // 正则表达式：匹配 videoUrl= 后面到 & 符号前的内容（非贪婪匹配）
+        String regex = "videoUrl=(https?://[^&]+)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(iframeHtml);
 
-        // 定义正则表达式
-        String regex = "<source id=\"video-source\".*?</source>";
-
-        // 创建 Pattern 对象
-        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
-
-        // 创建 matcher 对象
-        Matcher matcher = pattern.matcher(input);
-
-        // 检查是否匹配
+        // 找到匹配的地址并返回
         if (matcher.find()) {
-            System.out.println("Match found: " + matcher.group());
-        } else {
-            System.out.println("Match not found");
+            return matcher.group(1);
         }
+        return null; // 未找到视频地址时返回 null
+    }
+
+    // 测试代码
+    public static void main(String[] args) {
+        // 传入 iframe 标签字符串
+        String iframeHtml = "<iframe src=\"https://cloud.hdcdn.online/LivePlayer.html?videoUrl=https://cdn1.hdcdn.online/1761478409/DVzEsCgl-sqEEdKf0XhonA/hls/874162/index.m3u8&autoplay=yes&muted=no&&poster=https://img.ml0987.com/thumb/874162.webp&aspect=16x9&live=false\" frameborder=\"0\" allowfullscreen></iframe>";
+
+        // 提取并打印视频地址
+        String videoUrl = extractVideoUrlFromIframe(iframeHtml);
+        System.out.println("提取到的视频地址：" + videoUrl);
     }
 }
 
