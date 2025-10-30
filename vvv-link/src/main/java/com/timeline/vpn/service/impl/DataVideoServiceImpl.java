@@ -288,7 +288,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 Connection conn = Jsoup.connect(item.getPath()).headers(header);
 //                Document doc = conn.get();
                 Document doc = Jsoup.parse(data);
-                Elements links = doc.select("iframe");
+                Elements links = doc.select("source");
                 LOGGER.info("url---"+item.getPath());
                 LOGGER.info("title------"+doc.title());
 //                LOGGER.info("linksize---"+links.size());
@@ -298,7 +298,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                     LOGGER.info("links---url="+url);
 
                     RecommendVo vo = new RecommendVo();
-                    vo.setActionUrl(extractVideoUrlFromIframe(url));
+                    vo.setActionUrl(url);
                     vo.setTitle(item.getName());
                     vo.setImg(item.getPic());
                     vo.setAdsPopShow(false);
