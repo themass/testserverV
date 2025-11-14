@@ -32,7 +32,7 @@ public class ChatGeminiHandler extends BaseChatHandleProxy {
     ;
   @Override
   public boolean support(Integer t) {
-        return  t==7;
+        return  false;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
         GeminiContentPartsText partsText = new GeminiContentPartsText();
