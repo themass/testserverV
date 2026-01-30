@@ -29,7 +29,7 @@ public class ChatDeepseekHandler extends BaseChatHandleProxy {
     ;
   @Override
   public boolean support(Integer t) {
-        return  t>10 ;
+        return  t>=10 ;
   }
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
         List<ChatMsg> chatMessageList = new ArrayList<>();

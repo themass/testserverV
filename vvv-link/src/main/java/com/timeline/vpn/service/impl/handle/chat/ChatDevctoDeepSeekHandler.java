@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Component
 @MethodTimed
-public class ChatDevctoDeepSeekHandler extends BaseChatHandleProxy {
+public class    ChatDevctoDeepSeekHandler extends BaseChatHandleProxy {
     public static String url = "https://api.agicto.cn/v1/chat/completions";
 //    public static String url = "http://openapi2.ok123find.top";
     public static String apiKey = "Bearer sk";
@@ -36,7 +36,7 @@ public class ChatDevctoDeepSeekHandler extends BaseChatHandleProxy {
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
 
         ChatMessages chatMessages = new ChatMessages();
-        chatMessages.setModel("deepseek-chat");
+        chatMessages.setModel("deepseek-v3.2");
         chatMessages.setTopP(0.5);
         chatMessages.setMaxTokens(3000);
         chatMessages.setTemperature(0.2);

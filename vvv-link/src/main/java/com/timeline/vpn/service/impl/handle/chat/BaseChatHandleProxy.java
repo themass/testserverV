@@ -113,7 +113,7 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
                 "5. 使用 Markdown 格式。\n" +
                 "6. 如果需要返回数学公式，使用单 `$` 符号，避免使用 `\\(` 和 `\\[`。\n\n" +
                 "NOTE!!!\n" +
-                "根据用户问题的语言决定回答的语言。\n" +
+                "根据用户问题的语言决定回答的语言。%s\n" +
                 "# Conversation History:\n" +
                 "%s";
             return String.format(tmp,baseQuery.getAppInfo().getLang(), history(baseQuery, chatContentForm));
