@@ -44,6 +44,7 @@ public class UserCheckHandlerInterceptor implements HandlerInterceptor {
             throw new RuntimeException("welcome");
         }
         String test = request.getHeader("testtesttest");
+        LOGGER.info("test header:{}",test);
         if( "hahaha".equals(test)){
             UserPo po = userDao.get("themass","111111");
             request.setAttribute(Constant.HTTP_ATTR_TOKEN, po);

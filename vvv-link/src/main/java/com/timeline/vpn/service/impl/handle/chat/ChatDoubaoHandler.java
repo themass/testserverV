@@ -35,7 +35,7 @@ public class ChatDoubaoHandler extends BaseChatHandleProxy {
     }
     @Override
     public boolean support(Integer t) {
-        return t<=6 && t>3 ;
+        return  false ;
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
