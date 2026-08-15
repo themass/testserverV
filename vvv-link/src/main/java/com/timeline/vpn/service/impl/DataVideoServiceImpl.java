@@ -336,7 +336,7 @@ public class DataVideoServiceImpl implements DataVideoService {
         Matcher matcher = pattern.matcher(rawText);
         if (matcher.find()) {
             String jsonStr = matcher.group(1).replace("\\/", "/");
-            LOGGER.info("91----"+jsonStr);
+//            LOGGER.info("91----"+jsonStr);
             Map<String, Object> avdtData = JsonUtil.readValue(jsonStr, JsonUtil.getMapType(Object.class));
             if (avdtData != null) {
                 @SuppressWarnings("unchecked")
