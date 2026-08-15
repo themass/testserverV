@@ -149,6 +149,8 @@ public class DataVideoServiceImpl implements DataVideoService {
                     t.setNeedLazyUrl(true);
                 }else if(i.getBaseurl()!=null && i.getBaseurl().contains("rou")){
                     t.setNeedLazyUrl(true);
+                }else if(i.getBaseurl()!=null && i.getBaseurl().contains("rfd0i4")){
+                    t.setNeedLazyUrl(true);
                 }else{
                     t.setNeedLazyUrl(false);
                 }
@@ -276,6 +278,21 @@ public class DataVideoServiceImpl implements DataVideoService {
                 vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 return vo;
             }
+            if(item.getBaseurl().contains("rfd0i4.")){
+                String data = HttpCommonUtil.sendGet(item.getPath());
+                String url = fetchCdnUrl(data);
+                LOGGER.info("data={},url={}",data,url);
+                RecommendVo vo = new RecommendVo();
+                vo.setActionUrl(url);
+                vo.setTitle(item.getName());
+                vo.setImg(item.getPic());
+                vo.setAdsPopShow(false);
+                vo.setAdsShow(true);
+                vo.setParam(item.getBaseurl());
+                vo.setExtra(item.getVideoType());
+                vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
+                return vo;
+            }
             //hsex
             try {
                 Map<String ,String > header = new HashMap<>();
@@ -312,6 +329,27 @@ public class DataVideoServiceImpl implements DataVideoService {
                 LOGGER.error("抓取失败",e);
             }
             return new RecommendVo();
+    }
+
+    private String fetchCdnUrl(String rawText) {
+        Pattern pattern = Pattern.compile("window\\.\\$avdt = (\\{.*?\\})\\s*</script>", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(rawText);
+        if (matcher.find()) {
+            String jsonStr = matcher.group(1).replace("\\/", "/");
+            LOGGER.info("91----"+jsonStr);
+            Map<String, Object> avdtData = JsonUtil.readValue(jsonStr, JsonUtil.getMapType(Object.class));
+            if (avdtData != null) {
+                @SuppressWarnings("unchecked")
+                List<String> cdns = (List<String>) avdtData.get("cdns");
+                Object hls = avdtData.get("hls");
+                if (cdns != null && !cdns.isEmpty() && hls != null) {
+                    return "https://" + cdns.get(0) + "/" + hls;
+                }
+            }
+        } else {
+            LOGGER.warn("未匹配到 window.$avdt 的数据内容");
+        }
+        return null;
     }
 
     private String fetch(String url){
