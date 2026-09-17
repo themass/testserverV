@@ -332,22 +332,16 @@ public class DataVideoServiceImpl implements DataVideoService {
     }
 
     private String fetchCdnUrl(String rawText) {
-        Pattern pattern = Pattern.compile("window\\.\\$avdt = (\\{.*?\\})\\s*</script>", Pattern.DOTALL);
+        // 匹配 <video ... data-src="xxx"> 里面的链接
+        Pattern pattern = Pattern.compile("<video[^>]+data-src=\"([^\"]+)\"", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(rawText);
         if (matcher.find()) {
-            String jsonStr = matcher.group(1).replace("\\/", "/");
-//            LOGGER.info("91----"+jsonStr);
-            Map<String, Object> avdtData = JsonUtil.readValue(jsonStr, JsonUtil.getMapType(Object.class));
-            if (avdtData != null) {
-                @SuppressWarnings("unchecked")
-                List<String> cdns = (List<String>) avdtData.get("cdns");
-                Object hls = avdtData.get("hls");
-                if (cdns != null && !cdns.isEmpty() && hls != null) {
-                    return "https://" + cdns.get(0) + "/" + hls;
-                }
-            }
+            String url = matcher.group(1);
+            // html转义 &amp; -> &
+            String realUrl = url.replace("&amp;", "&");
+            return realUrl;
         } else {
-            LOGGER.warn("未匹配到 window.$avdt 的数据内容");
+            LOGGER.warn("未匹配到 video data-src 的内容");
         }
         return null;
     }
