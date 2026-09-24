@@ -151,6 +151,8 @@ public class DataVideoServiceImpl implements DataVideoService {
                     t.setNeedLazyUrl(true);
                 }else if(i.getBaseurl()!=null && i.getBaseurl().contains("rfd0i4")){
                     t.setNeedLazyUrl(true);
+                }else if(i.getBaseurl()!=null && i.getBaseurl().contains("91crdj")){
+                    t.setNeedLazyUrl(true);
                 }else{
                     t.setNeedLazyUrl(false);
                 }
@@ -293,6 +295,25 @@ public class DataVideoServiceImpl implements DataVideoService {
                 vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 return vo;
             }
+            if(item.getBaseurl().contains("91crdj.")){
+                String data = fetch(item.getPath());
+//                Document doc = conn.get();
+                Document doc = Jsoup.parse(data);
+                Element scriptEl = doc.selectFirst("script#playInitialData");
+                String jsonStr = scriptEl.html(); // script标签内文本
+                PlayInitialData dataUrl = JsonUtil.readValue(jsonStr, PlayInitialData.class);
+                LOGGER.info("data={},url={}",data,dataUrl);
+                RecommendVo vo = new RecommendVo();
+                vo.setActionUrl(dataUrl.getCurrent().getSrc());
+                vo.setTitle(item.getName());
+                vo.setImg(item.getPic());
+                vo.setAdsPopShow(false);
+                vo.setAdsShow(true);
+                vo.setParam(item.getBaseurl());
+                vo.setExtra(item.getVideoType());
+                vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
+                return vo;
+            }
             //hsex
             try {
                 Map<String ,String > header = new HashMap<>();
@@ -302,7 +323,7 @@ public class DataVideoServiceImpl implements DataVideoService {
 //                header.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
 //                header.put("Cookie","_ga=GA1.1.611983894.1716478735; __PPU_puid=7372220048289729256; __PPU_CAIFRQ=AC3I8gAAAAAAAAAB; __PPU_CAIFRT=AC3I8gAAAABmkgnQ; hid=pe23b18i9rui36af8tlct1hac4; cf_clearance=qXy7LEl8vOIYqy0owpkqfAJYKf7QKaH.9HOiHUVDlg0-1722351879-1.0.1.1-k8PaqqzEipqOUQdwV2p3JevlLcWdIBzw.b1E4LmRgp7dmucl076.09HpcxPE_8jJ3XqSJNSh1B5mrVpLlPqtQQ; UGVyc2lzdFN0b3JhZ2U=%7B%7D; bnState_1871751={\"impressions\":11,\"delayStarted\":0}; _ga_ECF2QFGQ9G=GS1.1.1722351875.8.1.1722353472.0.0.0");
                 String data = fetch(item.getPath());
-                Connection conn = Jsoup.connect(item.getPath()).headers(header);
+//                Connection conn = Jsoup.connect(item.getPath()).headers(header);
 //                Document doc = conn.get();
                 Document doc = Jsoup.parse(data);
                 Elements links = doc.select("source");
@@ -381,11 +402,20 @@ public class DataVideoServiceImpl implements DataVideoService {
     // 测试代码
     public static void main(String[] args) {
         // 传入 iframe 标签字符串
-        String iframeHtml = "<iframe src=\"https://cloud.hdcdn.online/LivePlayer.html?videoUrl=https://cdn1.hdcdn.online/1761478409/DVzEsCgl-sqEEdKf0XhonA/hls/874162/index.m3u8&autoplay=yes&muted=no&&poster=https://img.ml0987.com/thumb/874162.webp&aspect=16x9&live=false\" frameborder=\"0\" allowfullscreen></iframe>";
-
-        // 提取并打印视频地址
-        String videoUrl = extractVideoUrlFromIframe(iframeHtml);
-        System.out.println("提取到的视频地址：" + videoUrl);
+//        String iframeHtml = "<iframe src=\"https://cloud.hdcdn.online/LivePlayer.html?videoUrl=https://cdn1.hdcdn.online/1761478409/DVzEsCgl-sqEEdKf0XhonA/hls/874162/index.m3u8&autoplay=yes&muted=no&&poster=https://img.ml0987.com/thumb/874162.webp&aspect=16x9&live=false\" frameborder=\"0\" allowfullscreen></iframe>";
+//
+//        // 提取并打印视频地址
+//        String videoUrl = extractVideoUrlFromIframe(iframeHtml);
+//        System.out.println("提取到的视频地址：" + videoUrl);
+        DataVideoServiceImpl service = new DataVideoServiceImpl();
+        String data = service.fetch("https://91crdj.com/duanju/2401-congdiyuguilaishenyuandiaojiaoep1/2/");
+//                Document doc = conn.get();
+        Document doc = Jsoup.parse(data);
+        Element scriptEl = doc.selectFirst("script#playInitialData");
+        String jsonStr = scriptEl.html(); // script标签内文本
+        PlayInitialData dataUrl = JsonUtil.readValue(jsonStr, PlayInitialData.class);
+        System.out.println("dataUrl="+dataUrl.getCurrent().getSrc());
+        LOGGER.info("data={},url={}",data,dataUrl);
     }
 }
 
