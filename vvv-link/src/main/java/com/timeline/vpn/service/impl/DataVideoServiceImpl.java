@@ -153,6 +153,10 @@ public class DataVideoServiceImpl implements DataVideoService {
                     t.setNeedLazyUrl(true);
                 }else if(i.getBaseurl()!=null && i.getBaseurl().contains("91crdj")){
                     t.setNeedLazyUrl(true);
+                }else if(i.getBaseurl()!=null && i.getBaseurl().contains("91quanji")){
+                    t.setNeedLazyUrl(true);
+                }else if(i.getBaseurl()!=null && i.getBaseurl().contains("91crdj")){
+                    t.setNeedLazyUrl(true);
                 }else{
                     t.setNeedLazyUrl(false);
                 }
@@ -314,6 +318,54 @@ public class DataVideoServiceImpl implements DataVideoService {
                 vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 return vo;
             }
+            if(item.getBaseurl().contains("91quanji.")){
+                String pageUrl = item.getBaseurl() + item.getPath();
+                String data = fetch(pageUrl);
+                Document doc = Jsoup.parse(data);
+                String videoUrl = null;
+                Pattern evalPattern = Pattern.compile("eval\\(I\\(\"([^\"]+)\"\\)\\)");
+                Pattern m3u8Pattern = Pattern.compile("https?://[^\\s'\"]+\\.m3u8[^\\s'\"]*");
+                for (Element script : doc.select("script")) {
+                    String text = script.data();
+                    if (StringUtils.isBlank(text) || !text.contains("eval(I(")) {
+                        continue;
+                    }
+                    Matcher evalMatcher = evalPattern.matcher(text);
+                    if (!evalMatcher.find()) {
+                        continue;
+                    }
+                    String encoded = evalMatcher.group(1);
+                    StringBuilder decodedBuilder = new StringBuilder();
+                    for (int i = 0; i < encoded.length(); ) {
+                        int cp = encoded.codePointAt(i);
+                        i += Character.charCount(cp);
+                        int code = cp - 128;
+                        if (code >= 0 && code <= 0x10FFFF) {
+                            decodedBuilder.appendCodePoint(code);
+                        }
+                    }
+                    Matcher m3u8Matcher = m3u8Pattern.matcher(decodedBuilder.toString());
+                    if (m3u8Matcher.find()) {
+                        videoUrl = m3u8Matcher.group(0);
+                        break;
+                    }
+                }
+                if (videoUrl == null) {
+                    videoUrl = item.getUrl();
+                    LOGGER.info("91quanji 没找到m3u8, fallback item.url={}, page={}", videoUrl, pageUrl);
+                }
+                LOGGER.info("data={},url={}", data, videoUrl);
+                RecommendVo vo = new RecommendVo();
+                vo.setActionUrl(videoUrl);
+                vo.setTitle(item.getName());
+                vo.setImg(item.getPic());
+                vo.setAdsPopShow(false);
+                vo.setAdsShow(true);
+                vo.setParam(item.getBaseurl());
+                vo.setExtra(item.getVideoType());
+                vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
+                return vo;
+            }
             //hsex
             try {
                 Map<String ,String > header = new HashMap<>();
@@ -408,14 +460,39 @@ public class DataVideoServiceImpl implements DataVideoService {
 //        String videoUrl = extractVideoUrlFromIframe(iframeHtml);
 //        System.out.println("提取到的视频地址：" + videoUrl);
         DataVideoServiceImpl service = new DataVideoServiceImpl();
-        String data = service.fetch("https://91crdj.com/duanju/2401-congdiyuguilaishenyuandiaojiaoep1/2/");
+        String data = service.fetch("https://91quanji.com/watch.jsp?v=1mqglko392j3");
 //                Document doc = conn.get();
         Document doc = Jsoup.parse(data);
-        Element scriptEl = doc.selectFirst("script#playInitialData");
-        String jsonStr = scriptEl.html(); // script标签内文本
-        PlayInitialData dataUrl = JsonUtil.readValue(jsonStr, PlayInitialData.class);
-        System.out.println("dataUrl="+dataUrl.getCurrent().getSrc());
-        LOGGER.info("data={},url={}",data,dataUrl);
+        String videoUrl = null;
+        Pattern evalPattern = Pattern.compile("eval\\(I\\(\"([^\"]+)\"\\)\\)");
+        Pattern m3u8Pattern = Pattern.compile("https?://[^\\s'\"]+\\.m3u8[^\\s'\"]*");
+        for (Element script : doc.select("script")) {
+            String text = script.data();
+            if (StringUtils.isBlank(text) || !text.contains("eval(I(")) {
+                continue;
+            }
+            Matcher evalMatcher = evalPattern.matcher(text);
+            if (!evalMatcher.find()) {
+                continue;
+            }
+            String encoded = evalMatcher.group(1);
+            StringBuilder decodedBuilder = new StringBuilder();
+            for (int i = 0; i < encoded.length(); ) {
+                int cp = encoded.codePointAt(i);
+                i += Character.charCount(cp);
+                int code = cp - 128;
+                if (code >= 0 && code <= 0x10FFFF) {
+                    decodedBuilder.appendCodePoint(code);
+                }
+            }
+            Matcher m3u8Matcher = m3u8Pattern.matcher(decodedBuilder.toString());
+            if (m3u8Matcher.find()) {
+                videoUrl = m3u8Matcher.group(0);
+                break;
+            }
+        }
+        System.out.println("dataUrl="+videoUrl);
+        LOGGER.info("data={},url={}",data,videoUrl);
     }
 }
 
