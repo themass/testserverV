@@ -29,6 +29,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
@@ -399,40 +402,23 @@ public class DataVideoServiceImpl implements DataVideoService {
                         String apiPath = "/data/topic/play-" + postId + ".js";
                         String apiUrl = maomiApiHost + "/" + Base64.getEncoder().encodeToString(
                                 (maomiUriPrefix + apiPath).getBytes(StandardCharsets.UTF_8));
-                        ProcessBuilder nodePb = new ProcessBuilder("node", "-");
-                        Process nodeProc = nodePb.start();
-                        String nodeScript = "var https=require(\"https\");\n"
-                                + "var CryptoJS;\n"
-                                + "try{CryptoJS=require(\"/tmp/package/crypto-js\");}catch(e1){\n"
-                                + "  try{CryptoJS=require(\"crypto-js\");}catch(e2){process.exit(1);}}\n"
-                                + "var apiUrl=" + JsonUtil.writeValueAsString(apiUrl) + ";\n"
-                                + "var key=Buffer.from(" + JsonUtil.writeValueAsString(maomiAesKeyB64) + ",\"base64\").toString(\"utf8\");\n"
-                                + "var ivBase=Buffer.from(" + JsonUtil.writeValueAsString(maomiAesIvB64) + ",\"base64\").toString(\"utf8\");\n"
-                                + "function decrypt(enc,suffix){\n"
-                                + "  var iv=CryptoJS.enc.Utf8.parse(ivBase+(suffix||\"\"));\n"
-                                + "  var k=CryptoJS.enc.Utf8.parse(key);\n"
-                                + "  return CryptoJS.AES.decrypt(enc,k,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7}).toString(CryptoJS.enc.Utf8);\n"
-                                + "}\n"
-                                + "https.get(apiUrl,{headers:{\"User-Agent\":\"Mozilla/5.0\"}},function(res){\n"
-                                + "  var d=\"\";res.on(\"data\",function(c){d+=c;});\n"
-                                + "  res.on(\"end\",function(){\n"
-                                + "    try{\n"
-                                + "      var body=JSON.parse(d);\n"
-                                + "      process.stdout.write(decrypt(body.data, body.suffix));\n"
-                                + "    }catch(e){process.stdout.write(\"\");}\n"
-                                + "  });\n"
-                                + "}).on(\"error\",function(){process.stdout.write(\"\");});\n";
-                        nodeProc.getOutputStream().write(nodeScript.getBytes(StandardCharsets.UTF_8));
-                        nodeProc.getOutputStream().close();
-                        BufferedReader nodeReader = new BufferedReader(
-                                new InputStreamReader(nodeProc.getInputStream(), StandardCharsets.UTF_8));
-                        StringBuilder plainBuilder = new StringBuilder();
-                        String nodeLine;
-                        while ((nodeLine = nodeReader.readLine()) != null) {
-                            plainBuilder.append(nodeLine);
+                        String apiBody = fetch(apiUrl);
+                        if (StringUtils.isBlank(apiBody)) {
+                            throw new IllegalStateException("empty play api body " + apiUrl);
                         }
-                        nodeProc.waitFor();
-                        String plain = plainBuilder.toString().trim();
+                        JsonNode wrap = JsonUtil.getMapper().readTree(apiBody);
+                        String enc = wrap.path("data").asText("");
+                        String suffix = wrap.path("suffix").asText("");
+                        if (StringUtils.isBlank(enc)) {
+                            throw new IllegalStateException("play api data empty");
+                        }
+                        String keyStr = new String(Base64.getDecoder().decode(maomiAesKeyB64), StandardCharsets.UTF_8);
+                        String ivStr = new String(Base64.getDecoder().decode(maomiAesIvB64), StandardCharsets.UTF_8) + suffix;
+                        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+                        cipher.init(Cipher.DECRYPT_MODE,
+                                new SecretKeySpec(keyStr.getBytes(StandardCharsets.UTF_8), "AES"),
+                                new IvParameterSpec(ivStr.getBytes(StandardCharsets.UTF_8)));
+                        String plain = new String(cipher.doFinal(Base64.getDecoder().decode(enc)), StandardCharsets.UTF_8);
                         if (StringUtils.isNotBlank(plain)) {
                             JsonNode root = JsonUtil.getMapper().readTree(plain);
                             JsonNode srcNode = root.path("source").path("video_url");
@@ -467,7 +453,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                     String data = fetch(pageUrl);
                     Document doc = Jsoup.parse(data != null ? data : "");
                     Pattern fullM3u8 = Pattern.compile("https?://[^\"']*hongtaitanghua\\.com[^\"']+\\.m3u8\\?[^\"']+");
-                    Pattern impulsePath = Pattern.compile("(/common/impulses/[^\"']+\\.m3u8)");
+                    Pattern impulsePath = Pattern.compile("(/common/impulse[s]?/[^\"']+\\.m3u8)");
                     Pattern videoUrlJson = Pattern.compile("\"video_url\"\\s*:\\s*\"([^\"]+)\"");
                     Pattern legacyM3u8 = Pattern.compile("varvideo='(.*?)\\.m3u8';");
                     Pattern legacyMp4 = Pattern.compile("varvideo='(.*?)\\.mp4';");
