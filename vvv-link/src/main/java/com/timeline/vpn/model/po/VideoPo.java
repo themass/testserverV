@@ -20,7 +20,16 @@ public class VideoPo {
     private String baseurl;
     private Integer type;
     private String path;
-    
+    private String channelType;
+
+    public String getChannelType() {
+        return channelType;
+    }
+
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
+    }
+
     public Integer getType() {
         return type;
     }

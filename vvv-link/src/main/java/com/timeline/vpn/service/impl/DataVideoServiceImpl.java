@@ -23,11 +23,15 @@ import org.jsoup.select.Elements;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Base64;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -155,7 +159,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                     t.setNeedLazyUrl(true);
                 }else if(i.getBaseurl()!=null && i.getBaseurl().contains("91quanji")){
                     t.setNeedLazyUrl(true);
-                }else if(i.getBaseurl()!=null && i.getBaseurl().contains("91crdj")){
+                }else if(i.getChannelType()!=null && i.getChannelType().contains("miaomi")){
                     t.setNeedLazyUrl(true);
                 }else{
                     t.setNeedLazyUrl(false);
@@ -366,6 +370,214 @@ public class DataVideoServiceImpl implements DataVideoService {
                 vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 return vo;
             }
+            if (item.getChannelType() != null && item.getChannelType().contains("miaomi")) {
+                String pageUrl = item.getPath();
+                if (StringUtils.isBlank(pageUrl)) {
+                    pageUrl = item.getUrl();
+                } else if (!pageUrl.startsWith("http://") && !pageUrl.startsWith("https://")) {
+                    String site = item.getBaseurl() != null ? item.getBaseurl().replace("/home", "") : "https://exex.j8olo.cc";
+                    if (!pageUrl.startsWith("/")) {
+                        pageUrl = "/" + pageUrl;
+                    }
+                    pageUrl = site + pageUrl;
+                }
+                String videoUrl = null;
+                final String maomiVideoHost = "https://kwmdmmsp.hongtaitanghua.com";
+                final String maomiSignKey = "D7hGKHnWThaECaQ3ji4XyAF3MfYKJ53M";
+                final String maomiApiHost = "https://iofbsmcxzs.692fo7w1.com";
+                final String maomiUriPrefix = "gt6ikshg458mns4f";
+                final String maomiAesKeyB64 = "SWRUSnEwSGtscHVJNm11OGlCJU9PQCF2ZF40SyZ1WFc=";
+                final String maomiAesIvB64 = "JDB2QGtySDdWMg==";
+                Pattern postIdPattern = Pattern.compile("(?:post-detail|play)[/-](\\d+)|/video/[^/]+/(\\d+)(?:$|[/?#])");
+                Matcher postMatcher = postIdPattern.matcher(pageUrl);
+                String postId = null;
+                if (postMatcher.find()) {
+                    postId = postMatcher.group(1) != null ? postMatcher.group(1) : postMatcher.group(2);
+                }
+                if (postId != null) {
+                    try {
+                        String apiPath = "/data/topic/play-" + postId + ".js";
+                        String apiUrl = maomiApiHost + "/" + Base64.getEncoder().encodeToString(
+                                (maomiUriPrefix + apiPath).getBytes(StandardCharsets.UTF_8));
+                        ProcessBuilder nodePb = new ProcessBuilder("node", "-");
+                        Process nodeProc = nodePb.start();
+                        String nodeScript = "var https=require(\"https\");\n"
+                                + "var CryptoJS;\n"
+                                + "try{CryptoJS=require(\"/tmp/package/crypto-js\");}catch(e1){\n"
+                                + "  try{CryptoJS=require(\"crypto-js\");}catch(e2){process.exit(1);}}\n"
+                                + "var apiUrl=" + JsonUtil.writeValueAsString(apiUrl) + ";\n"
+                                + "var key=Buffer.from(" + JsonUtil.writeValueAsString(maomiAesKeyB64) + ",\"base64\").toString(\"utf8\");\n"
+                                + "var ivBase=Buffer.from(" + JsonUtil.writeValueAsString(maomiAesIvB64) + ",\"base64\").toString(\"utf8\");\n"
+                                + "function decrypt(enc,suffix){\n"
+                                + "  var iv=CryptoJS.enc.Utf8.parse(ivBase+(suffix||\"\"));\n"
+                                + "  var k=CryptoJS.enc.Utf8.parse(key);\n"
+                                + "  return CryptoJS.AES.decrypt(enc,k,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.Pkcs7}).toString(CryptoJS.enc.Utf8);\n"
+                                + "}\n"
+                                + "https.get(apiUrl,{headers:{\"User-Agent\":\"Mozilla/5.0\"}},function(res){\n"
+                                + "  var d=\"\";res.on(\"data\",function(c){d+=c;});\n"
+                                + "  res.on(\"end\",function(){\n"
+                                + "    try{\n"
+                                + "      var body=JSON.parse(d);\n"
+                                + "      process.stdout.write(decrypt(body.data, body.suffix));\n"
+                                + "    }catch(e){process.stdout.write(\"\");}\n"
+                                + "  });\n"
+                                + "}).on(\"error\",function(){process.stdout.write(\"\");});\n";
+                        nodeProc.getOutputStream().write(nodeScript.getBytes(StandardCharsets.UTF_8));
+                        nodeProc.getOutputStream().close();
+                        BufferedReader nodeReader = new BufferedReader(
+                                new InputStreamReader(nodeProc.getInputStream(), StandardCharsets.UTF_8));
+                        StringBuilder plainBuilder = new StringBuilder();
+                        String nodeLine;
+                        while ((nodeLine = nodeReader.readLine()) != null) {
+                            plainBuilder.append(nodeLine);
+                        }
+                        nodeProc.waitFor();
+                        String plain = plainBuilder.toString().trim();
+                        if (StringUtils.isNotBlank(plain)) {
+                            JsonNode root = JsonUtil.getMapper().readTree(plain);
+                            JsonNode srcNode = root.path("source").path("video_url");
+                            String vpath = srcNode.isMissingNode() || srcNode.isNull() ? null : srcNode.asText();
+                            if (StringUtils.isBlank(vpath)) {
+                                JsonNode infoNode = root.path("info").path("video_url");
+                                vpath = infoNode.isMissingNode() || infoNode.isNull() ? null : infoNode.asText();
+                            }
+                            if (StringUtils.isNotBlank(vpath)) {
+                                vpath = vpath.replace("\\/", "/");
+                                if (!vpath.startsWith("/")) {
+                                    vpath = "/" + vpath;
+                                }
+                                vpath = vpath.replaceAll("/+", "/");
+                                long wsTime = System.currentTimeMillis() / 1000 + 300;
+                                String raw = maomiSignKey + vpath + wsTime;
+                                MessageDigest md = MessageDigest.getInstance("MD5");
+                                byte[] digest = md.digest(raw.getBytes(StandardCharsets.UTF_8));
+                                StringBuilder hex = new StringBuilder();
+                                for (byte b : digest) {
+                                    hex.append(String.format("%02x", b));
+                                }
+                                videoUrl = maomiVideoHost + vpath + "?wsSecret=" + hex + "&wsTime=" + wsTime + "&ip=127.0.0.1";
+                            }
+                        }
+                    } catch (Exception e) {
+                        LOGGER.warn("miaomi topic api parse fail, page={}", pageUrl, e);
+                    }
+                }
+                if (videoUrl == null) {
+                    try {
+                    String data = fetch(pageUrl);
+                    Document doc = Jsoup.parse(data != null ? data : "");
+                    Pattern fullM3u8 = Pattern.compile("https?://[^\"']*hongtaitanghua\\.com[^\"']+\\.m3u8\\?[^\"']+");
+                    Pattern impulsePath = Pattern.compile("(/common/impulses/[^\"']+\\.m3u8)");
+                    Pattern videoUrlJson = Pattern.compile("\"video_url\"\\s*:\\s*\"([^\"]+)\"");
+                    Pattern legacyM3u8 = Pattern.compile("varvideo='(.*?)\\.m3u8';");
+                    Pattern legacyMp4 = Pattern.compile("varvideo='(.*?)\\.mp4';");
+                    for (Element div : doc.select("div#playlist4")) {
+                        Element a = div.selectFirst("a[href]");
+                        if (a == null) {
+                            continue;
+                        }
+                        String childHtml = fetch(a.attr("href"));
+                        if (StringUtils.isBlank(childHtml)) {
+                            continue;
+                        }
+                        String compact = childHtml.replace(" ", "");
+                        Matcher m = fullM3u8.matcher(compact);
+                        if (m.find()) {
+                            videoUrl = m.group(0);
+                            break;
+                        }
+                        m = impulsePath.matcher(compact);
+                        if (m.find()) {
+                            String vpath = m.group(1).replaceAll("/+", "/");
+                            long wsTime = System.currentTimeMillis() / 1000 + 300;
+                            String raw = maomiSignKey + vpath + wsTime;
+                            MessageDigest md = MessageDigest.getInstance("MD5");
+                            byte[] digest = md.digest(raw.getBytes(StandardCharsets.UTF_8));
+                            StringBuilder hex = new StringBuilder();
+                            for (byte b : digest) {
+                                hex.append(String.format("%02x", b));
+                            }
+                            videoUrl = maomiVideoHost + vpath + "?wsSecret=" + hex + "&wsTime=" + wsTime + "&ip=127.0.0.1";
+                            break;
+                        }
+                    }
+                    if (videoUrl == null) {
+                        StringBuilder scriptText = new StringBuilder();
+                        for (Element script : doc.select("script")) {
+                            if (StringUtils.isNotBlank(script.data())) {
+                                scriptText.append(script.data().replace(" ", ""));
+                            }
+                        }
+                        String compact = scriptText.toString();
+                        Matcher m = fullM3u8.matcher(compact);
+                        if (m.find()) {
+                            videoUrl = m.group(0);
+                        } else {
+                            m = legacyM3u8.matcher(compact);
+                            if (m.find()) {
+                                videoUrl = "https://s1.cdn-c55291f64e9b0e3a.com" + m.group(1) + ".m3u8";
+                            } else {
+                                m = legacyMp4.matcher(compact);
+                                if (m.find()) {
+                                    videoUrl = "https://jccfy.com" + m.group(1) + ".mp4";
+                                } else {
+                                    m = impulsePath.matcher(compact);
+                                    if (m.find()) {
+                                        String vpath = m.group(1).replaceAll("/+", "/");
+                                        long wsTime = System.currentTimeMillis() / 1000 + 300;
+                                        String raw = maomiSignKey + vpath + wsTime;
+                                        MessageDigest md = MessageDigest.getInstance("MD5");
+                                        byte[] digest = md.digest(raw.getBytes(StandardCharsets.UTF_8));
+                                        StringBuilder hex = new StringBuilder();
+                                        for (byte b : digest) {
+                                            hex.append(String.format("%02x", b));
+                                        }
+                                        videoUrl = maomiVideoHost + vpath + "?wsSecret=" + hex + "&wsTime=" + wsTime + "&ip=127.0.0.1";
+                                    } else {
+                                        m = videoUrlJson.matcher(compact);
+                                        if (m.find()) {
+                                            String vpath = m.group(1).replace("\\/", "/");
+                                            if (vpath.contains(".m3u8")) {
+                                                if (!vpath.startsWith("/")) {
+                                                    vpath = "/" + vpath;
+                                                }
+                                                vpath = vpath.replaceAll("/+", "/");
+                                                long wsTime = System.currentTimeMillis() / 1000 + 300;
+                                                String raw = maomiSignKey + vpath + wsTime;
+                                                MessageDigest md = MessageDigest.getInstance("MD5");
+                                                byte[] digest = md.digest(raw.getBytes(StandardCharsets.UTF_8));
+                                                StringBuilder hex = new StringBuilder();
+                                                for (byte b : digest) {
+                                                    hex.append(String.format("%02x", b));
+                                                }
+                                                videoUrl = maomiVideoHost + vpath + "?wsSecret=" + hex + "&wsTime=" + wsTime + "&ip=127.0.0.1";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    } catch (Exception e) {
+                        LOGGER.warn("miaomi html parse fail, page={}", pageUrl, e);
+                    }
+                }
+                if (videoUrl == null) {
+                    videoUrl = item.getUrl();
+                    LOGGER.info("miaomi 未解析到播放地址, fallback item.url={}, page={}", videoUrl, pageUrl);
+                }
+                LOGGER.info("miaomi play url={}, page={}", videoUrl, pageUrl);
+                RecommendVo vo = new RecommendVo();
+                vo.setActionUrl(videoUrl);
+                vo.setTitle(item.getName());
+                vo.setImg(item.getPic());
+                vo.setAdsPopShow(false);
+                vo.setAdsShow(true);
+                vo.setParam(item.getBaseurl());
+                vo.setExtra(item.getVideoType());
+                vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
+                return vo;
+            }
             //hsex
             try {
                 Map<String ,String > header = new HashMap<>();
@@ -384,7 +596,7 @@ public class DataVideoServiceImpl implements DataVideoService {
 //                LOGGER.info("linksize---"+links.size());
                 for (Element link : links) {
                     LOGGER.info("links---"+link.html());
-                    String url = link.attr("src");
+                    String url = link.attr("src").replace("online","store");
                     LOGGER.info("links---url="+url);
 
                     RecommendVo vo = new RecommendVo();
