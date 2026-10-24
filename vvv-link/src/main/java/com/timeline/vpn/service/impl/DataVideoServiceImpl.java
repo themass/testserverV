@@ -291,7 +291,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 return vo;
             }
-            if(item.getBaseurl().contains("rfd0i4.")){
+            if(item.getBaseurl().contains("rfd0i4")){
                 String data = HttpCommonUtil.sendGet(item.getPath());
                 String url = fetchCdnUrl(data);
                 LOGGER.info("data={},url={}",data,url);
@@ -306,7 +306,7 @@ public class DataVideoServiceImpl implements DataVideoService {
                 vo.setDataType(Constant.dataType_VIDEO_CHANNEL);
                 return vo;
             }
-            if(item.getBaseurl().contains("91crdj.")){
+            if(item.getBaseurl().contains("91crdj")){
                 String data = fetch(item.getPath());
 //                Document doc = conn.get();
                 Document doc = Jsoup.parse(data);
