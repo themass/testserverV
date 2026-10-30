@@ -36,7 +36,7 @@ public class ChatDeepseekHandler extends BaseChatHandleProxy {
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
 
         ChatMessages chatMessages = new ChatMessages();
-        chatMessages.setModel("deepseek-chat");
+        chatMessages.setModel("deepseek-flash");
         chatMessages.setTopP(0.5);
         chatMessages.setMaxTokens(1800);
         chatMessages.setTemperature(0.2);
