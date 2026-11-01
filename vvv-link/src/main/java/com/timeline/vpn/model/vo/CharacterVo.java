@@ -11,6 +11,8 @@ public class CharacterVo {
     private String content;
     private String url;
     private String extra;
+    /** 是否我自己上传的角色；官方角色为 false。客户端用这个字段决定"编辑/删除"按钮是否显示。 */
+    private boolean mine;
 
     public int getId() {
         return id;
@@ -50,5 +52,13 @@ public class CharacterVo {
 
     public void setExtra(String extra) {
         this.extra = extra;
+    }
+
+    public boolean isMine() {
+        return mine;
+    }
+
+    public void setMine(boolean mine) {
+        this.mine = mine;
     }
 }

@@ -11,6 +11,9 @@ public class CharacterPo {
     private String content;
     private String url;
     private String extra;
+    /** 所有者用户 id；null 表示官方内置角色，所有用户可见。 */
+    private Long ownerUserId;
+    private java.util.Date createdAt;
 
     public int getId() {
         return id;
@@ -50,5 +53,21 @@ public class CharacterPo {
 
     public void setExtra(String extra) {
         this.extra = extra;
+    }
+
+    public Long getOwnerUserId() {
+        return ownerUserId;
+    }
+
+    public void setOwnerUserId(Long ownerUserId) {
+        this.ownerUserId = ownerUserId;
+    }
+
+    public java.util.Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(java.util.Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

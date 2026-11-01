@@ -2,6 +2,8 @@ package com.timeline.vpn.service.impl;
 
 import com.timeline.vpn.VoBuilder;
 import com.timeline.vpn.dao.db.SettingCharacterDao;
+import com.timeline.vpn.common.exception.BusinessException;
+import com.timeline.vpn.model.form.CharacterForm;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.CharacterPo;
@@ -45,8 +47,76 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
 
     @Override
     public InfoListVo<CharacterVo> getCharacter(BaseQuery baseQuery) {
-        List<CharacterPo> list = settingCharacterDao.getAll();
-        return VoBuilder.buildListInfoVo(list, CharacterVo.class, null);
+        // 未登录时只看官方角色；getAll() 本身就是"所有行"，官方角色 ownerUserId 为 null，
+        // 过滤交给调用方做更简单，不新开一条 SQL 分支
+        Long userId = baseQuery.getUser() == null ? null : baseQuery.getUser().getId();
+        List<CharacterPo> list = userId == null
+                ? settingCharacterDao.getAll().stream().filter(po -> po.getOwnerUserId() == null).collect(java.util.stream.Collectors.toList())
+                : settingCharacterDao.getVisibleTo(userId);
+        return VoBuilder.buildListInfoVo(list, CharacterVo.class, (po, vo) ->
+                vo.setMine(userId != null && userId.equals(po.getOwnerUserId())));
+    }
+
+    @Override
+    public CharacterVo createCharacter(BaseQuery baseQuery, CharacterForm form) {
+        long userId = requireUserId(baseQuery);
+        CharacterPo po = new CharacterPo();
+        po.setTitle(form.getTitle());
+        po.setContent(form.getContent());
+        po.setUrl(form.getUrl());
+        po.setExtra(form.getExtra());
+        po.setOwnerUserId(userId);
+        settingCharacterDao.insertCustom(po);
+        return toVo(po, true);
+    }
+
+    @Override
+    public CharacterVo updateCharacter(BaseQuery baseQuery, CharacterForm form) {
+        long userId = requireUserId(baseQuery);
+        if (form.getId() == null) {
+            throw new BusinessException("缺少角色 id");
+        }
+        CharacterPo po = new CharacterPo();
+        po.setId(form.getId());
+        po.setTitle(form.getTitle());
+        po.setContent(form.getContent());
+        po.setUrl(form.getUrl());
+        po.setExtra(form.getExtra());
+        po.setOwnerUserId(userId);
+        int affected = settingCharacterDao.updateCustom(po);
+        if (affected == 0) {
+            // 要么角色不存在，要么不是这个用户的——两种情况都不告诉调用方具体是哪种，
+            // 避免被用来探测别人有没有这个角色 id
+            throw new BusinessException("角色不存在或无权修改");
+        }
+        return toVo(po, true);
+    }
+
+    @Override
+    public void deleteCharacter(BaseQuery baseQuery, int characterId) {
+        long userId = requireUserId(baseQuery);
+        int affected = settingCharacterDao.deleteCustom(characterId, userId);
+        if (affected == 0) {
+            throw new BusinessException("角色不存在或无权删除");
+        }
+    }
+
+    private long requireUserId(BaseQuery baseQuery) {
+        if (baseQuery.getUser() == null) {
+            throw new BusinessException("请先登录");
+        }
+        return baseQuery.getUser().getId();
+    }
+
+    private CharacterVo toVo(CharacterPo po, boolean mine) {
+        CharacterVo vo = new CharacterVo();
+        vo.setId(po.getId());
+        vo.setTitle(po.getTitle());
+        vo.setContent(po.getContent());
+        vo.setUrl(po.getUrl());
+        vo.setExtra(po.getExtra());
+        vo.setMine(mine);
+        return vo;
     }
 
     @Override
