@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: vpn-api
+  # 默认 local：本地直接跑不需要额外参数。生产必须显式 --spring.profiles.active=prod，
+  # 否则会带着 local 配置上线（log4j2-local.xml、本地库地址）。
+  # 已加 ApplicationRunner 在启动时把实际 profile 打出来并告警，见 ProfileGuard。
   profiles:
     active: local
   pid:

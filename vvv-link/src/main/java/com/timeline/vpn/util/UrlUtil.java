@@ -15,6 +15,8 @@ import java.util.Enumeration;
  * @version V1.0
  */
 public class UrlUtil {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UrlUtil.class);
     private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
     private static final String LOG_URL = "%s?%s ,cost:%s ,ua:%s";
     private static final String HEADER_URL = "%s?%s , header:[%s]";
@@ -57,7 +59,7 @@ public class UrlUtil {
             param = StringUtils.hasText(request.getQueryString())
                     ? URLDecoder.decode(request.getQueryString(), "utf-8") : null;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("处理失败", e);
         }
         return param;
     }

@@ -22,5 +22,7 @@ public class BaseController {
     public DataVideoService dataVideoService;
     @Autowired
     public ChatService chatService;
+    @Autowired
+    public WgDeviceKeyService wgDeviceKeyService;
     protected static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 }

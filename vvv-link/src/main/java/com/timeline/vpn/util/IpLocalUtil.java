@@ -15,6 +15,8 @@ import java.util.Enumeration;
  * @version V1.0
  */
 public class IpLocalUtil {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IpLocalUtil.class);
     public static final String IP_HOST="http://ip.taobao.com/service/getIpInfo.php?ip=%s";
     public static String getLocal(String ip){
         String url = String.format(IP_HOST, ip);
@@ -45,7 +47,7 @@ public class IpLocalUtil {
               }
           }
       }catch(Exception e){
-          e.printStackTrace();
+          log.error("处理失败", e);
       }
       return "-";
     }

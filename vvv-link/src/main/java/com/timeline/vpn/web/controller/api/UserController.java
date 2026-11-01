@@ -98,5 +98,30 @@ public class UserController extends BaseController {
     public JsonResult character(@UserInfo BaseQuery baseQuery) {
         return new JsonResult(chatService.getCharacter(baseQuery));
     }
+
+    /**
+     * 创建自定义角色。
+     *
+     * 多角色支持的一部分：官方角色由后端管理，这个接口让用户上传自己的人设——
+     * 新建的角色 ownerUserId 归属当前用户，只有自己能在列表里看到、能编辑/删除。
+     */
+    @RequestMapping(value = "/setting/character/create.json", method = RequestMethod.POST)
+    public JsonResult createCharacter(@UserInfo(required = true) BaseQuery baseQuery,
+            @Valid @ModelAttribute CharacterForm form) {
+        return new JsonResult(chatService.createCharacter(baseQuery, form));
+    }
+
+    @RequestMapping(value = "/setting/character/update.json", method = RequestMethod.POST)
+    public JsonResult updateCharacter(@UserInfo(required = true) BaseQuery baseQuery,
+            @Valid @ModelAttribute CharacterForm form) {
+        return new JsonResult(chatService.updateCharacter(baseQuery, form));
+    }
+
+    @RequestMapping(value = "/setting/character/delete.json", method = RequestMethod.POST)
+    public JsonResult deleteCharacter(@UserInfo(required = true) BaseQuery baseQuery,
+            @RequestParam("id") int characterId) {
+        chatService.deleteCharacter(baseQuery, characterId);
+        return Constant.RESULT_SUCCESS;
+    }
 }
 

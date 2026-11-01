@@ -8,16 +8,23 @@ import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.service.CacheRedisUtil;
+import com.timeline.vpn.model.chat.ChatMessages;
+import com.timeline.vpn.model.chat.ChatMsg;
+import com.timeline.vpn.model.vo.ChatChunkVo;
+import com.timeline.vpn.model.vo.StreamChunk;
 import com.timeline.vpn.service.strategy.BaseSupportHandle;
 import com.timeline.vpn.util.JsonUtil;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +54,113 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
     @Override
     public boolean isDefault() {
         return false;
+    }
+
+    // ------------------------------------------------------------------
+    // 流式输出。默认不支持；OpenAI 协议兼容的几个 handler（Deepseek/Devcto 系列）
+    // 重写 supportsStream()=true 并调用下面的 streamOpenAiCompatible 共享实现。
+    // 其余 handler（Qwen 用 DashScope SDK、Doubao 用火山引擎 SDK、Gemini 响应结构不同）
+    // 暂不接入流式，ChatContext 在挑选 handler 时会把它们排除在流式候选之外。
+    // ------------------------------------------------------------------
+
+    public boolean supportsStream() {
+        return false;
+    }
+
+    /**
+     * 流式对话入口，与 chatWithGptBase 对称：同样先写用户消息到 Redis 历史，
+     * 组装 prompt，再交给具体 handler 的 doStream 实现；全文拼好后回调里写入助理消息历史。
+     */
+    public void chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm, SseEmitter emitter) throws Exception {
+        CacheRedisUtil.appendRecod(baseQuery, LlmRecord.builder().text(chatContentForm.getText()).role(UserRole.user).sessionId(chatContentForm.getSessionId()).build());
+        String prompt = getPrompt(baseQuery, chatContentForm);
+        String msgId = chatContentForm.getId();
+        long sessionId = chatContentForm.getSessionId();
+        doStream(baseQuery, prompt, msgId, emitter, fullText -> {
+            String cleaned = fullText.replace("[assistant]:", "").replace("[assistant]", "");
+            CacheRedisUtil.appendRecod(baseQuery, LlmRecord.builder().sessionId(sessionId).role(UserRole.assistant).text(cleaned).build());
+        });
+    }
+
+    protected void doStream(BaseQuery baseQuery, String prompt, String msgId, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
+        throw new UnsupportedOperationException(getClass().getSimpleName() + " 不支持流式输出");
+    }
+
+    /**
+     * OpenAI 兼容协议（/v1/chat/completions, stream=true）的共享实现。
+     * 逐行读取上游 `data: {...}`，解析出 delta.content 就转发一帧给客户端，
+     * 遇到 `data: [DONE]` 结束；客户端断开/超时时取消掉上游请求，避免连接泄漏。
+     */
+    protected void streamOpenAiCompatible(
+            String url, String authorizationHeader, String model, String prompt, String systemPrompt,
+            double temperature, double topP, int maxTokens,
+            String msgId, String prod, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
+
+        List<ChatMsg> messages = new ArrayList<>();
+        messages.add(new ChatMsg("system", systemPrompt));
+        messages.add(new ChatMsg("user", prompt));
+
+        ChatMessages chatMessages = new ChatMessages();
+        chatMessages.setModel(model);
+        chatMessages.setTopP(topP);
+        chatMessages.setMaxTokens(maxTokens);
+        chatMessages.setTemperature(temperature);
+        chatMessages.setStream(Boolean.TRUE);
+        chatMessages.setMessages(messages);
+
+        okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, JsonUtil.writeValueAsString(chatMessages));
+        okhttp3.Request httpRequest = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", authorizationHeader)
+                .addHeader("Accept", "text/event-stream")
+                .post(body)
+                .build();
+
+        okhttp3.Call call = httpClient.newCall(httpRequest);
+        emitter.onTimeout(call::cancel);
+        emitter.onError(t -> call.cancel());
+
+        StringBuilder full = new StringBuilder();
+        try (okhttp3.Response response = call.execute()) {
+            if (!response.isSuccessful() || response.body() == null) {
+                throw new IllegalStateException(prod + " 流式请求失败: HTTP " + response.code());
+            }
+            okio.BufferedSource source = response.body().source();
+            String line;
+            while ((line = source.readUtf8Line()) != null) {
+                if (!line.startsWith("data:")) {
+                    continue;
+                }
+                String payload = line.substring(5).trim();
+                if (payload.isEmpty() || "[DONE]".equals(payload)) {
+                    if ("[DONE]".equals(payload)) {
+                        break;
+                    }
+                    continue;
+                }
+                ChatChunkVo chunk;
+                try {
+                    chunk = JsonUtil.readValue(payload, ChatChunkVo.class);
+                } catch (Exception parseError) {
+                    LOGGER.warn(prod + " 跳过无法解析的流式分片: " + payload, parseError);
+                    continue;
+                }
+                if (chunk == null || chunk.getChoices() == null || chunk.getChoices().isEmpty()) {
+                    continue;
+                }
+                ChatChunkVo.ChunkDelta delta = chunk.getChoices().get(0).getDelta();
+                String content = delta != null ? delta.getContent() : null;
+                if (content == null || content.isEmpty()) {
+                    continue;
+                }
+                full.append(content);
+                emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(new StreamChunk(msgId, content, false, null))));
+            }
+        }
+        onComplete.accept(full.toString());
+        emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(new StreamChunk(msgId, "", true, null))));
+        emitter.complete();
     }
 
 
@@ -81,7 +195,21 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
     public static String getPrompt(BaseQuery baseQuery, ChatContentForm chatContentForm){
         String prmpt = "";
 
-        if(StringUtils.isBlank(chatContentForm.getSettingName())){
+        // 新协议：优先按 characterId 查角色表（setting_character），这是用户真正在端上选的角色。
+        // characterId 为空时回退到下面 settingName 的硬编码 switch——
+        // 那套 switch 长期以来客户端其实从没真正传对过参数（一直传的是 charater 字段，
+        // 后端从未读取），现在只保留做兼容，不再是主路径。
+        if (chatContentForm.getCharacterId() != null && chatContentForm.getCharacterId() > 0) {
+            com.timeline.vpn.model.po.CharacterPo character = com.timeline.vpn.common.utils.SpringUtils
+                    .getBean(com.timeline.vpn.dao.db.SettingCharacterDao.class)
+                    .getById(chatContentForm.getCharacterId());
+            if (character != null && StringUtils.isNotBlank(character.getContent())) {
+                prmpt = character.getContent();
+            } else {
+                LOGGER.error("characterId={} 查不到对应角色，回退默认人设", chatContentForm.getCharacterId());
+                prmpt = myprompt;
+            }
+        } else if(StringUtils.isBlank(chatContentForm.getSettingName())){
             prmpt = myprompt;
         }else if("红颜知己".equals(chatContentForm.getSettingName())){
             prmpt = Soulmate;

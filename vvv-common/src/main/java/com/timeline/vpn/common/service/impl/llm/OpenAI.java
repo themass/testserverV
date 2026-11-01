@@ -1,7 +1,7 @@
 package com.timeline.vpn.common.service.impl.llm;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.timeline.vpn.common.utils.JacksonJsonUtil;
 import com.azure.ai.openai.OpenAIClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.ai.openai.models.*;
@@ -72,7 +72,7 @@ public class OpenAI implements LLMService {
             log.info("LLM_Message:{}", message.getContent());
 
             try {
-                chatResponse = StringUtils.isNotBlank(message.getContent()) ? JSONObject.parseObject(message.getContent(), ChatResponse.class) : new ChatResponse();
+                chatResponse = StringUtils.isNotBlank(message.getContent()) ? JacksonJsonUtil.readValue(message.getContent(), ChatResponse.class) : new ChatResponse();
             } catch (Exception e) {
                 log.error("chatStream error", e);
                 break;
@@ -131,11 +131,11 @@ public class OpenAI implements LLMService {
         String result = extractValidJson(sb.toString());
         ChatResponse chatResponse = null;
         try {
-            chatResponse = StringUtils.isNotBlank(result) ? JSONObject.parseObject(result, ChatResponse.class) : new ChatResponse();
+            chatResponse = StringUtils.isNotBlank(result) ? JacksonJsonUtil.readValue(result, ChatResponse.class) : new ChatResponse();
         } catch (Exception e) {
             log.error("error to json:{}", result);
             result.replace("# Output", "");
-            chatResponse = StringUtils.isNotBlank(result) ? JSONObject.parseObject(result, ChatResponse.class) : new ChatResponse();
+            chatResponse = StringUtils.isNotBlank(result) ? JacksonJsonUtil.readValue(result, ChatResponse.class) : new ChatResponse();
         }
         chatResponse.setRole(role.get());
         chatResponse.setContent(result);

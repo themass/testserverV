@@ -1,6 +1,6 @@
 package com.timeline.vpn.common.service.impl.llm;
 
-import com.alibaba.fastjson.JSONObject;
+import com.timeline.vpn.common.utils.JacksonJsonUtil;
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.common.config.LlmConfig;
 import com.timeline.vpn.common.exception.LlmRuntimeException;
@@ -62,7 +62,7 @@ public class DoubaoAI implements LLMService {
             Api.ChatResp resp = maasService.chat(req);
             log.info("LLM_Index: {}, Chat Role: {}", resp.getChoice().getIndex(), resp.getChoice().getMessage().getRole());
             log.info("LLM_Message:{}", resp.getChoice().getMessage());
-            ChatResponse chatResponse = StringUtils.isNotBlank(resp.getChoice().getMessage().getContent()) ? JSONObject.parseObject(resp.getChoice().getMessage().getContent(), ChatResponse.class) : new ChatResponse();
+            ChatResponse chatResponse = StringUtils.isNotBlank(resp.getChoice().getMessage().getContent()) ? JacksonJsonUtil.readValue(resp.getChoice().getMessage().getContent(), ChatResponse.class) : new ChatResponse();
             chatResponse.setRole(resp.getChoice().getMessage().getRole());
             chatResponse.setContent(resp.getChoice().getMessage().getContent());
             function.apply(chatResponse.getTeacherResponse());
@@ -86,7 +86,7 @@ public class DoubaoAI implements LLMService {
                 role.set(resp.getChoice().getMessage().getRole());
             });
             String content = sb.toString();
-            ChatResponse chatResponse = StringUtils.isNotBlank(content) ? JSONObject.parseObject(content, ChatResponse.class) : new ChatResponse();
+            ChatResponse chatResponse = StringUtils.isNotBlank(content) ? JacksonJsonUtil.readValue(content, ChatResponse.class) : new ChatResponse();
             chatResponse.setRole(role.get());
             chatResponse.setContent(content);
 //            log.info("doubao chatstream role:{};content:{}", role.get(), content);

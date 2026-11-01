@@ -7,8 +7,30 @@
 		<result column="content" property="content" />
 		<result column="url" property="url" />
 		<result column="extra" property="extra" />
+		<result column="ownerUserId" property="ownerUserId" />
+		<result column="createdAt" property="createdAt" />
 	</resultMap>
 	<select id="getAll" resultMap="CharacterMap">
 		select * from vpn.setting_character
 	</select>
+	<select id="getById" resultMap="CharacterMap" parameterType="int">
+		select * from vpn.setting_character where id = #{id}
+	</select>
+	<!-- 官方角色（ownerUserId 为 null）对所有人可见；自定义角色只对创建者可见 -->
+	<select id="getVisibleTo" resultMap="CharacterMap">
+		select * from vpn.setting_character
+		where ownerUserId is null or ownerUserId = #{userId}
+	</select>
+	<insert id="insertCustom" parameterType="com.timeline.vpn.model.po.CharacterPo" useGeneratedKeys="true" keyProperty="id">
+		insert into vpn.setting_character(title, content, url, extra, ownerUserId, createdAt)
+		values (#{title}, #{content}, #{url}, #{extra}, #{ownerUserId}, now())
+	</insert>
+	<update id="updateCustom" parameterType="com.timeline.vpn.model.po.CharacterPo">
+		update vpn.setting_character
+		set title = #{title}, content = #{content}, url = #{url}, extra = #{extra}
+		where id = #{id} and ownerUserId = #{ownerUserId}
+	</update>
+	<delete id="deleteCustom">
+		delete from vpn.setting_character where id = #{id} and ownerUserId = #{ownerUserId}
+	</delete>
 </mapper>
