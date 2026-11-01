@@ -6,6 +6,7 @@ import com.timeline.vpn.model.vo.CharacterVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.InfoListVo;
 import com.timeline.vpn.model.vo.Sessions;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
  * @author gqli
@@ -18,6 +19,8 @@ public interface ChatService {
 
     public InfoListVo<CharacterVo> getCharacter(BaseQuery baseQuery);
     public InfoListVo<Sessions> sessions(BaseQuery baseQuery);
+
+    public SseEmitter chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm);
 
 
 }

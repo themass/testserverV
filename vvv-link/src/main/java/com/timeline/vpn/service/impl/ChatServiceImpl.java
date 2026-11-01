@@ -39,6 +39,11 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
     }
 
     @Override
+    public org.springframework.web.servlet.mvc.method.annotation.SseEmitter chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm) {
+        return chatContext.chatWithGptStream(baseQuery, chatContentForm);
+    }
+
+    @Override
     public InfoListVo<CharacterVo> getCharacter(BaseQuery baseQuery) {
         List<CharacterPo> list = settingCharacterDao.getAll();
         return VoBuilder.buildListInfoVo(list, CharacterVo.class, null);

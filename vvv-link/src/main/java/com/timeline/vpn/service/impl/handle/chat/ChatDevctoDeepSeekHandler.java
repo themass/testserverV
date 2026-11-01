@@ -8,6 +8,9 @@ import com.timeline.vpn.model.vo.ChatVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.util.JsonUtil;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.function.Consumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,17 @@ public class    ChatDevctoDeepSeekHandler extends BaseChatHandleProxy {
   public boolean support(Integer t) {
         return  t<=6 && t>=3;
   }
+    @Override
+    public boolean supportsStream() {
+        return true;
+    }
+
+    @Override
+    protected void doStream(BaseQuery baseQuery, String prompt, String msgId, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
+        streamOpenAiCompatible(url, apiKey + apiKey2 + apiKey1, "deepseek-v3.2", prompt,
+                "你是一个智能AI小助手", 0.2, 0.5, 3000, msgId, "ChatDevctoDeepSeekHandler", emitter, onComplete);
+    }
+
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {
         List<ChatMsg> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMsg("system","你是一个智能AI小助手"));
