@@ -7,6 +7,8 @@ import java.io.IOException;
 
 public class PCMToWAVConverter {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PCMToWAVConverter.class);
+
     /**
      * 将 PCM 音频数据转换为 WAV 格式音频文件
      *
@@ -154,7 +156,7 @@ public class PCMToWAVConverter {
             pcmToWav(pcmFilePath, wavFilePath, sampleRate, channels, bitDepth);
             System.out.println("PCM 转换为 WAV 成功！");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("处理失败", e);
         }
     }
 }

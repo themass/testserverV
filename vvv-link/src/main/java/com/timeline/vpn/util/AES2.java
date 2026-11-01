@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class AES2 {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AES2.class);
+
     static final String algorithmStr = "AES/ECB/PKCS5Padding";
     private static byte[] encrypt(String content, String password) {
         try {
@@ -17,7 +19,7 @@ public class AES2 {
             byte[] result = cipher.doFinal(byteContent);
             return result; //
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("处理失败", e);
         }
         return null;
     }
@@ -32,7 +34,7 @@ public class AES2 {
             byte[] result = cipher.doFinal(content);
             return result; //
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("处理失败", e);
         }
         return null;
     }

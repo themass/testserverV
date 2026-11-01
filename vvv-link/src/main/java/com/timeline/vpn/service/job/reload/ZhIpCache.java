@@ -74,7 +74,7 @@ public class ZhIpCache extends ReloadJob {
             LOGGER.info("中国 ip 更新："+chinaIps.size());
         } catch (Exception e) {
             LOGGER.error("ERROR", e);
-            e.printStackTrace();
+            LOGGER.error("处理失败", e);
         }
     }
     public static boolean isChinaIp(String ip) {

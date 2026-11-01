@@ -55,7 +55,7 @@ public class AESUtil {
             byte[] encrypted = cipher.doFinal(content.getBytes("utf-8"));
             return new String(Base64.encode(encrypted), "UTF-8");// 此处使用BASE64做转码功能，同时能起到2次加密的作用。
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("处理失败", e);
             LOGGER.error("", e);
         }
         return null;

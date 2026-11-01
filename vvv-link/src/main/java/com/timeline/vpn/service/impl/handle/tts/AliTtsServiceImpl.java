@@ -1,7 +1,7 @@
 package com.timeline.vpn.service.impl.handle.tts;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.timeline.vpn.util.JsonUtil;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -140,10 +140,17 @@ public class AliTtsServiceImpl extends BaseTtsHandleProxy {
             throw new BusinessException("获取 ali tts-token 失败");
         }
         log.info("获取Token 完成！" + response.getHttpStatus());
-        JSONObject result = JSON.parseObject(response.getData());
+        JsonNode result;
+        try {
+            result = JsonUtil.getMapper().readTree(response.getData());
+        } catch (Exception e) {
+            log.error("解析 ali tts-token 响应失败", e);
+            throw new BusinessException("获取 ali tts-token 失败");
+        }
         if (response.getHttpStatus() == 200) {
-            token = result.getJSONObject(KEY_TOKEN).getString(KEY_ID);
-            long expireTime = result.getJSONObject(KEY_TOKEN).getLongValue(KEY_EXPIRETIME);
+            JsonNode tokenNode = result.path(KEY_TOKEN);
+            token = tokenNode.path(KEY_ID).asText(null);
+            long expireTime = tokenNode.path(KEY_EXPIRETIME).asLong();
             // 缓存5额小时
             long max = Math.min(5 * 60 * 60, expireTime - System.currentTimeMillis() / 1000);
             stringRedisTemplate.opsForValue().set(AI_LSESSION_ALI_TTS_TOKEN, token, max, TimeUnit.SECONDS);

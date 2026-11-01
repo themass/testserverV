@@ -112,7 +112,7 @@ public class BytedanceAsrClient extends WebSocketClient {
 //                close();
 //            }
 //        } catch (IOException e) {
-//            e.printStackTrace();
+//            logger.error("处理失败", e);
 //        }
     }
 
@@ -126,7 +126,7 @@ public class BytedanceAsrClient extends WebSocketClient {
             }
             recv_latch.countDown();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("处理失败", e);
         }
     }
 

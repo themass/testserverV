@@ -22,6 +22,8 @@ import java.security.Security;
 
 public class AES256 {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AES256.class);
+
 	public static byte[] encrypt(String content, String password) {
 		try {
 			//"AES"：请求的密钥算法的标准名称
@@ -46,7 +48,7 @@ public class AES256 {
 			byte[] cryptograph = cipher.doFinal(byteContent);
 			return Base64.encodeBase64(cryptograph);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("处理失败", e);
 		}
 		return null;
 	}
@@ -66,7 +68,7 @@ public class AES256 {
 			byte[] content = cipher.doFinal(Base64.decodeBase64(cryptograph));
 			return new String(content);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("处理失败", e);
 		}
 		return null;
 	}
