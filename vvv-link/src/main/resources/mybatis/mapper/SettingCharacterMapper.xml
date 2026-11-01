@@ -11,4 +11,7 @@
 	<select id="getAll" resultMap="CharacterMap">
 		select * from vpn.setting_character
 	</select>
+	<select id="getById" resultMap="CharacterMap" parameterType="int">
+		select * from vpn.setting_character where id = #{id}
+	</select>
 </mapper>

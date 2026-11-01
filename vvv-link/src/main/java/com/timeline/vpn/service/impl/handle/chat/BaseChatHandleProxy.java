@@ -195,7 +195,21 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
     public static String getPrompt(BaseQuery baseQuery, ChatContentForm chatContentForm){
         String prmpt = "";
 
-        if(StringUtils.isBlank(chatContentForm.getSettingName())){
+        // 新协议：优先按 characterId 查角色表（setting_character），这是用户真正在端上选的角色。
+        // characterId 为空时回退到下面 settingName 的硬编码 switch——
+        // 那套 switch 长期以来客户端其实从没真正传对过参数（一直传的是 charater 字段，
+        // 后端从未读取），现在只保留做兼容，不再是主路径。
+        if (chatContentForm.getCharacterId() != null && chatContentForm.getCharacterId() > 0) {
+            com.timeline.vpn.model.po.CharacterPo character = com.timeline.vpn.common.utils.SpringUtils
+                    .getBean(com.timeline.vpn.dao.db.SettingCharacterDao.class)
+                    .getById(chatContentForm.getCharacterId());
+            if (character != null && StringUtils.isNotBlank(character.getContent())) {
+                prmpt = character.getContent();
+            } else {
+                LOGGER.error("characterId={} 查不到对应角色，回退默认人设", chatContentForm.getCharacterId());
+                prmpt = myprompt;
+            }
+        } else if(StringUtils.isBlank(chatContentForm.getSettingName())){
             prmpt = myprompt;
         }else if("红颜知己".equals(chatContentForm.getSettingName())){
             prmpt = Soulmate;

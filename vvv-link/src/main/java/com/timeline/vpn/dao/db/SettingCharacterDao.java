@@ -14,5 +14,8 @@ import java.util.List;
 @Mapper
 public interface SettingCharacterDao extends BaseDBDao<CharacterPo> {
     public List<CharacterPo> getAll();
+
+    /** 按 id 查单个角色，用于对话接口按 characterId 组装人设 prompt。 */
+    public CharacterPo getById(int id);
 }
 
