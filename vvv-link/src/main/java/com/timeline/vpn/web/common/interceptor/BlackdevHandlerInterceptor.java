@@ -13,12 +13,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 
 /**
- * 
- * @ClassName: CostHandlerInterceptor
- * @Description: 接口cost时间拦截器，在json结果中添加cost字段
- * @author gqli
- * @date 2015年8月12日 下午8:19:53
+ * 设备黑名单拦截器：命中黑名单的 devId 直接抛异常中断请求。
  *
+ * 原先的 javadoc 是从另一个类（CostHandlerInterceptor）复制过来的，写的是"统计接口耗时、
+ * 在 json 结果里加 cost 字段"——和这个类实际做的事完全相反，误导性很强，已修正。
+ *
+ * @author gqli
  */
 @Service
 public class BlackdevHandlerInterceptor implements HandlerInterceptor {
