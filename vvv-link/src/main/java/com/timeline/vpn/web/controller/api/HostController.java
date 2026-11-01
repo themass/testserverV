@@ -1,10 +1,13 @@
 package com.timeline.vpn.web.controller.api;
 
 import com.timeline.vpn.Constant;
+import com.timeline.vpn.model.form.WgRegisterForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,6 +53,30 @@ public class HostController extends BaseController {
     public JsonResult dns(@UserInfo BaseQuery baseQuery,@RequestParam(name = "id") String d) {
         List<String> list = Arrays.asList(d.split(Constant.comma));
         return new JsonResult(hostService.getDnsResver(baseQuery, list));
+    }
+
+    /**
+     * WireGuard 设备公钥注册。
+     * <p>
+     * WireGuard 没有账号密码，服务端必须事先认识客户端公钥才能接受握手。
+     * 客户端在建隧道前调用本接口把公钥交上来；重复提交覆盖旧公钥，
+     * 以支持重装 App / 重置身份的场景（见 WgDeviceKeyMapper.xml）。
+     * <p>
+     * 契约详见客户端仓库的 docs/WIREGUARD-BACKEND.md。
+     */
+    @RequestMapping(value = "/wg/register.json", method = RequestMethod.POST)
+    public JsonResult wgRegister(@UserInfo BaseQuery baseQuery,
+            @Valid @ModelAttribute WgRegisterForm form) {
+        wgDeviceKeyService.register(baseQuery, form.getDeviceId(), form.getPublicKey());
+        return Constant.RESULT_SUCCESS;
+    }
+
+    /** 注销设备公钥。旧公钥在服务端成为死配置，不影响功能，仅避免垃圾数据累积。 */
+    @RequestMapping(value = "/wg/unregister.json", method = RequestMethod.POST)
+    public JsonResult wgUnregister(@UserInfo BaseQuery baseQuery,
+            @RequestParam(required = false, name = "deviceId") String deviceId) {
+        wgDeviceKeyService.unregister(baseQuery, deviceId);
+        return Constant.RESULT_SUCCESS;
     }
 }
 
