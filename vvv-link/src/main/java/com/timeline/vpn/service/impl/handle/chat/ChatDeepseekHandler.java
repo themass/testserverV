@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.chat.ChatMessages;
 import com.timeline.vpn.model.chat.ChatMsg;
@@ -27,8 +29,8 @@ public class ChatDeepseekHandler extends BaseChatHandleProxy {
     public static String url = "https://api.deepseek.com/chat/completions";
 //    public static String url = "http://openapi2.ok123find.top";
     public static String apiKey = "Bearer sk";
-    public static String apiKey1 = "543e1b5c4b9b2fe4cccf5";
-    public static String apiKey2 = "-abf5a3752d2";
+    public static String apiKey1 = Secrets.get("deepseek.apiKey1");
+    public static String apiKey2 = Secrets.get("deepseek.apiKey2");
     ;
   @Override
   public boolean support(Integer t) {

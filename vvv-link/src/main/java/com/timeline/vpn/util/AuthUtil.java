@@ -13,7 +13,7 @@ public class AuthUtil {
     private static final long MAX1 = 99999999999999999L;
     private static final long MIN2 = 100000L;
     private static final long MAX2 = 999999L;
-    private static final String ACCESS_KEY = "vpn@@server";
+    private static final String ACCESS_KEY = Secrets.get("auth.accessKey");
 
     public static byte[] xorEncode(byte[] data, byte[] key) {
         byte[] encode = new byte[data.length];

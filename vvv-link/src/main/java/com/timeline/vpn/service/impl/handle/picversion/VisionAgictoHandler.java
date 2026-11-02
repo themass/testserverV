@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.picversion;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.chat.ChatPicMessages;
 import com.timeline.vpn.model.form.ChatContentForm;
@@ -24,8 +26,8 @@ public class VisionAgictoHandler extends BaseVisionHandleProxy {
 
     public static String url = "https://api.agicto.cn/v1/chat/completions";
     public static String apiKey = "Bearer sk";
-    public static String apiKey2 = "-2ObAVaicEFICVaGs";
-    public static String apiKey1 = "vMiC7x3XTFa3LAKXG45zdNnGpE83prHv";
+    public static String apiKey2 = Secrets.get("vision_agicto.apiKey2");
+    public static String apiKey1 = Secrets.get("vision_agicto.apiKey1");
     @Override
     public boolean support(Integer t) {
         return t<3;

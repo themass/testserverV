@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
@@ -24,8 +26,8 @@ import java.util.List;
 @Component
 @MethodTimed
 public class ChatDoubaoHandler extends BaseChatHandleProxy {
-    private static String  appKey = "e8995123-8a55-4529-" ;
-    private static String  appKey2 =  "ae57-cd3f5fbd5eaf";
+    private static String  appKey = Secrets.get("doubao.appKey") ;
+    private static String  appKey2 =  Secrets.get("doubao.appKey2");
     private static String modelName = "ep-20240527113904-mrr8p";
     private static String endPoint = "https://ark.cn-beijing.volces.com/api/v3/";
     ArkService service = null;

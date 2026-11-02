@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.chat.ChatMessages;
 import com.timeline.vpn.model.chat.ChatMsg;
@@ -27,8 +29,8 @@ public class ChatMyGpt4Handler extends BaseChatHandleProxy {
     public static String url = "https://api.openai.com/v1/chat/completions";
 //    public static String url = "http://openapi2.ok123find.top";
     public static String apiKey = "Bearer sk";
-    public static String apiKey1 = "3TiIs5LyxJVCIU2wr";
-    public static String apiKey2 = "-IA5tH6GqUNfVxUJb0gyQT3BlbkFJVWa";
+    public static String apiKey1 = Secrets.get("gpt4.apiKey1");
+    public static String apiKey2 = Secrets.get("gpt4.apiKey2");
     ;
   @Override
   public boolean support(Integer t) {

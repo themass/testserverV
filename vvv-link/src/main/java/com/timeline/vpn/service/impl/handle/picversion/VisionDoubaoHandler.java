@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.picversion;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.chat.ChatPicMessages;
 import com.timeline.vpn.model.form.ChatContentForm;
@@ -30,7 +32,7 @@ public class VisionDoubaoHandler extends BaseVisionHandleProxy {
 
     public static String model = "doubao-vision-lite-32k-241015";
 
-    private static String  appKey = "49279ceb-e5b0-4409-" ;
+    private static String  appKey = Secrets.get("vision_doubao.appKey") ;
     private static String  appKey2 =  "a02a-e74e52782f9a";
     private static String endPoint = "https://ark.cn-beijing.volces.com/api/v3/";
     ArkService service = null;

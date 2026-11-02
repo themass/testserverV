@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.alibaba.dashscope.aigc.generation.Generation;
 import com.alibaba.dashscope.aigc.generation.GenerationOutput;
 import com.alibaba.dashscope.aigc.generation.GenerationParam;
@@ -28,8 +30,8 @@ import java.util.Arrays;
 @MethodTimed
 public class ChatQwenHandler extends BaseChatHandleProxy {
     public static String key = "sk-";
-    public static String key2 = "48f6b106605e49f9";
-    public static String key1 = "a3058b32f633797f";
+    public static String key2 = Secrets.get("qwen.key2");
+    public static String key1 = Secrets.get("qwen.key1");
     @Resource(name = "aliLlmGenericObjectPool")
     private GenericObjectPool<Generation> aliLlmGenericObjectPool;
     @Override
