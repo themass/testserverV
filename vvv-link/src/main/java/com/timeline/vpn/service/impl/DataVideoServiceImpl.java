@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl;
 
+import com.timeline.vpn.util.Secrets;
+
 import cn.hutool.core.codec.Base64Encoder;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -386,11 +388,11 @@ public class DataVideoServiceImpl implements DataVideoService {
                 }
                 String videoUrl = null;
                 final String maomiVideoHost = "https://kwmdmmsp.hongtaitanghua.com";
-                final String maomiSignKey = "D7hGKHnWThaECaQ3ji4XyAF3MfYKJ53M";
+                final String maomiSignKey = Secrets.get("maomi.signKey");
                 final String maomiApiHost = "https://iofbsmcxzs.692fo7w1.com";
-                final String maomiUriPrefix = "gt6ikshg458mns4f";
-                final String maomiAesKeyB64 = "SWRUSnEwSGtscHVJNm11OGlCJU9PQCF2ZF40SyZ1WFc=";
-                final String maomiAesIvB64 = "JDB2QGtySDdWMg==";
+                final String maomiUriPrefix = Secrets.get("maomi.uriPrefix");
+                final String maomiAesKeyB64 = Secrets.get("maomi.aesKeyB64");
+                final String maomiAesIvB64 = Secrets.get("maomi.aesIvB64");
                 Pattern postIdPattern = Pattern.compile("(?:post-detail|play)[/-](\\d+)|/video/[^/]+/(\\d+)(?:$|[/?#])");
                 Matcher postMatcher = postIdPattern.matcher(pageUrl);
                 String postId = null;

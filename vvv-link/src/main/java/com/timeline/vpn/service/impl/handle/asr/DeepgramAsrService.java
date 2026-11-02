@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.asr;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.common.utils.Base64Util;
 import com.timeline.vpn.model.chat.SpeechRecognitionResponse;
 import com.timeline.vpn.model.form.AsrContentForm;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeepgramAsrService extends BaseAsrHandleProxy {
     private static final Logger logger = LoggerFactory.getLogger(DeepgramAsrService.class);
-    String token = "Token c855a267d26e553c5b8e48f58114e9ad88bd460f";
+    String token = Secrets.get("deepgram.token");
     String url = "https://api.deepgram.com/v1/listen?model=nova-2-general&smart_format=true";// 项目的 token
     @Override
     public AsrResponseVo asrHandler(BaseQuery baseQuery, AsrContentForm asrContentForm) throws Exception {

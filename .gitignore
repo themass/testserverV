@@ -41,3 +41,5 @@ pom.xml.versionsBackup
 /logs/
 application.pid
 /application.pid
+# 服务器上的真实密钥文件（从 secrets.properties.example 复制后填写），不入库
+secrets.properties

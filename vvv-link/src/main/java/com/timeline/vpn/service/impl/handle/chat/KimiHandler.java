@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.chat.ChatMessages;
 import com.timeline.vpn.model.chat.ChatMsg;
@@ -25,9 +27,9 @@ import java.util.concurrent.TimeUnit;
 @MethodTimed
 public class KimiHandler extends BaseChatHandleProxy {
     public static String url = "https://api.moonshot.cn/v1/chat/completions";
-    public static String apiKey = "Bearer sk-V2MfUM1";
-    public static String apiKey1 = "uRUGaqENzTwkZDqiBpTe3uur";
-    public static String apiKey2 = "pUheyg1PFqMmCv0wM";
+    public static String apiKey = Secrets.get("kimi.apiKey");
+    public static String apiKey1 = Secrets.get("kimi.apiKey1");
+    public static String apiKey2 = Secrets.get("kimi.apiKey2");
 
     @Override
   public boolean support(Integer t) {

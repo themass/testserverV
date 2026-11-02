@@ -25,8 +25,6 @@ import java.util.List;
 @Service
 public class ChatServiceImpl implements ChatService {
 //    public static String chatGptUrl = "http://book.ok123find.top/v1/chat/completions";
-    //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
-    //sk-4zWTqK981p5ee3GByGxPGNnTgltorSAUDQAXTa4qNe5kTjJn；
 protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.class);
 
     @Autowired

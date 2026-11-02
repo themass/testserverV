@@ -1,5 +1,7 @@
 package com.timeline.vpn.web.controller.api;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
 import com.timeline.vpn.model.vo.Token;
@@ -32,8 +34,8 @@ public class LiveKitController extends BaseController {
 
         RoomServiceClient client = RoomServiceClient.createClient(
                 "http://example.com",
-                "APISANNmEGBQxfY",
-                "u8ebbeJevmfBs5fgoR184aFwjnZU75wz66a71qtRkKWF");
+                Secrets.get("livekit.apiKey"),
+                Secrets.get("livekit.apiSecretA"));
 
         Call<LivekitModels.Room> call = client.createRoom(baseQuery.getUser().getName()+"_room");
         Response<LivekitModels.Room> response = call.execute(); // Use call.enqueue for async
@@ -43,8 +45,7 @@ public class LiveKitController extends BaseController {
     }
     @PostMapping(value = "/token.json")
     public JsonResult token(@UserInfo(required = true) BaseQuery baseQuery) throws Exception {
-//1oW0oznixZcJAAijg60Us02JNRjO3QiHQ2WnnMRvYjL
-        AccessToken token = new AccessToken("APISANNmEGBQxfY", "1oW0oznixZcJAAijg60Us02JNRjO3QiHQ2WnnMRvYjL");
+        AccessToken token = new AccessToken(Secrets.get("livekit.apiKey"), Secrets.get("livekit.apiSecretB"));
         token.setName(baseQuery.getUser().getName());
         token.setIdentity(baseQuery.getUser().getName());
         token.setMetadata("metadata");
@@ -59,8 +60,7 @@ public class LiveKitController extends BaseController {
     }
     @PostMapping(value = "/token_new.json")
     public JsonResult tokenNew(@UserInfo(required = true) BaseQuery baseQuery) throws Exception {
-//1oW0oznixZcJAAijg60Us02JNRjO3QiHQ2WnnMRvYjL
-        AccessToken token = new AccessToken("APISANNmEGBQxfY", "1oW0oznixZcJAAijg60Us02JNRjO3QiHQ2WnnMRvYjL");
+        AccessToken token = new AccessToken(Secrets.get("livekit.apiKey"), Secrets.get("livekit.apiSecretB"));
         String tokenNanme = baseQuery.getUser().getName()+"_"+System.currentTimeMillis();
         token.setName("name");
         token.setIdentity("identity");

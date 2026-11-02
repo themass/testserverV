@@ -11,6 +11,7 @@ import com.timeline.vpn.service.impl.handle.tts.dto.BytedanceTtsRequest;
 import com.timeline.vpn.service.impl.handle.tts.dto.TtsConfig;
 import com.timeline.vpn.service.impl.handle.tts.dto.TtsVolcResponse;
 import com.timeline.vpn.common.utils.JacksonJsonUtil;
+import com.timeline.vpn.util.Secrets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,14 @@ public class BytedanceTtsServiceImpl extends BaseTtsHandleProxy {
     private static int VOLCENGINE_SUCCESS = 3000;
     private static TtsConfig ttsConfig = new TtsConfig();
     static {
-        ttsConfig.setAppid("4319026663");
+        ttsConfig.setAppid(Secrets.get("bytedance_tts.appid"));
         ttsConfig.setTextType("plain");
         ttsConfig.setEncoding("wav");
         ttsConfig.setSampleRate(48000);
         ttsConfig.setUid("388808087185088");
         ttsConfig.setVoiceType("BV001_streaming");
         ttsConfig.setCluster("volcano_tts");
-        ttsConfig.setToken("YJYBl-jGgkv-AZfQrwObHWfbwa5w3aAX");
+        ttsConfig.setToken(Secrets.get("bytedance_tts.token"));
         ttsConfig.setEmotion("happy");
     }
     @Override

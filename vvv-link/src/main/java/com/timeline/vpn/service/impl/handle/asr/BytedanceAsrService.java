@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.asr;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.common.utils.Base64Util;
 import com.timeline.vpn.model.form.AsrContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -19,8 +21,8 @@ import java.util.Base64;
 @Service
 public class BytedanceAsrService extends BaseAsrHandleProxy {
     private static final Logger logger = LoggerFactory.getLogger(BytedanceAsrService.class);
-    String appid = "4319026663";  // 项目的 appid
-    String token = "YJYBl-jGgkv-AZfQrwObHWfbwa5w3aAX";  // 项目的 token
+    String appid = Secrets.get("bytedance_asr.appid");  // 项目的 appid
+    String token = Secrets.get("bytedance_asr.token");  // 项目的 token
     String cluster = "volcengine_input_common";  // 请求的集群
     String audio_format = "raw";  // wav 或者 mp3, 根据音频类型设置
 

@@ -1,5 +1,7 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
+import com.timeline.vpn.util.Secrets;
+
 import com.timeline.vpn.common.annotation.MethodTimed;
 import com.timeline.vpn.model.chat.ChatMessages;
 import com.timeline.vpn.model.chat.ChatMsg;
@@ -27,8 +29,8 @@ public class ChatDevctoHandler extends BaseChatHandleProxy {
     public static String url = "https://api.agicto.cn/v1/chat/completions";
     //    public static String url = "http://openapi2.ok123find.top";
     public static String apiKey = "Bearer sk";
-    public static String apiKey2 = "-2ObAVaicEFICVaGs";
-    public static String apiKey1 = "vMiC7x3XTFa3LAKXG45zdNnGpE83prHv";
+    public static String apiKey2 = Secrets.get("devcto.apiKey2");
+    public static String apiKey1 = Secrets.get("devcto.apiKey1");
     //t>=3&&t<5
   @Override
   public boolean support(Integer t) {
