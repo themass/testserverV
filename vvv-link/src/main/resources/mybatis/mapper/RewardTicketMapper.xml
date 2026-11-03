@@ -16,6 +16,11 @@
         select count(*) from vpn.user_reward_ticket
         where user_name=#{name} and granted=1 and used=0 and expire_at &gt; #{now}
     </select>
+    <select id="countExpiringBefore" resultType="int">
+        select count(*) from vpn.user_reward_ticket
+        where user_name=#{name} and granted=1 and used=0
+        and expire_at &gt; #{now} and expire_at &lt;= #{until}
+    </select>
     <select id="lockAvailable" resultType="long">
         select id from vpn.user_reward_ticket
         where user_name=#{name} and granted=1 and used=0 and expire_at &gt; #{now}

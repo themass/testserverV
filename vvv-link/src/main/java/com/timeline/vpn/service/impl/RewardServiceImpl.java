@@ -119,6 +119,7 @@ public class RewardServiceImpl implements RewardService {
         vo.cooldownSec = (int) (COOLDOWN_MS / 1000);
         vo.redeemTickets = REDEEM_TICKETS;
         vo.redeemHours = REDEEM_HOURS;
+        vo.expiringTickets = ticketDao.countExpiringBefore(name, now, new Date(now.getTime() + 24L * 3600_000L));
         UserPo po = userDao.exist(name);
         if (po != null && po.getPaidEndTime() != null && po.getPaidEndTime().after(now)) {
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");

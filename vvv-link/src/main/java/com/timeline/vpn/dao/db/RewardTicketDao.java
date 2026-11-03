@@ -20,6 +20,9 @@ public interface RewardTicketDao {
 
     int countAvailable(@Param("name") String name, @Param("now") Date now);
 
+    /** 可用且在 until 之前过期的观看券数量（用于到期提醒）。 */
+    int countExpiringBefore(@Param("name") String name, @Param("now") Date now, @Param("until") Date until);
+
     /** 锁定最早的若干张可用观看券（SELECT ... FOR UPDATE，需在事务内调用）。 */
     List<Long> lockAvailable(@Param("name") String name, @Param("now") Date now, @Param("limit") int limit);
 

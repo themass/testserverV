@@ -25,6 +25,8 @@ public class UserRegForm {
     private String channel;
     private String email;
     private String ref;
+    /** 邀请码（可选）：填写他人的邀请码注册，双方各得 1 张观看券。 */
+    private String inviteCode;
 
 }
 

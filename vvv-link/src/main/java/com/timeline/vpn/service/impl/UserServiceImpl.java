@@ -79,6 +79,8 @@ public class UserServiceImpl implements UserService {
     private UserRegContext userRegContext;
     @Resource(name = "dhumanHeartbeatExecutor")
     private ExecutorService taskExecutor;
+    @Autowired
+    private InviteService inviteService;
 
     public void updateDevUseinfo(final DevApp appInfo, final String userName) {
         taskExecutor.execute(new Runnable() {
@@ -233,6 +235,12 @@ public class UserServiceImpl implements UserService {
                 po.setPaidStartTime(new Date());
                 po.setPaidEndTime(new Date());
                 userDao.insert(po);
+                // 邀请码发放失败不能影响注册本身
+                try {
+                    inviteService.applyInvite(form.getInviteCode(), form.getName());
+                } catch (RuntimeException e) {
+                    LOGGER.error("邀请码发放失败: " + form.getName(), e);
+                }
                 checkService.addRadUser(form.getName(), form.getPwd(),
                         Constant.UserGroup.RAD_GROUP_REG);
                 baseQuery.setUser(po);

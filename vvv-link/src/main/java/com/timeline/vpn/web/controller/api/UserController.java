@@ -3,13 +3,16 @@ package com.timeline.vpn.web.controller.api;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.model.form.*;
 import com.timeline.vpn.model.param.BaseQuery;
+import com.timeline.vpn.model.vo.InviteVo;
 import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.service.InviteService;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -22,6 +25,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/user")
 public class UserController extends BaseController {
+
+    @Autowired
+    private InviteService inviteService;
+
+    /** 当前用户的邀请码（没有则生成）。 */
+    @RequestMapping(value = "/invite.json", method = {RequestMethod.GET, RequestMethod.POST})
+    public JsonResult invite(@UserInfo(required = true) BaseQuery baseQuery) {
+        return new JsonResult(new InviteVo(inviteService.getOrCreateCode(baseQuery.getUser().getName())));
+    }
     
     @RequestMapping(value = "/reg.json", method = RequestMethod.POST)
     public JsonResult reg(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserRegForm form) {

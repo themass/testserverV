@@ -16,4 +16,6 @@ public class RewardStatusVo {
     public int redeemHours;
     /** VIP 到期时间（yyyy-MM-dd HH:mm，Asia/Shanghai），没有 VIP 时为空 */
     public String vipEnd;
+    /** 24 小时内即将过期的观看券数量（客户端据此提醒用户及时使用） */
+    public int expiringTickets;
 }
