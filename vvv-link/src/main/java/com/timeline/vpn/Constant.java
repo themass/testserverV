@@ -28,6 +28,10 @@ public class Constant {
         public static final String RESULT_DENGTA_ERROR = "RESULT.ERROR.DENGTA";
         public static final String RESULT_REG_REGCODE = "RESULT.ERROR.REGCODE";
         public static final String RESULT_ERROR_USER = "RESULT.ERROR.USER";
+        public static final String RESULT_RESET_CODE_ERROR = "RESULT.ERROR.RESETCODE";
+        public static final String RESULT_RESET_CODE_EXPIRED = "RESULT.ERROR.RESETCODE.EXPIRED";
+        public static final String RESULT_RESET_PWD_MISMATCH = "RESULT.ERROR.RESETPWD.MISMATCH";
+        public static final String RESULT_RESET_MAIL_FAIL = "RESULT.ERROR.RESETMAIL";
         public static final String RESULT_ERROR_NEEDUSER = "RESULT.ERROR.NEEDUSER";
         public static final String RESULT_ERROR_MANYUSER = "RESULT.ERROR.MANYUSER";
         public static final String RESULT_ERROR_DEV = "RESULT.ERROR.DEV";

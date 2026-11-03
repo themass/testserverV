@@ -43,6 +43,32 @@
 	<update id="updateLevelPaid">
 	    update vpn.user set level=0 where paidEndTime &lt;= #{end}
 	</update>
+	<resultMap id="ResetCodeMap" type="com.timeline.vpn.model.po.PasswordResetPo">
+		<id column="id" property="id" />
+		<result column="user_name" property="userName" />
+		<result column="code_hash" property="codeHash" />
+		<result column="expire_at" property="expireAt" />
+		<result column="used" property="used" />
+		<result column="attempts" property="attempts" />
+	</resultMap>
+	<select id="getByEmail" resultMap="UserMap">
+		select * from vpn.user where email=#{email} limit 1
+	</select>
+	<update id="invalidateResetCodes">
+		update vpn.user_reset_code set used=1 where user_name=#{name} and used=0
+	</update>
+	<insert id="insertResetCode">
+		insert into vpn.user_reset_code(user_name,code_hash,expire_at) values(#{name},#{hash},#{expire})
+	</insert>
+	<select id="latestResetCode" resultMap="ResetCodeMap">
+		select * from vpn.user_reset_code where user_name=#{name} and used=0 order by id desc limit 1
+	</select>
+	<update id="bumpResetAttempt">
+		update vpn.user_reset_code set attempts=attempts+1 where id=#{id}
+	</update>
+	<update id="markResetUsed">
+		update vpn.user_reset_code set used=1 where id=#{id}
+	</update>
 	<update id="updateEmail">
 	    update vpn.user set email=#{email} where name=#{name}
 	</update>

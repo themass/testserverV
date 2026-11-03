@@ -36,5 +36,9 @@ public interface UserService {
     public void delCustome(BaseQuery baseQuery, int id);
     public InfoListVo<RecommendVo> getRecommendCustomePage(BaseQuery baseQuery, PageBaseParam param);
     public InfoListVo<RecommendVo> getRecommendLocal(BaseQuery baseQuery, PageBaseParam param);
-}
+    /** 发送找回密码验证码。邮箱是否注册都返回成功，不暴露账号是否存在。 */
+    void requestPasswordReset(String email);
 
+    /** 校验验证码并重置密码。 */
+    void resetPassword(com.timeline.vpn.model.form.UserResetPwdForm form);
+}

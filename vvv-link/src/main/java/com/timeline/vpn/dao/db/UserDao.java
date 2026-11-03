@@ -2,6 +2,7 @@ package com.timeline.vpn.dao.db;
 
 import com.timeline.vpn.dao.BaseDBDao;
 import com.timeline.vpn.model.po.UserPo;
+import com.timeline.vpn.model.po.PasswordResetPo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,6 +15,14 @@ import java.util.Date;
  */
 @Mapper
 public interface UserDao extends BaseDBDao<UserPo> {
+    public UserPo getByEmail(String email);
+    public void invalidateResetCodes(String name);
+    public void insertResetCode(@Param(value = "name") String name,
+                                @Param(value = "hash") String hash,
+                                @Param(value = "expire") java.util.Date expire);
+    public PasswordResetPo latestResetCode(String name);
+    public void bumpResetAttempt(long id);
+    public void markResetUsed(long id);
     public UserPo get(@Param(value = "name") String name, @Param(value = "pwd") String pwd);
     public UserPo updatePass(@Param(value = "name") String name, @Param(value = "pwd") String pwd);
 

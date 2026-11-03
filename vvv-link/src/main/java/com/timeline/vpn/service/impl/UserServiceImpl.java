@@ -38,6 +38,13 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.nio.charset.StandardCharsets;
+import com.timeline.vpn.model.form.UserResetPwdForm;
+import com.timeline.vpn.model.po.PasswordResetPo;
+import com.timeline.vpn.util.MailUtil;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -338,5 +345,60 @@ public class UserServiceImpl implements UserService {
         userDao.updateEmail(form.getEmail(), baseQuery.getUser().getName());
     }
 
-}
 
+    private static final SecureRandom RESET_RANDOM = new SecureRandom();
+    private static final long RESET_CODE_TTL_MS = 30L * 60_000L;
+    private static final int RESET_MAX_ATTEMPTS = 5;
+
+    @Override
+    public void requestPasswordReset(String email) {
+        UserPo po = userDao.getByEmail(email);
+        if (po == null) {
+            return;
+        }
+        String code = String.format("%06d", RESET_RANDOM.nextInt(1_000_000));
+        userDao.invalidateResetCodes(po.getName());
+        userDao.insertResetCode(po.getName(), sha256Hex(code),
+                new Date(System.currentTimeMillis() + RESET_CODE_TTL_MS));
+        boolean sent = MailUtil.sendMailTo(email, "Password reset code",
+                "<p>Your verification code is <b>" + code + "</b>.</p>"
+                        + "<p>It expires in 30 minutes. If you did not request this, you can ignore this email.</p>");
+        if (!sent) {
+            throw new LoginException(Constant.ResultMsg.RESULT_RESET_MAIL_FAIL);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(UserResetPwdForm form) {
+        if (!form.getPwd().equals(form.getRePwd())) {
+            throw new LoginException(Constant.ResultMsg.RESULT_RESET_PWD_MISMATCH);
+        }
+        UserPo po = userDao.getByEmail(form.getEmail());
+        PasswordResetPo reset = po == null ? null : userDao.latestResetCode(po.getName());
+        if (reset == null || reset.getAttempts() >= RESET_MAX_ATTEMPTS
+                || reset.getExpireAt().before(new Date())) {
+            throw new LoginException(Constant.ResultMsg.RESULT_RESET_CODE_EXPIRED);
+        }
+        if (!reset.getCodeHash().equals(sha256Hex(form.getCode()))) {
+            userDao.bumpResetAttempt(reset.getId());
+            throw new LoginException(Constant.ResultMsg.RESULT_RESET_CODE_ERROR);
+        }
+        userDao.updatePass(po.getName(), form.getPwd());
+        userDao.markResetUsed(reset.getId());
+    }
+
+    private static String sha256Hex(String value) {
+        try {
+            byte[] digest = MessageDigest.getInstance("SHA-256")
+                    .digest(value.trim().getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+}

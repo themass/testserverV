@@ -30,8 +30,13 @@ public class UserController extends BaseController {
     }
     @RequestMapping(value = "/findpass.json", method = RequestMethod.POST)
     public JsonResult findpass(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserEmailForm form) {
-//        userService.reg(form, baseQuery.getAppInfo());
-        //TODO 找回密码 发送邮件
+        userService.requestPasswordReset(form.getEmail());
+        return Constant.RESULT_SUCCESS;
+    }
+
+    @RequestMapping(value = "/resetpass.json", method = RequestMethod.POST)
+    public JsonResult resetpass(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserResetPwdForm form) {
+        userService.resetPassword(form);
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/del.json", method = RequestMethod.POST)
