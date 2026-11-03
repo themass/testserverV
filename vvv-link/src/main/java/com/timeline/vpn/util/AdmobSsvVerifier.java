@@ -40,7 +40,7 @@ public final class AdmobSsvVerifier {
     private static final String FALLBACK_KEY_BASE64 =
             "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE+nzvoGqvDeB9+SzE6igTl7TyK4JBbglwir9oTcQta8NuG26ZpZFxt+F2NDk7asTE6/2Yc8i1ATcGIqtuS5hv0Q==";
 
-    private static volatile Map<Integer, PublicKey> keys = new HashMap<>();
+    private static volatile Map<Long, PublicKey> keys = new HashMap<>();
     private static volatile long keysLoadedAt = 0;
 
     private AdmobSsvVerifier() {
@@ -65,7 +65,7 @@ public final class AdmobSsvVerifier {
             return false;
         }
         try {
-            PublicKey key = publicKey(Integer.parseInt(keyId));
+            PublicKey key = publicKey(Long.parseLong(keyId));
             if (key == null) {
                 LOGGER.warn("SSV 验签失败：key_id={} 不在 Google 公钥列表中", keyId);
                 return false;
@@ -103,7 +103,7 @@ public final class AdmobSsvVerifier {
         return Base64.getDecoder().decode(normalized);
     }
 
-    private static PublicKey publicKey(int keyId) throws Exception {
+    private static PublicKey publicKey(long keyId) throws Exception {
         long now = System.currentTimeMillis();
         if (!keys.containsKey(keyId) || now - keysLoadedAt > KEYS_TTL_MS) {
             try {
@@ -118,11 +118,11 @@ public final class AdmobSsvVerifier {
         return keys.get(keyId);
     }
 
-    private static Map<Integer, PublicKey> fallbackKeys() throws Exception {
-        Map<Integer, PublicKey> fallback = new HashMap<>();
+    private static Map<Long, PublicKey> fallbackKeys() throws Exception {
+        Map<Long, PublicKey> fallback = new HashMap<>();
         KeyFactory factory = KeyFactory.getInstance("EC");
         byte[] der = Base64.getDecoder().decode(FALLBACK_KEY_BASE64);
-        fallback.put(Integer.parseInt(FALLBACK_KEY_ID), factory.generatePublic(new X509EncodedKeySpec(der)));
+        fallback.put(Long.parseLong(FALLBACK_KEY_ID), factory.generatePublic(new X509EncodedKeySpec(der)));
         return fallback;
     }
 
@@ -130,13 +130,13 @@ public final class AdmobSsvVerifier {
         HttpURLConnection conn = (HttpURLConnection) new URL(KEYS_URL).openConnection();
         conn.setConnectTimeout(5000);
         conn.setReadTimeout(5000);
-        Map<Integer, PublicKey> loaded = new HashMap<>();
+        Map<Long, PublicKey> loaded = new HashMap<>();
         try (InputStream in = conn.getInputStream()) {
             JsonNode root = MAPPER.readTree(in);
             KeyFactory factory = KeyFactory.getInstance("EC");
             for (JsonNode node : root.path("keys")) {
                 byte[] der = Base64.getDecoder().decode(node.path("base64").asText());
-                loaded.put(node.path("keyId").asInt(), factory.generatePublic(new X509EncodedKeySpec(der)));
+                loaded.put(node.path("keyId").asLong(), factory.generatePublic(new X509EncodedKeySpec(der)));
             }
         } finally {
             conn.disconnect();
