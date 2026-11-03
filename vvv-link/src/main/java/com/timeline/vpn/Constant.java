@@ -28,6 +28,7 @@ public class Constant {
         public static final String RESULT_DENGTA_ERROR = "RESULT.ERROR.DENGTA";
         public static final String RESULT_REG_REGCODE = "RESULT.ERROR.REGCODE";
         public static final String RESULT_ERROR_USER = "RESULT.ERROR.USER";
+        public static final String RESULT_REWARD_NOT_ENOUGH = "RESULT.ERROR.REWARD.NOTENOUGH";
         public static final String RESULT_RESET_CODE_ERROR = "RESULT.ERROR.RESETCODE";
         public static final String RESULT_RESET_CODE_EXPIRED = "RESULT.ERROR.RESETCODE.EXPIRED";
         public static final String RESULT_RESET_PWD_MISMATCH = "RESULT.ERROR.RESETPWD.MISMATCH";

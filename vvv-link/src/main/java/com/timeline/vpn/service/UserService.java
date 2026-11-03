@@ -41,4 +41,7 @@ public interface UserService {
 
     /** 校验验证码并重置密码。 */
     void resetPassword(com.timeline.vpn.model.form.UserResetPwdForm form);
+
+    /** 已登录用户修改密码：校验旧密码后写入新哈希。 */
+    void changePassword(BaseQuery baseQuery, com.timeline.vpn.model.form.UserChangePwdForm form);
 }

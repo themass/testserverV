@@ -23,6 +23,10 @@ public interface UserDao extends BaseDBDao<UserPo> {
     public PasswordResetPo latestResetCode(String name);
     public void bumpResetAttempt(long id);
     public void markResetUsed(long id);
+    public int updateVip(@Param(value = "name") String name, @Param(value = "level") int level,
+                         @Param(value = "end") java.util.Date end);
+    public int deductScore(@Param(value = "name") String name, @Param(value = "cost") long cost);
+    public void updatePwdHash(@Param(value = "name") String name, @Param(value = "hash") String hash);
     public UserPo get(@Param(value = "name") String name, @Param(value = "pwd") String pwd);
     public UserPo updatePass(@Param(value = "name") String name, @Param(value = "pwd") String pwd);
 

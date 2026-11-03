@@ -13,6 +13,7 @@ public class UserPo {
     private long id;
     private String name;
     private String pwd;
+    private String pwdHash;
     private Date time;
     private String sex;
     private int level;
@@ -133,5 +134,13 @@ public class UserPo {
     
 
 
-}
 
+    public String getPwdHash() {
+        return pwdHash;
+    }
+
+    public UserPo setPwdHash(String pwdHash) {
+        this.pwdHash = pwdHash;
+        return this;
+    }
+}

@@ -66,6 +66,15 @@
 	<update id="bumpResetAttempt">
 		update vpn.user_reset_code set attempts=attempts+1 where id=#{id}
 	</update>
+	<update id="updateVip">
+		update vpn.user set level=#{level}, paidEndTime=#{end} where name=#{name}
+	</update>
+	<update id="deductScore">
+		update vpn.user set score=score-#{cost} where name=#{name} and score&gt;=#{cost}
+	</update>
+	<update id="updatePwdHash">
+		update vpn.user set pwdHash=#{hash}, pwd='' where name=#{name}
+	</update>
 	<update id="markResetUsed">
 		update vpn.user_reset_code set used=1 where id=#{id}
 	</update>

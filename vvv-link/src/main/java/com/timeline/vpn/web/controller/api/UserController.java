@@ -34,6 +34,12 @@ public class UserController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
 
+    @RequestMapping(value = "/changepass.json", method = RequestMethod.POST)
+    public JsonResult changepass(@UserInfo(required = true) BaseQuery baseQuery, @Valid @ModelAttribute UserChangePwdForm form) {
+        userService.changePassword(baseQuery, form);
+        return Constant.RESULT_SUCCESS;
+    }
+
     @RequestMapping(value = "/resetpass.json", method = RequestMethod.POST)
     public JsonResult resetpass(@UserInfo BaseQuery baseQuery, @Valid @ModelAttribute UserResetPwdForm form) {
         userService.resetPassword(form);
@@ -79,10 +85,8 @@ public class UserController extends BaseController {
     public JsonResult adsFabClick(@UserInfo(required = true) BaseQuery baseQuery,
             @RequestParam(name="score") int score) {
 //          return new JsonResult(userService.score(baseQuery, score));
-        LOGGER.info(baseQuery.getUser().getName()+"------"+score);
-        if (score == Constant.ADS_CLICK_SCORE) {
-            return new JsonResult(userService.score(baseQuery, score));
-        }
+        // 已停用：积分由客户端上报、没有服务端验证，任何人都能伪造。
+        // 激励视频奖励改由 /api/reward/admob/ssv（AdMob 服务端回调）发放。
         return Constant.RESULT_SUCCESS;
     }
     @RequestMapping(value = "/ads/check.json", method = RequestMethod.POST)

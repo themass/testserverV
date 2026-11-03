@@ -45,6 +45,8 @@ import java.nio.charset.StandardCharsets;
 import com.timeline.vpn.model.form.UserResetPwdForm;
 import com.timeline.vpn.model.po.PasswordResetPo;
 import com.timeline.vpn.util.MailUtil;
+import com.timeline.vpn.util.PasswordHasher;
+import com.timeline.vpn.model.form.UserChangePwdForm;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -142,7 +144,7 @@ public class UserServiceImpl implements UserService {
             // LOGGER.error("账号滥用用户："+name);
             throw new LoginException(Constant.ResultMsg.RESULT_ERROR_USER);
         }
-        UserPo po = userDao.get(name, pwd);
+        UserPo po = authenticate(name, pwd);
         baseQuery.setUser(po);
         String channel = baseQuery.getAppInfo().getChannel();
         if (baseQuery.getAppInfo().getChannel().startsWith(Constant.SEX)) {
@@ -193,9 +195,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void del(BaseQuery baseQuery, String name, String pwd) {
-        UserPo po = userDao.get(name,pwd);
+        UserPo po = authenticate(name, pwd);
         if(po!=null){
-            userDao.updatePass(name, "uuuuuu");
+            userDao.updatePwdHash(name, PasswordHasher.hash("uuuuuu"));
         }
     }
 
@@ -217,7 +219,8 @@ public class UserServiceImpl implements UserService {
                 // }
                 po = new UserPo();
                 po.setTime(new Date()).setLevel(Constant.UserLevel.LEVEL_FREE)
-                        .setName(form.getName()).setPwd(form.getPwd()).setSex(form.getSex())
+                        .setName(form.getName()).setPwd("").setPwdHash(PasswordHasher.hash(form.getPwd()))
+                        .setSex(form.getSex())
                         .setEmail(form.getEmail());
                 if (StringUtils.isEmpty(baseQuery.getAppInfo().getNetType())) {
                     po.setChannel(Constant.VPN);
@@ -384,8 +387,48 @@ public class UserServiceImpl implements UserService {
             userDao.bumpResetAttempt(reset.getId());
             throw new LoginException(Constant.ResultMsg.RESULT_RESET_CODE_ERROR);
         }
-        userDao.updatePass(po.getName(), form.getPwd());
+        userDao.updatePwdHash(po.getName(), PasswordHasher.hash(form.getPwd()));
         userDao.markResetUsed(reset.getId());
+    }
+
+    /**
+     * 校验账号密码。已哈希账号走 PBKDF2 校验；旧明文账号按明文比对，成功后迁移为哈希。
+     *
+     * @return 校验通过返回账号；否则 null
+     */
+    private UserPo authenticate(String name, String pwd) {
+        if (name == null || pwd == null) {
+            return null;
+        }
+        UserPo po = userDao.exist(name);
+        if (po == null) {
+            return null;
+        }
+        if (po.getPwdHash() != null && !po.getPwdHash().isEmpty()) {
+            return PasswordHasher.verify(pwd, po.getPwdHash()) ? po : null;
+        }
+        if (pwd.equals(po.getPwd())) {
+            userDao.updatePwdHash(name, PasswordHasher.hash(pwd));
+            po.setPwdHash("migrated");
+            return po;
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(BaseQuery baseQuery, UserChangePwdForm form) {
+        UserPo current = baseQuery.getUser();
+        if (current == null) {
+            throw new LoginException(Constant.ResultErrno.ERRNO_NEED_LOGIN, Constant.ResultMsg.RESULT_ERROR_NEEDUSER);
+        }
+        if (!form.getNewPwd().equals(form.getRePwd())) {
+            throw new LoginException(Constant.ResultMsg.RESULT_RESET_PWD_MISMATCH);
+        }
+        if (authenticate(current.getName(), form.getOldPwd()) == null) {
+            throw new LoginException(Constant.ResultMsg.RESULT_PWD_ERROR);
+        }
+        userDao.updatePwdHash(current.getName(), PasswordHasher.hash(form.getNewPwd()));
     }
 
     private static String sha256Hex(String value) {

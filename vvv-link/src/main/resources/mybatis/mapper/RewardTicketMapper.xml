@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.RewardTicketDao">
+    <insert id="insert">
+        insert ignore into vpn.user_reward_ticket(user_name, transaction_id, granted, created_at, expire_at)
+        values(#{name}, #{tx}, #{granted}, #{createdAt}, #{expireAt})
+    </insert>
+    <select id="countGrantedSince" resultType="int">
+        select count(*) from vpn.user_reward_ticket
+        where user_name=#{name} and granted=1 and created_at &gt;= #{since}
+    </select>
+    <select id="lastGrantedAt" resultType="java.util.Date">
+        select max(created_at) from vpn.user_reward_ticket where user_name=#{name} and granted=1
+    </select>
+    <select id="countAvailable" resultType="int">
+        select count(*) from vpn.user_reward_ticket
+        where user_name=#{name} and granted=1 and used=0 and expire_at &gt; #{now}
+    </select>
+    <select id="lockAvailable" resultType="long">
+        select id from vpn.user_reward_ticket
+        where user_name=#{name} and granted=1 and used=0 and expire_at &gt; #{now}
+        order by id limit #{limit} for update
+    </select>
+    <update id="markUsed">
+        update vpn.user_reward_ticket set used=1 where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </update>
+</mapper>
