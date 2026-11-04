@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.UserNodeDao">
+    <select id="listByUser" resultType="com.timeline.vpn.model.vo.UserNodeVo">
+        select id, name, protocol, server, port, link,
+               unix_timestamp(updated_at) * 1000 as updatedAt
+        from vpn.user_node
+        where user_name = #{name}
+        order by updated_at desc
+    </select>
+    <insert id="insert">
+        insert into vpn.user_node(id, user_name, name, link, protocol, server, port, updated_at)
+        values(#{node.id}, #{name}, #{node.name}, #{node.link}, #{node.protocol}, #{node.server}, #{node.port}, now())
+    </insert>
+    <update id="update">
+        update vpn.user_node
+        set name = #{node.name}, link = #{node.link}, protocol = #{node.protocol},
+            server = #{node.server}, port = #{node.port}, updated_at = now()
+        where id = #{node.id} and user_name = #{name}
+    </update>
+    <delete id="delete">
+        delete from vpn.user_node where id = #{id} and user_name = #{name}
+    </delete>
+</mapper>
