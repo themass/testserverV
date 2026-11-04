@@ -36,6 +36,8 @@ public class RewardServiceImpl implements RewardService {
     static final long LEGACY_SCORE_PER_TICKET = 30;
     /** 单次折算上限，防止一次请求写入过多记录 */
     private static final int LEGACY_CONVERT_LIMIT = 100;
+    /** 旧积分折算开关。当前关闭。 */
+    private static final boolean LEGACY_CONVERT_ENABLED = false;
 
     private static final TimeZone ZONE = TimeZone.getTimeZone("Asia/Shanghai");
 
@@ -95,6 +97,11 @@ public class RewardServiceImpl implements RewardService {
 
     /** 旧版积分折算：扣除积分并写入等量观看券。 */
     private void convertLegacyScore(String name) {
+        // 已停用：每次打开奖励页都会折算出票，导致票数被重复发放（见 2026-11-04 事件）。
+        // 在查清积分来源、并给折算加上一次性标记之前，不再执行。
+        if (!LEGACY_CONVERT_ENABLED) {
+            return;
+        }
         UserPo po = userDao.exist(name);
         if (po == null || po.getScore() < LEGACY_SCORE_PER_TICKET) {
             return;
