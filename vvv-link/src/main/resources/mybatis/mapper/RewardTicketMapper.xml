@@ -8,9 +8,11 @@
     <select id="countGrantedSince" resultType="int">
         select count(*) from vpn.user_reward_ticket
         where user_name=#{name} and granted=1 and created_at &gt;= #{since}
+        and transaction_id not like 'legacy-%' and transaction_id not like 'invite-%'
     </select>
     <select id="lastGrantedAt" resultType="java.util.Date">
         select max(created_at) from vpn.user_reward_ticket where user_name=#{name} and granted=1
+        and transaction_id not like 'legacy-%' and transaction_id not like 'invite-%'
     </select>
     <select id="countAvailable" resultType="int">
         select count(*) from vpn.user_reward_ticket
