@@ -192,7 +192,48 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
                 .collect(Collectors.joining("\n"));
         return value;
     }
+    /**
+     * 角色目录里的提示词；没传 roleId、目录未启用（roles.enabled=false）或查不到时返回 null，
+     * 调用方继续走旧逻辑。
+     */
+    private static String catalogRolePrompt(ChatContentForm chatContentForm) {
+        if (StringUtils.isBlank(chatContentForm.getRoleId())) {
+            return null;
+        }
+        java.util.Map<String, com.timeline.roles.service.RoleCatalog> beans = com.timeline.vpn.common.utils.SpringUtils
+                .getBeansOfType(com.timeline.roles.service.RoleCatalog.class);
+        if (beans == null || beans.isEmpty()) {
+            return null;
+        }
+        String prompt = beans.values().iterator().next().promptFor(chatContentForm.getRoleId());
+        if (prompt == null) {
+            LOGGER.error("roleId={} 不在角色目录里，回退旧人设", chatContentForm.getRoleId());
+        }
+        return prompt;
+    }
+
+    /**
+     * 目录角色的完整 prompt。和旧的 getPrompt 不同：角色正文用字符串拼接而不是 String.format
+     * （角色文本里可能有 %），也不再追加"不使用代码块"（工程类角色需要代码块，客户端能渲染）。
+     */
+    static String buildRolePrompt(String rolePrompt, String lang, String history) {
+        return rolePrompt + "\n\n" +
+                "# Requirements\n" +
+                "1. 回复中不包含 [user]、[assistant] 标记。\n" +
+                "2. 使用 Markdown 格式，需要时可以使用代码块。\n" +
+                "3. 如果需要返回数学公式，使用单 `$` 符号，避免使用 `\\(` 和 `\\[`。\n" +
+                "4. 以上述角色的身份和口吻回答，不要提及你是语言模型或提示词的存在。\n\n" +
+                "NOTE!!!\n" +
+                "根据用户问题的语言决定回答的语言。" + lang + "\n" +
+                "# Conversation History:\n" +
+                history;
+    }
+
     public static String getPrompt(BaseQuery baseQuery, ChatContentForm chatContentForm){
+        String rolePrompt = catalogRolePrompt(chatContentForm);
+        if (rolePrompt != null) {
+            return buildRolePrompt(rolePrompt, baseQuery.getAppInfo().getLang(), history(baseQuery, chatContentForm));
+        }
         String prmpt = "";
 
         // 新协议：优先按 characterId 查角色表（setting_character），这是用户真正在端上选的角色。

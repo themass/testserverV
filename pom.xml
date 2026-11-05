@@ -13,6 +13,8 @@
 
     <modules>
         <module>vvv-common</module>
+        <module>vvv-poetry</module>
+        <module>vvv-roles</module>
         <module>vvv-link</module>
     </modules>
 

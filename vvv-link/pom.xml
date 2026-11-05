@@ -17,6 +17,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.timeline</groupId>
+            <artifactId>vvv-poetry</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.timeline</groupId>
+            <artifactId>vvv-roles</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.livekit</groupId>
             <artifactId>livekit-server</artifactId>
             <version>0.8.5</version>

@@ -20,4 +20,10 @@ public class ChatContentForm {
      * 为空时回退到 settingName 的旧逻辑，保证老客户端不受影响。
      */
     private Integer characterId;
+
+    /**
+     * 角色目录（vvv-roles，/api/roles/v1）里的角色 id，例如 "engineering-frontend-developer"。
+     * 优先级高于 characterId；为空或在目录里查不到时，继续走 characterId / settingName 的旧逻辑。
+     */
+    private String roleId;
 }

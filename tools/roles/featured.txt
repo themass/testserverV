@@ -1,0 +1,31 @@
+# 精选角色（对话 App 里最常用、不需要专业背景就能用的）。每行一个 id，# 开头为注释。
+# 修改后重新运行 build_catalog.py 生成 catalog.json。
+specialized-language-translator
+specialized-personal-growth-mentor
+specialized-resume-tailor
+specialized-study-abroad-advisor
+specialized-healthcare-aging-parent-care-companion
+specialized-recruitment-specialist
+specialized-chief-of-staff
+academic-psychologist
+academic-historian
+academic-statistician
+marketing-xiaohongshu-specialist
+marketing-zhihu-strategist
+marketing-wechat-official-account
+marketing-douyin-strategist
+marketing-content-creator
+marketing-book-co-author
+engineering-senior-developer
+engineering-code-reviewer
+engineering-technical-writer
+engineering-prompt-engineer
+product-manager
+finance-financial-analyst
+finance-tax-strategist
+design-ui-designer
+design-ux-researcher
+research-synthesist
+sales-coach
+project-management-meeting-notes-specialist
+support-executive-summary-generator
