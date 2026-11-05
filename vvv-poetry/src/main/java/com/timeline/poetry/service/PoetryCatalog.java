@@ -3,6 +3,8 @@ package com.timeline.poetry.service;
 import com.timeline.poetry.api.PoetryModels.*;
 import com.timeline.poetry.domain.TimeSpan;
 import com.timeline.poetry.persistence.PoetryMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.Locale;
 import java.util.Set;
 
@@ -12,17 +14,17 @@ public class PoetryCatalog {
     public PoetryCatalog(PoetryMapper mapper) { this.mapper = mapper; }
     public static void pageBounds(int limit, int offset) {
         if (limit < 1 || limit > 100 || offset < 0 || offset > 1_000_000)
-            throw new IllegalArgumentException("limit must be 1..100; offset must be 0..1000000");
+            throw new BadRequest("limit must be 1..100; offset must be 0..1000000");
     }
     private String type(String type) {
         if (type == null) return null;
         String normalized = type.toUpperCase(Locale.ROOT);
-        if (!TYPES.contains(normalized)) throw new IllegalArgumentException("Invalid content type");
+        if (!TYPES.contains(normalized)) throw new BadRequest("Invalid content type");
         return normalized;
     }
     public ContentItem content(String id, String expectedType) {
         if (id == null || !id.matches("[A-Za-z0-9][A-Za-z0-9_-]{0,63}"))
-            throw new IllegalArgumentException("Invalid content id");
+            throw new BadRequest("Invalid content id");
         ContentItem item = mapper.content(id);
         if (item == null || (expectedType != null && !expectedType.equals(item.entityType())))
             throw new NotFound();
@@ -34,9 +36,13 @@ public class PoetryCatalog {
     }
     public Timeline timeline(String type, int from, int to, int limit, int offset) {
         pageBounds(limit, offset);
-        new TimeSpan(from, to, "RANGE");
+        try {
+            new TimeSpan(from, to, "RANGE");
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequest(ex.getMessage());
+        }
         if (from < -9999 || to > 9999 || (long) to - from > 5000)
-            throw new IllegalArgumentException("Timeline bounds must be within -9999..9999 and span at most 5000 years");
+            throw new BadRequest("Timeline bounds must be within -9999..9999 and span at most 5000 years");
         return new Timeline(Page.from(mapper.timeline(type(type), from, to, limit + 1, offset), limit, offset),
             "仅展示当前已发布且有年代范围的内容；空白不代表历史上不存在。年代不可考的内容请通过目录查询。", false);
     }
@@ -89,7 +95,14 @@ public class PoetryCatalog {
         // Parent/claim/text publication is rechecked by the mapper, never trusted from a prior request.
         return Page.from(mapper.backgroundLines(id, limit + 1, offset), limit, offset);
     }
+    /** Missing or unpublished public content. Not a subclass of IllegalArgumentException. */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public static class NotFound extends RuntimeException {
         public NotFound() { super("Content not found"); }
+    }
+    /** Invalid client parameters. Kept separate from IllegalArgumentException so 404 is never remapped to 400. */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public static class BadRequest extends RuntimeException {
+        public BadRequest(String message) { super(message); }
     }
 }

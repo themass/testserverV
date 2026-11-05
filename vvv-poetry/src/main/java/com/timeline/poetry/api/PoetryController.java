@@ -75,10 +75,11 @@ public class PoetryController {
     public Response<Claim> claim(@PathVariable String id) { return Response.ok(catalog.claim(id)); }
 
     @ExceptionHandler(PoetryCatalog.NotFound.class)
-    public ResponseEntity<Response<Void>> notFound() {
+    public ResponseEntity<Response<Void>> notFound(PoetryCatalog.NotFound exception) {
         return ResponseEntity.status(404).body(new Response<>(404, null, "Content not found"));
     }
-    @ExceptionHandler({IllegalArgumentException.class, MissingServletRequestParameterException.class,
+    // Do not catch IllegalArgumentException: if NotFound were ever a subclass it would be remapped to 400.
+    @ExceptionHandler({PoetryCatalog.BadRequest.class, MissingServletRequestParameterException.class,
                        MethodArgumentTypeMismatchException.class})
     public ResponseEntity<Response<Void>> badRequest(Exception exception) {
         return ResponseEntity.badRequest().body(new Response<>(400, null, "Invalid request parameters"));

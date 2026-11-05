@@ -43,3 +43,5 @@ application.pid
 /application.pid
 # 服务器上的真实密钥文件（从 secrets.properties.example 复制后填写），不入库
 secrets.properties
+# 环境私有配置（DB/Redis 等），不入库；bootstrap.yml 本身仍跟踪
+**/bootstrap-*.yml

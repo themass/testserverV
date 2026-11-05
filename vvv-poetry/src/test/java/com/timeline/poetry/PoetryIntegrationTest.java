@@ -137,7 +137,7 @@ class PoetryIntegrationTest {
                 .andExpect(jsonPath("$.errno").value(400));
         }
         mvc.perform(get("/api/poetry/v1/content/missing")).andExpect(status().isNotFound());
-        assertThrows(IllegalArgumentException.class, () -> catalog.content("' OR 1=1", null));
+        assertThrows(PoetryCatalog.BadRequest.class, () -> catalog.content("' OR 1=1", null));
     }
     @Test void publicApiIsPlainJsonAndSupportsTypedDetailAndLines() throws Exception {
         reviewWorkAndSource();

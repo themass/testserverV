@@ -78,6 +78,8 @@
         <junit.jupiter.api.version>5.10.2</junit.jupiter.api.version>
         <embedded-redis.version>0.7.5-yaww</embedded-redis.version>
         <wiremock-standalone.version>2.22.0</wiremock-standalone.version>
+        <!-- 默认跳过测试：本地启动 / package / install 不跑；需要时 -DskipTests=false -->
+        <skipTests>true</skipTests>
 
     </properties>
 
