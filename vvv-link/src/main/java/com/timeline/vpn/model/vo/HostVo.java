@@ -37,6 +37,23 @@ public class HostVo {
     private String realityShortId;
     private String realityFingerprint;
 
+    // ---- 通用代理节点（sing-box 承载），见 sql/2026111100_proxy_links.sql ----
+    /**
+     * 各协议的分享链接，JSON 对象：协议名 -> 链接，如
+     * {"trojan":"trojan://...","hysteria2":"hysteria2://..."}。
+     * 链接就是服务端脚本 `vpn.sh singbox links` 的输出，客户端用与「自己的节点」相同的解析与连接路径，
+     * 所以新增协议不需要改表结构，也不需要改客户端解析。
+     */
+    private String proxyLinks;
+
+    public String getProxyLinks() {
+        return proxyLinks;
+    }
+
+    public void setProxyLinks(String proxyLinks) {
+        this.proxyLinks = proxyLinks;
+    }
+
     public String getVlessUuid() {
         return vlessUuid;
     }
