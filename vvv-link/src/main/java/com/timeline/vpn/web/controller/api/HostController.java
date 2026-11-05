@@ -65,10 +65,12 @@ public class HostController extends BaseController {
      * 契约详见客户端仓库的 docs/WIREGUARD-BACKEND.md。
      */
     @RequestMapping(value = "/wg/register.json", method = RequestMethod.POST)
-    public JsonResult wgRegister(@UserInfo BaseQuery baseQuery,
+    public JsonResult wgRegister(@UserInfo(required = true) BaseQuery baseQuery,
             @Valid @ModelAttribute WgRegisterForm form) {
-        wgDeviceKeyService.register(baseQuery, form.getDeviceId(), form.getPublicKey());
-        return Constant.RESULT_SUCCESS;
+        // 必须登录：注册一次就会占用一个隧道内地址，并被同步到 WireGuard 服务器，
+        // 匿名开放的话任何人都能耗尽地址池，或者给自己开一个能进内网的 peer。
+        String clientAddress = wgDeviceKeyService.register(baseQuery, form.getDeviceId(), form.getPublicKey());
+        return new JsonResult(new com.timeline.vpn.model.vo.WgRegisterVo(clientAddress));
     }
 
     /** 注销设备公钥。旧公钥在服务端成为死配置，不影响功能，仅避免垃圾数据累积。 */

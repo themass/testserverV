@@ -14,15 +14,21 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface WgDeviceKeyDao {
 
+    /** 更新已有设备的公钥，地址序号不变。 */
+    int updateKey(@Param("devId") String devId, @Param("publicKey") String publicKey);
+
     /**
-     * 插入或覆盖（devId 唯一）。
-     * <p>
-     * 用 upsert 而不是"先查后改"：两个并发请求同时注册同一设备时，
-     * 先查后改会产生唯一键冲突；单条 INSERT ... ON DUPLICATE KEY UPDATE 是原子的。
-     *
-     * @return 受影响行数（1 = 新建，2 = 更新，0 = 数据未变化）
+     * 插入新设备。devId 或 addrIndex 的唯一键冲突时抛 DuplicateKeyException，
+     * 由 {@link com.timeline.vpn.util.WgAddressAllocator} 重新取下标再试。
      */
-    int upsert(@Param("devId") String devId, @Param("publicKey") String publicKey);
+    int insert(@Param("devId") String devId, @Param("publicKey") String publicKey,
+               @Param("addrIndex") int addrIndex);
+
+    /** 当前最小的空闲序号（范围 min~max）；池满返回 null。 */
+    Integer nextFreeIndex(@Param("min") int min, @Param("max") int max);
+
+    /** 全部设备，按地址序号排序，供服务器同步。 */
+    java.util.List<WgDeviceKeyPo> listAll();
 
     WgDeviceKeyPo getByDevId(@Param("devId") String devId);
 

@@ -12,17 +12,22 @@ import com.timeline.vpn.model.param.BaseQuery;
 public interface WgDeviceKeyService {
 
     /**
-     * 注册（或覆盖）设备的 WireGuard 公钥。
+     * 注册（或覆盖）设备的 WireGuard 公钥，并返回该设备唯一的隧道内地址。
+     * 重复注册只覆盖公钥，地址不变。
      *
      * @param baseQuery  请求上下文
      * @param devId      设备标识；为空时回退到请求头里的设备号
      * @param publicKey  WireGuard 公钥，Base64
+     * @return 设备的隧道内地址，CIDR，如 10.66.1.5/32
      */
-    void register(BaseQuery baseQuery, String devId, String publicKey);
+    String register(BaseQuery baseQuery, String devId, String publicKey);
 
     /** 注销设备公钥；不存在时静默成功。 */
     void unregister(BaseQuery baseQuery, String devId);
 
     /** 查询已注册的公钥；未注册返回 null。 */
     String getPublicKey(String devId);
+
+    /** 全部设备的 peer 列表，每行 "公钥 地址/32"，供 WireGuard 服务器同步。 */
+    String peersText();
 }

@@ -16,6 +16,8 @@ public class WgDeviceKeyPo {
     private String devId;
     /** WireGuard 公钥，Base64 */
     private String publicKey;
+    /** 隧道内地址序号，见 {@link com.timeline.vpn.util.WgAddress}。 */
+    private Integer addrIndex;
 
     public Long getId() {
         return id;
@@ -39,6 +41,14 @@ public class WgDeviceKeyPo {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public Integer getAddrIndex() {
+        return addrIndex;
+    }
+
+    public void setAddrIndex(Integer addrIndex) {
+        this.addrIndex = addrIndex;
     }
 
     @Override

@@ -47,6 +47,22 @@ public class NoappController extends BaseController {
         }
         return Constant.RESULT_SUCCESS;
     }
+    /**
+     * WireGuard 服务器同步 peer 列表（服务器主动拉取，见 modules/wireguard.sh 的 sync）。
+     * <p>
+     * 故意用 .txt 而不是 .json：.json 才会进用户校验、版本校验、AES 加密这套面向 App 的拦截链，
+     * 服务器脚本既没有这些头也解不了 AES。鉴权只靠令牌（请求头 X-Sync-Token）。
+     * 令牌未配置或不匹配一律 403，且不区分原因，不暴露配置状态。
+     */
+    @RequestMapping(value = "/wg/peers.txt", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    public org.springframework.http.ResponseEntity<String> wgPeers(
+            @org.springframework.web.bind.annotation.RequestHeader(name = "X-Sync-Token", required = false) String token) {
+        if (!com.timeline.vpn.util.WgSyncAuth.matches(token, com.timeline.vpn.util.Secrets.get("wg.syncToken"))) {
+            return org.springframework.http.ResponseEntity.status(403).body("forbidden\n");
+        }
+        return org.springframework.http.ResponseEntity.ok(wgDeviceKeyService.peersText());
+    }
+
     @RequestMapping(value = "/ping.json", method = RequestMethod.POST)
     public JsonResult ping(@UserInfo BaseQuery baseQuery,@RequestParam(name="pingCheck") String pingCheck) {
         List<PingCheck> list = parse(pingCheck);
