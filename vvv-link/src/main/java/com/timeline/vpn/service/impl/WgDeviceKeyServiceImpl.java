@@ -46,20 +46,25 @@ public class WgDeviceKeyServiceImpl implements WgDeviceKeyService {
         if (key.length() != WG_PUBLIC_KEY_LENGTH) {
             throw new DataException("publicKey 长度非法，应为 44 字符的 Base64");
         }
+        // 登录是必须的（控制器里 @UserInfo(required = true)），这里一定有用户。
+        String userName = baseQuery.getUser().getName();
         int index;
         try {
-            index = new WgAddressAllocator(new DaoStore()).register(finalDevId, key);
+            index = new WgAddressAllocator(new DaoStore()).register(finalDevId, key, userName);
         } catch (WgAddressAllocator.PoolExhaustedException e) {
             LOGGER.error("wireguard 地址池已用完，无法为新设备分配地址");
             throw new DataException("服务繁忙，请稍后再试");
         }
-        LOGGER.info("wireguard register devId={} addrIndex={}", finalDevId, index);
+        LOGGER.info("wireguard register devId={} user={} addrIndex={}", finalDevId, userName, index);
         return WgAddress.toCidr(index);
     }
 
     @Override
-    public String peersText() {
-        return WgAddress.formatPeers(wgDeviceKeyDao.listAll());
+    public String peersText(int lineLevel) {
+        if (WgAddress.isFreeLine(lineLevel)) {
+            return WgAddress.formatPeers(wgDeviceKeyDao.listAll());
+        }
+        return WgAddress.formatPeers(wgDeviceKeyDao.listForLevel(lineLevel));
     }
 
     /** 把分配器需要的存储操作接到 DAO；唯一键冲突转成 false 交给分配器重试。 */
@@ -71,14 +76,14 @@ public class WgDeviceKeyServiceImpl implements WgDeviceKeyService {
         }
 
         @Override
-        public void updateKey(String devId, String publicKey) {
-            wgDeviceKeyDao.updateKey(devId, publicKey);
+        public void updateKey(String devId, String publicKey, String userName) {
+            wgDeviceKeyDao.updateKey(devId, publicKey, userName);
         }
 
         @Override
-        public boolean tryInsert(String devId, String publicKey, int index) {
+        public boolean tryInsert(String devId, String publicKey, String userName, int index) {
             try {
-                wgDeviceKeyDao.insert(devId, publicKey, index);
+                wgDeviceKeyDao.insert(devId, publicKey, index, userName);
                 return true;
             } catch (DuplicateKeyException e) {
                 return false;

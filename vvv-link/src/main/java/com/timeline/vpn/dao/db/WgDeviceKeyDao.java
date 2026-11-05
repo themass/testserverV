@@ -15,20 +15,24 @@ import org.apache.ibatis.annotations.Param;
 public interface WgDeviceKeyDao {
 
     /** 更新已有设备的公钥，地址序号不变。 */
-    int updateKey(@Param("devId") String devId, @Param("publicKey") String publicKey);
+    int updateKey(@Param("devId") String devId, @Param("publicKey") String publicKey,
+                  @Param("userName") String userName);
 
     /**
      * 插入新设备。devId 或 addrIndex 的唯一键冲突时抛 DuplicateKeyException，
      * 由 {@link com.timeline.vpn.util.WgAddressAllocator} 重新取下标再试。
      */
     int insert(@Param("devId") String devId, @Param("publicKey") String publicKey,
-               @Param("addrIndex") int addrIndex);
+               @Param("addrIndex") int addrIndex, @Param("userName") String userName);
 
     /** 当前最小的空闲序号（范围 min~max）；池满返回 null。 */
     Integer nextFreeIndex(@Param("min") int min, @Param("max") int max);
 
-    /** 全部设备，按地址序号排序，供服务器同步。 */
+    /** 全部设备，按地址序号排序（免费线路，不看用户等级）。 */
     java.util.List<WgDeviceKeyPo> listAll();
+
+    /** 所属用户等级不低于 minLevel 的设备（迁移前的旧记录没有用户，不会出现在这里）。 */
+    java.util.List<WgDeviceKeyPo> listForLevel(@Param("minLevel") int minLevel);
 
     WgDeviceKeyPo getByDevId(@Param("devId") String devId);
 

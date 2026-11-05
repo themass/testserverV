@@ -23,10 +23,10 @@ public final class WgAddressAllocator {
         /** 设备已有的 addrIndex，没有返回 null。 */
         Integer findIndex(String devId);
 
-        void updateKey(String devId, String publicKey);
+        void updateKey(String devId, String publicKey, String userName);
 
         /** 插入新设备；addrIndex 或 devId 唯一键冲突返回 false，其他错误直接抛。 */
-        boolean tryInsert(String devId, String publicKey, int index);
+        boolean tryInsert(String devId, String publicKey, String userName, int index);
 
         /** 当前最小的空闲 addrIndex（范围 INDEX_MIN ~ INDEX_MAX），池满返回 null。 */
         Integer nextFreeIndex();
@@ -41,18 +41,18 @@ public final class WgAddressAllocator {
     /**
      * 注册设备公钥并返回该设备的 addrIndex。重复注册覆盖公钥，地址保持不变（客户端重装后拿到同一个地址）。
      */
-    public int register(String devId, String publicKey) {
+    public int register(String devId, String publicKey, String userName) {
         for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             Integer existing = store.findIndex(devId);
             if (existing != null) {
-                store.updateKey(devId, publicKey);
+                store.updateKey(devId, publicKey, userName);
                 return existing;
             }
             Integer free = store.nextFreeIndex();
             if (free == null) {
                 throw new PoolExhaustedException();
             }
-            if (store.tryInsert(devId, publicKey, free)) {
+            if (store.tryInsert(devId, publicKey, userName, free)) {
                 return free;
             }
             // 下标被别人抢先占了，或同一设备被并发注册：回到循环开头重新判断。

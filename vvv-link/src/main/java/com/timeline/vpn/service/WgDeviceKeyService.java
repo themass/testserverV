@@ -28,6 +28,9 @@ public interface WgDeviceKeyService {
     /** 查询已注册的公钥；未注册返回 null。 */
     String getPublicKey(String devId);
 
-    /** 全部设备的 peer 列表，每行 "公钥 地址/32"，供 WireGuard 服务器同步。 */
-    String peersText();
+    /**
+     * 某条线路的设备 peer 列表，每行 "公钥 地址/32"，供该线路的 WireGuard 服务器同步。
+     * 免费线路返回全部设备；付费线路只返回所属用户等级够用的设备。
+     */
+    String peersText(int lineLevel);
 }

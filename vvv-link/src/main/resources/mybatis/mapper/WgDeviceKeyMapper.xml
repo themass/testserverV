@@ -7,16 +7,17 @@
 		<result column="devId" property="devId"/>
 		<result column="publicKey" property="publicKey"/>
 		<result column="addrIndex" property="addrIndex"/>
+		<result column="userName" property="userName"/>
 	</resultMap>
 
 	<!-- 重复注册：覆盖公钥，地址序号保持不变（客户端重装后拿到同一个地址）。 -->
 	<update id="updateKey">
-		update vpn.wg_device_key set publicKey = #{publicKey} where devId = #{devId}
+		update vpn.wg_device_key set publicKey = #{publicKey}, userName = #{userName} where devId = #{devId}
 	</update>
 	<!-- devId 与 addrIndex 都有唯一键：并发冲突由分配器重试。 -->
 	<insert id="insert">
-		insert into vpn.wg_device_key(devId, publicKey, addrIndex)
-		values (#{devId}, #{publicKey}, #{addrIndex})
+		insert into vpn.wg_device_key(devId, publicKey, addrIndex, userName)
+		values (#{devId}, #{publicKey}, #{addrIndex}, #{userName})
 	</insert>
 	<!--
 		最小空闲序号：候选是 min 以及每个已用序号的下一个，取其中不在表里的最小值。
@@ -29,10 +30,18 @@
 		where t.addrIndex is null and c.i between #{min} and #{max}
 	</select>
 	<select id="listAll" resultMap="WgDeviceKeyMap">
-		select id, devId, publicKey, addrIndex from vpn.wg_device_key order by addrIndex
+		select id, devId, publicKey, addrIndex, userName from vpn.wg_device_key order by addrIndex
+	</select>
+	<!-- 按所属用户的当前等级过滤：等级变化后下一次同步就生效。 -->
+	<select id="listForLevel" resultMap="WgDeviceKeyMap">
+		select d.id, d.devId, d.publicKey, d.addrIndex, d.userName
+		from vpn.wg_device_key d
+		join vpn.user u on u.name = d.userName
+		where u.level &gt;= #{minLevel}
+		order by d.addrIndex
 	</select>
 	<select id="getByDevId" resultMap="WgDeviceKeyMap">
-		select id, devId, publicKey, addrIndex
+		select id, devId, publicKey, addrIndex, userName
 		from vpn.wg_device_key
 		where devId = #{devId}
 	</select>

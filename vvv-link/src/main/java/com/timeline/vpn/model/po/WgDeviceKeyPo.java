@@ -18,6 +18,8 @@ public class WgDeviceKeyPo {
     private String publicKey;
     /** 隧道内地址序号，见 {@link com.timeline.vpn.util.WgAddress}。 */
     private Integer addrIndex;
+    /** 注册该设备的登录用户名；迁移前的旧记录为 null。 */
+    private String userName;
 
     public Long getId() {
         return id;
@@ -41,6 +43,14 @@ public class WgDeviceKeyPo {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Integer getAddrIndex() {

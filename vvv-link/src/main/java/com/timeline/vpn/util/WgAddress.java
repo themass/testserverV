@@ -39,6 +39,14 @@ public final class WgAddress {
      * 服务器同步用的 peer 列表：每行 "公钥 地址/32"，按地址排序。
      * 不包含 devId 等内部标识。
      */
+    /**
+     * 线路等级与用户等级的判定，与 HostServerImpl.checkPermission 保持一致：
+     * 免费线路（0 或 4）所有设备都可以用，其余线路要求用户等级 >= 线路等级。
+     */
+    public static boolean isFreeLine(int lineLevel) {
+        return lineLevel == 0 || lineLevel == 4;
+    }
+
     public static String formatPeers(List<WgDeviceKeyPo> devices) {
         StringBuilder sb = new StringBuilder();
         for (WgDeviceKeyPo d : devices) {

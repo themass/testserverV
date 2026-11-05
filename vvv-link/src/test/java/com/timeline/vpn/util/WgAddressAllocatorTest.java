@@ -13,6 +13,7 @@ class WgAddressAllocatorTest {
     private static class FakeStore implements WgAddressAllocator.Store {
         final Map<String, Integer> index = new HashMap<>();
         final Map<String, String> keys = new HashMap<>();
+        final Map<String, String> owners = new HashMap<>();
         final int min;
         final int max;
         /** 在第一次 tryInsert 之前，模拟另一个请求抢先占用的下标。 */
@@ -30,12 +31,14 @@ class WgAddressAllocatorTest {
         }
 
         @Override
-        public void updateKey(String devId, String publicKey) {
+        public void updateKey(String devId, String publicKey, String userName) {
+            owners.put(devId, userName);
             keys.put(devId, publicKey);
         }
 
         @Override
-        public boolean tryInsert(String devId, String publicKey, int i) {
+        public boolean tryInsert(String devId, String publicKey, String userName, int i) {
+            owners.put(devId, userName);
             insertCalls++;
             if (stealBeforeFirstInsert != null) {
                 index.put("someone-else", stealBeforeFirstInsert);
@@ -64,18 +67,18 @@ class WgAddressAllocatorTest {
     void newDevicesGetConsecutiveDistinctIndexes() {
         FakeStore store = new FakeStore(2, 100);
         WgAddressAllocator a = new WgAddressAllocator(store);
-        Assertions.assertEquals(2, a.register("d1", "K1="));
-        Assertions.assertEquals(3, a.register("d2", "K2="));
-        Assertions.assertEquals(4, a.register("d3", "K3="));
+        Assertions.assertEquals(2, a.register("d1", "K1=", "alice"));
+        Assertions.assertEquals(3, a.register("d2", "K2=", "alice"));
+        Assertions.assertEquals(4, a.register("d3", "K3=", "alice"));
     }
 
     @Test
     void reRegisteringKeepsTheAddressAndReplacesTheKey() {
         FakeStore store = new FakeStore(2, 100);
         WgAddressAllocator a = new WgAddressAllocator(store);
-        int first = a.register("d1", "OLD=");
-        a.register("d2", "K2=");
-        Assertions.assertEquals(first, a.register("d1", "NEW="), "重装 App 后地址必须不变");
+        int first = a.register("d1", "OLD=", "alice");
+        a.register("d2", "K2=", "alice");
+        Assertions.assertEquals(first, a.register("d1", "NEW=", "alice"), "重装 App 后地址必须不变");
         Assertions.assertEquals("NEW=", store.keys.get("d1"));
         Assertions.assertEquals(2, store.index.size(), "不能因为重复注册多占一个地址");
     }
@@ -85,7 +88,7 @@ class WgAddressAllocatorTest {
         FakeStore store = new FakeStore(2, 100);
         store.stealBeforeFirstInsert = 2;
         WgAddressAllocator a = new WgAddressAllocator(store);
-        Assertions.assertEquals(3, a.register("d1", "K1="), "下标 2 被抢走后应换下一个空闲的");
+        Assertions.assertEquals(3, a.register("d1", "K1=", "alice"), "下标 2 被抢走后应换下一个空闲的");
         Assertions.assertEquals(2, store.insertCalls);
     }
 
@@ -93,33 +96,34 @@ class WgAddressAllocatorTest {
     void reusesAGapLeftByADeletedDevice() {
         FakeStore store = new FakeStore(2, 100);
         WgAddressAllocator a = new WgAddressAllocator(store);
-        a.register("d1", "K1=");
-        a.register("d2", "K2=");
-        a.register("d3", "K3=");
+        a.register("d1", "K1=", "alice");
+        a.register("d2", "K2=", "alice");
+        a.register("d3", "K3=", "alice");
         store.index.remove("d2");
-        Assertions.assertEquals(3, a.register("d4", "K4="));
+        Assertions.assertEquals(3, a.register("d4", "K4=", "alice"));
     }
 
     @Test
     void exhaustedPoolIsReportedNotWrappedAround() {
         FakeStore store = new FakeStore(2, 3);
         WgAddressAllocator a = new WgAddressAllocator(store);
-        a.register("d1", "K1=");
-        a.register("d2", "K2=");
-        Assertions.assertThrows(WgAddressAllocator.PoolExhaustedException.class, () -> a.register("d3", "K3="));
+        a.register("d1", "K1=", "alice");
+        a.register("d2", "K2=", "alice");
+        Assertions.assertThrows(WgAddressAllocator.PoolExhaustedException.class, () -> a.register("d3", "K3=", "alice"));
         // 已注册的设备在池满后仍然可以更新公钥
-        Assertions.assertEquals(2, a.register("d1", "K1b="));
+        Assertions.assertEquals(2, a.register("d1", "K1b=", "alice"));
     }
 
     @Test
     void giveUpWithAClearErrorWhenConflictsNeverStop() {
         FakeStore store = new FakeStore(2, 100) {
             @Override
-            public boolean tryInsert(String devId, String publicKey, int i) {
+            public boolean tryInsert(String devId, String publicKey, String userName, int i) {
+            owners.put(devId, userName);
                 return false;
             }
         };
-        Assertions.assertThrows(IllegalStateException.class, () -> new WgAddressAllocator(store).register("d1", "K1="));
+        Assertions.assertThrows(IllegalStateException.class, () -> new WgAddressAllocator(store).register("d1", "K1=", "alice"));
     }
 
     @Test
@@ -128,7 +132,7 @@ class WgAddressAllocatorTest {
         WgAddressAllocator a = new WgAddressAllocator(store);
         Map<Integer, String> seen = new TreeMap<>();
         for (int i = 0; i < 500; i++) {
-            int idx = a.register("dev" + i, "K" + i + "=");
+            int idx = a.register("dev" + i, "K" + i + "=", "alice");
             Assertions.assertNull(seen.put(idx, "dev" + i), "地址重复分配: " + idx);
         }
     }
