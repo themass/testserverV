@@ -7,6 +7,7 @@ import com.timeline.vpn.model.po.WgDeviceKeyPo;
 import com.timeline.vpn.service.WgDeviceKeyService;
 import com.timeline.vpn.util.WgAddress;
 import com.timeline.vpn.util.WgAddressAllocator;
+import com.timeline.vpn.util.WgRegisterRateLimiter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,10 @@ public class WgDeviceKeyServiceImpl implements WgDeviceKeyService {
     /** WireGuard 公钥固定 32 字节，Base64 编码后恒为 44 个字符（含末尾 '='）。 */
     private static final int WG_PUBLIC_KEY_LENGTH = 44;
 
+    /** 每用户注册限流（进程内），见 WgRegisterRateLimiter。 */
+    private static final WgRegisterRateLimiter REGISTER_LIMITER = new WgRegisterRateLimiter(
+            WgRegisterRateLimiter.DEFAULT_MAX_PER_WINDOW, WgRegisterRateLimiter.DEFAULT_WINDOW_MILLIS);
+
     @Autowired
     private WgDeviceKeyDao wgDeviceKeyDao;
 
@@ -48,6 +53,11 @@ public class WgDeviceKeyServiceImpl implements WgDeviceKeyService {
         }
         // 登录是必须的（控制器里 @UserInfo(required = true)），这里一定有用户。
         String userName = baseQuery.getUser().getName();
+        // 限流放在分配地址之前：超限的请求不能占用地址池，也不能触发数据库写入。
+        if (!REGISTER_LIMITER.tryAcquire(userName, System.currentTimeMillis())) {
+            LOGGER.warn("wireguard register rate limited user={}", userName);
+            throw new DataException("注册太频繁，请稍后再试");
+        }
         int index;
         try {
             index = new WgAddressAllocator(new DaoStore()).register(finalDevId, key, userName);
