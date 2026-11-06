@@ -97,6 +97,7 @@ public class PoetryAgentService {
         requireMandate(c, workId);
         if (!"APPROVED".equals(mapper.proposalReviewStatus(proposalId))) throw new Conflict("proposal needs an APPROVED human review");
         if (blank(request.reviewId())) throw new Rejected("review_id is required");
+        if (!request.reviewId().equals(mapper.proposalReviewId(proposalId))) throw new Rejected("review_id does not belong to this proposal");
         String receipt = mapper.receipt("APPLY_PROPOSAL", c.idempotencyKey());
         if (receipt != null) return AgentResponse.ok(Map.of("proposal_id", proposalId, "application_id", receipt, "idempotent", true), List.of("agent-receipt:" + receipt));
         JsonNode proposal;

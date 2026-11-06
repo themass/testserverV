@@ -50,6 +50,7 @@ public interface PoetryAgentMapper {
     @Select("SELECT proposal_json FROM poetry_agent_proposal WHERE id=#{id}") String proposalJson(@Param("id") String id);
     @Select("SELECT work_id FROM poetry_agent_proposal WHERE id=#{id}") String proposalWorkId(@Param("id") String id);
     @Select("SELECT review_status FROM poetry_agent_proposal WHERE id=#{id}") String proposalReviewStatus(@Param("id") String id);
+    @Select("SELECT review_id FROM poetry_agent_proposal WHERE id=#{id}") String proposalReviewId(@Param("id") String id);
     @Update("UPDATE poetry_agent_proposal SET review_status=#{decision},review_id=#{reviewId},reviewed_by=#{reviewer},reviewed_at=NOW(),review_comment=#{comment} WHERE id=#{id} AND review_status='PENDING'")
     int reviewProposal(@Param("id") String id, @Param("reviewId") String reviewId, @Param("decision") String decision, @Param("reviewer") String reviewer, @Param("comment") String comment);
     @Update("UPDATE poetry_agent_proposal SET status='APPLIED',applied_at=NOW() WHERE id=#{id} AND status='DRAFT' AND review_status='APPROVED'")

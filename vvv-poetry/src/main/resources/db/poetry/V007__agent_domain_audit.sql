@@ -69,7 +69,7 @@ CREATE TABLE poetry_agent_review (
 CREATE TABLE poetry_agent_tool_receipt (
   id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   operation VARCHAR(48) NOT NULL,
-  idempotency_key VARCHAR(200) COLLATE utf8mb4_bin NOT NULL,
+  idempotency_key VARCHAR(128) COLLATE utf8mb4_bin NOT NULL,
   run_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   mandate_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   result_ref VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
@@ -106,6 +106,12 @@ CREATE TABLE poetry_agent_compile_request (
   KEY ix_poetry_agent_compile_work (work_id, status),
   KEY ix_poetry_agent_compile_mandate (run_id, mandate_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- V006 was deployed before its version-ledger row existed. Keep this repair idempotent so
+-- V007 can safely close that historical ledger gap on the already-deployed schema.
+INSERT INTO poetry_schema_version (version_no, description)
+SELECT 6, 'Media and scene-script base tables; no foreign keys' FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM poetry_schema_version WHERE version_no=6);
 
 INSERT INTO poetry_schema_version (version_no, description)
 VALUES (7, 'Agent domain records: mandate, draft proposal, review, receipt and compiler eligibility; no foreign keys');

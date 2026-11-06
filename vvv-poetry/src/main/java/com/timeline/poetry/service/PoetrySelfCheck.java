@@ -31,12 +31,15 @@ public class PoetrySelfCheck implements ApplicationListener<ApplicationReadyEven
         try {
             Integer rows = mapper.contentRowCount();
             Integer version = mapper.maxSchemaVersion();
+            Integer requiredVersions = mapper.requiredSchemaVersionCount();
             out.append("tables reachable: poetry_content rows=").append(rows)
-               .append(", schema_version=").append(version);
-            if (version == null || version < 7) problems.add("schema_version looks older than V004");
+               .append(", schema_version=").append(version)
+               .append(", required_versions_present=").append(requiredVersions);
+            if (version == null || version < 8 || requiredVersions == null || requiredVersions != 8)
+                problems.add("schema version ledger must contain every version V001..V008");
         } catch (Exception ex) {
             problems.add("poetry tables are NOT reachable (" + ex.getClass().getSimpleName()
-                + "). Apply db/poetry/V001..V007 on this schema, or set poetry.enabled=false.");
+                + "). Apply db/poetry/V001..V008 on this schema, or set poetry.enabled=false.");
         }
         String audit = readClasspath(AUDIT_RESOURCE);
         if (audit == null) problems.add("audit SQL missing from classpath: " + AUDIT_RESOURCE);

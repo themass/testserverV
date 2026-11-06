@@ -135,4 +135,6 @@ public interface PoetryMapper {
 
     @Select("SELECT MAX(version_no) FROM poetry_schema_version")
     Integer maxSchemaVersion();
+    @Select("SELECT COUNT(DISTINCT version_no) FROM poetry_schema_version WHERE version_no BETWEEN 1 AND 8")
+    Integer requiredSchemaVersionCount();
 }

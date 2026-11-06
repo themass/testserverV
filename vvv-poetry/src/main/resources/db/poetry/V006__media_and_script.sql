@@ -60,3 +60,6 @@ CREATE TABLE poetry_script_asset (
   KEY ix_poetry_script_asset_asset (asset_id),
   KEY ix_poetry_script_asset_script (script_id, script_version)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO poetry_schema_version (version_no, description)
+VALUES (6, 'Media and scene-script base tables; no foreign keys');

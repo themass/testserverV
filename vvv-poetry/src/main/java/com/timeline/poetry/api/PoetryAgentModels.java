@@ -18,11 +18,13 @@ public final class PoetryAgentModels {
         public static <T> AgentResponse<T> review(T data, List<String> refs) {
             return new AgentResponse<>("REVIEW_REQUIRED", data, List.copyOf(refs), "HUMAN_REVIEW");
         }
+        @SuppressWarnings("unchecked")
         public static <T> AgentResponse<T> rejected(String reason) {
-            return new AgentResponse<>("REJECTED", Map.of("reason", reason), List.of(), "REPLAN");
+            return new AgentResponse<>("REJECTED", (T) Map.of("reason", reason), List.of(), "REPLAN");
         }
+        @SuppressWarnings("unchecked")
         public static <T> AgentResponse<T> conflict(String reason) {
-            return new AgentResponse<>("CONFLICT", Map.of("reason", reason), List.of(), "REPLAN");
+            return new AgentResponse<>("CONFLICT", (T) Map.of("reason", reason), List.of(), "REPLAN");
         }
     }
 

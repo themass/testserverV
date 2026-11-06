@@ -73,6 +73,7 @@ public class PoetryAgentController {
         if (internalToken == null || internalToken.isBlank()) return AgentResponse.rejected("agent domain API disabled: configure poetry.agentInternalToken");
         if (!internalToken.equals(token)) return AgentResponse.rejected("invalid internal Agent token");
         if (blank(run) || blank(mandate) || blank(key)) return AgentResponse.rejected("run, mandate and Idempotency-Key headers are required");
+        if (key.length() > 128) return AgentResponse.rejected("Idempotency-Key may not exceed 128 characters");
         // Role is retained as audit context only. The deployment token is the authorization decision.
         if (!("CONTENT_EDITOR".equals(role) || "HISTORICAL_REVIEWER".equals(role))) return AgentResponse.rejected("unsupported agent audit role");
         return null;

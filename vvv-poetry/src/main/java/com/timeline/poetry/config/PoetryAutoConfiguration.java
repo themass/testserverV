@@ -9,6 +9,7 @@ import com.timeline.poetry.api.PoetryReviewController;
 import com.timeline.poetry.persistence.PoetryDraftWriter;
 import com.timeline.poetry.persistence.PoetryDraftWriter2;
 import com.timeline.poetry.persistence.PoetryAgentMapper;
+import com.timeline.poetry.persistence.PoetryAgentOrchestrationMapper;
 import com.timeline.poetry.persistence.PoetryMapper;
 import com.timeline.poetry.persistence.PoetryMediaMapper;
 import com.timeline.poetry.persistence.PoetryWriter;
@@ -19,7 +20,9 @@ import com.timeline.poetry.service.PoetryMediaService;
 import com.timeline.poetry.service.PoetryReviewService;
 import com.timeline.poetry.service.PoetryTextService;
 import com.timeline.poetry.service.PoetryAgentService;
+import com.timeline.poetry.service.PoetryAgentOrchestrationService;
 import com.timeline.poetry.api.PoetryAgentController;
+import com.timeline.poetry.api.PoetryAgentOrchestrationController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timeline.poetry.service.PoetrySelfCheck;
 import javax.sql.DataSource;
@@ -138,11 +141,18 @@ public class PoetryAutoConfiguration {
         return new PoetryReviewService(writer, audit);
     }
 
-    /* ---------- V007 Agent domain: authenticated, audited, DRAFT-only ---------- */
+    /* ---------- V007/V008 Agent domain: authenticated, durable, DRAFT-only ---------- */
 
     @Bean
     public MapperFactoryBean<PoetryAgentMapper> poetryAgentMapper(SqlSessionFactory factory) {
         MapperFactoryBean<PoetryAgentMapper> bean = new MapperFactoryBean<>(PoetryAgentMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
+    @Bean
+    public MapperFactoryBean<PoetryAgentOrchestrationMapper> poetryAgentOrchestrationMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<PoetryAgentOrchestrationMapper> bean = new MapperFactoryBean<>(PoetryAgentOrchestrationMapper.class);
         bean.setSqlSessionFactory(factory);
         return bean;
     }
@@ -158,6 +168,19 @@ public class PoetryAutoConfiguration {
     public PoetryAgentController poetryAgentController(PoetryAgentService service,
             @Value("${poetry.agentInternalToken:}") String internalToken) {
         return new PoetryAgentController(service, internalToken);
+    }
+
+    @Bean
+    @ConditionalOnBean(PlatformTransactionManager.class)
+    public PoetryAgentOrchestrationService poetryAgentOrchestrationService(PoetryAgentOrchestrationMapper mapper, PoetryAgentService domain, ObjectMapper json) {
+        return new PoetryAgentOrchestrationService(mapper, domain, json);
+    }
+
+    @Bean
+    @ConditionalOnBean(PlatformTransactionManager.class)
+    public PoetryAgentOrchestrationController poetryAgentOrchestrationController(PoetryAgentOrchestrationService service,
+            @Value("${poetry.agentInternalToken:}") String internalToken) {
+        return new PoetryAgentOrchestrationController(service, internalToken);
     }
 
     /** Published content is token-free by decision, so it gets a log and a cheap ceiling. */

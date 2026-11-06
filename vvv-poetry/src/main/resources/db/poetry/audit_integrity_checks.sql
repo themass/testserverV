@@ -271,11 +271,23 @@ UNION ALL SELECT 'C8_invalid_asset_status', COUNT(*) FROM poetry_asset a
   WHERE a.status NOT IN ('DRAFT','PUBLISHED','RETIRED')
 UNION ALL SELECT 'C8_invalid_script_status', COUNT(*) FROM poetry_script s
   WHERE s.status NOT IN ('DRAFT','PUBLISHED','RETIRED')
--- C9 Agent domain integrity (V007). Associations are conventions; no SQL foreign keys exist.
+-- C9 Agent domain integrity (V007/V008). Associations are conventions; no SQL foreign keys exist.
 UNION ALL SELECT 'C9_agent_task_missing_work', COUNT(*) FROM poetry_agent_task t
   LEFT JOIN poetry_content w ON w.id=t.work_id WHERE w.id IS NULL OR w.entity_type<>'WORK'
 UNION ALL SELECT 'C9_agent_run_missing_task', COUNT(*) FROM poetry_agent_run r
   LEFT JOIN poetry_agent_task t ON t.id=r.task_id WHERE t.id IS NULL
+UNION ALL SELECT 'C9_agent_task_bad_orchestration_state', COUNT(*) FROM poetry_agent_task t
+  WHERE t.status NOT IN ('CREATED','RUNNING','WAITING_FOR_RUNTIME','AWAITING_REVIEW','COMPLETED','FAILED')
+     OR t.requested_role NOT IN ('CONTENT_EDITOR','HISTORICAL_REVIEWER','RELEASE_MANAGER','PLATFORM_ADMIN')
+UNION ALL SELECT 'C9_agent_task_active_run_mismatch', COUNT(*) FROM poetry_agent_task t
+  LEFT JOIN poetry_agent_run r ON r.id=t.active_run_id AND r.task_id=t.id
+  WHERE t.active_run_id IS NOT NULL AND r.id IS NULL
+UNION ALL SELECT 'C9_agent_run_missing_mandate', COUNT(*) FROM poetry_agent_run r
+  LEFT JOIN poetry_agent_mandate m ON m.run_id=r.id AND m.mandate_id=r.mandate_id
+  WHERE m.run_id IS NULL
+UNION ALL SELECT 'C9_agent_run_bad_orchestration_state', COUNT(*) FROM poetry_agent_run r
+  WHERE r.status NOT IN ('RUNNING','WAITING_FOR_RUNTIME','AWAITING_REVIEW','COMPLETED','FAILED')
+     OR r.runtime NOT IN ('DEERFLOW','STUB')
 UNION ALL SELECT 'C9_agent_mandate_bad_role', COUNT(*) FROM poetry_agent_mandate m
   WHERE m.actor_role NOT IN ('CONTENT_EDITOR','HISTORICAL_REVIEWER') OR m.status NOT IN ('ACTIVE','REVOKED','COMPLETED')
 UNION ALL SELECT 'C9_agent_mandate_missing_work', COUNT(*) FROM poetry_agent_mandate m
