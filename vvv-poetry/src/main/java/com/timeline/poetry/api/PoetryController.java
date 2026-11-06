@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/poetry/v1")
@@ -61,6 +62,15 @@ public class PoetryController {
     public Response<Page<Background>> backgrounds(@PathVariable String id, @RequestParam(defaultValue="20") int limit,
                                                    @RequestParam(defaultValue="0") int offset) {
         return Response.ok(catalog.backgrounds(id, limit, offset));
+    }
+    @GetMapping("/coverage")
+    public Response<List<Coverage>> coverage(@RequestParam(required=false) String type) {
+        return Response.ok(catalog.coverage(type));
+    }
+    @GetMapping("/themes/{id}/items")
+    public Response<Page<ThemeItem>> themeItems(@PathVariable String id, @RequestParam(defaultValue="20") int limit,
+                                                   @RequestParam(defaultValue="0") int offset) {
+        return Response.ok(catalog.themeItems(id, limit, offset));
     }
     @GetMapping("/backgrounds/{id}/lines")
     public Response<Page<BackgroundLine>> backgroundLines(@PathVariable String id, @RequestParam(defaultValue="20") int limit,

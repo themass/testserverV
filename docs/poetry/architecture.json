@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "诗词时空：底座 · 应用 · Agent 边界",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1240,
+      700
+    ],
+    "views": [
+      {
+        "id": "read-path",
+        "label": "读路径",
+        "focus": [
+          "student",
+          "app",
+          "api",
+          "foundation"
+        ],
+        "note": "学生可见的一切都必须穿过这条只读路径；未发布、未核查、未标识的内容一律不可见。"
+      },
+      {
+        "id": "write-path",
+        "label": "写路径",
+        "focus": [
+          "agent",
+          "draft",
+          "author",
+          "gate",
+          "audit"
+        ],
+        "note": "人与 Agent 都只能产出草稿；进入底座前必须过人工审核与核查 SQL。"
+      },
+      {
+        "id": "guard-path",
+        "label": "自检与守护",
+        "focus": [
+          "api",
+          "selfcheck",
+          "audit",
+          "foundation"
+        ],
+        "note": "读接口不加鉴权，但每次请求都留日志、每客户端限流；启动自检只报告，绝不改动数据。"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "student",
+      "type": "external",
+      "label": "学生",
+      "sublabel": "自由探索 · 主题学习",
+      "pos": [
+        30,
+        150
+      ],
+      "size": [
+        160,
+        72
+      ]
+    },
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "应用层",
+      "sublabel": "时间轴空间 · 读→到→见→回→诵",
+      "pos": [
+        280,
+        150
+      ],
+      "size": [
+        160,
+        72
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "只读 API",
+      "sublabel": "/api/poetry/v1 · 限流+日志",
+      "pos": [
+        530,
+        150
+      ],
+      "size": [
+        160,
+        72
+      ]
+    },
+    {
+      "id": "foundation",
+      "type": "database",
+      "label": "内容底座",
+      "sublabel": "26 表 · 无外键 · poetry_ 前缀",
+      "pos": [
+        780,
+        150
+      ],
+      "size": [
+        160,
+        72
+      ]
+    },
+    {
+      "id": "audit",
+      "type": "security",
+      "label": "核查 SQL",
+      "sublabel": "106 项 · 非 0 禁止发布",
+      "pos": [
+        1030,
+        150
+      ],
+      "size": [
+        160,
+        72
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "security",
+      "label": "发布闸门",
+      "sublabel": "人审 · 来源已核查 · 演绎已标识",
+      "pos": [
+        780,
+        360
+      ],
+      "size": [
+        160,
+        72
+      ]
+    },
+    {
+      "id": "agent",
+      "type": "external",
+      "label": "Agent（未来）",
+      "sublabel": "只产草稿 · 禁止直接发布",
+      "tag": "未实现",
+      "pos": [
+        280,
+        570
+      ],
+      "size": [
+        160,
+        72
+      ]
+    },
+    {
+      "id": "draft",
+      "type": "messagebus",
+      "label": "草稿区",
+      "sublabel": "DRAFT · 接口不可见",
+      "pos": [
+        530,
+        570
+      ],
+      "size": [
+        160,
+        72
+      ]
+    },
+    {
+      "id": "author",
+      "type": "backend",
+      "label": "录入与复核",
+      "sublabel": "受控 SQL · 人审记录",
+      "pos": [
+        780,
+        570
+      ],
+      "size": [
+        160,
+        72
+      ]
+    },
+    {
+      "id": "selfcheck",
+      "type": "security",
+      "label": "自检与词表",
+      "sublabel": "词表唯一定义 · 漂移告警",
+      "pos": [
+        1030,
+        360
+      ],
+      "size": [
+        160,
+        72
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "底座：唯一事实来源",
+      "wraps": [
+        "foundation",
+        "gate",
+        "audit"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "未发布区：到此为止",
+      "wraps": [
+        "agent",
+        "draft",
+        "author"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "student-app",
+      "from": "student",
+      "to": "app",
+      "label": "使用",
+      "variant": "emphasis"
+    },
+    {
+      "id": "app-api",
+      "from": "app",
+      "to": "api",
+      "label": "只读"
+    },
+    {
+      "id": "api-foundation",
+      "from": "api",
+      "to": "foundation",
+      "label": "已发布",
+      "variant": "emphasis"
+    },
+    {
+      "id": "audit-foundation",
+      "from": "audit",
+      "to": "foundation",
+      "label": "体检",
+      "variant": "dashed"
+    },
+    {
+      "id": "gate-foundation",
+      "from": "gate",
+      "to": "foundation",
+      "label": "发布",
+      "variant": "emphasis",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "author-gate",
+      "from": "author",
+      "to": "gate",
+      "label": "人审",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "draft-author",
+      "from": "draft",
+      "to": "author",
+      "label": "待复核"
+    },
+    {
+      "id": "agent-draft",
+      "from": "agent",
+      "to": "draft",
+      "label": "产草稿"
+    },
+    {
+      "id": "api-agent",
+      "from": "api",
+      "to": "agent",
+      "label": "只读上下文",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "selfcheck-audit",
+      "from": "selfcheck",
+      "to": "audit",
+      "label": "词表比对",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "selfcheck-foundation",
+      "from": "selfcheck",
+      "to": "foundation",
+      "label": "探活 · 不修复",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "读路径只有一条",
+      "items": [
+        "每条查询都复查发布、审核与来源状态",
+        "猜出 ID 也读不到草稿：fail closed"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "写路径只有一条",
+      "items": [
+        "人工与 Agent 一律先产 DRAFT",
+        "发布前必须过人审 + 72 项核查"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Agent 的硬边界",
+      "items": [
+        "可读底座，不可写库",
+        "演绎必须标 DRAMATIZATION，不得伪装史实"
+      ]
+    }
+  ]
+}

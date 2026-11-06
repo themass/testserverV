@@ -2,14 +2,18 @@ package com.timeline.poetry.service;
 
 import com.timeline.poetry.api.PoetryModels.*;
 import com.timeline.poetry.domain.TimeSpan;
+import com.timeline.poetry.domain.Vocabulary;
 import com.timeline.poetry.persistence.PoetryMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 public class PoetryCatalog {
-    private static final Set<String> TYPES = Set.of("DYNASTY", "PERIOD", "PLACE", "PERSON", "EVENT", "EXPERIENCE", "WORK", "BACKGROUND");
+    private static final Set<String> TYPES = Vocabulary.ENTITY_TYPES;
+    private static final String COVERAGE_NOTICE = "仅展示当前已发布且有年代范围的内容；空白代表尚未覆盖，不代表历史上不存在。年代不可考的内容请通过目录查询。";
+    private static final int COVERAGE_ROWS = 50;
     private final PoetryMapper mapper;
     public PoetryCatalog(PoetryMapper mapper) { this.mapper = mapper; }
     public static void pageBounds(int limit, int offset) {
@@ -43,8 +47,9 @@ public class PoetryCatalog {
         }
         if (from < -9999 || to > 9999 || (long) to - from > 5000)
             throw new BadRequest("Timeline bounds must be within -9999..9999 and span at most 5000 years");
+        // An empty coverage list is itself the answer: nothing is declared covered yet.
         return new Timeline(Page.from(mapper.timeline(type(type), from, to, limit + 1, offset), limit, offset),
-            "仅展示当前已发布且有年代范围的内容；空白不代表历史上不存在。年代不可考的内容请通过目录查询。", false);
+            List.copyOf(mapper.coverages(type(type), COVERAGE_ROWS, 0)), false, COVERAGE_NOTICE);
     }
     public WorkDetail work(String id) {
         ContentItem content = content(id, "WORK");
@@ -89,6 +94,14 @@ public class PoetryCatalog {
     public Page<Background> backgrounds(String id, int limit, int offset) {
         pageBounds(limit, offset); work(id);
         return Page.from(mapper.backgrounds(id, limit + 1, offset), limit, offset);
+    }
+    public List<Coverage> coverage(String type) {
+        return List.copyOf(mapper.coverages(type(type), COVERAGE_ROWS, 0));
+    }
+    public Page<ThemeItem> themeItems(String id, int limit, int offset) {
+        pageBounds(limit, offset); content(id, "THEME");
+        // Theme membership is only readable when the theme itself and every item are published.
+        return Page.from(mapper.themeItems(id, limit + 1, offset), limit, offset);
     }
     public Page<BackgroundLine> backgroundLines(String id, int limit, int offset) {
         pageBounds(limit, offset); content(id, "BACKGROUND");

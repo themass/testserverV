@@ -92,7 +92,7 @@ public interface PoetryMapper {
         + "AND a.attribution IN ('ACCEPTED','DISPUTED') AND a.work_id=#{workId} ORDER BY p.id" + PAGE)
     List<Author> authors(@Param("workId") String workId, @Param("fetchLimit") int fetchLimit, @Param("offset") int offset);
 
-    @Select("SELECT b.id,c.title,b.layer,b.primary_text,b.middle_text,b.claim_id FROM poetry_background b "
+    @Select("SELECT b.id,c.title,b.layer,b.audience,b.body_text,b.claim_id FROM poetry_background b "
         + "JOIN poetry_content c ON c.id=b.id AND c.entity_type='BACKGROUND' "
         + "JOIN poetry_content w ON w.id=b.work_id AND w.entity_type='WORK' "
         + "JOIN poetry_claim cl ON cl.id=b.claim_id AND cl.subject_id=b.id "
@@ -114,4 +114,25 @@ public interface PoetryMapper {
         + "AND TRIM(w.reviewed_by)!='' AND w.reviewed_at IS NOT NULL "
         + "AND b.id=#{id} ORDER BY bl.version_id,bl.line_seq" + PAGE)
     List<BackgroundLine> backgroundLines(@Param("id") String id, @Param("fetchLimit") int fetchLimit, @Param("offset") int offset);
+
+    @Select("SELECT v.id,v.entity_type,v.from_year,v.to_year,v.coverage_kind,v.note FROM poetry_coverage v "
+        + "WHERE v.status='PUBLISHED' AND (#{type} IS NULL OR v.entity_type=#{type}) "
+        + "ORDER BY v.entity_type,v.from_year" + PAGE)
+    List<Coverage> coverages(@Param("type") String type, @Param("fetchLimit") int fetchLimit, @Param("offset") int offset);
+
+    @Select("SELECT ti.theme_id,ti.ordinal,ti.item_role,o.id,o.slug,o.title,o.entity_type,o.start_year,o.end_year,"
+        + "o.time_precision FROM poetry_theme_item ti "
+        + "JOIN poetry_theme t ON t.id=ti.theme_id "
+        + "JOIN poetry_content c ON c.id=ti.theme_id AND c.entity_type='THEME' "
+        + "JOIN poetry_content o ON o.id=ti.item_id "
+        + "WHERE " + PUBLIC_CONTENT + " AND o.status='PUBLISHED' AND o.reviewed_by IS NOT NULL "
+        + "AND TRIM(o.reviewed_by)!='' AND o.reviewed_at IS NOT NULL AND ti.theme_id=#{id} "
+        + "ORDER BY ti.ordinal" + PAGE)
+    List<ThemeItem> themeItems(@Param("id") String id, @Param("fetchLimit") int fetchLimit, @Param("offset") int offset);
+
+    @Select("SELECT COUNT(*) FROM poetry_content")
+    Integer contentRowCount();
+
+    @Select("SELECT MAX(version_no) FROM poetry_schema_version")
+    Integer maxSchemaVersion();
 }

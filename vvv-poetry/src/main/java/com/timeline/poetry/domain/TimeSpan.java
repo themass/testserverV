@@ -3,7 +3,7 @@ package com.timeline.poetry.domain;
 /** Historical year numbers: BCE is negative; there is no year zero. */
 public record TimeSpan(Integer startYear, Integer endYear, String precision) {
     public TimeSpan {
-        if (precision == null || !java.util.Set.of("UNKNOWN", "EXACT", "RANGE", "APPROXIMATE").contains(precision))
+        if (!Vocabulary.isMember(Vocabulary.TIME_PRECISIONS, precision))
             throw new IllegalArgumentException("Invalid time precision");
         if ((startYear != null && startYear == 0) || (endYear != null && endYear == 0))
             throw new IllegalArgumentException("Historical dates have no year zero");

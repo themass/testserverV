@@ -2,7 +2,17 @@
 -- MySQL 5.6+ syntax target; exact deployed version MUST be verified before applying.
 -- No JSON, CHECK, generated columns, window functions or changes to existing tables.
 -- DDL is not transactional in MySQL. Stop on the first error; never use mysql --force.
--- Foreign keys use RESTRICT. Status/review and semantic constraints are application/audit responsibilities.
+--
+-- PROJECT RULE: no FOREIGN KEY in DDL and none in application code. Referential integrity is
+-- a documented convention enforced by three things instead:
+--   1. Read side: every SELECT joins the parent rows and re-checks publish/review/source state,
+--      so a dangling or mismatched reference can never reach a student (fail closed).
+--   2. Insert order convention: poetry_content first, then the entity child row, then link rows.
+--   3. audit_integrity_checks.sql: run after every data change; all checks must return 0.
+-- Because FOREIGN KEY is removed, MySQL no longer auto-creates indexes on reference columns.
+-- Every reference column that is joined gets an explicit KEY below.
+-- entity_type is not cross-checked by the database: a child row MUST match its poetry_content
+-- entity_type by convention, verified by audit check 'type_mismatch_*'.
 
 CREATE TABLE poetry_schema_version (
 version_no INT NOT NULL PRIMARY KEY,
@@ -29,18 +39,15 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_dynasty (
-id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
-  
-  FOREIGN KEY (id) REFERENCES poetry_content(id)
+id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_period (
 id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   dynasty_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   parent_id VARCHAR(64) COLLATE utf8mb4_bin,
-  FOREIGN KEY (dynasty_id) REFERENCES poetry_dynasty(id),
-  FOREIGN KEY (parent_id) REFERENCES poetry_period(id),
-  FOREIGN KEY (id) REFERENCES poetry_content(id)
+  KEY ix_poetry_period_dynasty (dynasty_id),
+  KEY ix_poetry_period_parent (parent_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_place (
@@ -48,23 +55,20 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   modern_name VARCHAR(200),
   latitude DECIMAL(10,7),
   longitude DECIMAL(10,7),
-  coordinate_system VARCHAR(16),
-  FOREIGN KEY (id) REFERENCES poetry_content(id)
+  coordinate_system VARCHAR(16)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_person (
 id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   dynasty_id VARCHAR(64) COLLATE utf8mb4_bin,
   courtesy_name VARCHAR(100),
-  FOREIGN KEY (dynasty_id) REFERENCES poetry_dynasty(id),
-  FOREIGN KEY (id) REFERENCES poetry_content(id)
+  KEY ix_poetry_person_dynasty (dynasty_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_event (
 id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   place_id VARCHAR(64) COLLATE utf8mb4_bin,
-  FOREIGN KEY (place_id) REFERENCES poetry_place(id),
-  FOREIGN KEY (id) REFERENCES poetry_content(id)
+  KEY ix_poetry_event_place (place_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_experience (
@@ -72,11 +76,9 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   person_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   event_id VARCHAR(64) COLLATE utf8mb4_bin,
   place_id VARCHAR(64) COLLATE utf8mb4_bin,
-  FOREIGN KEY (person_id) REFERENCES poetry_person(id),
-  FOREIGN KEY (event_id) REFERENCES poetry_event(id),
-  FOREIGN KEY (place_id) REFERENCES poetry_place(id),
   KEY ix_poetry_experience_person (person_id),
-  FOREIGN KEY (id) REFERENCES poetry_content(id)
+  KEY ix_poetry_experience_event (event_id),
+  KEY ix_poetry_experience_place (place_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_work (
@@ -84,9 +86,8 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   dynasty_id VARCHAR(64) COLLATE utf8mb4_bin,
   creation_place_id VARCHAR(64) COLLATE utf8mb4_bin,
   genre VARCHAR(32),
-  FOREIGN KEY (dynasty_id) REFERENCES poetry_dynasty(id),
-  FOREIGN KEY (creation_place_id) REFERENCES poetry_place(id),
-  FOREIGN KEY (id) REFERENCES poetry_content(id)
+  KEY ix_poetry_work_dynasty (dynasty_id),
+  KEY ix_poetry_work_creation_place (creation_place_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_source (
@@ -98,7 +99,8 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   rights_note TEXT,
   verification_status VARCHAR(16) NOT NULL DEFAULT 'PENDING',
   verified_by VARCHAR(100),
-  verified_at DATETIME
+  verified_at DATETIME,
+  KEY ix_poetry_source_verification (verification_status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_claim (
@@ -112,7 +114,6 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   status VARCHAR(16) NOT NULL DEFAULT 'DRAFT',
   reviewed_by VARCHAR(100),
   reviewed_at DATETIME,
-  FOREIGN KEY (subject_id) REFERENCES poetry_content(id),
   KEY ix_poetry_claim_subject (subject_id, status, id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -122,8 +123,7 @@ claim_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   locator VARCHAR(300) NOT NULL,
   evidence_excerpt TEXT,
   PRIMARY KEY (claim_id, source_id),
-  FOREIGN KEY (claim_id) REFERENCES poetry_claim(id),
-  FOREIGN KEY (source_id) REFERENCES poetry_source(id)
+  KEY ix_poetry_citation_source (source_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_claim_selection (
@@ -131,8 +131,7 @@ subject_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   property_key VARCHAR(64) NOT NULL,
   claim_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (subject_id, property_key),
-  FOREIGN KEY (subject_id) REFERENCES poetry_content(id),
-  FOREIGN KEY (claim_id) REFERENCES poetry_claim(id)
+  KEY ix_poetry_claim_selection_claim (claim_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_relation (
@@ -141,11 +140,9 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   predicate VARCHAR(40) NOT NULL,
   object_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   claim_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
-  FOREIGN KEY (subject_id) REFERENCES poetry_content(id),
-  FOREIGN KEY (object_id) REFERENCES poetry_content(id),
-  FOREIGN KEY (claim_id) REFERENCES poetry_claim(id),
   UNIQUE KEY uk_poetry_relation (subject_id, predicate, object_id),
-  KEY ix_poetry_relation_object (object_id)
+  KEY ix_poetry_relation_object (object_id),
+  KEY ix_poetry_relation_claim (claim_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_work_author (
@@ -154,9 +151,8 @@ work_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   attribution VARCHAR(24) NOT NULL,
   claim_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (work_id, person_id),
-  FOREIGN KEY (work_id) REFERENCES poetry_work(id),
-  FOREIGN KEY (person_id) REFERENCES poetry_person(id),
-  FOREIGN KEY (claim_id) REFERENCES poetry_claim(id)
+  KEY ix_poetry_work_author_person (person_id),
+  KEY ix_poetry_work_author_claim (claim_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_text_version (
@@ -170,9 +166,8 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   status VARCHAR(16) NOT NULL DEFAULT 'DRAFT',
   reviewed_by VARCHAR(100),
   reviewed_at DATETIME,
-  FOREIGN KEY (work_id) REFERENCES poetry_work(id),
-  FOREIGN KEY (source_id) REFERENCES poetry_source(id),
-  UNIQUE KEY uk_poetry_text_version (work_id, version_code)
+  UNIQUE KEY uk_poetry_text_version (work_id, version_code),
+  KEY ix_poetry_text_version_source (source_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_text_line (
@@ -180,8 +175,7 @@ version_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   line_seq INT NOT NULL,
   content VARCHAR(500) NOT NULL,
   pinyin VARCHAR(1000),
-  PRIMARY KEY (version_id, line_seq),
-  FOREIGN KEY (version_id) REFERENCES poetry_text_version(id)
+  PRIMARY KEY (version_id, line_seq)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_background (
@@ -191,10 +185,8 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   claim_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   primary_text TEXT,
   middle_text TEXT,
-  FOREIGN KEY (id) REFERENCES poetry_content(id),
-  FOREIGN KEY (work_id) REFERENCES poetry_work(id),
-  FOREIGN KEY (claim_id) REFERENCES poetry_claim(id),
-  KEY ix_poetry_background_work (work_id)
+  KEY ix_poetry_background_work (work_id),
+  KEY ix_poetry_background_claim (claim_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_background_line (
@@ -202,8 +194,7 @@ background_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   version_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   line_seq INT NOT NULL,
   PRIMARY KEY (background_id, version_id, line_seq),
-  FOREIGN KEY (background_id) REFERENCES poetry_background(id),
-  FOREIGN KEY (version_id, line_seq) REFERENCES poetry_text_line(version_id, line_seq)
+  KEY ix_poetry_background_line_version (version_id, line_seq)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_annotation (
@@ -214,8 +205,8 @@ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   audience VARCHAR(16) NOT NULL,
   content TEXT NOT NULL,
   claim_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
-  FOREIGN KEY (version_id, line_seq) REFERENCES poetry_text_line(version_id, line_seq),
-  FOREIGN KEY (claim_id) REFERENCES poetry_claim(id)
+  KEY ix_poetry_annotation_line (version_id, line_seq),
+  KEY ix_poetry_annotation_claim (claim_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE poetry_textbook (
@@ -238,9 +229,8 @@ textbook_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
   lesson_label VARCHAR(100),
   page_locator VARCHAR(100) NOT NULL,
   PRIMARY KEY (textbook_id, work_id),
-  FOREIGN KEY (textbook_id) REFERENCES poetry_textbook(id),
-  FOREIGN KEY (work_id) REFERENCES poetry_work(id),
-  FOREIGN KEY (version_id) REFERENCES poetry_text_version(id)
+  KEY ix_poetry_textbook_work_work (work_id),
+  KEY ix_poetry_textbook_work_version (version_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO poetry_schema_version (version_no, description) VALUES (1, 'Content foundation schema');
+INSERT INTO poetry_schema_version (version_no, description) VALUES (1, 'Content foundation schema, no foreign keys');
