@@ -55,6 +55,12 @@ public interface PoetryAgentMapper {
     int reviewProposal(@Param("id") String id, @Param("reviewId") String reviewId, @Param("decision") String decision, @Param("reviewer") String reviewer, @Param("comment") String comment);
     @Update("UPDATE poetry_agent_proposal SET status='APPLIED',applied_at=NOW() WHERE id=#{id} AND status='DRAFT' AND review_status='APPROVED'")
     int markApplied(@Param("id") String id);
+    /**
+     * V009 / D7: 逐项评审记录。apply 用它决定哪些可执行项被明确 APPROVE。
+     * 返回 Map(item_index, decision)，避免依赖 record 构造器映射。表由 V009 创建；表不存在时调用方会收到异常(有意不静默降级)。
+     */
+    @Select("SELECT item_index AS item_index, decision AS decision FROM poetry_agent_proposal_item WHERE proposal_id=#{id} ORDER BY item_index")
+    List<java.util.Map<String, Object>> proposalItemDecisions(@Param("id") String id);
     @Insert("INSERT INTO poetry_agent_review (id,proposal_id,reviewer_id,decision,comment) VALUES (#{id},#{proposalId},#{reviewer},#{decision},#{comment})")
     int reviewInsert(@Param("id") String id, @Param("proposalId") String proposalId, @Param("reviewer") String reviewer, @Param("decision") String decision, @Param("comment") String comment);
 

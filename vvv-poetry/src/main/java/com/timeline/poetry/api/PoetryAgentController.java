@@ -1,9 +1,12 @@
 package com.timeline.poetry.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.timeline.poetry.api.PoetryAgentModels.*;
 import com.timeline.poetry.service.PoetryAgentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Map;
 
@@ -21,20 +24,20 @@ public class PoetryAgentController {
     public PoetryAgentController(PoetryAgentService service, String internalToken) { this.service = service; this.internalToken = internalToken; }
 
     @GetMapping("/works/{workId}/snapshot")
-    public ResponseEntity<AgentResponse<Snapshot>> snapshot(@PathVariable String workId, @RequestHeader(name=TOKEN, required=false) String token,
+    public ResponseEntity<AgentResponse<JsonNode>> snapshot(@PathVariable String workId, @RequestHeader(name=TOKEN, required=false) String token,
             @RequestHeader(name=RUN, required=false) String run, @RequestHeader(name=MANDATE, required=false) String mandate,
             @RequestHeader(name="Idempotency-Key", required=false) String key, @RequestHeader(name=ROLE, required=false) String role) {
-        AgentResponse<Snapshot> denied = authorize(token, run, mandate, key, role); if (denied != null) return ResponseEntity.status(403).body(denied);
-        try { return ResponseEntity.ok(AgentResponse.ok(service.snapshot(workId), List.of("snapshot:" + workId))); }
+        AgentResponse<JsonNode> denied = authorize(token, run, mandate, key, role); if (denied != null) return ResponseEntity.status(403).body(denied);
+        try { return ResponseEntity.ok(AgentResponse.ok(PoetryAgentWire.snake(service.snapshot(workId)), List.of("snapshot:" + workId))); }
         catch (PoetryAgentService.Rejected e) { return ResponseEntity.badRequest().body(AgentResponse.rejected(e.getMessage())); }
     }
 
     @GetMapping("/works/{workId}/integrity-gap-report")
-    public ResponseEntity<AgentResponse<GapReport>> gaps(@PathVariable String workId, @RequestHeader(name=TOKEN, required=false) String token,
+    public ResponseEntity<AgentResponse<JsonNode>> gaps(@PathVariable String workId, @RequestHeader(name=TOKEN, required=false) String token,
             @RequestHeader(name=RUN, required=false) String run, @RequestHeader(name=MANDATE, required=false) String mandate,
             @RequestHeader(name="Idempotency-Key", required=false) String key, @RequestHeader(name=ROLE, required=false) String role) {
-        AgentResponse<GapReport> denied = authorize(token, run, mandate, key, role); if (denied != null) return ResponseEntity.status(403).body(denied);
-        try { return ResponseEntity.ok(AgentResponse.ok(service.gaps(workId), List.of("gap-report:" + workId))); }
+        AgentResponse<JsonNode> denied = authorize(token, run, mandate, key, role); if (denied != null) return ResponseEntity.status(403).body(denied);
+        try { return ResponseEntity.ok(AgentResponse.ok(PoetryAgentWire.snake(service.gaps(workId)), List.of("gap-report:" + workId))); }
         catch (PoetryAgentService.Rejected e) { return ResponseEntity.badRequest().body(AgentResponse.rejected(e.getMessage())); }
     }
 
@@ -71,7 +74,7 @@ public class PoetryAgentController {
     }
     private <T> AgentResponse<T> authorize(String token, String run, String mandate, String key, String role) {
         if (internalToken == null || internalToken.isBlank()) return AgentResponse.rejected("agent domain API disabled: configure poetry.agentInternalToken");
-        if (!internalToken.equals(token)) return AgentResponse.rejected("invalid internal Agent token");
+        if (!tokenMatches(internalToken, token)) return AgentResponse.rejected("invalid internal Agent token");
         if (blank(run) || blank(mandate) || blank(key)) return AgentResponse.rejected("run, mandate and Idempotency-Key headers are required");
         if (key.length() > 128) return AgentResponse.rejected("Idempotency-Key may not exceed 128 characters");
         // Role is retained as audit context only. The deployment token is the authorization decision.
@@ -79,5 +82,11 @@ public class PoetryAgentController {
         return null;
     }
     private static boolean blank(String v) { return v == null || v.isBlank(); }
+
+    /** Constant-time comparison (no early exit on the first differing byte). A blank configured token never matches. */
+    public static boolean tokenMatches(String configured, String provided) {
+        if (configured == null || configured.isBlank() || provided == null) return false;
+        return MessageDigest.isEqual(configured.getBytes(StandardCharsets.UTF_8), provided.getBytes(StandardCharsets.UTF_8));
+    }
     @FunctionalInterface private interface WriteCall { AgentResponse<Map<String,Object>> run(PoetryAgentService.Context c); }
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * refused because it would leave the library unverified (already rolled back by the service).
  */
 @RestControllerAdvice(assignableTypes = {PoetryDraftController.class, PoetryReviewController.class, PoetryController.class,
-    PoetryMediaController.class, PoetryAgentController.class})
+    PoetryMediaController.class, PoetryPublishController.class, PoetryAgentController.class})
 public class PoetryAuthoringAdvice {
 
     @ExceptionHandler(Invalid.class)

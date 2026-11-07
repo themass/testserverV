@@ -41,10 +41,12 @@ public class PoetryAgentOrchestrationService {
         if (!("DEERFLOW".equals(request.runtime()) || "STUB".equals(request.runtime()))) throw new Rejected("unsupported runtime");
         if (blank(request.profileName()) || blank(request.profileFingerprint()) || !request.profileFingerprint().matches("[a-f0-9]{64}") || request.profileManifest() == null || !request.profileManifest().isObject()) throw new Rejected("profile identity invalid");
         String workId = string(task, "work_id"); String role = string(task, "requested_role");
+        // One active run per task. The BFF checks first, but two requests can both pass that check; this
+        // conditional UPDATE is the atomic part, and a loser rolls the whole transaction back (review item A-07).
+        if (mapper.claimTask(taskId, request.runId()) != 1) throw new Conflict("task already has an active run");
         mapper.ensureProfile(request.profileFingerprint(), request.profileName(), serialize(request.profileManifest()));
         mapper.insertRun(request.runId(), taskId, request.mandateId(), request.runtime(), request.profileName(), request.profileFingerprint());
         mapper.insertMandate(request.runId(), request.mandateId(), workId, role);
-        mapper.taskState(taskId, "RUNNING", request.runId());
         appendEvent(request.runId(), "RUN_CREATED", json.valueToTree(Map.of("task_id", taskId, "mandate_id", request.mandateId(), "runtime", request.runtime())));
         return run(request.runId());
     }

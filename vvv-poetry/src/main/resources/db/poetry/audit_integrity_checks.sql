@@ -1,7 +1,8 @@
 -- Read-only integrity audit. There are NO foreign keys by project rule, so this file is the
 -- enforcement substitute. Run it after EVERY data change and before ANY publish decision.
 -- Expected result: every bad_rows = 0. A non-zero row is a blocked publish, not a warning.
--- Currently 106 checks (C1-C7). Since V003 they also cover THEME, poetry_coverage,
+-- Currently 156 checks (C1-C10): C1-C7 = 106, C8 (V006 media/script) = 20, C9 (V007/V008 agent) = 18, C10 (V009 studio) = 12.
+-- Since V003 they also cover THEME, poetry_coverage,
 -- poetry_review_log, poetry_source.source_kind/reliability and poetry_background.body_text/audience.
 -- Conventions checked here (see docs/poetry/data-model.md):
 --   C1 every child row has a poetry_content row
@@ -11,6 +12,9 @@
 --   C5 published rows satisfy the read-side publication gate, or they silently disappear
 --   C6 time fields follow TimeSpan rules (no year 0, ordered bounds, EXACT means one year)
 --   C7 enum values are inside the documented vocabulary
+--   C8 media and script rows reference existing rows (V006)
+--   C9 agent task/run/mandate/proposal/review/receipt rows are consistent (V007/V008)
+--   C10 per-item proposal decisions and the Studio human-check log are consistent (V009)
 
 SELECT 'C1_orphan_dynasty' AS check_name, COUNT(*) AS bad_rows FROM poetry_dynasty x LEFT JOIN poetry_content c ON c.id=x.id WHERE c.id IS NULL
 UNION ALL SELECT 'C1_orphan_period', COUNT(*) FROM poetry_period x LEFT JOIN poetry_content c ON c.id=x.id WHERE c.id IS NULL
@@ -311,4 +315,32 @@ UNION ALL SELECT 'C9_agent_compile_missing_work', COUNT(*) FROM poetry_agent_com
 UNION ALL SELECT 'C9_agent_compile_missing_mandate', COUNT(*) FROM poetry_agent_compile_request c
   LEFT JOIN poetry_agent_mandate m ON m.run_id=c.run_id AND m.mandate_id=c.mandate_id AND m.work_id=c.work_id WHERE m.run_id IS NULL
 UNION ALL SELECT 'C9_agent_compile_bad_status', COUNT(*) FROM poetry_agent_compile_request c
-  WHERE c.status NOT IN ('PENDING_REVIEW','BLOCKED','COMPLETED','REJECTED');
+  WHERE c.status NOT IN ('PENDING_REVIEW','BLOCKED','COMPLETED','REJECTED')
+-- C10 Studio governance integrity (V009). poetry_agent_proposal_item decides what apply() executes, and
+-- poetry_studio_check_log is the only record of who entered a locator or verified a source, so both are policed.
+-- DEPLOY ORDER: run V009 BEFORE shipping a build that contains this block. AuditRunner executes the whole file as one
+-- statement; if these tables do not exist yet the audit cannot run and every publish is blocked ("audit could not run").
+UNION ALL SELECT 'C10_item_missing_proposal', COUNT(*) FROM poetry_agent_proposal_item i
+  LEFT JOIN poetry_agent_proposal p ON p.id=i.proposal_id WHERE p.id IS NULL
+UNION ALL SELECT 'C10_item_bad_decision', COUNT(*) FROM poetry_agent_proposal_item i
+  WHERE i.decision NOT IN ('APPROVE','REJECT')
+UNION ALL SELECT 'C10_item_negative_index', COUNT(*) FROM poetry_agent_proposal_item i
+  WHERE i.item_index < 0
+UNION ALL SELECT 'C10_item_blank_reviewer', COUNT(*) FROM poetry_agent_proposal_item i
+  WHERE TRIM(i.reviewer)=''
+UNION ALL SELECT 'C10_log_bad_action', COUNT(*) FROM poetry_studio_check_log l
+  WHERE l.action NOT IN ('SET_LOCATOR','VERIFY_SOURCE','REJECT_SOURCE','ITEM_DECISIONS')
+UNION ALL SELECT 'C10_log_bad_role', COUNT(*) FROM poetry_studio_check_log l
+  WHERE l.reviewer_role NOT IN ('HISTORICAL_REVIEWER','PLATFORM_ADMIN','CONTENT_EDITOR')
+UNION ALL SELECT 'C10_log_blank_reviewer', COUNT(*) FROM poetry_studio_check_log l
+  WHERE TRIM(l.reviewer)=''
+UNION ALL SELECT 'C10_log_locator_row_incomplete', COUNT(*) FROM poetry_studio_check_log l
+  WHERE l.action='SET_LOCATOR' AND (l.source_id IS NULL OR l.claim_id IS NULL OR l.locator IS NULL OR TRIM(l.locator)='')
+UNION ALL SELECT 'C10_log_source_row_incomplete', COUNT(*) FROM poetry_studio_check_log l
+  WHERE l.action IN ('VERIFY_SOURCE','REJECT_SOURCE') AND (l.source_id IS NULL OR l.decision IS NULL OR l.decision NOT IN ('VERIFY','REJECT'))
+UNION ALL SELECT 'C10_log_items_row_incomplete', COUNT(*) FROM poetry_studio_check_log l
+  WHERE l.action='ITEM_DECISIONS' AND l.proposal_id IS NULL
+UNION ALL SELECT 'C10_log_missing_source', COUNT(*) FROM poetry_studio_check_log l
+  LEFT JOIN poetry_source s ON s.id=l.source_id WHERE l.source_id IS NOT NULL AND s.id IS NULL
+UNION ALL SELECT 'C10_log_missing_proposal', COUNT(*) FROM poetry_studio_check_log l
+  LEFT JOIN poetry_agent_proposal p ON p.id=l.proposal_id WHERE l.proposal_id IS NOT NULL AND p.id IS NULL;

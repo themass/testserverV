@@ -105,9 +105,25 @@ public class PoetryAgentService {
         catch (Exception ex) { throw new Rejected("stored proposal JSON is unreadable"); }
         List<String> applied = new ArrayList<>();
         List<String> retained = new ArrayList<>();
+        // --- V009 / 契约 D7(对既有 apply 的最小改动) ---
+        // 提案下"完全没有"逐项记录 -> 旧行为：全部可执行项都执行。
+        // 只要存在任何逐项记录 -> 只执行被明确 APPROVE 的可执行项；未记录或 REJECT 的可执行项跳过并在响应里列出。
+        // item_index 是 changes 数组的 0 起始下标。不可执行项(无 draft_payload)的逐项记录不影响应用。
+        // 读取失败(例如 V009 尚未执行)会让 apply 失败，而不是退回"全部执行"，宁可不动内容。
+        Map<Integer, String> itemDecisions = new java.util.HashMap<>();
+        for (Map<String, Object> row : mapper.proposalItemDecisions(proposalId))
+            itemDecisions.put(((Number) row.get("item_index")).intValue(), String.valueOf(row.get("decision")));
+        boolean itemised = !itemDecisions.isEmpty();
+        List<String> skipped = new ArrayList<>();
+        int changeIndex = -1;
         for (JsonNode change : proposal.path("changes")) {
+            changeIndex++;
             JsonNode payload = change.path("draft_payload");
             if (payload.isMissingNode() || payload.isNull()) { retained.add(change.path("change_type").asText()); continue; }
+            if (itemised && !"APPROVE".equals(itemDecisions.get(changeIndex))) {
+                skipped.add(changeIndex + ":" + itemDecisions.getOrDefault(changeIndex, "UNDECIDED"));
+                continue;
+            }
             String operation = payload.path("operation").asText();
             if (!"CREATE_ANNOTATION".equals(operation)) throw new Rejected("unsupported DRAFT operation: " + operation);
             AnnotationWrite annotation = new AnnotationWrite(
@@ -123,6 +139,7 @@ public class PoetryAgentService {
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("proposal_id", proposalId); data.put("application_id", applicationId); data.put("content_state", "DRAFT_ONLY");
         data.put("applied_operations", applied); data.put("retained_editorial_changes", retained);
+        data.put("item_review", itemised); data.put("skipped_executable_changes", skipped); // V009 新增键，不改旧键
         return AgentResponse.ok(data, List.of("agent-application:" + applicationId, "agent-review:" + request.reviewId()));
     }
 

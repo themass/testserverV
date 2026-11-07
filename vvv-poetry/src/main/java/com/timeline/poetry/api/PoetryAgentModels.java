@@ -1,5 +1,7 @@
 package com.timeline.poetry.api;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +13,11 @@ import java.util.Map;
 public final class PoetryAgentModels {
     private PoetryAgentModels() {}
 
-    public record AgentResponse<T>(String status, T data, List<String> auditRefs, String nextAction) {
+    public record AgentResponse<T>(
+            @JsonProperty("status") String status,
+            @JsonProperty("data") T data,
+            @JsonProperty("audit_refs") List<String> auditRefs,
+            @JsonProperty("next_action") String nextAction) {
         public static <T> AgentResponse<T> ok(T data, List<String> refs) {
             return new AgentResponse<>("OK", data, List.copyOf(refs), "NONE");
         }
@@ -29,14 +35,31 @@ public final class PoetryAgentModels {
     }
 
     /** schema_version=1 DRAFT candidate from the bounded BFF/MCP handoff. */
-    public record ProposalCreate(String workId, String proposalId, JsonNode proposal) {}
-    public record ProposalReview(String reviewId, String reviewerId, String decision, String comment) {}
-    public record ProposalApply(String reviewId) {}
-    public record CompileRequest(String scriptVersion) {}
+    // Request keys are explicit snake_case (what the MCP bridge sends); camelCase is still accepted
+    // so a caller written against the old implicit naming keeps working.
+    public record ProposalCreate(
+            @JsonProperty("work_id") @JsonAlias("workId") String workId,
+            @JsonProperty("proposal_id") @JsonAlias("proposalId") String proposalId,
+            @JsonProperty("proposal") JsonNode proposal) {}
+    public record ProposalReview(
+            @JsonProperty("review_id") @JsonAlias("reviewId") String reviewId,
+            @JsonProperty("reviewer_id") @JsonAlias("reviewerId") String reviewerId,
+            @JsonProperty("decision") String decision,
+            @JsonProperty("comment") String comment) {}
+    public record ProposalApply(@JsonProperty("review_id") @JsonAlias("reviewId") String reviewId) {}
+    public record CompileRequest(@JsonProperty("script_version") @JsonAlias("scriptVersion") String scriptVersion) {}
 
     public record Snapshot(Object work, Object workInfo, List<?> versions, List<?> lines,
                            List<?> claims, List<?> citations, List<?> backgrounds,
                            List<?> annotations, List<?> sources) {}
-    public record Gap(String code, String severity, String message, String targetRef) {}
-    public record GapReport(String workId, List<Gap> gaps, int auditChecks, List<String> auditNonZero) {}
+    public record Gap(
+            @JsonProperty("code") String code,
+            @JsonProperty("severity") String severity,
+            @JsonProperty("message") String message,
+            @JsonProperty("target_ref") String targetRef) {}
+    public record GapReport(
+            @JsonProperty("work_id") String workId,
+            @JsonProperty("gaps") List<Gap> gaps,
+            @JsonProperty("audit_checks") int auditChecks,
+            @JsonProperty("audit_non_zero") List<String> auditNonZero) {}
 }

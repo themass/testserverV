@@ -13,6 +13,9 @@ public interface PoetryAgentOrchestrationMapper {
     Map<String,Object> task(@Param("id") String id);
     @Select("SELECT COUNT(*) FROM poetry_agent_task WHERE id=#{id}") int taskExists(@Param("id") String id);
     @Select("SELECT work_id FROM poetry_agent_task WHERE id=#{id}") String taskWorkId(@Param("id") String id);
+    /** Atomic claim: succeeds for exactly one of two concurrent callers (the row's status test and write are one statement). */
+    @Update("UPDATE poetry_agent_task SET status='RUNNING',active_run_id=#{runId},updated_at=NOW() WHERE id=#{id} AND status<>'RUNNING'")
+    int claimTask(@Param("id") String id, @Param("runId") String runId);
     @Update("UPDATE poetry_agent_task SET status=#{status},active_run_id=#{runId},updated_at=NOW() WHERE id=#{id}")
     int taskState(@Param("id") String id, @Param("status") String status, @Param("runId") String runId);
 

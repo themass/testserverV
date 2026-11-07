@@ -47,6 +47,6 @@ public class PoetryAgentOrchestrationController {
         catch (PoetryAgentOrchestrationService.Conflict e) { return ResponseEntity.status(409).body(AgentResponse.conflict(e.getMessage())); }
         catch (PoetryAgentOrchestrationService.Rejected e) { return ResponseEntity.badRequest().body(AgentResponse.rejected(e.getMessage())); }
     }
-    private boolean allowed(String token) { return internalToken != null && !internalToken.isBlank() && internalToken.equals(token); }
+    private boolean allowed(String token) { return PoetryAgentController.tokenMatches(internalToken, token); }
     @FunctionalInterface private interface Work { Map<String,Object> get(); }
 }

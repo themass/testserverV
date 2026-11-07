@@ -130,6 +130,35 @@ public class PoetryAutoConfiguration {
         return new PoetryMediaController(media, authorToken);
     }
 
+    /* ---------- publish side (architecture review P0-1 / P0-2): human reviewer token only ---------- */
+
+    @Bean
+    public MapperFactoryBean<com.timeline.poetry.persistence.PoetryPublishMapper> poetryPublishMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<com.timeline.poetry.persistence.PoetryPublishMapper> bean =
+            new MapperFactoryBean<>(com.timeline.poetry.persistence.PoetryPublishMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
+    /** poetry.bundleRoot: where the compiler writes {hash32}/manifest.json. Unset -> script publish is refused. */
+    @Bean
+    @ConditionalOnBean(PlatformTransactionManager.class)
+    public com.timeline.poetry.service.PoetryPublishService poetryPublishService(
+            com.timeline.poetry.persistence.PoetryPublishMapper publish, PoetryMediaMapper media, AuditRunner audit,
+            @Value("${poetry.bundleRoot:}") String bundleRoot) {
+        java.nio.file.Path root = (bundleRoot == null || bundleRoot.isBlank()) ? null : java.nio.file.Path.of(bundleRoot);
+        return new com.timeline.poetry.service.PoetryPublishService(publish, media, audit, root);
+    }
+
+    @Bean
+    @ConditionalOnBean(PlatformTransactionManager.class)
+    public com.timeline.poetry.api.PoetryPublishController poetryPublishController(
+            com.timeline.poetry.service.PoetryPublishService publish,
+            @Value("${poetry.studioReviewerToken:}") String reviewerToken,
+            @Value("${poetry.agentInternalToken:}") String agentToken) {
+        return new com.timeline.poetry.api.PoetryPublishController(publish, reviewerToken, agentToken);
+    }
+
     /**
      * Write side. Only assembled when a transaction manager exists, because a half-applied
      * status change is worse than no write side at all. Endpoints still refuse everything until
@@ -194,4 +223,44 @@ public class PoetryAutoConfiguration {
         registration.setOrder(1);
         return registration;
     }
+
+    /* ---------- V009 Studio governance (appended; no existing bean above is changed) ---------- */
+
+    @Bean
+    public MapperFactoryBean<com.timeline.poetry.persistence.PoetryStudioMapper> poetryStudioMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<com.timeline.poetry.persistence.PoetryStudioMapper> bean =
+            new MapperFactoryBean<>(com.timeline.poetry.persistence.PoetryStudioMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
+    @Bean
+    @ConditionalOnBean(PlatformTransactionManager.class)
+    public com.timeline.poetry.service.PoetryStudioService poetryStudioService(
+            com.timeline.poetry.persistence.PoetryStudioMapper mapper, PoetryAgentService domain,
+            PoetryReviewService review, ObjectMapper json) {
+        return new com.timeline.poetry.service.PoetryStudioService(mapper, domain, review, json);
+    }
+
+    /** Read routes for the MCP control bridge. Same agent token and 403 behaviour as the orchestration controller. */
+    @Bean
+    @ConditionalOnBean(PlatformTransactionManager.class)
+    public com.timeline.poetry.api.PoetryStudioReadController poetryStudioReadController(
+            com.timeline.poetry.service.PoetryStudioService service,
+            @Value("${poetry.agentInternalToken:}") String internalToken) {
+        return new com.timeline.poetry.api.PoetryStudioReadController(service, internalToken);
+    }
+
+    /** Human write routes. Own token (poetry.studioReviewerToken); unset -> 503, wrong or agent token -> 401. */
+    @Bean
+    @ConditionalOnBean(PlatformTransactionManager.class)
+    public com.timeline.poetry.api.PoetryStudioWriteController poetryStudioWriteController(
+            com.timeline.poetry.service.PoetryStudioService service, ObjectMapper json,
+            @Value("${poetry.studioReviewerToken:}") String reviewerToken,
+            @Value("${poetry.agentInternalToken:}") String agentToken) {
+        return new com.timeline.poetry.api.PoetryStudioWriteController(service, reviewerToken, agentToken, json);
+    }
+
+    @Bean
+    public com.timeline.poetry.api.PoetryStudioAdvice poetryStudioAdvice() { return new com.timeline.poetry.api.PoetryStudioAdvice(); }
 }
