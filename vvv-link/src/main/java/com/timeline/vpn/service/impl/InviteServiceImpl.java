@@ -1,23 +1,30 @@
 package com.timeline.vpn.service.impl;
 
 import com.timeline.vpn.dao.db.RewardTicketDao;
-import com.timeline.vpn.dao.db.UserInviteDao;
 import com.timeline.vpn.service.InviteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Date;
 
 /**
- * 邀请码规则：
+ * 邀请码规则（存在 Redis，不建表）：
  * <ul>
  *   <li>码是数字 + 字母，默认 4 位；一旦随机撞上 10 天内发出过的码，本次改用 6 位。</li>
  *   <li>每个码有效 5 天。用户的码过期后，再次获取会重新生成。</li>
  *   <li>一个码发出后 10 天内不会再发给别人。</li>
  * </ul>
+ * 键：
+ * <ul>
+ *   <li>invite:code:&lt;码&gt; = 持有者用户名，TTL 10 天（用 SET NX 占用，存在即表示 10 天内已发出）</li>
+ *   <li>invite:user:&lt;用户名&gt; = 当前邀请码，TTL 5 天（过期即失效）</li>
+ * </ul>
+ * Redis 重启或数据被淘汰时记录会丢，已发出的码可能在 10 天内被再次发出，这一点是可接受的取舍。
  */
 @Service
 public class InviteServiceImpl implements InviteService {
@@ -28,55 +35,49 @@ public class InviteServiceImpl implements InviteService {
     private static final String ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
     private static final int SHORT_LENGTH = 4;
     private static final int LONG_LENGTH = 6;
-    /** 6 位码也撞上时的重试次数。 */
+    /** 随机重试次数。 */
     private static final int MAX_ATTEMPTS = 20;
     /** 码的有效期：5 天。 */
-    static final long VALID_MS = 5L * 24 * 3600_000L;
+    static final Duration VALID_FOR = Duration.ofDays(5);
     /** 码发出后不允许再次发出的时间：10 天。 */
-    static final long REUSE_BLOCK_MS = 10L * 24 * 3600_000L;
+    static final Duration REUSE_BLOCK_FOR = Duration.ofDays(10);
+    private static final String CODE_KEY = "invite:code:";
+    private static final String USER_KEY = "invite:user:";
     /** 每次邀请各发放的观看券张数。 */
     static final int INVITE_TICKETS = 1;
 
     private final SecureRandom random = new SecureRandom();
 
     @Autowired
-    private UserInviteDao inviteDao;
+    private StringRedisTemplate redis;
     @Autowired
     private RewardTicketDao ticketDao;
 
     @Override
     public String getOrCreateCode(String name) {
-        Date now = new Date();
-        String code = inviteDao.findCode(name);
-        Date createdAt = inviteDao.findCreatedAt(name);
-        if (code != null && createdAt != null && createdAt.getTime() >= now.getTime() - VALID_MS) {
-            return code;
+        String current = redis.opsForValue().get(USER_KEY + name);
+        if (current != null) {
+            return current;
         }
-        return issueCode(name, now);
+        return issueCode(name);
     }
 
     /** 生成并记录一个新码：先 4 位，撞上了就改 6 位。 */
-    private String issueCode(String name, Date now) {
-        Date reuseCutoff = new Date(now.getTime() - REUSE_BLOCK_MS);
+    private String issueCode(String name) {
         int length = SHORT_LENGTH;
-        String code = null;
-        for (int attempt = 0; attempt < MAX_ATTEMPTS && code == null; attempt++) {
+        for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             String candidate = newCode(length);
-            inviteDao.deleteStaleHistory(candidate, reuseCutoff);
-            if (inviteDao.insertHistory(candidate, name, now) > 0) {
-                code = candidate;
-            } else {
-                // 10 天内重复了：之后都用 6 位
-                length = LONG_LENGTH;
+            // SET NX：10 天内已发出过就返回 false
+            Boolean reserved = redis.opsForValue().setIfAbsent(CODE_KEY + candidate, name, REUSE_BLOCK_FOR);
+            if (Boolean.TRUE.equals(reserved)) {
+                redis.opsForValue().set(USER_KEY + name, candidate, VALID_FOR);
+                return candidate;
             }
+            // 重复了：之后都用 6 位
+            length = LONG_LENGTH;
         }
-        if (code == null) {
-            LOGGER.error("邀请码生成失败（重复过多）user=" + name);
-            throw new IllegalStateException("邀请码生成失败，请稍后再试");
-        }
-        inviteDao.deleteOtherOwner(code, name);
-        inviteDao.upsert(name, code, now);
-        return code;
+        LOGGER.error("邀请码生成失败（重复过多）user=" + name);
+        throw new IllegalStateException("邀请码生成失败，请稍后再试");
     }
 
     @Override
@@ -85,9 +86,8 @@ public class InviteServiceImpl implements InviteService {
             return;
         }
         String normalized = code.trim().toUpperCase();
-        Date validSince = new Date(System.currentTimeMillis() - VALID_MS);
-        String inviter = inviteDao.findUserByCode(normalized, validSince);
-        if (inviter == null) {
+        String inviter = redis.opsForValue().get(CODE_KEY + normalized);
+        if (inviter == null || !normalized.equals(redis.opsForValue().get(USER_KEY + inviter))) {
             LOGGER.info("邀请码无效或已过期: " + code + " invitee=" + invitee);
             return;
         }
