@@ -41,12 +41,14 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
     @Override
     public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
         long userId = requireUserId(baseQuery);
-        chatHistoryService.beginTurn(userId, chatContentForm);
+        long userMessageId = chatHistoryService.beginTurn(userId, chatContentForm);
         Choice choice = chatContext.chatWithGpt(baseQuery, chatContentForm);
         String reply = choice == null || choice.getMessage() == null ? null : choice.getMessage().getContent();
-        chatHistoryService.saveAssistant(userId, chatContentForm.getSessionId(), reply);
+        long assistantMessageId = chatHistoryService.saveAssistant(userId, chatContentForm.getSessionId(), reply);
         if (choice != null) {
             choice.setSessionId(chatContentForm.getSessionId());
+            choice.setUserMessageId(userMessageId);
+            choice.setAssistantMessageId(assistantMessageId);
         }
         return choice;
     }
@@ -55,9 +57,9 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
     @Override
     public SseEmitter chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm) {
         long userId = requireUserId(baseQuery);
-        chatHistoryService.beginTurn(userId, chatContentForm);
+        long userMessageId = chatHistoryService.beginTurn(userId, chatContentForm);
         long sessionId = chatContentForm.getSessionId();
-        return chatContext.chatWithGptStream(baseQuery, chatContentForm,
+        return chatContext.chatWithGptStream(baseQuery, chatContentForm, userMessageId,
                 reply -> chatHistoryService.saveAssistant(userId, sessionId, reply));
     }
 

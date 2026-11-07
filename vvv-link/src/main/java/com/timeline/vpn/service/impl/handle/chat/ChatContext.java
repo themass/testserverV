@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -64,7 +64,8 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
 
     private static final ExecutorService STREAM_EXECUTOR = Executors.newCachedThreadPool();
 
-    public SseEmitter chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm, Consumer<String> onFinish) {
+    public SseEmitter chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm, long userMessageId,
+                                        Function<String, Long> onFinish) {
         SseEmitter emitter = new SseEmitter(0L); // 不设超时，由我们主动 complete/completeWithError
 
         List<BaseChatHandleProxy> streamable = allHandles == null ? java.util.Collections.emptyList() :
@@ -84,7 +85,7 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
 
         STREAM_EXECUTOR.execute(() -> {
             try {
-                handle.chatWithGptStream(baseQuery, chatContentForm, emitter, onFinish);
+                handle.chatWithGptStream(baseQuery, chatContentForm, emitter, userMessageId, onFinish);
             } catch (Exception e) {
                 LOGGER.error("流式对话失败：handle=" + handle.getClass().getName(), e);
                 try {

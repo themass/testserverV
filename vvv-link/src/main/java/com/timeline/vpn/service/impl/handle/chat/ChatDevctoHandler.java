@@ -12,7 +12,7 @@ import com.timeline.vpn.util.JsonUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class ChatDevctoHandler extends BaseChatHandleProxy {
     }
 
     @Override
-    protected void doStream(BaseQuery baseQuery, String prompt, String msgId, long sessionId, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
+    protected void doStream(BaseQuery baseQuery, String prompt, String msgId, long sessionId, SseEmitter emitter, Function<String, Long> onComplete) throws Exception {
         streamOpenAiCompatible(url, apiKey + apiKey2 + apiKey1, "gpt-4o-mini", prompt,
                 "你是一个智能AI小助手", 0.2, 0.5, 3000, msgId, sessionId, "ChatDevctoHandler", emitter, onComplete);
     }

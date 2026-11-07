@@ -15,10 +15,10 @@ public interface ChatHistoryService {
      * 一轮对话开始前调用：解析/新建会话、补齐人设、写入用户消息（或重新生成时删掉旧回复）。
      * 调用后 form 的 sessionId / characterId / roleId 会被回填为服务端的值。
      */
-    void beginTurn(long userId, ChatContentForm form);
+    long beginTurn(long userId, ChatContentForm form);
 
     /** 一轮对话结束后保存助手回复；空白内容不落库。 */
-    void saveAssistant(long userId, long sessionId, String text);
+    long saveAssistant(long userId, long sessionId, String text);
 
     /** 提示词里的历史文本（[user]...\n[assistant]...），取最近若干条。 */
     String promptHistory(long userId, long sessionId);

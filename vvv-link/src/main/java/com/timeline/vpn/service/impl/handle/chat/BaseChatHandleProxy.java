@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
@@ -70,20 +72,26 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
         return false;
     }
 
-    /**
-     * 流式对话入口。回合准备（解析会话、写入用户消息）已由 ChatServiceImpl 在请求线程完成，
-     * 这里只组装 prompt 并交给具体 handler。onFinish 在流结束或被取消时各调用一次，
-     * 收到的是已生成的全文（取消时可能只有一部分）。
-     */
     public void chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm, SseEmitter emitter,
-                                  Consumer<String> onFinish) throws Exception {
+                                  long userMessageId, Function<String, Long> onFinish) throws Exception {
         String prompt = getPrompt(baseQuery, chatContentForm);
-        doStream(baseQuery, prompt, chatContentForm.getId(), chatContentForm.getSessionId(), emitter,
-                fullText -> onFinish.accept(cleanAssistant(fullText)));
+        String msgId = chatContentForm.getId();
+        long sessionId = chatContentForm.getSessionId();
+        AtomicLong assistantId = new AtomicLong();
+        doStream(baseQuery, prompt, msgId, sessionId, emitter,
+                fullText -> {
+                    long saved = onFinish.apply(cleanAssistant(fullText));
+                    assistantId.set(saved);
+                    return saved;
+                });
+        // 流正常结束后才发 done 帧，带上用户消息与助手消息的服务端 id
+        emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(
+                StreamChunk.done(msgId, sessionId, userMessageId, assistantId.get()))));
+        emitter.complete();
     }
 
     protected void doStream(BaseQuery baseQuery, String prompt, String msgId, long sessionId,
-                            SseEmitter emitter, Consumer<String> onComplete) throws Exception {
+                            SseEmitter emitter, Function<String, Long> onComplete) throws Exception {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " 不支持流式输出");
     }
 
@@ -96,7 +104,7 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
     protected void streamOpenAiCompatible(
             String url, String authorizationHeader, String model, String prompt, String systemPrompt,
             double temperature, double topP, int maxTokens,
-            String msgId, long sessionId, String prod, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
+            String msgId, long sessionId, String prod, SseEmitter emitter, Function<String, Long> onComplete) throws Exception {
 
         List<ChatMsg> messages = new ArrayList<>();
         messages.add(new ChatMsg("system", systemPrompt));
@@ -165,14 +173,11 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
         } catch (Exception e) {
             // 中途断开或被取消：已生成的部分照样保存，避免历史里只剩一条用户消息
             if (full.length() > 0) {
-                onComplete.accept(full.toString());
+                onComplete.apply(full.toString());
             }
             throw e;
         }
-        onComplete.accept(full.toString());
-        emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(
-                new StreamChunk(msgId, sessionId, "", true, null))));
-        emitter.complete();
+        onComplete.apply(full.toString());
     }
 
 

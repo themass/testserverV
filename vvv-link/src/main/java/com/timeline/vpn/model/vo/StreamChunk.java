@@ -12,6 +12,10 @@ public class StreamChunk {
     private String delta;
     private boolean done;
     private String error;
+    /** 仅 done 帧：本轮用户消息 id。 */
+    private long userMessageId;
+    /** 仅 done 帧：本轮助手消息 id，回复为空时为 0。 */
+    private long assistantMessageId;
 
     public StreamChunk() {
     }
@@ -22,6 +26,30 @@ public class StreamChunk {
         this.delta = delta;
         this.done = done;
         this.error = error;
+    }
+
+    /** 流结束帧：带上用户消息与助手消息的服务端 id。 */
+    public static StreamChunk done(String id, long sessionId, long userMessageId, long assistantMessageId) {
+        StreamChunk c = new StreamChunk(id, sessionId, "", true, null);
+        c.userMessageId = userMessageId;
+        c.assistantMessageId = assistantMessageId;
+        return c;
+    }
+
+    public long getUserMessageId() {
+        return userMessageId;
+    }
+
+    public void setUserMessageId(long userMessageId) {
+        this.userMessageId = userMessageId;
+    }
+
+    public long getAssistantMessageId() {
+        return assistantMessageId;
+    }
+
+    public void setAssistantMessageId(long assistantMessageId) {
+        this.assistantMessageId = assistantMessageId;
     }
 
     public String getId() {

@@ -13,7 +13,6 @@ public class ChatContentForm {
     private String text;
     /** 客户端消息 id（同会话内重发时用于幂等）；同时作为助手回复的 choice id。 */
     private String id;
-    private String charater;
     private String settingName;
     /** 会话 id；<=0 或不传时服务端新建会话，新 id 在响应里返回。 */
     private long sessionId;

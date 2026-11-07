@@ -113,7 +113,8 @@ Redis 不可用时接口仍然正确，只是每次多一次库查询。
 | settingName | 否 | 旧人设 switch，仅在没有 characterId/roleId 时生效 |
 
 - 流式响应：`StreamChunk{id, sessionId, delta, done, error}`，**新增 `sessionId` 字段**（每帧都带）。
-- 非流式响应：`Choice` 里新增 `sessionId`。
+  流正常结束时的 done 帧额外带 `userMessageId`、`assistantMessageId`（回复为空时为 0）。
+- 非流式响应：`Choice` 里新增 `sessionId`、`userMessageId`、`assistantMessageId`。
 - 助手回复为空（模型没吐字）时不写库；流被取消/断开时，把已生成的部分写库。
 
 ### 5.2 会话
@@ -127,6 +128,7 @@ Redis 不可用时接口仍然正确，只是每次多一次库查询。
 
 `ChatSessionVo`：`{id, name, characterId, roleId, createdAt, updatedAt, lastMessage, messageCount}`
 （后两个是列表展示用的，`lastMessage` 截断到 40 字；时间都是毫秒时间戳）。
+删除最后一个会话是允许的，之后 `/sessions.json` 会自动新建一个。
 
 ### 5.3 消息
 
@@ -137,6 +139,7 @@ Redis 不可用时接口仍然正确，只是每次多一次库查询。
 | POST | `/message/edit.json` | `sessionId`、`id`（必须是 user 消息）、`text` | 改后的 `ChatMessageVo`；该消息之后的所有消息一并删除 |
 
 `ChatMessageVo`：`{id, sessionId, role, content, type, clientMsgId, createdAt}`（时间是毫秒时间戳）。
+历史里只存文本（type=0）。图片、文件、语音附件不进历史，刷新或换设备后消失，这是确认过的预期行为。
 
 「重新生成」不单独开接口：客户端调 `/stream.json` 带 `regenerate=true`，
 服务端先删掉最后一条用户消息之后的助手回复，再重新回答，少一次往返、也不会出现
@@ -182,3 +185,11 @@ Redis 不可用时接口仍然正确，只是每次多一次库查询。
 - 没有迁移旧数据（已确认不需要）。
 - 没有做会话摘要、长期记忆、原生多轮 messages 组装；这些是分析文档 4.3 的后续步骤。
 - 没有限制单会话消息总量，也没有清理策略；需要时按 `createdAt` 归档。
+
+## 9. 已确认的决定
+
+- 消息 id：流结束的 done 帧与非流式 `Choice` 都带 `userMessageId`、`assistantMessageId`，客户端拿到后直接写进本地气泡，编辑/删除使用正式 id。`/messages.json` 只作兜底。
+- 附件（图片、文件、语音）不进历史，换设备或刷新后消失，是预期行为。
+- 非文本消息：服务端历史只存 type=0 文本。type 1–4 仅为预留，格式沿用客户端 `ChatLogMapper` 的 JSON 结构（语音：`content`/`org`/`time`；图片：`images` + `caption`；文件：`files`）。
+- 请求字段 `charater` 已删除（无人读取）。
+- 允许删除最后一个会话，`/sessions.json` 会自动恢复一个。

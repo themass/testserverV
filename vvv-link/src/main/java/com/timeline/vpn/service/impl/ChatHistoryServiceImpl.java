@@ -57,7 +57,7 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
     // ------------------------------------------------------------------
 
     @Override
-    public void beginTurn(long userId, ChatContentForm form) {
+    public long beginTurn(long userId, ChatContentForm form) {
         boolean regenerate = form.isRegenerate();
         String text = form.getText() == null ? null : form.getText().trim();
         if (!regenerate && StringUtils.isBlank(text)) {
@@ -93,13 +93,14 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
                 messageDao.softDeleteAfter(sessionId, lastUser);
                 invalidate(userId, sessionId);
                 sessionDao.touch(sessionId);
+                return lastUser;
             }
-        } else {
-            appendUser(userId, session, text, form.getId());
+            return 0L;
         }
+        return appendUser(userId, session, text, form.getId());
     }
 
-    private void appendUser(long userId, ChatSessionPo session, String text, String clientMsgId) {
+    private long appendUser(long userId, ChatSessionPo session, String text, String clientMsgId) {
         long sessionId = session.getId();
         String msgId = StringUtils.trimToNull(clientMsgId);
         if (msgId != null && msgId.length() > 64) {
@@ -112,7 +113,7 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
                 messageDao.softDeleteAfter(sessionId, dup.getId());
                 invalidate(userId, sessionId);
                 sessionDao.touch(sessionId);
-                return;
+                return dup.getId();
             }
         }
         ChatMessagePo po = new ChatMessagePo();
@@ -129,12 +130,13 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
             sessionDao.rename(sessionId, userId, nameFrom(text));
         }
         appendCache(userId, sessionId, "user", text);
+        return po.getId();
     }
 
     @Override
-    public void saveAssistant(long userId, long sessionId, String text) {
+    public long saveAssistant(long userId, long sessionId, String text) {
         if (StringUtils.isBlank(text)) {
-            return;
+            return 0L;
         }
         ChatMessagePo po = new ChatMessagePo();
         po.setSessionId(sessionId);
@@ -145,6 +147,7 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
         messageDao.insert(po);
         sessionDao.touch(sessionId);
         appendCache(userId, sessionId, "assistant", text);
+        return po.getId();
     }
 
     @Override
