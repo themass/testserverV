@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.ChatSessionDao">
+    <insert id="insert" parameterType="com.timeline.vpn.model.po.ChatSessionPo" useGeneratedKeys="true" keyProperty="id">
+        insert into vpn.chat_session(userId, name, characterId, roleId, createdAt, updatedAt, deleted)
+        values (#{userId}, #{name}, #{characterId}, #{roleId}, now(), now(), 0)
+    </insert>
+    <select id="getOwned" resultType="com.timeline.vpn.model.po.ChatSessionPo">
+        select id, userId, name, characterId, roleId, createdAt, updatedAt, deleted
+        from vpn.chat_session
+        where id = #{id} and userId = #{userId} and deleted = 0
+    </select>
+    <select id="listVo" resultType="com.timeline.vpn.model.vo.ChatSessionVo">
+        select s.id, s.name, s.characterId, s.roleId,
+               unix_timestamp(s.createdAt) * 1000 as createdAt,
+               unix_timestamp(s.updatedAt) * 1000 as updatedAt,
+               (select left(m.content, 40) from vpn.chat_message m
+                 where m.sessionId = s.id and m.deleted = 0 order by m.id desc limit 1) as lastMessage,
+               (select count(*) from vpn.chat_message m
+                 where m.sessionId = s.id and m.deleted = 0) as messageCount
+        from vpn.chat_session s
+        where s.userId = #{userId} and s.deleted = 0
+        order by s.updatedAt desc, s.id desc
+    </select>
+    <update id="rename">
+        update vpn.chat_session set name = #{name}, updatedAt = now()
+        where id = #{id} and userId = #{userId} and deleted = 0
+    </update>
+    <update id="softDelete">
+        update vpn.chat_session set deleted = 1, updatedAt = now()
+        where id = #{id} and userId = #{userId} and deleted = 0
+    </update>
+    <update id="touch">
+        update vpn.chat_session set updatedAt = now() where id = #{id}
+    </update>
+    <update id="fillPersona">
+        update vpn.chat_session
+        set characterId = coalesce(characterId, #{characterId}),
+            roleId = coalesce(roleId, #{roleId})
+        where id = #{id}
+    </update>
+</mapper>

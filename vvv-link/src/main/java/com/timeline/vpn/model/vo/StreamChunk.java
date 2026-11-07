@@ -7,18 +7,49 @@ package com.timeline.vpn.model.vo;
  */
 public class StreamChunk {
     private String id;
+    /** 本轮所属会话 id，每一帧都带，客户端据此拿到新建会话的 id。 */
+    private long sessionId;
     private String delta;
     private boolean done;
     private String error;
+    /** 仅 done 帧：本轮用户消息 id。 */
+    private long userMessageId;
+    /** 仅 done 帧：本轮助手消息 id，回复为空时为 0。 */
+    private long assistantMessageId;
 
     public StreamChunk() {
     }
 
-    public StreamChunk(String id, String delta, boolean done, String error) {
+    public StreamChunk(String id, long sessionId, String delta, boolean done, String error) {
         this.id = id;
+        this.sessionId = sessionId;
         this.delta = delta;
         this.done = done;
         this.error = error;
+    }
+
+    /** 流结束帧：带上用户消息与助手消息的服务端 id。 */
+    public static StreamChunk done(String id, long sessionId, long userMessageId, long assistantMessageId) {
+        StreamChunk c = new StreamChunk(id, sessionId, "", true, null);
+        c.userMessageId = userMessageId;
+        c.assistantMessageId = assistantMessageId;
+        return c;
+    }
+
+    public long getUserMessageId() {
+        return userMessageId;
+    }
+
+    public void setUserMessageId(long userMessageId) {
+        this.userMessageId = userMessageId;
+    }
+
+    public long getAssistantMessageId() {
+        return assistantMessageId;
+    }
+
+    public void setAssistantMessageId(long assistantMessageId) {
+        this.assistantMessageId = assistantMessageId;
     }
 
     public String getId() {
@@ -27,6 +58,14 @@ public class StreamChunk {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public long getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(long sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getDelta() {

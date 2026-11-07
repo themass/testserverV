@@ -8,39 +8,59 @@ import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.po.CharacterPo;
 import com.timeline.vpn.model.vo.CharacterVo;
+import com.timeline.vpn.model.vo.ChatMessageVo;
+import com.timeline.vpn.model.vo.ChatSessionVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.InfoListVo;
-import com.timeline.vpn.model.vo.Sessions;
+import com.timeline.vpn.service.ChatHistoryService;
 import com.timeline.vpn.service.ChatService;
 import com.timeline.vpn.service.impl.handle.chat.ChatContext;
-import com.timeline.vpn.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ChatServiceImpl implements ChatService {
-//    public static String chatGptUrl = "http://book.ok123find.top/v1/chat/completions";
 protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.class);
 
     @Autowired
     private SettingCharacterDao settingCharacterDao;
     @Autowired
     private ChatContext chatContext;
+    @Autowired
+    private ChatHistoryService chatHistoryService;
 
+    /**
+     * 非流式：先落用户消息（服务端历史），再调模型，成功后落助手回复。
+     * 模型调用失败由 ChatContext 重试，用户消息只写一次。
+     */
     @Override
     public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
-        Choice choice =  chatContext.chatWithGpt(baseQuery, chatContentForm);
+        long userId = requireUserId(baseQuery);
+        long userMessageId = chatHistoryService.beginTurn(userId, chatContentForm);
+        Choice choice = chatContext.chatWithGpt(baseQuery, chatContentForm);
+        String reply = choice == null || choice.getMessage() == null ? null : choice.getMessage().getContent();
+        long assistantMessageId = chatHistoryService.saveAssistant(userId, chatContentForm.getSessionId(), reply);
+        if (choice != null) {
+            choice.setSessionId(chatContentForm.getSessionId());
+            choice.setUserMessageId(userMessageId);
+            choice.setAssistantMessageId(assistantMessageId);
+        }
         return choice;
     }
 
+    /** 流式：回合准备在请求线程完成；助手回复在流结束或被取消时保存（部分文本也会保存）。 */
     @Override
-    public org.springframework.web.servlet.mvc.method.annotation.SseEmitter chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm) {
-        return chatContext.chatWithGptStream(baseQuery, chatContentForm);
+    public SseEmitter chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm) {
+        long userId = requireUserId(baseQuery);
+        long userMessageId = chatHistoryService.beginTurn(userId, chatContentForm);
+        long sessionId = chatContentForm.getSessionId();
+        return chatContext.chatWithGptStream(baseQuery, chatContentForm, userMessageId,
+                reply -> chatHistoryService.saveAssistant(userId, sessionId, reply));
     }
 
     @Override
@@ -53,6 +73,41 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
                 : settingCharacterDao.getVisibleTo(userId);
         return VoBuilder.buildListInfoVo(list, CharacterVo.class, (po, vo) ->
                 vo.setMine(userId != null && userId.equals(po.getOwnerUserId())));
+    }
+
+    @Override
+    public InfoListVo<ChatSessionVo> sessions(BaseQuery baseQuery) {
+        return chatHistoryService.sessions(requireUserId(baseQuery));
+    }
+
+    @Override
+    public ChatSessionVo createSession(BaseQuery baseQuery, String name, Integer characterId, String roleId) {
+        return chatHistoryService.createSession(requireUserId(baseQuery), name, characterId, roleId);
+    }
+
+    @Override
+    public ChatSessionVo renameSession(BaseQuery baseQuery, long sessionId, String name) {
+        return chatHistoryService.renameSession(requireUserId(baseQuery), sessionId, name);
+    }
+
+    @Override
+    public void deleteSession(BaseQuery baseQuery, long sessionId) {
+        chatHistoryService.deleteSession(requireUserId(baseQuery), sessionId);
+    }
+
+    @Override
+    public InfoListVo<ChatMessageVo> messages(BaseQuery baseQuery, long sessionId, Long beforeId, int limit) {
+        return chatHistoryService.messages(requireUserId(baseQuery), sessionId, beforeId, limit);
+    }
+
+    @Override
+    public void deleteMessage(BaseQuery baseQuery, long sessionId, long messageId) {
+        chatHistoryService.deleteMessage(requireUserId(baseQuery), sessionId, messageId);
+    }
+
+    @Override
+    public ChatMessageVo editMessage(BaseQuery baseQuery, long sessionId, long messageId, String text) {
+        return chatHistoryService.editMessage(requireUserId(baseQuery), sessionId, messageId, text);
     }
 
     @Override
@@ -115,65 +170,5 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
         vo.setExtra(po.getExtra());
         vo.setMine(mine);
         return vo;
-    }
-
-    @Override
-    public InfoListVo<Sessions> sessions(BaseQuery baseQuery) {
-        InfoListVo<Sessions> infoListVo= new InfoListVo<Sessions>();
-        List<Sessions> sessions = new ArrayList<>();
-        Sessions sessions1 = new Sessions();
-        sessions1.setName("单词翻译(translation)");
-        sessions1.setType(0);
-        sessions1.setSetting("单词翻译");
-        sessions1.setId(1000l);
-
-        Sessions sessions2 = new Sessions();
-        sessions2.setName("星座检测");
-        sessions2.setType(0);
-        sessions2.setSetting("星座检测");
-        sessions2.setId(1001l);
-
-        Sessions sessions3 = new Sessions();
-        sessions3.setName("红颜知己(Soulmate)");
-        sessions3.setType(0);
-        sessions3.setSetting("红颜知己");
-        sessions3.setId(1002l);
-
-        Sessions sessions4 = new Sessions();
-        sessions4.setName("吵架小能手(DebateMaster)");
-        sessions4.setType(0);
-        sessions4.setSetting("吵架小能手");
-        sessions4.setId(1003l);
-
-        Sessions sessions5 = new Sessions();
-        sessions5.setName("夸夸怪");
-        sessions5.setType(0);
-        sessions5.setSetting("夸夸怪");
-        sessions5.setId(1004l);
-
-        Sessions sessions6 = new Sessions();
-        sessions6.setName("文字冒险游戏");
-        sessions6.setType(0);
-        sessions6.setSetting("文字冒险游戏");
-        sessions6.setId(1005l);
-
-        Sessions sessions7 = new Sessions();
-        sessions7.setName("讲故事");
-        sessions7.setType(0);
-        sessions7.setSetting("讲故事");
-        sessions7.setId(1006l);
-
-        sessions.add(sessions1);
-        sessions.add(sessions2);
-        sessions.add(sessions3);
-        sessions.add(sessions4);
-        sessions.add(sessions5);
-        sessions.add(sessions6);
-        sessions.add(sessions7);
-
-
-        infoListVo.setVoList(sessions);
-        LOGGER.info("session list = "+ JsonUtil.writeValueAsString(infoListVo));
-        return infoListVo;
     }
 }

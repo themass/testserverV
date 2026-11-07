@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +29,7 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
     private static final Logger LOGGER =
             LoggerFactory.getLogger(ChatContext.class);
 
+    /** 非流式：随机选 handler，失败最多重试 3 次。历史与用户消息由调用方（ChatServiceImpl）负责。 */
     public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
         Random random = new Random();
 
@@ -54,6 +56,7 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
     //
     // 一旦开始往 emitter 里吐字就不能像非流式那样整包重试了，所以这里不重试：
     // 选 handler 失败直接报错，选中之后的失败交给 emitter.completeWithError。
+    // onFinish 在流结束或中途失败/取消时被调用，用来保存助手回复（可能是部分文本）。
     // ------------------------------------------------------------------
 
     @Autowired(required = false)
@@ -61,7 +64,8 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
 
     private static final ExecutorService STREAM_EXECUTOR = Executors.newCachedThreadPool();
 
-    public SseEmitter chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm) {
+    public SseEmitter chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm, long userMessageId,
+                                        Function<String, Long> onFinish) {
         SseEmitter emitter = new SseEmitter(0L); // 不设超时，由我们主动 complete/completeWithError
 
         List<BaseChatHandleProxy> streamable = allHandles == null ? java.util.Collections.emptyList() :
@@ -81,7 +85,7 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
 
         STREAM_EXECUTOR.execute(() -> {
             try {
-                handle.chatWithGptStream(baseQuery, chatContentForm, emitter);
+                handle.chatWithGptStream(baseQuery, chatContentForm, emitter, userMessageId, onFinish);
             } catch (Exception e) {
                 LOGGER.error("流式对话失败：handle=" + handle.getClass().getName(), e);
                 try {
@@ -94,4 +98,3 @@ public class ChatContext extends BaseSingleServiceContext<Integer, BaseChatHandl
         return emitter;
     }
 }
-

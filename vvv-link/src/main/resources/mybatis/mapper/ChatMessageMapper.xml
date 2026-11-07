@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.ChatMessageDao">
+    <sql id="cols">
+        id, sessionId, userId, `role`, content, `type`, clientMsgId, createdAt, deleted
+    </sql>
+    <insert id="insert" parameterType="com.timeline.vpn.model.po.ChatMessagePo" useGeneratedKeys="true" keyProperty="id">
+        insert into vpn.chat_message(sessionId, userId, `role`, content, `type`, clientMsgId, createdAt, deleted)
+        values (#{sessionId}, #{userId}, #{role}, #{content}, #{type}, #{clientMsgId}, now(), 0)
+    </insert>
+    <select id="recentDesc" resultType="com.timeline.vpn.model.po.ChatMessagePo">
+        select <include refid="cols"/> from vpn.chat_message
+        where sessionId = #{sessionId} and deleted = 0
+        order by id desc limit #{limit}
+    </select>
+    <select id="pageDesc" resultType="com.timeline.vpn.model.po.ChatMessagePo">
+        select <include refid="cols"/> from vpn.chat_message
+        where sessionId = #{sessionId} and deleted = 0
+        <if test="beforeId != null">
+            and id &lt; #{beforeId}
+        </if>
+        order by id desc limit #{limit}
+    </select>
+    <select id="getOwned" resultType="com.timeline.vpn.model.po.ChatMessagePo">
+        select <include refid="cols"/> from vpn.chat_message
+        where id = #{id} and sessionId = #{sessionId} and userId = #{userId} and deleted = 0
+    </select>
+    <select id="findByClientMsgId" resultType="com.timeline.vpn.model.po.ChatMessagePo">
+        select <include refid="cols"/> from vpn.chat_message
+        where sessionId = #{sessionId} and clientMsgId = #{clientMsgId} and `role` = 'user' and deleted = 0
+        order by id desc limit 1
+    </select>
+    <select id="lastUserId" resultType="long">
+        select id from vpn.chat_message
+        where sessionId = #{sessionId} and `role` = 'user' and deleted = 0
+        order by id desc limit 1
+    </select>
+    <update id="softDeleteAfter">
+        update vpn.chat_message set deleted = 1
+        where sessionId = #{sessionId} and id &gt; #{afterId} and deleted = 0
+    </update>
+    <update id="softDeleteOne">
+        update vpn.chat_message set deleted = 1 where id = #{id} and deleted = 0
+    </update>
+    <update id="softDeleteAllInSession">
+        update vpn.chat_message set deleted = 1 where sessionId = #{sessionId} and deleted = 0
+    </update>
+    <update id="updateContent">
+        update vpn.chat_message set content = #{content} where id = #{id} and deleted = 0
+    </update>
+</mapper>

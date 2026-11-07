@@ -5,11 +5,17 @@ import lombok.ToString;
 @ToString
 public class Choice {
     private String id;
+    /** 本轮所属会话 id（服务端回填）。 */
+    private long sessionId;
     private int index;
     private Message message;
     private String logprobs;
     private String finish_reason;
     private String prod;
+    /** 本轮用户消息 id（服务端）。 */
+    private long userMessageId;
+    /** 本轮助手消息 id（服务端）；回复为空时为 0。 */
+    private long assistantMessageId;
     public Choice() {
     }
 
@@ -58,6 +64,30 @@ public class Choice {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public long getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(long sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public long getUserMessageId() {
+        return userMessageId;
+    }
+
+    public void setUserMessageId(long userMessageId) {
+        this.userMessageId = userMessageId;
+    }
+
+    public long getAssistantMessageId() {
+        return assistantMessageId;
+    }
+
+    public void setAssistantMessageId(long assistantMessageId) {
+        this.assistantMessageId = assistantMessageId;
     }
 
     public String getProd() {
