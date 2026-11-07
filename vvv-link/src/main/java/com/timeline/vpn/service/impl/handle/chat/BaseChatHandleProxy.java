@@ -1,13 +1,12 @@
 package com.timeline.vpn.service.impl.handle.chat;
 
 import com.timeline.vpn.common.annotation.MethodTimed;
-import com.timeline.vpn.model.chat.LlmRecord;
-import com.timeline.vpn.model.chat.UserRole;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.Choice;
-import com.timeline.vpn.service.CacheRedisUtil;
+import com.timeline.vpn.common.utils.SpringUtils;
+import com.timeline.vpn.service.ChatHistoryService;
 import com.timeline.vpn.model.chat.ChatMessages;
 import com.timeline.vpn.model.chat.ChatMsg;
 import com.timeline.vpn.model.vo.ChatChunkVo;
@@ -38,17 +37,21 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
             LoggerFactory.getLogger(BaseChatHandleProxy.class);
 
 
-    public Choice chatWithGptBase(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception{
-        CacheRedisUtil.appendRecod(baseQuery, LlmRecord.builder().text(chatContentForm.getText()).role(UserRole.user).sessionId(chatContentForm.getSessionId()).build());
+    public Choice chatWithGptBase(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception {
         String prompt = getPrompt(baseQuery, chatContentForm);
         Choice choice = chatWithGpt(baseQuery, prompt);
-        if(choice!=null){
-            choice.setId(chatContentForm.getId());
-            choice.getMessage().getContent().replace("[assistant]:","");
-            choice.getMessage().getContent().replace("[assistant]","");
+        if (choice == null || choice.getMessage() == null || choice.getMessage().getContent() == null) {
+            // 抛出来交给 ChatContext 重试，而不是返回 null 让调用方 NPE
+            throw new IllegalStateException(getClass().getSimpleName() + " 返回空回复");
         }
-        CacheRedisUtil.appendRecod(baseQuery, LlmRecord.builder().sessionId(chatContentForm.getSessionId()).role(UserRole.assistant).text(choice.getMessage().getContent()).build());
+        choice.setId(chatContentForm.getId());
+        choice.getMessage().setContent(cleanAssistant(choice.getMessage().getContent()));
         return choice;
+    }
+
+    /** 去掉模型回显的角色标记。注意 String.replace 返回新串，结果必须写回去。 */
+    static String cleanAssistant(String text) {
+        return text.replace("[assistant]:", "").replace("[assistant]", "");
     }
     public abstract Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception;
     @Override
@@ -68,21 +71,19 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
     }
 
     /**
-     * 流式对话入口，与 chatWithGptBase 对称：同样先写用户消息到 Redis 历史，
-     * 组装 prompt，再交给具体 handler 的 doStream 实现；全文拼好后回调里写入助理消息历史。
+     * 流式对话入口。回合准备（解析会话、写入用户消息）已由 ChatServiceImpl 在请求线程完成，
+     * 这里只组装 prompt 并交给具体 handler。onFinish 在流结束或被取消时各调用一次，
+     * 收到的是已生成的全文（取消时可能只有一部分）。
      */
-    public void chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm, SseEmitter emitter) throws Exception {
-        CacheRedisUtil.appendRecod(baseQuery, LlmRecord.builder().text(chatContentForm.getText()).role(UserRole.user).sessionId(chatContentForm.getSessionId()).build());
+    public void chatWithGptStream(BaseQuery baseQuery, ChatContentForm chatContentForm, SseEmitter emitter,
+                                  Consumer<String> onFinish) throws Exception {
         String prompt = getPrompt(baseQuery, chatContentForm);
-        String msgId = chatContentForm.getId();
-        long sessionId = chatContentForm.getSessionId();
-        doStream(baseQuery, prompt, msgId, emitter, fullText -> {
-            String cleaned = fullText.replace("[assistant]:", "").replace("[assistant]", "");
-            CacheRedisUtil.appendRecod(baseQuery, LlmRecord.builder().sessionId(sessionId).role(UserRole.assistant).text(cleaned).build());
-        });
+        doStream(baseQuery, prompt, chatContentForm.getId(), chatContentForm.getSessionId(), emitter,
+                fullText -> onFinish.accept(cleanAssistant(fullText)));
     }
 
-    protected void doStream(BaseQuery baseQuery, String prompt, String msgId, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
+    protected void doStream(BaseQuery baseQuery, String prompt, String msgId, long sessionId,
+                            SseEmitter emitter, Consumer<String> onComplete) throws Exception {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " 不支持流式输出");
     }
 
@@ -90,11 +91,12 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
      * OpenAI 兼容协议（/v1/chat/completions, stream=true）的共享实现。
      * 逐行读取上游 `data: {...}`，解析出 delta.content 就转发一帧给客户端，
      * 遇到 `data: [DONE]` 结束；客户端断开/超时时取消掉上游请求，避免连接泄漏。
+     * 无论正常结束还是中途失败/取消，只要已经生成了文字，都会通过 onComplete 保存部分内容。
      */
     protected void streamOpenAiCompatible(
             String url, String authorizationHeader, String model, String prompt, String systemPrompt,
             double temperature, double topP, int maxTokens,
-            String msgId, String prod, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
+            String msgId, long sessionId, String prod, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
 
         List<ChatMsg> messages = new ArrayList<>();
         messages.add(new ChatMsg("system", systemPrompt));
@@ -122,75 +124,65 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
         emitter.onError(t -> call.cancel());
 
         StringBuilder full = new StringBuilder();
-        try (okhttp3.Response response = call.execute()) {
-            if (!response.isSuccessful() || response.body() == null) {
-                throw new IllegalStateException(prod + " 流式请求失败: HTTP " + response.code());
-            }
-            okio.BufferedSource source = response.body().source();
-            String line;
-            while ((line = source.readUtf8Line()) != null) {
-                if (!line.startsWith("data:")) {
-                    continue;
+        try {
+            try (okhttp3.Response response = call.execute()) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    throw new IllegalStateException(prod + " 流式请求失败: HTTP " + response.code());
                 }
-                String payload = line.substring(5).trim();
-                if (payload.isEmpty() || "[DONE]".equals(payload)) {
+                okio.BufferedSource source = response.body().source();
+                String line;
+                while ((line = source.readUtf8Line()) != null) {
+                    if (!line.startsWith("data:")) {
+                        continue;
+                    }
+                    String payload = line.substring(5).trim();
+                    if (payload.isEmpty()) {
+                        continue;
+                    }
                     if ("[DONE]".equals(payload)) {
                         break;
                     }
-                    continue;
+                    ChatChunkVo chunk;
+                    try {
+                        chunk = JsonUtil.readValue(payload, ChatChunkVo.class);
+                    } catch (Exception parseError) {
+                        LOGGER.warn(prod + " 跳过无法解析的流式分片: " + payload, parseError);
+                        continue;
+                    }
+                    if (chunk == null || chunk.getChoices() == null || chunk.getChoices().isEmpty()) {
+                        continue;
+                    }
+                    ChatChunkVo.ChunkDelta delta = chunk.getChoices().get(0).getDelta();
+                    String content = delta != null ? delta.getContent() : null;
+                    if (content == null || content.isEmpty()) {
+                        continue;
+                    }
+                    full.append(content);
+                    emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(
+                            new StreamChunk(msgId, sessionId, content, false, null))));
                 }
-                ChatChunkVo chunk;
-                try {
-                    chunk = JsonUtil.readValue(payload, ChatChunkVo.class);
-                } catch (Exception parseError) {
-                    LOGGER.warn(prod + " 跳过无法解析的流式分片: " + payload, parseError);
-                    continue;
-                }
-                if (chunk == null || chunk.getChoices() == null || chunk.getChoices().isEmpty()) {
-                    continue;
-                }
-                ChatChunkVo.ChunkDelta delta = chunk.getChoices().get(0).getDelta();
-                String content = delta != null ? delta.getContent() : null;
-                if (content == null || content.isEmpty()) {
-                    continue;
-                }
-                full.append(content);
-                emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(new StreamChunk(msgId, content, false, null))));
             }
+        } catch (Exception e) {
+            // 中途断开或被取消：已生成的部分照样保存，避免历史里只剩一条用户消息
+            if (full.length() > 0) {
+                onComplete.accept(full.toString());
+            }
+            throw e;
         }
         onComplete.accept(full.toString());
-        emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(new StreamChunk(msgId, "", true, null))));
+        emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(
+                new StreamChunk(msgId, sessionId, "", true, null))));
         emitter.complete();
     }
 
 
-    public static String history(BaseQuery baseQuery, ChatContentForm chatContentForm){
-        if(StringUtils.isBlank(chatContentForm.getContent())){
-            List<LlmRecord> list = CacheRedisUtil.getRecod(baseQuery, chatContentForm.getSessionId());
-            String value = Optional.ofNullable(list).orElse(null).stream().map(roleContext -> {
-                        if (UserRole.assistant == roleContext.getRole()) {
-                            return UserRole.assistant.getRole() + roleContext.getText()+"\n";
-                        } else {
-                            return UserRole.user.getRole() + roleContext.getText();
-                        }
-                    })
-                    .collect(Collectors.joining("\n"));
-            return "\n" + value;
-        }
-        List<SimpleMessage> msgs = JsonUtil.readValue(chatContentForm.getContent(),JsonUtil.getListType(SimpleMessage.class));
-        LOGGER.info("用户的对话历史："+chatContentForm.getContent());
-        return appendOldHistory(msgs);
-    }
-
-    protected static String appendOldHistory(List<SimpleMessage> history) {
-        if (history == null) {
+    /** 服务端历史（按 sessionId 读取，不再读请求里的 content）。 */
+    static String promptHistory(BaseQuery baseQuery, ChatContentForm chatContentForm) {
+        if (baseQuery.getUser() == null || chatContentForm.getSessionId() <= 0) {
             return "";
         }
-        String value = Optional.ofNullable(history).orElse(null).stream().map(role -> {
-                    return "["+role.getRole()+"]" +role.getText();
-                })
-                .collect(Collectors.joining("\n"));
-        return value;
+        return "\n" + SpringUtils.getBean(ChatHistoryService.class)
+                .promptHistory(baseQuery.getUser().getId(), chatContentForm.getSessionId());
     }
     /**
      * 角色目录里的提示词；没传 roleId、目录未启用（roles.enabled=false）或查不到时返回 null，
@@ -232,7 +224,7 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
     public static String getPrompt(BaseQuery baseQuery, ChatContentForm chatContentForm){
         String rolePrompt = catalogRolePrompt(chatContentForm);
         if (rolePrompt != null) {
-            return buildRolePrompt(rolePrompt, baseQuery.getAppInfo().getLang(), history(baseQuery, chatContentForm));
+            return buildRolePrompt(rolePrompt, baseQuery.getAppInfo().getLang(), promptHistory(baseQuery, chatContentForm));
         }
         String prmpt = "";
 
@@ -282,10 +274,10 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
                 "5. 使用 Markdown 格式。\n" +
                 "6. 如果需要返回数学公式，使用单 `$` 符号，避免使用 `\\(` 和 `\\[`。\n\n" +
                 "NOTE!!!\n" +
-                "根据用户问题的语言决定回答的语言。%s\n" +
+                "根据用户问题的语言决定回答的语言。" + baseQuery.getAppInfo().getLang() + "\n" +
                 "# Conversation History:\n" +
-                "%s";
-            return String.format(tmp,baseQuery.getAppInfo().getLang(), history(baseQuery, chatContentForm));
+                promptHistory(baseQuery, chatContentForm);
+            return tmp;
     }
     private static String myprompt = "   #Character Setting\n" +
             "\n" +

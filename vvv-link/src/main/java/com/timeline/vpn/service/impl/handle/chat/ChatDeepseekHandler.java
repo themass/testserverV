@@ -42,9 +42,9 @@ public class ChatDeepseekHandler extends BaseChatHandleProxy {
     }
 
     @Override
-    protected void doStream(BaseQuery baseQuery, String prompt, String msgId, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
+    protected void doStream(BaseQuery baseQuery, String prompt, String msgId, long sessionId, SseEmitter emitter, Consumer<String> onComplete) throws Exception {
         streamOpenAiCompatible(url, apiKey + apiKey2 + apiKey1, "deepseek-flash", prompt,
-                "你是一个智能AI小助手", 0.2, 0.5, 1800, msgId, "ChatDeepseekHandler", emitter, onComplete);
+                "你是一个智能AI小助手", 0.2, 0.5, 1800, msgId, sessionId, "ChatDeepseekHandler", emitter, onComplete);
     }
 
     public Choice chatWithGpt(BaseQuery baseQuery, String prompt) throws Exception {

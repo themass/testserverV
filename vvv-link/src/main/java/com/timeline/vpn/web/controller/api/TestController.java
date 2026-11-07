@@ -67,7 +67,7 @@ public class TestController extends BaseController {
     public JsonResult testmychat(@UserInfo BaseQuery baseQuery, @RequestParam(name = "content") String content) throws Exception {
         List<Choice> listC = new ArrayList<>();
         ChatContentForm chatContentForm = new ChatContentForm();
-        chatContentForm.setContent(content);
+        chatContentForm.setText(content);
         chatContentForm.setId("1111");
         list.stream().forEach(o -> {
             try {

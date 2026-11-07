@@ -2,15 +2,12 @@ package com.timeline.vpn.service.impl.handle.asr;
 
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.common.utils.Base64Util;
-import com.timeline.vpn.model.chat.LlmRecord;
-import com.timeline.vpn.model.chat.UserRole;
 import com.timeline.vpn.model.form.AsrContentForm;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.form.SimpleMessage;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.AsrResponseVo;
 import com.timeline.vpn.model.vo.Choice;
-import com.timeline.vpn.service.CacheRedisUtil;
 import com.timeline.vpn.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

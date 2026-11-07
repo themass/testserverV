@@ -7,6 +7,8 @@ package com.timeline.vpn.model.vo;
  */
 public class StreamChunk {
     private String id;
+    /** 本轮所属会话 id，每一帧都带，客户端据此拿到新建会话的 id。 */
+    private long sessionId;
     private String delta;
     private boolean done;
     private String error;
@@ -14,8 +16,9 @@ public class StreamChunk {
     public StreamChunk() {
     }
 
-    public StreamChunk(String id, String delta, boolean done, String error) {
+    public StreamChunk(String id, long sessionId, String delta, boolean done, String error) {
         this.id = id;
+        this.sessionId = sessionId;
         this.delta = delta;
         this.done = done;
         this.error = error;
@@ -27,6 +30,14 @@ public class StreamChunk {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public long getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(long sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getDelta() {

@@ -4,9 +4,10 @@ import com.timeline.vpn.model.form.CharacterForm;
 import com.timeline.vpn.model.form.ChatContentForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.CharacterVo;
+import com.timeline.vpn.model.vo.ChatMessageVo;
+import com.timeline.vpn.model.vo.ChatSessionVo;
 import com.timeline.vpn.model.vo.Choice;
 import com.timeline.vpn.model.vo.InfoListVo;
-import com.timeline.vpn.model.vo.Sessions;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
@@ -19,7 +20,21 @@ public interface ChatService {
     public Choice chatWithGpt(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception;
 
     public InfoListVo<CharacterVo> getCharacter(BaseQuery baseQuery);
-    public InfoListVo<Sessions> sessions(BaseQuery baseQuery);
+
+    /** 当前用户的会话列表（没有则自动建一个）。 */
+    public InfoListVo<ChatSessionVo> sessions(BaseQuery baseQuery);
+
+    public ChatSessionVo createSession(BaseQuery baseQuery, String name, Integer characterId, String roleId);
+
+    public ChatSessionVo renameSession(BaseQuery baseQuery, long sessionId, String name);
+
+    public void deleteSession(BaseQuery baseQuery, long sessionId);
+
+    public InfoListVo<ChatMessageVo> messages(BaseQuery baseQuery, long sessionId, Long beforeId, int limit);
+
+    public void deleteMessage(BaseQuery baseQuery, long sessionId, long messageId);
+
+    public ChatMessageVo editMessage(BaseQuery baseQuery, long sessionId, long messageId, String text);
 
     /** 创建一个用户自定义角色，归属当前用户。 */
     public CharacterVo createCharacter(BaseQuery baseQuery, CharacterForm form);
@@ -34,4 +49,3 @@ public interface ChatService {
 
 
 }
-

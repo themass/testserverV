@@ -5,6 +5,8 @@ import lombok.ToString;
 @ToString
 public class Choice {
     private String id;
+    /** 本轮所属会话 id（服务端回填）。 */
+    private long sessionId;
     private int index;
     private Message message;
     private String logprobs;
@@ -58,6 +60,14 @@ public class Choice {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public long getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(long sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getProd() {
