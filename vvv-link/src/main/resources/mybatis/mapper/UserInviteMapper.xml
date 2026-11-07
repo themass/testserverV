@@ -4,11 +4,28 @@
     <select id="findCode" resultType="string">
         select code from vpn.user_invite where user_name=#{name}
     </select>
-    <select id="findUserByCode" resultType="string">
-        select user_name from vpn.user_invite where code=#{code}
+    <select id="findCreatedAt" resultType="java.util.Date">
+        select created_at from vpn.user_invite where user_name=#{name}
     </select>
-    <insert id="insert">
-        insert ignore into vpn.user_invite(user_name, code, created_at)
+    <!-- 仅返回仍在有效期内（created_at 不早于 since）的邀请人 -->
+    <select id="findUserByCode" resultType="string">
+        select user_name from vpn.user_invite where code=#{code} and created_at &gt;= #{since}
+    </select>
+    <!-- 10 天内发出过的码不能再发：先删掉过期的历史记录，再尝试写入 -->
+    <delete id="deleteStaleHistory">
+        delete from vpn.invite_code_history where code=#{code} and issued_at &lt; #{cutoff}
+    </delete>
+    <insert id="insertHistory">
+        insert ignore into vpn.invite_code_history(code, user_name, issued_at)
+        values(#{code}, #{name}, #{issuedAt})
+    </insert>
+    <!-- 历史表确认该码可用后，释放旧持有者的记录（它已超过 10 天） -->
+    <delete id="deleteOtherOwner">
+        delete from vpn.user_invite where code=#{code} and user_name&lt;&gt;#{name}
+    </delete>
+    <insert id="upsert">
+        insert into vpn.user_invite(user_name, code, created_at)
         values(#{name}, #{code}, #{createdAt})
+        on duplicate key update code=values(code), created_at=values(created_at)
     </insert>
 </mapper>
