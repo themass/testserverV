@@ -136,6 +136,7 @@ Redis 不可用时接口仍然正确，只是每次多一次库查询。
 |---|---|---|---|
 | GET/POST | `/messages.json` | `sessionId`、`beforeId`（可空）、`limit`（默认 30，最大 200） | `InfoListVo<ChatMessageVo>`，`voList` 按 id 正序；`hasMore=true` 表示还有更早的 |
 | POST | `/message/delete.json` | `sessionId`、`id` | 成功即 `errno=0` |
+| POST | `/messages/clear.json` | `sessionId` | `{"deleted": n}`，清空该会话所有消息，保留会话（名称、id 不变）；只有所有者可调用，同时清 Redis 缓存 |
 | POST | `/message/edit.json` | `sessionId`、`id`（必须是 user 消息）、`text` | 改后的 `ChatMessageVo`；该消息之后的所有消息一并删除 |
 
 `ChatMessageVo`：`{id, sessionId, role, content, type, clientMsgId, createdAt}`（时间是毫秒时间戳）。

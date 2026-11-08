@@ -106,6 +106,11 @@ protected static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.c
     }
 
     @Override
+    public int clearMessages(BaseQuery baseQuery, long sessionId) {
+        return chatHistoryService.clearMessages(requireUserId(baseQuery), sessionId);
+    }
+
+    @Override
     public ChatMessageVo editMessage(BaseQuery baseQuery, long sessionId, long messageId, String text) {
         return chatHistoryService.editMessage(requireUserId(baseQuery), sessionId, messageId, text);
     }

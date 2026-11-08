@@ -36,6 +36,9 @@ public interface ChatService {
 
     public ChatMessageVo editMessage(BaseQuery baseQuery, long sessionId, long messageId, String text);
 
+    /** 清空会话消息，保留会话；返回删除条数。 */
+    public int clearMessages(BaseQuery baseQuery, long sessionId);
+
     /** 创建一个用户自定义角色，归属当前用户。 */
     public CharacterVo createCharacter(BaseQuery baseQuery, CharacterForm form);
 

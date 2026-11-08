@@ -238,6 +238,16 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
 
     @Override
     @Transactional
+    public int clearMessages(long userId, long sessionId) {
+        requireOwned(userId, sessionId);
+        int deleted = messageDao.softDeleteAllInSession(sessionId);
+        sessionDao.touch(sessionId);
+        invalidate(userId, sessionId);
+        return deleted;
+    }
+
+    @Override
+    @Transactional
     public ChatMessageVo editMessage(long userId, long sessionId, long messageId, String text) {
         requireOwned(userId, sessionId);
         if (StringUtils.isBlank(text)) {
