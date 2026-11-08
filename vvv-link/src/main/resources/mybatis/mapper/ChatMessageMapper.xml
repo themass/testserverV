@@ -21,6 +21,9 @@
         </if>
         order by id desc limit #{limit}
     </select>
+    <select id="findById" resultType="com.timeline.vpn.model.po.ChatMessagePo">
+        select <include refid="cols"/> from vpn.chat_message where id = #{id}
+    </select>
     <select id="getOwned" resultType="com.timeline.vpn.model.po.ChatMessagePo">
         select <include refid="cols"/> from vpn.chat_message
         where id = #{id} and sessionId = #{sessionId} and userId = #{userId} and deleted = 0

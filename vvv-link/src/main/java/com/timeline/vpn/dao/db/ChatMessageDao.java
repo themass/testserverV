@@ -19,6 +19,9 @@ public interface ChatMessageDao {
     List<ChatMessagePo> pageDesc(@Param("sessionId") long sessionId, @Param("beforeId") Long beforeId,
                                  @Param("limit") int limit);
 
+    /** 不带任何过滤的按 id 查询（含已删除），用于区分"已删除"和"不存在/不属于自己"。 */
+    ChatMessagePo findById(@Param("id") long id);
+
     /** 本人会话里的一条未删除消息；不是本人的返回 null。 */
     ChatMessagePo getOwned(@Param("id") long id, @Param("sessionId") long sessionId, @Param("userId") long userId);
 

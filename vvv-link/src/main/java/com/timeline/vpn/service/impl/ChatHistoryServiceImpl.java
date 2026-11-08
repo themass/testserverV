@@ -1,6 +1,8 @@
 package com.timeline.vpn.service.impl;
 
+import com.timeline.vpn.Constant;
 import com.timeline.vpn.common.exception.BusinessException;
+import com.timeline.vpn.exception.ApiException;
 import com.timeline.vpn.common.utils.JacksonJsonUtil;
 import com.timeline.vpn.dao.db.ChatMessageDao;
 import com.timeline.vpn.dao.db.ChatSessionDao;
@@ -229,8 +231,14 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
     @Override
     public void deleteMessage(long userId, long sessionId, long messageId) {
         requireOwned(userId, sessionId);
-        if (messageDao.getOwned(messageId, sessionId, userId) == null) {
-            throw new BusinessException("消息不存在");
+        ChatMessagePo po = messageDao.findById(messageId);
+        // 不存在、或属于别的会话/用户：明确的错误码（客户端据此提示，而不是 System error）
+        if (po == null || po.getSessionId() != sessionId || po.getUserId() != userId) {
+            throw new ApiException(Constant.ResultErrno.ERRNO_MESSAGE_NOT_FOUND, "消息不存在或无权删除");
+        }
+        // 已经删除：幂等成功，重复请求不报错
+        if (po.getDeleted() != 0) {
+            return;
         }
         messageDao.softDeleteOne(messageId);
         invalidate(userId, sessionId);
