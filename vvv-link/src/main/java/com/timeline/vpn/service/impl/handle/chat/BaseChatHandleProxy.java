@@ -77,12 +77,21 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
         String msgId = chatContentForm.getId();
         long sessionId = chatContentForm.getSessionId();
         AtomicLong assistantId = new AtomicLong();
-        doStream(baseQuery, prompt, msgId, sessionId, emitter,
-                fullText -> {
-                    long saved = onFinish.apply(cleanAssistant(fullText));
-                    assistantId.set(saved);
-                    return saved;
-                });
+        try {
+            doStream(baseQuery, prompt, msgId, sessionId, emitter,
+                    fullText -> {
+                        long saved = onFinish.apply(cleanAssistant(fullText));
+                        assistantId.set(saved);
+                        return saved;
+                    });
+        } catch (StreamUpstreamException e) {
+            // 上游失败或没有内容：不保存助手消息，只发一帧带 error 的结束帧，客户端可直接展示
+            LOGGER.warn("流式回复失败 handle={} sessionId={} reason={}", getClass().getSimpleName(), sessionId, e.getMessage());
+            emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(
+                    new StreamChunk(msgId, sessionId, "", true, e.getMessage()))));
+            emitter.complete();
+            return;
+        }
         // 流正常结束后才发 done 帧，带上用户消息与助手消息的服务端 id
         emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(
                 StreamChunk.done(msgId, sessionId, userMessageId, assistantId.get()))));
@@ -131,13 +140,19 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
         emitter.onError(t -> call.cancel());
 
         StringBuilder full = new StringBuilder();
-        StringBuilder rawHead = new StringBuilder();
+        StringBuilder rawHead = new StringBuilder();   // 原始响应前 200 字，仅用于日志
+        StringBuilder nonSse = new StringBuilder();    // 非 data: 行，上游错误体（JSON）从这里解析
         int httpCode = 0;
         try {
             try (okhttp3.Response response = call.execute()) {
                 httpCode = response.code();
                 if (!response.isSuccessful() || response.body() == null) {
-                    throw new IllegalStateException(prod + " 流式请求失败: HTTP " + response.code());
+                    String errBody = response.body() == null ? "" : response.body().string();
+                    String detail = upstreamErrorMessage(errBody);
+                    LOGGER.warn("{} 上游 HTTP 失败 model={} http={} raw={}", prod, model, httpCode, head(errBody));
+                    throw new StreamUpstreamException(detail != null
+                            ? "模型调用失败：" + detail
+                            : "模型调用失败（HTTP " + httpCode + "）");
                 }
                 okio.BufferedSource source = response.body().source();
                 String line;
@@ -146,6 +161,9 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
                         rawHead.append(line).append('\n');
                     }
                     if (!line.startsWith("data:")) {
+                        if (nonSse.length() < 2000) {
+                            nonSse.append(line);
+                        }
                         continue;
                     }
                     String payload = line.substring(5).trim();
@@ -175,6 +193,8 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
                             new StreamChunk(msgId, sessionId, content, false, null))));
                 }
             }
+        } catch (StreamUpstreamException e) {
+            throw e;
         } catch (Exception e) {
             // 中途断开或被取消：已生成的部分照样保存，避免历史里只剩一条用户消息
             if (full.length() > 0) {
@@ -183,10 +203,34 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
             throw e;
         }
         if (full.length() == 0) {
-            LOGGER.warn("模型返回空回复 prod={} model={} promptLen={} http={} raw={}", prod, model, prompt.length(),
-                    httpCode, rawHead.substring(0, Math.min(200, rawHead.length())));
+            // HTTP 200 但不是 SSE（上游错误体），或流正常结束却没有文字：都是失败，不保存
+            String detail = upstreamErrorMessage(nonSse.toString());
+            LOGGER.warn("{} 流式回复为空 model={} promptLen={} http={} raw={}", prod, model, prompt.length(),
+                    httpCode, head(rawHead.toString()));
+            throw new StreamUpstreamException(detail != null ? "模型调用失败：" + detail : "模型没有返回内容");
         }
         onComplete.apply(full.toString());
+    }
+
+    private static final com.fasterxml.jackson.databind.ObjectMapper ERROR_MAPPER =
+            new com.fasterxml.jackson.databind.ObjectMapper();
+
+    /** 从上游错误体里取出 error.message（OpenAI 兼容格式）；不是错误 JSON 时返回 null。 */
+    static String upstreamErrorMessage(String raw) {
+        if (raw == null || !raw.trim().startsWith("{")) {
+            return null;
+        }
+        try {
+            com.fasterxml.jackson.databind.JsonNode err = ERROR_MAPPER.readTree(raw.trim()).path("error");
+            String msg = err.isTextual() ? err.asText() : err.path("message").asText("");
+            return msg.isEmpty() ? null : msg;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static String head(String s) {
+        return s == null ? "null" : s.substring(0, Math.min(200, s.length()));
     }
 
 
