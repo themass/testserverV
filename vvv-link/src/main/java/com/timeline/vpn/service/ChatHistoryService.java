@@ -35,6 +35,9 @@ public interface ChatHistoryService {
 
     void deleteMessage(long userId, long sessionId, long messageId);
 
+    /** 清空会话里的所有消息，保留会话本身；返回删除的条数。只有会话所有者可以调用。 */
+    int clearMessages(long userId, long sessionId);
+
     /** 改一条用户消息，并删掉它之后的所有消息（回复需要重新生成）。 */
     ChatMessageVo editMessage(long userId, long sessionId, long messageId, String text);
 }

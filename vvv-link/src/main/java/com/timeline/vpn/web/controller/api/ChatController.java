@@ -100,6 +100,14 @@ public class ChatController extends BaseController {
         return new JsonResult();
     }
 
+    /** 清空会话的所有消息，保留会话（名称、id 不变）。返回 {"deleted": 条数}。 */
+    @PostMapping(value = "/messages/clear.json")
+    public JsonResult clearMessages(@UserInfo(required = true) BaseQuery baseQuery,
+                                    @RequestParam("sessionId") long sessionId) {
+        int deleted = chatService.clearMessages(baseQuery, sessionId);
+        return new JsonResult(java.util.Collections.singletonMap("deleted", deleted));
+    }
+
     /** 编辑用户消息：改内容并删掉之后的所有消息，之后调 /stream.json 即可重新回答。 */
     @PostMapping(value = "/message/edit.json")
     public JsonResult editMessage(@UserInfo(required = true) BaseQuery baseQuery,
