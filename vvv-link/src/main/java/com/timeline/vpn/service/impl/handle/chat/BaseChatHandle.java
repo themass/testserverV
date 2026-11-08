@@ -39,6 +39,21 @@ public abstract class BaseChatHandle implements BaseSupportHandle<Integer> {
     }
 
     public abstract Choice chatWithGptBase(BaseQuery baseQuery, ChatContentForm chatContentForm) throws Exception;
+
+    /**
+     * 模型回复为空时打日志（S2）：模型、提示词长度、HTTP 状态、原始响应前 200 字。
+     * 只记录，不做任何落库或替换；空回复由调用方决定如何处理（当前不保存）。
+     */
+    protected static void checkReply(String prod, String model, String prompt, int httpCode, String raw, com.timeline.vpn.model.vo.ChatVo vo) {
+        boolean empty = vo == null || vo.getChoices() == null || vo.getChoices().isEmpty()
+                || vo.getChoices().get(0).getMessage() == null
+                || org.apache.commons.lang3.StringUtils.isBlank(vo.getChoices().get(0).getMessage().getContent());
+        if (empty) {
+            LOGGER.warn("模型返回空回复 prod={} model={} promptLen={} http={} raw={}",
+                    prod, model, prompt == null ? -1 : prompt.length(), httpCode,
+                    raw == null ? "null" : raw.substring(0, Math.min(200, raw.length())));
+        }
+    }
     @Override
     public boolean isDefault() {
         return false;

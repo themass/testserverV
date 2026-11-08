@@ -61,6 +61,7 @@ public class KimiHandler extends BaseChatHandleProxy {
         okhttp3.Response response = httpClient.newCall(httpRequest).execute();
         String res = response.body().string();
         ChatVo vo = JsonUtil.readValue(res,ChatVo.class);
+        checkReply("KimiHandler", "moonshot-v1-32k", prompt, response.code(), res, vo);
         LOGGER.info("KimiHandler 我的gpt  chat 回复 : "+res);
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);

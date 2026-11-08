@@ -70,6 +70,10 @@ public class Constant {
         public static final int ERRNO_PWD = 11001;// 用户名密码错误
         public static final int ERRNO_PARAM = 11002; // 参数错误
         public static final int ERRNO_DATA = 21000; // 参数错误
+        /** 业务错误：ex.getMessage() 可直接展示给用户（BusinessException 统一映射到这里，不再是 System error）。 */
+        public static final int ERRNO_BUSINESS = 11003;
+        /** 消息不存在或不属于当前用户/会话（区别于系统错误）。 */
+        public static final int ERRNO_MESSAGE_NOT_FOUND = 21001;
     }
     //用户分类 免费用户和VIP用户
     public static class UserLevel {

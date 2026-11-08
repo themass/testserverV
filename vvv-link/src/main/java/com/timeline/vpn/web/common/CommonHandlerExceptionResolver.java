@@ -64,6 +64,10 @@ public class CommonHandlerExceptionResolver {
         } else if (ex instanceof ApiException) {
             result.setErrno(((ApiException) ex).getStatus());
             result.setError(getMessage(ex.getMessage(), request));
+        } else if (ex instanceof com.timeline.vpn.common.exception.BusinessException) {
+            // 业务异常带的是可展示的文案（如"会话不存在"），不能落到下面的 System error
+            result.setErrno(Constant.ResultErrno.ERRNO_BUSINESS);
+            result.setError(ex.getMessage());
         } else if (ex instanceof BindException) {
             result.setErrno(Constant.ResultErrno.ERRNO_PARAM);
             result.setError(getMessage(Constant.ResultMsg.RESULT_PARAM_ERROR, request));

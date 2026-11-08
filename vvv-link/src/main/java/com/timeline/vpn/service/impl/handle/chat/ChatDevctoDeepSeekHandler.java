@@ -71,6 +71,7 @@ public class    ChatDevctoDeepSeekHandler extends BaseChatHandleProxy {
         okhttp3.Response response = httpClient.newCall(httpRequest).execute();
         String res = response.body().string();
         ChatVo vo = JsonUtil.readValue(res,ChatVo.class);
+        checkReply("ChatDevctoDeepSeekHandler", "deepseek-v3.2", prompt, response.code(), res, vo);
         LOGGER.info("ChatDevctoDeepSeekHandler Devcto-deepseek  chat 回复 : "+vo.getChoices());
         if(vo.getChoices()!=null&&vo.getChoices().size()>0){
             Choice choice =  vo.getChoices().get(0);

@@ -21,7 +21,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -132,14 +131,20 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
         emitter.onError(t -> call.cancel());
 
         StringBuilder full = new StringBuilder();
+        StringBuilder rawHead = new StringBuilder();
+        int httpCode = 0;
         try {
             try (okhttp3.Response response = call.execute()) {
+                httpCode = response.code();
                 if (!response.isSuccessful() || response.body() == null) {
                     throw new IllegalStateException(prod + " 流式请求失败: HTTP " + response.code());
                 }
                 okio.BufferedSource source = response.body().source();
                 String line;
                 while ((line = source.readUtf8Line()) != null) {
+                    if (rawHead.length() < 200) {
+                        rawHead.append(line).append('\n');
+                    }
                     if (!line.startsWith("data:")) {
                         continue;
                     }
@@ -176,6 +181,10 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
                 onComplete.apply(full.toString());
             }
             throw e;
+        }
+        if (full.length() == 0) {
+            LOGGER.warn("模型返回空回复 prod={} model={} promptLen={} http={} raw={}", prod, model, prompt.length(),
+                    httpCode, rawHead.substring(0, Math.min(200, rawHead.length())));
         }
         onComplete.apply(full.toString());
     }
