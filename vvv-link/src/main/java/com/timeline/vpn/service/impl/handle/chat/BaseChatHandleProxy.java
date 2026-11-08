@@ -87,8 +87,9 @@ public abstract class BaseChatHandleProxy extends BaseChatHandle {
         } catch (StreamUpstreamException e) {
             // 上游失败或没有内容：不保存助手消息，只发一帧带 error 的结束帧，客户端可直接展示
             LOGGER.warn("流式回复失败 handle={} sessionId={} reason={}", getClass().getSimpleName(), sessionId, e.getMessage());
-            emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(
-                    new StreamChunk(msgId, sessionId, "", true, e.getMessage()))));
+            StreamChunk errorFrame = new StreamChunk(msgId, sessionId, "", true, e.getMessage());
+            errorFrame.setUserMessageId(userMessageId);
+            emitter.send(SseEmitter.event().data(JsonUtil.writeValueAsString(errorFrame)));
             emitter.complete();
             return;
         }
