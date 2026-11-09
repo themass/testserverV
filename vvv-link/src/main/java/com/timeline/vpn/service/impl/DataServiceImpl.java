@@ -416,13 +416,6 @@ appsecret
         LOGGER.error("发送微信消息： 失败");
       }
     }
-    public static void main(String[]args) {
-      DataServiceImpl impl = new DataServiceImpl();
-//      String token = impl.getAsstoken();
-//      System.out.println(token);
-      impl.sendMsg("test侧事故续爱选打算");
-//        impl.getOpenId();
-    }
     
 
 }

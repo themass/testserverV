@@ -53,7 +53,7 @@ public class LiveKitController extends BaseController {
         System.out.println("New access token: " + token.toJwt());
         Token assToken = new Token();
         assToken.setToken(token.toJwt());
-        assToken.setUrl("wss://testvoice-b8y35yvd.livekit.cloud");
+        assToken.setUrl(liveKitUrl());
         assToken.setRoomId(baseQuery.getUser().getName());
         assToken.setRoomName(baseQuery.getUser().getName()+"_room");
         return new JsonResult(assToken);
@@ -69,11 +69,19 @@ public class LiveKitController extends BaseController {
         System.out.println("New access token: " + token.toJwt());
         Token assToken = new Token();
         assToken.setToken(token.toJwt());
-        assToken.setUrl("wss://testvoice-b8y35yvd.livekit.cloud");
+        assToken.setUrl(liveKitUrl());
         assToken.setRoomId(baseQuery.getUser().getName());
         assToken.setRoomName(tokenNanme);
         return new JsonResult(assToken);
     }
 
-}
+    /** LiveKit 服务地址，来自 secrets.properties 的 livekit.url。未配置直接报错，不回退到测试服务。 */
+    private static String liveKitUrl() {
+        String url = Secrets.get("livekit.url");
+        if (url == null || url.isEmpty()) {
+            throw new IllegalStateException("未配置 livekit.url（secrets.properties）");
+        }
+        return url;
+    }
 
+}

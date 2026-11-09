@@ -144,16 +144,19 @@ public class PCMToWAVConverter {
         outputStream.write(header, 0, 44);
     }
 
+    /**
+     * 命令行用法：java PCMToWAVConverter <pcm文件> <wav输出> [采样率=24000] [声道=1] [位深=16]
+     */
     public static void main(String[] args) {
+        if (args.length < 2) {
+            System.err.println("用法: PCMToWAVConverter <pcm文件> <wav输出> [采样率] [声道] [位深]");
+            return;
+        }
         try {
-            // 示例参数，根据实际情况修改
-            String pcmFilePath = "/Users/liguoqing/Downloads/test/voice_1739288846238.wav";
-            String wavFilePath = "output.wav";
-            int sampleRate = 24000;
-            int channels = 1;
-            int bitDepth = 16;
-
-            pcmToWav(pcmFilePath, wavFilePath, sampleRate, channels, bitDepth);
+            int sampleRate = args.length > 2 ? Integer.parseInt(args[2]) : 24000;
+            int channels = args.length > 3 ? Integer.parseInt(args[3]) : 1;
+            int bitDepth = args.length > 4 ? Integer.parseInt(args[4]) : 16;
+            pcmToWav(args[0], args[1], sampleRate, channels, bitDepth);
             System.out.println("PCM 转换为 WAV 成功！");
         } catch (IOException e) {
             log.error("处理失败", e);

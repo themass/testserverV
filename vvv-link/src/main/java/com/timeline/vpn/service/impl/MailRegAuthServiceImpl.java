@@ -75,10 +75,6 @@ public class MailRegAuthServiceImpl implements RegAuthService{
     public boolean check(String channel, String code) {
         return false;
     }
-    public static void main(String[] args){
-        MailRegAuthServiceImpl i = new MailRegAuthServiceImpl();
-        i.reg("liguoqing19861028@163.com");
-    }
 
 }
 
