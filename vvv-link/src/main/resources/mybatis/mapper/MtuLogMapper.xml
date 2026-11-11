@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.MtuLogDao">
+	<insert id="insertAll">
+		insert into vpn.mtu_log(devId,userIp,node,protocol,netType,carrier,linkMtu,mtu,probe,retried,createdAt)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.devId},#{item.userIp},#{item.node},#{item.protocol},#{item.netType},#{item.carrier},
+			 #{item.linkMtu},#{item.mtu},#{item.probe},#{item.retried},#{item.createdAt})
+		</foreach>
+	</insert>
+</mapper>
