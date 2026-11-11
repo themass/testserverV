@@ -8,6 +8,7 @@ import com.timeline.student.api.StudentAdvice;
 import com.timeline.student.api.StudentContentController;
 import com.timeline.student.api.StudentCorsFilter;
 import com.timeline.student.api.StudentDeviceController;
+import com.timeline.student.api.StudentIndexController;
 import com.timeline.student.api.StudentModels.Config;
 import com.timeline.student.persistence.StudentContentMapper;
 import com.timeline.student.persistence.StudentDeviceMapper;
@@ -42,6 +43,8 @@ import java.util.Set;
  *   student.cors.allowedOrigins=a,b              comma list; defaults to the Capacitor/localhost set
  *   student.rateLimitPerMinute=300, student.deviceCreatePerMinute=10
  *   student.trustForwardedFor=false              true ONLY behind a proxy that overwrites X-Forwarded-For
+ *   student.app.root=                            built frontend to serve at /app/; blank = not served (404)
+ *   student.asset.root=                          scene assets to serve at /assets/; blank = not served (404)
  */
 @AutoConfiguration(after = PoetryAutoConfiguration.class,
     afterName = "org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration")
@@ -98,6 +101,23 @@ public class StudentAutoConfiguration {
     public StudentDeviceController studentDeviceController(DeviceService devices,
             @Value("${student.internalToken:}") String internalToken) {
         return new StudentDeviceController(devices, internalToken);
+    }
+
+    /**
+     * Static hosting for the frontend and its assets. Spring Boot applies every {@code WebMvcConfigurer} bean in
+     * the context, so a host that has its own MVC config simply gets these two handlers added to it.
+     * Both roots default to blank: unconfigured means 404, never "serve whatever is in the working directory".
+     */
+    @Bean
+    public StudentStaticResources studentStaticResources(@Value("${student.app.root:}") String appRoot,
+                                                         @Value("${student.asset.root:}") String assetRoot) {
+        return new StudentStaticResources(appRoot, assetRoot);
+    }
+
+    /** index.html needs a different cache policy from every other file under /app/, so it is a controller. */
+    @Bean
+    public StudentIndexController studentIndexController(@Value("${student.app.root:}") String appRoot) {
+        return new StudentIndexController(appRoot);
     }
 
     @Bean

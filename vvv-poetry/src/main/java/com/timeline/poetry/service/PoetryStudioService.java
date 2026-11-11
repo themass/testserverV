@@ -272,8 +272,16 @@ public class PoetryStudioService {
         if (existing == null) throw Failure.notFound("CITATION_NOT_FOUND", "citation not found for this claim and source; this endpoint only edits an existing citation");
         String previous = (String) ci(existing, "locator");
         String keptExcerpt = excerpt != null ? excerpt : (String) ci(existing, "evidence_excerpt");
+        boolean locatorChanged = previous == null || !previous.equals(locator);
         mapper.updateCitation(claimId, sourceId, locator, keptExcerpt);
-        // 来源的 verification_status 不动：写 locator 不等于核验。
+        // 写 locator 本身不等于核验；但**改掉一个已核验来源的 locator**会让原来的核验失去依据：
+        // 那次核验针对的是旧出处，新出处没人看过。所以把它降回 PENDING，等人工重新核验。
+        // 不降级的话，学生端读到的是"已核验"的来源配着没人核验过的 locator（审查 A-06）。
+        boolean demoted = locatorChanged && mapper.demoteSourceToPending(sourceId) > 0;
+        if (locatorChanged) {
+            mapper.appendLocatorChangeReviewLog(sourceId, reviewer,
+                "locator 改写，来源核验失效，已降回 PENDING；previous_locator=" + (previous == null ? "" : previous));
+        }
         String logNote = (note == null ? "" : note + " | ") + "previous_locator=" + (previous == null ? "" : previous);
         long id = log("SET_LOCATOR", sourceId, claimId, null, locator, keptExcerpt, null, reviewer, body.reviewerRole(), logNote);
 
@@ -281,6 +289,8 @@ public class PoetryStudioService {
         data.put("claim_id", claimId); data.put("source_id", sourceId); data.put("locator", locator);
         data.put("locator_state", LocatorState.SET.name()); data.put("evidence_excerpt", keptExcerpt);
         data.put("source_verification_status", mapper.sourceStatus(sourceId));
+        // 让调用方（Studio 界面）知道这次改动把来源降级了，需要重新核验。
+        data.put("source_demoted", demoted);
         return new Written(data, List.of(logRef(id), "citation:" + claimId + "/" + sourceId));
     }
 

@@ -1,0 +1,94 @@
+name: ci
+
+# 唯一目的：让「安全网」真的会被拉。
+#
+# 背景（2026-11-11 架构复核 G-03）：testserverV 此前没有任何 CI，而平台侧
+# `make test-all` 有 18 个步骤一次都没跑过。144 条内容审计 SQL 的防线存在，
+# 但没有任何机制自动执行它。这个文件把已有的入口接到 push/PR 上，不新增检查项。
+#
+# 两件事需要人工确认后才能启用（见 docs/user-todo.md 第 15 节）：
+#   1. Java 作业需要私服凭据（settings.xml / MAVEN_OPTS），当前用离线模式，
+#      若 runner 上没有本地 ~/.m2 缓存会因缺插件失败。
+#   2. 内容审计 SQL 不在 CI 里跑：它需要真实 MySQL 5.6 与授权，只能人工执行。
+
+on:
+  push:
+    branches: [testjava_springboot, master, main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  java:
+    name: Java（离线编译 + 单测）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      # -o = 离线。runner 首次运行需要先联网解析一次依赖；
+      # 若仓库私有而 runner 无凭据，改为在组织级配置 settings.xml，或先跑一次 `mvn -B install -DskipTests` 预热缓存。
+      - name: mvn -o test（poetry + roles + student）
+        run: mvn -o -B -pl vvv-poetry,vvv-roles,vvv-student -am test
+      # 显式声明不跑什么，免得以后有人以为 CI 覆盖了这些
+      - name: 声明未覆盖项
+        run: |
+          echo "未在 CI 中执行：真实 MySQL 5.6 迁移与审计 SQL（需授权，人工执行）"
+          echo "未在 CI 中执行：Docker 镜像构建（本机代理未通，从未成功过）"
+          echo "未在 CI 中执行：浏览器走查与真机（走 docs/e2e）"
+
+  content:
+    name: 内容包与校验器
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # 校验器必须能给出结论。BLOCKED 是内容状态，不是失败；只有「跑不起来」才失败。
+      - name: 校验器可运行并给出 verdict
+        working-directory: content-agent/pipeline
+        run: |
+          node tools/scene-validator/validate.mjs contracts/sample.chun-wang.json \
+            --facts contracts/facts.chun-wang.json > /tmp/verdict.json
+          grep -E '"verdict": "(COMPILES|BLOCKED)"' /tmp/verdict.json
+
+  student-app:
+    name: 学生端（零依赖，node --test）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 前端单测
+        working-directory: student-app/frontend
+        run: node --test tests/
+      - name: 素材工具单测
+        working-directory: student-app/production
+        run: node --test tools/tests/
+      - name: 移动壳静态检查
+        working-directory: student-app/shell
+        run: node scripts/check-shell.mjs
+
+  python:
+    name: Python（ruff + pytest）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: '0.9.21'
+      - run: uv sync --frozen
+      - name: ruff
+        run: uv run --offline ruff check content-agent/agent
+      - name: pytest
+        run: uv run --offline pytest
+      - name: pytest（dev-mock）
+        run: uv run --offline pytest content-agent/deploy/dev-mock/tests

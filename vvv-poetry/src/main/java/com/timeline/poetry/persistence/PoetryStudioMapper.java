@@ -131,6 +131,17 @@ public interface PoetryStudioMapper {
     @Select("SELECT verification_status FROM poetry_source WHERE id=#{id}")
     String sourceStatus(@Param("id") String id);
 
+    /** Demote a verified source back to PENDING. Used when its locator is rewritten (see setLocator). */
+    @Update("UPDATE poetry_source SET verification_status='PENDING', verified_by=NULL, verified_at=NULL "
+        + "WHERE id=#{id} AND verification_status='VERIFIED'")
+    int demoteSourceToPending(@Param("id") String id);
+
+    /** Review-log entry so a locator rewrite is visible next to publish/retract, not only in the studio log. */
+    @Insert("INSERT INTO poetry_review_log (subject_table, subject_id, subject_revision, decision, reviewer, note) "
+        + "VALUES ('poetry_source', #{sourceId}, 1, 'LOCATOR_CHANGED', #{reviewer}, #{note})")
+    int appendLocatorChangeReviewLog(@Param("sourceId") String sourceId, @Param("reviewer") String reviewer,
+                                     @Param("note") String note);
+
     @Select("SELECT ci.claim_id,ci.locator FROM poetry_citation ci WHERE ci.source_id=#{sourceId} ORDER BY ci.claim_id")
     List<Map<String, Object>> citationsOfSource(@Param("sourceId") String sourceId);
 

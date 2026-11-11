@@ -26,6 +26,13 @@
             <artifactId>vvv-roles</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 学生端 API（/api/student/v1）与 /app/ /assets/ 静态托管。靠 AutoConfiguration.imports 装配，
+             不需要组件扫描：它只在 student.enabled=true 且 poetry 模块在时生效。 -->
+        <dependency>
+            <groupId>com.timeline</groupId>
+            <artifactId>vvv-student</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.livekit</groupId>
             <artifactId>livekit-server</artifactId>
