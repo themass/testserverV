@@ -105,15 +105,19 @@ public class PoetryAgentService {
         catch (Exception ex) { throw new Rejected("stored proposal JSON is unreadable"); }
         List<String> applied = new ArrayList<>();
         List<String> retained = new ArrayList<>();
-        // --- V009 / 契约 D7(对既有 apply 的最小改动) ---
-        // 提案下"完全没有"逐项记录 -> 旧行为：全部可执行项都执行。
-        // 只要存在任何逐项记录 -> 只执行被明确 APPROVE 的可执行项；未记录或 REJECT 的可执行项跳过并在响应里列出。
+        // --- 逐项评审是应用的唯一依据(A-05 收口) ---
+        // 提案下没有任何逐项记录 -> 拒绝。旧行为"全部执行"意味着持 agent 令牌的一方可以造提案、
+        // 自我批准、再一次性应用，逐项评审形同虚设。现在必须先由人逐项决定。
+        // 有逐项记录 -> 只执行被明确 APPROVE 的可执行项；未记录或 REJECT 的跳过并在响应里列出。
         // item_index 是 changes 数组的 0 起始下标。不可执行项(无 draft_payload)的逐项记录不影响应用。
         // 读取失败(例如 V009 尚未执行)会让 apply 失败，而不是退回"全部执行"，宁可不动内容。
         Map<Integer, String> itemDecisions = new java.util.HashMap<>();
         for (Map<String, Object> row : mapper.proposalItemDecisions(proposalId))
             itemDecisions.put(((Number) row.get("item_index")).intValue(), String.valueOf(row.get("decision")));
         boolean itemised = !itemDecisions.isEmpty();
+        // 没有逐项记录就拒绝：可执行项必须被人逐条看过。提案里本来就没有可执行项时(纯缺口报告)
+        // 没有东西可应用，走下面 retained 的路径完成，不需要逐项记录。
+        if (!itemised && hasExecutable(proposal)) throw new Rejected("proposal has executable changes but no per-item decisions; itemised review is required to apply");
         List<String> skipped = new ArrayList<>();
         int changeIndex = -1;
         for (JsonNode change : proposal.path("changes")) {
@@ -141,6 +145,15 @@ public class PoetryAgentService {
         data.put("applied_operations", applied); data.put("retained_editorial_changes", retained);
         data.put("item_review", itemised); data.put("skipped_executable_changes", skipped); // V009 新增键，不改旧键
         return AgentResponse.ok(data, List.of("agent-application:" + applicationId, "agent-review:" + request.reviewId()));
+    }
+
+    /** True when at least one change carries a draft payload, i.e. applying would write content. */
+    private static boolean hasExecutable(JsonNode proposal) {
+        for (JsonNode change : proposal.path("changes")) {
+            JsonNode payload = change.path("draft_payload");
+            if (!payload.isMissingNode() && !payload.isNull()) return true;
+        }
+        return false;
     }
 
     @Transactional

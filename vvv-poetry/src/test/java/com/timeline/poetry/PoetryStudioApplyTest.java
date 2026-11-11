@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * PoetryAgentService.apply 的逐项评审行为(契约 D7)：没有任何逐项记录 -> 旧行为(全部可执行项都执行)；
+ * PoetryAgentService.apply 的逐项评审行为：没有逐项记录且提案含可执行项 -> 拒绝；
  * 有逐项记录 -> 只执行被明确 APPROVE 的可执行项。proposal 的 3 个 change：0、1 可执行，2 不可执行。
  */
 class PoetryStudioApplyTest {
@@ -31,17 +31,16 @@ class PoetryStudioApplyTest {
         return fx.jdbc.queryForObject("SELECT COUNT(*) FROM poetry_annotation WHERE id LIKE ?", Integer.class, "ann-" + proposalId + "-%");
     }
 
-    @Test void withoutAnyItemRecordApplyKeepsTheOldBehaviourAndExecutesEverything() throws Exception {
+    @Test void withoutAnyItemRecordApplyIsRefused() throws Exception {
+        // 旧行为是"全部执行"。那等于 agent 造提案、自批、一次性应用，逐项评审形同虚设(A-05)。
         fx.seedProposal("proposal_leg");
         fx.approveProposal("proposal_leg", "review_leg");
-        AgentResponse<Map<String, Object>> r = fx.agent.apply(fx.contextFor("proposal_leg", "idem-leg"), "proposal_leg", new ProposalApply("review_leg"));
-        assertEquals("OK", r.status());
-        assertEquals(List.of("CREATE_ANNOTATION:ann-proposal_leg-a", "CREATE_ANNOTATION:ann-proposal_leg-b"), r.data().get("applied_operations"));
-        assertEquals(List.of("GAP_REPORT"), r.data().get("retained_editorial_changes"));
-        assertEquals(false, r.data().get("item_review"));
-        assertEquals(List.of(), r.data().get("skipped_executable_changes"));
-        assertEquals(2, annotationCount("proposal_leg"));
-        assertEquals("APPLIED", fx.jdbc.queryForObject("SELECT status FROM poetry_agent_proposal WHERE id='proposal_leg'", String.class));
+        assertThrows(RuntimeException.class, () ->
+            fx.agent.apply(fx.contextFor("proposal_leg", "idem-leg"), "proposal_leg", new ProposalApply("review_leg")),
+            "executable changes with no per-item decisions must be refused");
+        assertEquals(0, annotationCount("proposal_leg"), "nothing may be written");
+        assertEquals("APPROVED", fx.jdbc.queryForObject("SELECT status FROM poetry_agent_proposal WHERE id='proposal_leg'", String.class),
+            "a refused apply must leave the proposal as it was");
     }
 
     @Test void onlyExplicitlyApprovedExecutableItemsAreApplied() throws Exception {
@@ -78,6 +77,7 @@ class PoetryStudioApplyTest {
 
     @Test void applyIsStillIdempotentForTheSameKey() throws Exception {
         fx.seedProposal("proposal_idem");
+        decide("proposal_idem", 0, "APPROVE", 1, "APPROVE");
         fx.approveProposal("proposal_idem", "review_idem");
         PoetryAgentService.Context ctx = fx.contextFor("proposal_idem", "idem-key");
         AgentResponse<Map<String, Object>> first = fx.agent.apply(ctx, "proposal_idem", new ProposalApply("review_idem"));
