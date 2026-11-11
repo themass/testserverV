@@ -22,6 +22,9 @@ public final class PhotoSolveErrno {
     /** 额度用完。 */
     public static final int QUOTA_EXCEEDED = 42901;
 
+    /** 全站当日预算用完（熔断）：不是这个用户的问题，客户端文案与 42901 区分开。 */
+    public static final int BUDGET_EXHAUSTED = 42902;
+
     /** 模型服务失败 / 超时：可重试。 */
     public static final int MODEL_FAILED = 50001;
 
@@ -42,6 +45,8 @@ public final class PhotoSolveErrno {
                 return "图片过大或格式不支持";
             case QUOTA_EXCEEDED:
                 return "今日识别额度已用完";
+            case BUDGET_EXHAUSTED:
+                return "今日识别服务已满，请明天再来";
             case MODEL_FAILED:
                 return "识别服务暂时不可用，请重试";
             case PROVIDER_NOT_CONFIGURED:

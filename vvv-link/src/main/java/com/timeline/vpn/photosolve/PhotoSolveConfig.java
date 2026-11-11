@@ -16,6 +16,11 @@ import com.timeline.vpn.util.Secrets;
  * photosolve.maxImages=          # 一次请求最多几张图，默认 4
  * photosolve.maxBytes=           # 单张图上限（字节），默认 5MB
  * photosolve.timeoutSeconds=     # 调模型的总超时，默认 60
+ * photosolve.quota.freePerDay=   # 免费用户每天可用次数，默认 10
+ * photosolve.quota.vipPerDay=    # VIP 每天可用次数，默认 50
+ * photosolve.quota.perMinute=    # 每用户每分钟最多几次，默认 3
+ * photosolve.quota.totalPerDay=  # 全站每天总预算（熔断），默认 2000
+ * photosolve.quota.idempotentSeconds= # 同一 clientRequestId 的结果缓存多久，默认 600
  * </pre>
  *
  * 之所以用 {@link Secrets}（启动时读一次）而不是 {@code @Value}：
@@ -55,6 +60,54 @@ public final class PhotoSolveConfig {
 
     public static int timeoutSeconds() {
         return intOf("photosolve.timeoutSeconds", 60);
+    }
+
+    /** 用量控制的配置。改额度不需要重新打包，重启即可。 */
+    public static Quota quota() {
+        return new Quota(
+                intOf("photosolve.quota.freePerDay", 10),
+                intOf("photosolve.quota.vipPerDay", 50),
+                intOf("photosolve.quota.perMinute", 3),
+                intOf("photosolve.quota.totalPerDay", 2000),
+                intOf("photosolve.quota.idempotentSeconds", 600)
+        );
+    }
+
+    /** 一组额度参数。值是快照：一次请求内不会变。 */
+    public static final class Quota {
+        private final int freePerDay;
+        private final int vipPerDay;
+        private final int perMinute;
+        private final int totalPerDay;
+        private final int idempotentSeconds;
+
+        Quota(int freePerDay, int vipPerDay, int perMinute, int totalPerDay, int idempotentSeconds) {
+            this.freePerDay = freePerDay;
+            this.vipPerDay = vipPerDay;
+            this.perMinute = perMinute;
+            this.totalPerDay = totalPerDay;
+            this.idempotentSeconds = idempotentSeconds;
+        }
+
+        public int freePerDay() {
+            return freePerDay;
+        }
+
+        public int vipPerDay() {
+            return vipPerDay;
+        }
+
+        public int perMinute() {
+            return perMinute;
+        }
+
+        public int totalPerDay() {
+            return totalPerDay;
+        }
+
+        public int idempotentSeconds() {
+            return idempotentSeconds;
+        }
     }
 
     /**
