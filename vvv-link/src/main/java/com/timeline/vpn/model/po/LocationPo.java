@@ -20,6 +20,29 @@ public class LocationPo implements Comparable<LocationPo>{
     private Integer weight;
     private String showName;
     private String category;
+    /**
+     * 经纬度（vpn.location_v2.lat/lng）。客户端 3D 地球用这个定位节点；
+     * 为空时客户端按城市名兜底，所以老数据不需要强制回填。
+     */
+    private java.math.BigDecimal lat;
+    private java.math.BigDecimal lng;
+
+    public java.math.BigDecimal getLat() {
+        return lat;
+    }
+
+    public void setLat(java.math.BigDecimal lat) {
+        this.lat = lat;
+    }
+
+    public java.math.BigDecimal getLng() {
+        return lng;
+    }
+
+    public void setLng(java.math.BigDecimal lng) {
+        this.lng = lng;
+    }
+
     public int getId() {
         return id;
     }
