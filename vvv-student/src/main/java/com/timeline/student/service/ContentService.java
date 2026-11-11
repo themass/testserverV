@@ -116,13 +116,13 @@ public class ContentService {
         List<AnnotationItem> annotations = safe(() -> mapper.annotations(versionId), warnings);
         if (annotations.isEmpty()) warnings.add("annotations: none published");
 
-        List<Background> bgs = safe(() -> catalog.backgrounds(workId, PAGE, 0).items(), warnings);
+        List<Background> bgs = oneTextPerLayer(safe(() -> catalog.backgrounds(workId, PAGE, 0).items(), warnings));
         List<BackgroundItem> backgrounds = new ArrayList<>();
         List<Relation> relations = new ArrayList<>();
         for (Background b : bgs) {
             // The claim behind a background says whether the text is 史实 / 理解 / 演绎 and how sure we are.
             Claim backing = claimOrNull(b.claimId());
-            backgrounds.add(new BackgroundItem(b.id(), b.layer(), b.audience(), b.bodyText(), b.claimId(),
+            backgrounds.add(new BackgroundItem(b.id(), b.layer(), b.bodyText(), b.claimId(),
                 backing == null ? null : backing.claimKind(), backing == null ? null : backing.certainty()));
             for (BackgroundLine bl : safe(() -> catalog.backgroundLines(b.id(), PAGE, 0).items(), warnings))
                 if (versionId.equals(bl.versionId())) relations.add(new Relation(b.id(), bl.lineSeq()));
@@ -217,5 +217,26 @@ public class ContentService {
             warnings.add("a part could not be read: " + ex.getClass().getSimpleName());
             return List.of();
         }
+    }
+
+    /**
+     * The reader is not split by grade (2026-11-12): every layer shows one text. Content written before that
+     * decision can still carry per-grade variants in {@code poetry_background.audience}; pick one per layer,
+     * preferring a variant written for no particular grade, then the fuller (non-PRIMARY) one. Layer order is
+     * the order the catalog returned. New content should simply not write variants.
+     */
+    static List<Background> oneTextPerLayer(List<Background> all) {
+        java.util.LinkedHashMap<String, Background> chosen = new java.util.LinkedHashMap<>();
+        for (Background b : all) {
+            Background current = chosen.get(b.layer());
+            if (current == null || rank(b) < rank(current)) chosen.put(b.layer(), b);
+        }
+        return new ArrayList<>(chosen.values());
+    }
+
+    private static int rank(Background b) {
+        String a = b.audience();
+        if (a == null || a.isBlank()) return 0;
+        return "PRIMARY".equals(a) ? 2 : 1;
     }
 }

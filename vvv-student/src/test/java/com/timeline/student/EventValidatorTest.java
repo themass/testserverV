@@ -103,12 +103,11 @@ class EventValidatorTest {
     }
 
     @Test void sessionAcceptsOnlyKnownStepsWithoutDuplicates() {
-        SessionWrite good = EventValidator.session(new SessionWrite("arrive", List.of("read", "arrive"), "PRIMARY"));
+        SessionWrite good = EventValidator.session(new SessionWrite("arrive", List.of("read", "arrive")));
         assertEquals("arrive", good.lastStep());
-        assertThrows(BadRequest.class, () -> EventValidator.session(new SessionWrite("quiz", List.of(), "PRIMARY")));
-        assertThrows(BadRequest.class, () -> EventValidator.session(new SessionWrite("arrive", List.of("read", "read"), "PRIMARY")));
-        assertThrows(BadRequest.class, () -> EventValidator.session(new SessionWrite("arrive", List.of("x"), "PRIMARY")));
-        assertThrows(BadRequest.class, () -> EventValidator.session(new SessionWrite("arrive", List.of(), "SENIOR")));
+        assertThrows(BadRequest.class, () -> EventValidator.session(new SessionWrite("quiz", List.of())));
+        assertThrows(BadRequest.class, () -> EventValidator.session(new SessionWrite("arrive", List.of("read", "read"))));
+        assertThrows(BadRequest.class, () -> EventValidator.session(new SessionWrite("arrive", List.of("x"))));
         assertThrows(BadRequest.class, () -> EventValidator.session(null));
     }
 

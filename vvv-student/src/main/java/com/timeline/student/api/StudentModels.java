@@ -15,8 +15,8 @@ public final class StudentModels {
     }
 
     /* ---------- config ---------- */
-    public record Config(String assetBase, int minSchemaMajor, String dataNoticeVersion, List<String> audiences,
-                         boolean agentEnabled) {}
+    /** No grade/audience: one telling for every reader (product decision 2026-11-12). */
+    public record Config(String assetBase, int minSchemaMajor, String dataNoticeVersion, boolean agentEnabled) {}
 
     /* ---------- content ---------- */
     /** The newest PUBLISHED script of a work that actually has a compiled bundle. */
@@ -26,9 +26,10 @@ public final class StudentModels {
                            String timePrecision, boolean hasLesson) {}
     public record Author(String personId, String name, String attribution) {}
     public record Line(int seq, String text, String pinyin) {}
-    public record AnnotationItem(String id, int lineSeq, String kind, String audience, String text) {}
+    public record AnnotationItem(String id, int lineSeq, String kind, String text) {}
     /** claimKind/certainty come from the claim behind the text, so the page can show 史实/理解/演绎 without guessing. */
-    public record BackgroundItem(String id, String layer, String audience, String body, String claimId,
+    /** One per layer: the reader is not split by grade, so the server picks the single text to show. */
+    public record BackgroundItem(String id, String layer, String body, String claimId,
                                  String claimKind, String certainty) {}
     /** What a learner may see of a source: enough to find it again, nothing about rights or internal ids. */
     public record CitationItem(String title, String author, String edition, String locator, String evidenceExcerpt) {}
@@ -59,9 +60,9 @@ public final class StudentModels {
     /* ---------- devices & learning records ---------- */
     /** The key is returned exactly once. Only its SHA-256 is stored. */
     public record DeviceCreated(String deviceId, String deviceKey, String dataNoticeVersion) {}
-    public record DeviceInfo(String deviceId, String audience, String createdAt, String dataNoticeVersion) {}
-    public record SessionWrite(String lastStep, List<String> visited, String audience) {}
-    public record SessionView(String workId, String lastStep, List<String> visited, String audience,
+    public record DeviceInfo(String deviceId, String createdAt, String dataNoticeVersion) {}
+    public record SessionWrite(String lastStep, List<String> visited) {}
+    public record SessionView(String workId, String lastStep, List<String> visited,
                               String enteredAt, String updatedAt) {}
     public record EventIn(String workId, String step, String kind, String ref, Integer ms, String at) {}
     public record GapIn(String workId, String scriptHash, List<String> covered, List<String> missing) {}

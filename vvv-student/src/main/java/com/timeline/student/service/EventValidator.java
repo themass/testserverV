@@ -106,14 +106,13 @@ public final class EventValidator {
     public static SessionWrite session(SessionWrite in) {
         if (in == null) throw new BadRequest("empty session");
         if (in.lastStep() == null || !STEPS.contains(in.lastStep())) throw new BadRequest("lastStep");
-        if (in.audience() == null || !AUDIENCES.contains(in.audience())) throw new BadRequest("audience");
         List<String> visited = in.visited() == null ? List.of() : in.visited();
         if (visited.size() > STEPS.size()) throw new BadRequest("visited");
         Set<String> seen = new HashSet<>();
         for (String s : visited) {
             if (s == null || !STEPS.contains(s) || !seen.add(s)) throw new BadRequest("visited");
         }
-        return new SessionWrite(in.lastStep(), List.copyOf(visited), in.audience());
+        return new SessionWrite(in.lastStep(), List.copyOf(visited));
     }
 
     public static GapIn gaps(GapIn in) {

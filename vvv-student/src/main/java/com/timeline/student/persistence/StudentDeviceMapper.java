@@ -12,17 +12,16 @@ import java.util.List;
  * No query here selects IP addresses, names or any free text because none of those columns exist.
  */
 public interface StudentDeviceMapper {
-    record DeviceRow(String id, String audience, String consentVersion, String createdAt) {}
-    record SessionRow(String workId, String lastStep, String visited, String audience, String enteredAt,
-                      String updatedAt) {}
+    record DeviceRow(String id, String consentVersion, String createdAt) {}
+    record SessionRow(String workId, String lastStep, String visited, String enteredAt, String updatedAt) {}
     record BoardRow(String pointId, int coveredDevices, int missingDevices) {}
 
-    @Insert("INSERT INTO student_device (id, key_sha256, audience, consent_version, created_at, last_seen_at) "
-        + "VALUES (#{id}, #{keySha256}, #{audience}, #{consentVersion}, UTC_TIMESTAMP(), UTC_TIMESTAMP())")
+    @Insert("INSERT INTO student_device (id, key_sha256, consent_version, created_at, last_seen_at) "
+        + "VALUES (#{id}, #{keySha256}, #{consentVersion}, UTC_TIMESTAMP(), UTC_TIMESTAMP())")
     int insertDevice(@Param("id") String id, @Param("keySha256") String keySha256,
-                     @Param("audience") String audience, @Param("consentVersion") String consentVersion);
+                     @Param("consentVersion") String consentVersion);
 
-    @Select("SELECT d.id, d.audience, d.consent_version, DATE_FORMAT(d.created_at,'%Y-%m-%dT%H:%i:%sZ') "
+    @Select("SELECT d.id, d.consent_version, DATE_FORMAT(d.created_at,'%Y-%m-%dT%H:%i:%sZ') "
         + "FROM student_device d WHERE d.key_sha256=#{keySha256}")
     DeviceRow deviceByKey(@Param("keySha256") String keySha256);
 
@@ -31,18 +30,13 @@ public interface StudentDeviceMapper {
         + "AND last_seen_at < UTC_TIMESTAMP() - INTERVAL 1 HOUR")
     int touchDevice(@Param("id") String id);
 
-    @Update("UPDATE student_device SET audience=#{audience} WHERE id=#{id}")
-    int setAudience(@Param("id") String id, @Param("audience") String audience);
-
-    @Insert("INSERT INTO student_session (device_id, work_id, last_step, visited, audience, entered_at, updated_at) "
-        + "VALUES (#{deviceId}, #{workId}, #{lastStep}, #{visited}, #{audience}, UTC_TIMESTAMP(), UTC_TIMESTAMP()) "
-        + "ON DUPLICATE KEY UPDATE last_step=VALUES(last_step), visited=VALUES(visited), "
-        + "audience=VALUES(audience), updated_at=UTC_TIMESTAMP()")
+    @Insert("INSERT INTO student_session (device_id, work_id, last_step, visited, entered_at, updated_at) "
+        + "VALUES (#{deviceId}, #{workId}, #{lastStep}, #{visited}, UTC_TIMESTAMP(), UTC_TIMESTAMP()) "
+        + "ON DUPLICATE KEY UPDATE last_step=VALUES(last_step), visited=VALUES(visited), updated_at=UTC_TIMESTAMP()")
     int upsertSession(@Param("deviceId") String deviceId, @Param("workId") String workId,
-                      @Param("lastStep") String lastStep, @Param("visited") String visited,
-                      @Param("audience") String audience);
+                      @Param("lastStep") String lastStep, @Param("visited") String visited);
 
-    @Select("SELECT s.work_id, s.last_step, s.visited, s.audience, "
+    @Select("SELECT s.work_id, s.last_step, s.visited, "
         + "DATE_FORMAT(s.entered_at,'%Y-%m-%dT%H:%i:%sZ'), DATE_FORMAT(s.updated_at,'%Y-%m-%dT%H:%i:%sZ') "
         + "FROM student_session s WHERE s.device_id=#{deviceId} ORDER BY s.updated_at DESC LIMIT 100")
     List<SessionRow> sessions(@Param("deviceId") String deviceId);

@@ -14,7 +14,6 @@ public final class StudentVocabulary {
     /** Order matters: it is the five-step order 读 到 见 回 诵. */
     public static final List<String> STEPS = List.of("read", "arrive", "meet", "return", "recite");
     public static final Set<String> LAYERS = Set.of("SCENE", "CITY", "WORLD", "PERSON");
-    public static final Set<String> AUDIENCES = Set.of("PRIMARY", "JUNIOR");
     public static final Set<String> ASK_ACTIONS = Set.of("rephrase", "hint", "ask_why", "open_layer", "basis",
         "recite_prompt", "decline");
     public static final Set<String> DEGRADE_REASONS = Set.of("weak_net", "low_memory", "reduced_motion", "user_off",

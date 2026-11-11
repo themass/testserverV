@@ -81,7 +81,9 @@ public class MonitorController extends BaseController {
                 bugReportDao.insert(po);
             }
         } catch (Exception e) {
-            LOGGER.error("bug.json 写入失败: " + e.getMessage());
+            // 带上完整堆栈：只看 getMessage() 时，"表不存在"和"字段超长"这类错误分不出来，
+            // 排查时得靠这句话本身说清楚是哪种失败。
+            LOGGER.error("bug.json 写入失败: " + e, e);
             return new JsonResult(new RetInfoVo(false), Constant.ResultErrno.ERRNO_SYSTEM, null);
         }
         return Constant.RESULT_SUCCESS;

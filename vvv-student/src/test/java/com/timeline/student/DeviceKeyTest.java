@@ -60,7 +60,7 @@ class DeviceKeyTest {
         Recorder rec = new Recorder();
         DeviceService service = new DeviceService(rec.mapper(), "n");
         var created = service.create();
-        rec.stored = new DeviceRow(created.deviceId(), "PRIMARY", "n", "2026-11-06T00:00:00Z");
+        rec.stored = new DeviceRow(created.deviceId(), "n", "2026-11-06T00:00:00Z");
 
         assertEquals(created.deviceId(), service.authenticate("Bearer " + created.deviceKey()).id());
         String lookedUp = (String) rec.args.get(rec.calls.lastIndexOf("deviceByKey"))[0];
@@ -77,7 +77,7 @@ class DeviceKeyTest {
     @Test void deletingADeviceRemovesEveryDependantBeforeTheDevice() {
         Recorder rec = new Recorder();
         DeviceService service = new DeviceService(rec.mapper(), "n");
-        service.deleteAll(new DeviceRow("dev-1", "PRIMARY", "n", "t"));
+        service.deleteAll(new DeviceRow("dev-1", "n", "t"));
         assertEquals(List.of("deleteEvents", "deleteGaps", "deleteSessions", "deleteDevice"), rec.calls);
     }
 

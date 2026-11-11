@@ -38,7 +38,7 @@ public class DeviceService {
     public DeviceCreated create() {
         String id = token(18);       // 144 bits -> 24 chars
         String key = token(32);      // 256 bits -> 43 chars
-        mapper.insertDevice(id, sha256(key), "PRIMARY", dataNoticeVersion);
+        mapper.insertDevice(id, sha256(key), dataNoticeVersion);
         return new DeviceCreated(id, key, dataNoticeVersion);
     }
 
@@ -54,21 +54,20 @@ public class DeviceService {
     }
 
     public DeviceInfo info(DeviceRow row) {
-        return new DeviceInfo(row.id(), row.audience(), row.createdAt(), row.consentVersion());
+        return new DeviceInfo(row.id(), row.createdAt(), row.consentVersion());
     }
 
     @Transactional
     public void putSession(DeviceRow device, String workId, SessionWrite in) {
         if (workId == null || !ID.matcher(workId).matches()) throw new BadRequest("workId");
         SessionWrite clean = EventValidator.session(in);
-        mapper.upsertSession(device.id(), workId, clean.lastStep(), String.join(",", clean.visited()), clean.audience());
-        mapper.setAudience(device.id(), clean.audience());
+        mapper.upsertSession(device.id(), workId, clean.lastStep(), String.join(",", clean.visited()));
     }
 
     public List<SessionView> sessions(DeviceRow device) {
         return mapper.sessions(device.id()).stream().map(r -> new SessionView(r.workId(), r.lastStep(),
             r.visited() == null || r.visited().isBlank() ? List.of() : List.of(r.visited().split(",")),
-            r.audience(), r.enteredAt(), r.updatedAt())).toList();
+            r.enteredAt(), r.updatedAt())).toList();
     }
 
     @Transactional

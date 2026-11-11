@@ -80,7 +80,7 @@ public class StudentAutoConfiguration {
     public Config studentConfig(@Value("${student.assetBase:}") String assetBase,
                                 @Value("${student.dataNoticeVersion:2026-11-06}") String notice,
                                 @Value("${student.agentEnabled:false}") boolean agentEnabled) {
-        return new Config(assetBase, 1, notice, List.of("PRIMARY", "JUNIOR"), agentEnabled);
+        return new Config(assetBase, 1, notice, agentEnabled);
     }
 
     @Bean

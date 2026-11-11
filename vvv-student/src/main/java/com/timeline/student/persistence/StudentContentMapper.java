@@ -32,7 +32,7 @@ public interface StudentContentMapper {
     int publishedBundleCount(@Param("hash") String hash);
 
     /** Published annotations of a published text version, each backed by a public claim. */
-    @Select("SELECT a.id, a.line_seq, a.annotation_kind, a.audience, a.content FROM poetry_annotation a "
+    @Select("SELECT a.id, a.line_seq, a.annotation_kind, a.content FROM poetry_annotation a "
         + "JOIN poetry_text_version v ON v.id=a.version_id "
         + "JOIN poetry_source s ON s.id=v.source_id "
         + "JOIN poetry_content w ON w.id=v.work_id "
