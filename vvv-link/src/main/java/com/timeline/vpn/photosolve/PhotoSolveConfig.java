@@ -1,0 +1,89 @@
+package com.timeline.vpn.photosolve;
+
+import com.timeline.vpn.exception.ApiException;
+import com.timeline.vpn.photosolve.model.PhotoSolveErrno;
+import com.timeline.vpn.util.Secrets;
+
+/**
+ * 拍照解题的配置项。全部来自外部 secrets.properties（见 secrets.properties.example），
+ * **不要把真实密钥写进代码或配置文件**。
+ *
+ * 需要在 secrets.properties 里填：
+ * <pre>
+ * photosolve.doubao.apiKey=      # 火山方舟 API Key
+ * photosolve.doubao.model=       # 接入点 id（形如 ep-xxxxxxxx）或模型名
+ * photosolve.doubao.endpoint=    # 默认 https://ark.cn-beijing.volces.com/api/v3/
+ * photosolve.maxImages=          # 一次请求最多几张图，默认 4
+ * photosolve.maxBytes=           # 单张图上限（字节），默认 5MB
+ * photosolve.timeoutSeconds=     # 调模型的总超时，默认 60
+ * </pre>
+ *
+ * 之所以用 {@link Secrets}（启动时读一次）而不是 {@code @Value}：
+ * 本项目的密钥统一放在 jar 外的文件里，改密钥不需要重新打包，和现有 Doubao/Vision handler 一致。
+ */
+public final class PhotoSolveConfig {
+
+    /** 默认的火山方舟 v3 接口地址。同一个域名下的接入点靠 model 区分。 */
+    public static final String DEFAULT_ENDPOINT = "https://ark.cn-beijing.volces.com/api/v3/";
+
+    /** 这些模型/接入点是否就绪。没配置时接口返回 50002，而不是抛一堆空指针。 */
+    public static boolean isConfigured() {
+        return hasText(apiKey()) && hasText(model());
+    }
+
+    public static String apiKey() {
+        return Secrets.get("photosolve.doubao.apiKey");
+    }
+
+    public static String model() {
+        String configured = Secrets.get("photosolve.doubao.model");
+        return hasText(configured) ? configured : Secrets.get("doubao.photoModel");
+    }
+
+    public static String endpoint() {
+        String configured = Secrets.get("photosolve.doubao.endpoint");
+        return hasText(configured) ? configured : DEFAULT_ENDPOINT;
+    }
+
+    public static int maxImages() {
+        return intOf("photosolve.maxImages", 4);
+    }
+
+    public static long maxBytes() {
+        return intOf("photosolve.maxBytes", 5 * 1024 * 1024);
+    }
+
+    public static int timeoutSeconds() {
+        return intOf("photosolve.timeoutSeconds", 60);
+    }
+
+    /**
+     * 检查配置，缺失时抛出对客户端有意义的错误码。
+     * Controller 在收图之前调用，避免白白读一遍 5MB 的请求体。
+     */
+    public static void requireConfigured() {
+        if (!isConfigured()) {
+            throw new ApiException(PhotoSolveErrno.PROVIDER_NOT_CONFIGURED,
+                    PhotoSolveErrno.messageOf(PhotoSolveErrno.PROVIDER_NOT_CONFIGURED));
+        }
+    }
+
+    private static int intOf(String key, int fallback) {
+        String raw = Secrets.get(key);
+        if (!hasText(raw)) {
+            return fallback;
+        }
+        try {
+            return Integer.parseInt(raw.trim());
+        } catch (NumberFormatException e) {
+            return fallback;
+        }
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
+
+    private PhotoSolveConfig() {
+    }
+}
