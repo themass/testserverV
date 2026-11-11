@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.UsageDailyDao">
+	<!--
+	  按 (devId, day) 覆盖：
+	  - createdAt 保留首次写入时间（插入后不再改），用于判断"这台设备第一次出现是哪天"，也就是安装日；
+	  - updatedAt 每次覆盖都刷新，所以可以区分"当天落下的数据"和"后来补传的数据"。
+	  客户端最多一次性补传最近 7 天，重复上报只会刷新数字。
+	-->
+	<insert id="upsertAll">
+		insert into vpn.usage_daily
+			(devId,day,userId,userIp,version,platform,tzOffsetMin,connectedMs,sessions,
+			 rxBytes,txBytes,nodes,protocols,featureMask,createdAt,updatedAt)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.devId},#{item.day},#{item.userId},#{item.userIp},#{item.version},#{item.platform},
+			 #{item.tzOffsetMin},#{item.connectedMs},#{item.sessions},#{item.rxBytes},#{item.txBytes},
+			 #{item.nodes},#{item.protocols},#{item.featureMask},#{item.createdAt},#{item.updatedAt})
+		</foreach>
+		on duplicate key update
+			userId      = values(userId),
+			userIp      = values(userIp),
+			version     = values(version),
+			platform    = values(platform),
+			tzOffsetMin = values(tzOffsetMin),
+			connectedMs = values(connectedMs),
+			sessions    = values(sessions),
+			rxBytes     = values(rxBytes),
+			txBytes     = values(txBytes),
+			nodes       = values(nodes),
+			protocols   = values(protocols),
+			featureMask = values(featureMask),
+			updatedAt   = values(updatedAt)
+	</insert>
+</mapper>

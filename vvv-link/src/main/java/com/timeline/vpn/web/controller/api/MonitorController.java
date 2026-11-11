@@ -5,12 +5,15 @@ import com.timeline.vpn.exception.LoginException;
 import com.timeline.vpn.model.form.CInfoForm;
 import com.timeline.vpn.model.form.ConnLogForm;
 import com.timeline.vpn.model.form.MtuLogForm;
+import com.timeline.vpn.model.form.UsageDailyForm;
 import com.timeline.vpn.dao.db.BugReportDao;
 import com.timeline.vpn.dao.db.MtuLogDao;
+import com.timeline.vpn.dao.db.UsageDailyDao;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.po.BugReportPo;
 import com.timeline.vpn.model.po.UserPo;
 import com.timeline.vpn.model.po.MtuLogPo;
+import com.timeline.vpn.model.po.UsageDailyPo;
 import com.timeline.vpn.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.timeline.vpn.model.param.BaseQuery;
@@ -165,6 +168,116 @@ public class MonitorController extends BaseController {
             return new JsonResult(new RetInfoVo(false), Constant.ResultErrno.ERRNO_SYSTEM, null);
         }
         return Constant.RESULT_SUCCESS;
+    }
+
+    @Autowired
+    private UsageDailyDao usageDailyDao;
+
+    /** 单次上报最多接收的天数（客户端只补传最近 7 天，留出余量）。 */
+    private static final int USAGE_DAILY_MAX = 31;
+
+    /**
+     * 每日使用汇总上报：留存、每天连接时长、流量、功能使用。
+     * <p>
+     * 这张表是判断"上面那些改动到底有没有用"的唯一依据，所以写库失败必须如实返回非 0 errno，
+     * 客户端据此保留数据下次重发（与 mtulog / bug.json 同一处理方式：静默成功等于数据丢失）。
+     * <p>
+     * (devId, day) 唯一，重复上报覆盖数字，客户端可以每天把最近 7 天一起重发而不产生重复行。
+     */
+    @RequestMapping(value = "/usage.json", method = RequestMethod.POST)
+    public JsonResult usage(@UserInfo BaseQuery baseQuery, @ModelAttribute UsageDailyForm form) {
+        if (form == null || form.getLog() == null || form.getLog().isEmpty()) {
+            return Constant.RESULT_SUCCESS;
+        }
+        try {
+            List<Map<String, Object>> raw = JsonUtil.readValue(form.getLog(), JsonUtil.getListType(Map.class));
+            if (raw == null || raw.isEmpty()) {
+                return Constant.RESULT_SUCCESS;
+            }
+            DevApp app = baseQuery.getAppInfo();
+            UserPo user = baseQuery.getUser();
+            String devId = app == null ? null : app.getDevId();
+            if (devId == null || devId.isEmpty()) {
+                // 没有设备标识就无法去重，写进去只会污染留存统计
+                LOGGER.error("usage.json 缺少 devId，丢弃本次上报");
+                return new JsonResult(new RetInfoVo(false), Constant.ResultErrno.ERRNO_SYSTEM, null);
+            }
+            String userIp = app == null ? null : app.getUserIp();
+            String version = app == null ? null : app.getVersionName();
+            String platform = app == null ? null : app.getPlatform();
+            Date now = new Date();
+            List<UsageDailyPo> list = new ArrayList<>();
+            for (Map<String, Object> m : raw) {
+                if (list.size() >= USAGE_DAILY_MAX) {
+                    break;
+                }
+                String day = dayOf(str(m.get("day")));
+                if (day == null) {
+                    // 日期都解析不出来的一行没法归天，留着只会挡住其余的正常行
+                    continue;
+                }
+                UsageDailyPo po = new UsageDailyPo();
+                po.setDevId(cut(devId, 64));
+                po.setDay(day);
+                po.setUserId(user == null ? null : user.getId());
+                po.setUserIp(cut(userIp, 64));
+                po.setVersion(cut(version, 32));
+                po.setPlatform(cut(platform, 16));
+                po.setTzOffsetMin(intIn(m.get("tzOffsetMin"), -840, 840));
+                po.setConnectedMs(longIn(m.get("connectedMs"), 0, 86_400_000L));
+                po.setSessions(intIn(m.get("sessions"), 0, 10_000));
+                po.setRxBytes(longIn(m.get("rxBytes"), 0, 1L << 50));
+                po.setTxBytes(longIn(m.get("txBytes"), 0, 1L << 50));
+                po.setNodes(intIn(m.get("nodes"), 0, 10_000));
+                po.setProtocols(cut(str(m.get("protocols")), 128));
+                po.setFeatureMask(intIn(m.get("featureMask"), 0, Integer.MAX_VALUE));
+                po.setCreatedAt(now);
+                po.setUpdatedAt(now);
+                list.add(po);
+            }
+            if (!list.isEmpty()) {
+                usageDailyDao.upsertAll(list);
+            }
+        } catch (Exception e) {
+            LOGGER.error("usage.json 写入失败: " + e, e);
+            return new JsonResult(new RetInfoVo(false), Constant.ResultErrno.ERRNO_SYSTEM, null);
+        }
+        return Constant.RESULT_SUCCESS;
+    }
+
+    /**
+     * 把客户端传来的 day 规整成 yyyy-MM-dd。
+     * <p>
+     * 客户端可能传完整时间戳或带时区的字符串，这里只认前 10 个字符是合法日期的；STRICT 解析
+     * 是为了挡掉 2026-13-45 这类脏数据——MySQL 在非严格模式下会把它静默存成 0000-00-00，
+     * 那一行就永远算不进任何一天，还查不出来。
+     */
+    private static String dayOf(String raw) {
+        if (raw == null || raw.length() < 10) {
+            return null;
+        }
+        String s = raw.substring(0, 10);
+        try {
+            java.time.LocalDate.parse(s);   // ISO_LOCAL_DATE，严格
+            return s;
+        } catch (RuntimeException e) {
+            LOGGER.error("usage.json 非法日期: " + raw);
+            return null;
+        }
+    }
+
+    private static long longIn(Object o, long min, long max) {
+        long v;
+        if (o instanceof Number) {
+            v = ((Number) o).longValue();
+        } else {
+            try {
+                v = o == null ? 0 : Long.parseLong(String.valueOf(o));
+            } catch (NumberFormatException e) {
+                v = 0;
+            }
+        }
+        return Math.max(min, Math.min(max, v));
     }
 
     private static String str(Object o) {
