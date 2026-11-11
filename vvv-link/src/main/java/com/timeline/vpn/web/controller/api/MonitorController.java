@@ -11,6 +11,7 @@ import com.timeline.vpn.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.vo.JsonResult;
+import com.timeline.vpn.model.vo.RetInfoVo;
 import com.timeline.vpn.util.AES2;
 import com.timeline.vpn.web.common.resolver.UserInfo;
 import com.timeline.vpn.web.controller.BaseController;
@@ -53,7 +54,10 @@ public class MonitorController extends BaseController {
 
     /**
      * 隧道 MTU 探测结果上报（doc/MTU-DESIGN.md 3.7）。
-     * 统计数据，写库失败（如迁移未执行）不影响客户端：只记日志，照常返回成功，避免客户端反复重发。
+     * <p>
+     * 客户端只在收到成功响应后才清本地队列，所以这里必须如实反映写库结果：
+     * 写库失败返回非 0 errno，客户端保留数据下次重发。早先无条件返回成功，
+     * 迁移没执行时数据会静默丢失，而这份数据正是用来决定"要不要下调默认 MTU"的。
      */
     @RequestMapping(value = "/mtulog.json", method = RequestMethod.POST)
     public JsonResult mtulog(@UserInfo BaseQuery baseQuery, @ModelAttribute MtuLogForm form) {
@@ -92,6 +96,7 @@ public class MonitorController extends BaseController {
             }
         } catch (Exception e) {
             LOGGER.error("mtulog 写入失败: " + e.getMessage());
+            return new JsonResult(new RetInfoVo(false), Constant.ResultErrno.ERRNO_SYSTEM, null);
         }
         return Constant.RESULT_SUCCESS;
     }
