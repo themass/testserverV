@@ -51,6 +51,13 @@ public class PhotoSolveResponse {
         /** 最终答案的 LaTeX；没有则为 null。 */
         private String finalAnswerLatex;
 
+        /**
+         * 思考过程（审题思路）：已知什么、要求什么、选哪种方法、容易错在哪。Markdown + LaTeX。
+         * 与 steps 的区别：steps 是"怎么算"，thinking 是"为什么这么想"。客户端默认折叠展示。
+         * 模型没给时为空字符串（旧客户端忽略未知字段，兼容）。
+         */
+        private String thinking = "";
+
         /** 解题步骤。 */
         private List<Step> steps = new ArrayList<>();
 

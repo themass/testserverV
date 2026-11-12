@@ -163,7 +163,8 @@ public class DoubaoPhotoSolveProvider implements PhotoSolveProvider {
             return response;
         }
         try {
-            JsonNode root = MAPPER.readTree(json);
+            // 先修 LaTeX 反斜杠：\frac 之类会被 JSON 当成合法转义静默吃掉，不修的话公式是坏的但不会报错
+            JsonNode root = MAPPER.readTree(PhotoSolveJsonRepair.repair(json));
             boolean found = root.path("questionFound").asBoolean(true);
             response.setQuestionFound(found);
             response.setSubject(root.path("subject").asText(""));
@@ -196,6 +197,7 @@ public class DoubaoPhotoSolveProvider implements PhotoSolveProvider {
         q.setLatex(node.path("latex").asText(""));
         q.setFinalAnswer(node.path("finalAnswer").asText(""));
         q.setFinalAnswerLatex(node.path("finalAnswerLatex").asText(""));
+        q.setThinking(node.path("thinking").asText(""));
         JsonNode steps = node.path("steps");
         if (steps.isArray()) {
             for (JsonNode s : steps) {
