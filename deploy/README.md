@@ -10,6 +10,13 @@
 
 上游 `vpn_server`、`chat_server`、`chat_server1`、`fetchurl_server`、`book_server` 仍在 `nginx.conf` 的 `http {}` 里定义，这里不重复。
 
+**新增上游 `companion_server`**（陪伴 / agent 服务）也要手动加到 `nginx.conf` 的 `http {}` 里
+（`upstream` 只允许出现在 `http {}`，写进 snippet 会让 `nginx -t` 失败）：
+
+```nginx
+upstream companion_server { server 127.0.0.1:8081; keepalive 16; }
+```
+
 ## 步骤
 
 1. 备份：`cp /etc/nginx/conf.d/vpn.conf /etc/nginx/conf.d/vpn.conf.bak`

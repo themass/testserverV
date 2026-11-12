@@ -31,9 +31,27 @@ public final class PhotoSolveConfig {
     /** 默认的火山方舟 v3 接口地址。同一个域名下的接入点靠 model 区分。 */
     public static final String DEFAULT_ENDPOINT = "https://ark.cn-beijing.volces.com/api/v3/";
 
-    /** 这些模型/接入点是否就绪。没配置时接口返回 50002，而不是抛一堆空指针。 */
+    /** apiKey 短于这个长度基本是没填完或填错（火山方舟的 key 是 36 位）。 */
+    private static final int MIN_API_KEY_LENGTH = 20;
+
+    /** 模板里的占位符，如 {@code ep-2024xxxx-xxxxx}、{@code your-model}、{@code TODO}。 */
+    private static final java.util.regex.Pattern PLACEHOLDER =
+            java.util.regex.Pattern.compile("xxxx|your|todo|changeme|placeholder", java.util.regex.Pattern.CASE_INSENSITIVE);
+
+    /**
+     * 这些模型/接入点是否就绪。没配置时接口返回 50002，而不是抛一堆空指针。
+     *
+     * 不能只判断非空：模板里 model 写的是 {@code ep-2024xxxx-xxxxx}，部署时忘了改，
+     * 以前这里照样返回 true，{@code health.json} 报 {@code configured:true}，
+     * 直到有人真的调模型才发现不可用。现在占位符和过短的 key 都按未配置处理。
+     */
     public static boolean isConfigured() {
-        return hasText(apiKey()) && hasText(model());
+        String key = apiKey();
+        String model = model();
+        if (!hasText(key) || !hasText(model)) {
+            return false;
+        }
+        return key.trim().length() >= MIN_API_KEY_LENGTH && !PLACEHOLDER.matcher(model).find();
     }
 
     public static String apiKey() {
@@ -54,8 +72,24 @@ public final class PhotoSolveConfig {
         return intOf("photosolve.maxImages", 4);
     }
 
+    /** 单张图上限的下限：低于它多半是单位写错了（把 5 当成 5MB，实际是 5 字节）。 */
+    private static final long MIN_MAX_BYTES = 64 * 1024;
+
+    /**
+     * 单张图上限，单位**字节**。
+     *
+     * 配成 5 时（本意 5MB）以前会让所有图片都被判超限，客户端看到「单张图片不能超过 0MB」。
+     * 现在低于 64KB 的值视为配置错误，回退到默认 5MB 并打 WARN。
+     */
     public static long maxBytes() {
-        return intOf("photosolve.maxBytes", 5 * 1024 * 1024);
+        long configured = intOf("photosolve.maxBytes", 5 * 1024 * 1024);
+        if (configured < MIN_MAX_BYTES) {
+            org.slf4j.LoggerFactory.getLogger(PhotoSolveConfig.class).warn(
+                    "photosolve.maxBytes={} 小于 {} 字节，疑似单位写错（单位是字节），已回退到默认 5MB",
+                    configured, MIN_MAX_BYTES);
+            return 5L * 1024 * 1024;
+        }
+        return configured;
     }
 
     public static int timeoutSeconds() {
