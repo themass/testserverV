@@ -75,18 +75,19 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
         long sessionId = session.getId();
         form.setSessionId(sessionId);
 
-        // 人设以会话为准：请求没带的就用会话里存的；请求带了而会话里是空的，补进会话
-        if (form.getCharacterId() == null || form.getCharacterId() <= 0) {
-            form.setCharacterId(session.getCharacterId());
+        // 人设属于会话，不属于某次请求（规则见 SessionPersona）：
+        // 会话里有人设就一直用它，请求带的不同角色忽略；会话还是空的才采用请求的并写进去。
+        boolean hasMessages = messageDao.lastUserId(sessionId) != null;
+        SessionPersona persona = SessionPersona.resolve(session.getCharacterId(), session.getRoleId(),
+                form.getCharacterId(), form.getRoleId(), hasMessages);
+        if (persona.requestIgnored()) {
+            LOGGER.warn("请求的人设与会话不一致，按会话的为准: session={}, sessionRole={}, requestRole={}",
+                    sessionId, persona.roleId(), form.getRoleId());
         }
-        if (StringUtils.isBlank(form.getRoleId())) {
-            form.setRoleId(session.getRoleId());
-        }
-        boolean hasCharacter = form.getCharacterId() != null && form.getCharacterId() > 0;
-        boolean hasRole = StringUtils.isNotBlank(form.getRoleId());
-        if (hasCharacter || hasRole) {
-            sessionDao.fillPersona(sessionId, hasCharacter ? form.getCharacterId() : null,
-                    hasRole ? form.getRoleId() : null);
+        form.setCharacterId(persona.characterId());
+        form.setRoleId(persona.roleId());
+        if (persona.shouldPersist()) {
+            sessionDao.fillPersona(sessionId, persona.characterId(), persona.roleId());
         }
 
         if (regenerate) {
