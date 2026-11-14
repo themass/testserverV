@@ -214,7 +214,10 @@ public class UserServiceImpl implements UserService {
     public void del(BaseQuery baseQuery, String name, String pwd) {
         UserPo po = authenticate(name, pwd);
         if (po == null) {
-            return;
+            // 原来这里是 return —— 用户名不存在或密码错误时，接口仍然返回 errno=0，
+            // 网页版会显示"Account deleted successfully"，用户以为账号没了，实际原封不动。
+            // 现在与登录一致，抛带错误码的异常，让前端能分辨"删成功"和"密码不对"。
+            throw new LoginException(Constant.ResultMsg.RESULT_PWD_ERROR);
         }
         userNodeService.deleteAllByUser(name);
         userDao.deleteByName(name);

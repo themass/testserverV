@@ -39,6 +39,25 @@ public class NoappController extends BaseController {
         return Constant.RESULT_SUCCESS;
     }
 
+    /**
+     * 网页版账号注销（Play 要求提供"不安装 App 也能申请删除"的入口）。
+     * <p>
+     * 与 {@code /repass.json} 的区别：
+     * <ul>
+     *   <li>只接受 POST —— 旧接口同时接受 GET，密码会出现在 URL、浏览器历史和服务器访问日志里；</li>
+     *   <li>参数名用 name/pwd，与 App 内接口一致，避免两套叫法。</li>
+     * </ul>
+     * 走 noapp 前缀是刻意的：{@code HostFilter} 对含 "noapp" 的 URI 跳过 App 头校验，
+     * 网页端没有 devId / 签名 / 版本号，走普通用户接口会被拦掉。
+     */
+    @RequestMapping(value = "/delete.json", method = RequestMethod.POST)
+    public JsonResult deleteFromWeb(@UserInfo BaseQuery baseQuery,
+                                    @RequestParam(name = "name") String name,
+                                    @RequestParam(name = "pwd") String pwd) {
+        userService.del(baseQuery, name, pwd);
+        return Constant.RESULT_SUCCESS;
+    }
+
     @RequestMapping(value = "/collect.json", method = RequestMethod.POST)
     public JsonResult collect(@UserInfo BaseQuery baseQuery,@RequestParam(name="count") Integer count,@RequestParam(name="localhost") String localhost,@RequestParam(required=false,name="ip") String ip) {
         if(count==-1) {
