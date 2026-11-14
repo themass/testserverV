@@ -64,4 +64,9 @@ public class UserNodeServiceImpl implements UserNodeService {
     public void delete(String userName, UserNodeDelForm form) {
         userNodeDao.delete(userName, form.getId());
     }
+
+    @Override
+    public void deleteAllByUser(String userName) {
+        userNodeDao.deleteByUser(userName);
+    }
 }

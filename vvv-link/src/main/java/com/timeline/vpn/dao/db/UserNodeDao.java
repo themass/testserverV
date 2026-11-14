@@ -12,6 +12,9 @@ public interface UserNodeDao {
 
     List<UserNodeVo> listByUser(@Param("name") String name);
 
+    /** 账号注销：删掉该用户保存在服务端的全部节点。 */
+    int deleteByUser(@Param("name") String name);
+
     int insert(@Param("name") String name, @Param("node") UserNodeVo node);
 
     /** 更新本人的节点；id 属于别人时影响行数为 0。 */

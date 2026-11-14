@@ -15,4 +15,7 @@ public interface UserNodeService {
     UserNodeVo save(String userName, UserNodeSaveForm form);
 
     void delete(String userName, UserNodeDelForm form);
+
+    /** 账号注销时清空该用户的全部节点（含分享链接）。 */
+    void deleteAllByUser(String userName);
 }

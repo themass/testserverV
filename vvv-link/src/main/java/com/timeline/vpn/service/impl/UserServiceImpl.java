@@ -70,6 +70,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CacheService cacheService;
     @Autowired
+    private com.timeline.vpn.service.UserNodeService userNodeService;
+    @Autowired
     private RegAuthService regAuthService;
     @Autowired
     private RadacctDao radacctDao;
@@ -195,12 +197,29 @@ public class UserServiceImpl implements UserService {
         cacheService.del(baseQuery.getToken());
     }
 
+    /**
+     * 账号注销。
+     * <p>
+     * 原实现只是把密码改成 "uuuuuu"——用户数据仍然留在库里，Play 明确不接受这种
+     * "假删除"，审核要求账号及其数据真正被移除（或至少不可恢复地匿名化）。
+     * <p>
+     * 这里删除 user 行本身。关联数据保留但失去主体：
+     *   - connlog / devuseinfo 里是设备维度记录，不是账号内容；
+     *   - usage_daily / bug_report 里的 userId 变成悬空外键，统计时按 userId 过滤自然排除；
+     *   - user_node 的分享链接属于用户内容，一并删掉。
+     * 先删子表再删主表，避免留下孤儿行。
+     */
     @Override
+    @Transactional
     public void del(BaseQuery baseQuery, String name, String pwd) {
         UserPo po = authenticate(name, pwd);
-        if(po!=null){
-            userDao.updatePwdHash(name, PasswordHasher.hash("uuuuuu"));
+        if (po == null) {
+            return;
         }
+        userNodeService.deleteAllByUser(name);
+        userDao.deleteByName(name);
+        cacheService.del(baseQuery.getToken());
+        LOGGER.info("账号已删除: " + name);
     }
 
     @Override

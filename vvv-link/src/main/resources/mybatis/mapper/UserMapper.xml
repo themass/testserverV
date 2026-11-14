@@ -78,6 +78,9 @@
 	<update id="markResetUsed">
 		update vpn.user_reset_code set used=1 where id=#{id}
 	</update>
+	<delete id="deleteByName">
+		delete from vpn.user where name=#{name}
+	</delete>
 	<update id="updateEmail">
 	    update vpn.user set email=#{email} where name=#{name}
 	</update>

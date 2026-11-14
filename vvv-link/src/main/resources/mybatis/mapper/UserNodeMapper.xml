@@ -18,6 +18,9 @@
             server = #{node.server}, port = #{node.port}, updated_at = now()
         where id = #{node.id} and user_name = #{name}
     </update>
+    <delete id="deleteByUser">
+        delete from vpn.user_node where user_name = #{name}
+    </delete>
     <delete id="delete">
         delete from vpn.user_node where id = #{id} and user_name = #{name}
     </delete>

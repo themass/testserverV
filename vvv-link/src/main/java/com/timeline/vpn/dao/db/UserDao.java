@@ -41,5 +41,8 @@ public interface UserDao extends BaseDBDao<UserPo> {
     public void updateLevel(UserPo po);
     public void updateLevelPaid(@Param(value = "start") Date start,@Param(value = "end") Date end);
 
+    /** 账号注销：真正删除用户行。Play 要求"删除"而不是禁用，见 delAccount 的说明。 */
+    public int deleteByName(@Param(value = "name") String name);
+
 }
 
