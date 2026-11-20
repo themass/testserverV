@@ -26,14 +26,24 @@
 
 ## 错误
 
-`evt: "error"`，`data: { code, message }`。code 是 SCREAMING_SNAKE 稳定词表（对齐 TS ErrorCodes，语义不变）：
+`evt: "error"`，`data: { code, message }`。code 是 SCREAMING_SNAKE 稳定词表（对齐 TS ErrorCodes，语义不变）。
+以 Java 枚举 `GameErrorCode` 为准（分组即枚举内的注释分组）：
 
 ```
-BAD_JSON BAD_SHAPE UNKNOWN_CMD NOT_AUTHED NOT_IN_ROOM ALREADY_IN_ROOM
-ROOM_NOT_FOUND ROOM_FULL NOT_HOST NOT_READY PHASE_LOCKED NOT_YOUR_TURN
-BAD_MOVE TICKET_DENIED BALANCE_LOW QUOTA_EXCEEDED SESSION_CLOSED
+BAD_JSON BAD_SHAPE UNKNOWN_CMD UNSUPPORTED
+NOT_AUTHED NOT_IN_ROOM ALREADY_IN_ROOM ROOM_NOT_FOUND ROOM_FULL ROOM_IN_GAME
+NOT_HOST NOT_READY STALE_RULES BAD_RULES TARGET_NOT_FOUND TARGET_READY BANNED SESSION_CLOSED
+PHASE_LOCKED WRONG_PHASE PAUSED NOT_YOUR_TURN BAD_MOVE OUT_OF_RANGE REPEAT_SHOT INVALID_PLACEMENT
+TICKET_DENIED BALANCE_LOW QUOTA_EXCEEDED NOT_IN_QUEUE
 RATE_LIMITED INTERNAL
 ```
+
+其中 `BAD_MOVE` 保留给协议层的非法参数（形状对但取值越界一类）；引擎侧的非法操作会精确报
+`OUT_OF_RANGE` / `REPEAT_SHOT` / `INVALID_PLACEMENT`，客户端可按 code 区分提示文案。
+
+与 TS 错误码的有意差异：`BAD_TOKEN` 不引入（身份走平台 `Vpn-Token`，没有服务端自签 token 可校验）；
+`NOT_ENOUGH_COINS` 收敛为 `BALANCE_LOW`；`DAILY_TICKET_LIMIT` / `AD_LIMIT` 收敛为 `QUOTA_EXCEEDED`
+（`data.message` 区分场景）。
 
 ## 命令清单（19 条，逐条对应 TS 版）
 
@@ -68,6 +78,8 @@ RATE_LIMITED INTERNAL
 `phase.changed`（placing→playing→finished，带 deadlineAt）
 `game.planeAccepted` `game.shot`（含双方视角：自己 shots 增量 + 对手 incoming 增量）
 `game.destroyed`（某家一架飞机被击落）`game.over`（TableResult）
+`game.submitted`（melee：某人本轮已提交，无坐标，公开）`game.roundResult`（melee：本轮结算，私有视图）
+`game.playerOut`（melee：某人出局，当场公开）
 `player.presence`（座位在线态变化）`profile.now` `rank.changed` `rank.list` `coins.now` `coins.ledger`
 
 ## 与 TS 协议的行为不变式（移植时逐条对拍）

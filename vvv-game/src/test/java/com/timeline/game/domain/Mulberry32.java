@@ -1,12 +1,12 @@
 package com.timeline.game.domain;
 
-/** 测试专用的确定性随机源（mulberry32），镜像 TS test/helpers.ts。 */
-final class Mulberry32 {
+/** 测试专用的确定性随机源（mulberry32），镜像 TS test/helpers.ts。engine 测试包也用它。 */
+public final class Mulberry32 {
 
     private Mulberry32() {}
 
     /** JS 的 int 溢出回绕 = Java int 乘法/加法回绕；唯一的无符号点在最后的 >>> 0 / toUnsignedLong。 */
-    static java.util.function.DoubleSupplier of(int seed) {
+    public static java.util.function.DoubleSupplier of(int seed) {
         int[] a = {seed};
         return () -> {
             a[0] = a[0] + 0x6D2B79F5;

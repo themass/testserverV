@@ -1,0 +1,20 @@
+package com.timeline.game.protocol;
+
+/**
+ * 稳定错误码词表（协议层）。引擎与桌子/连接层共用一份；客户端只按 code 分支，不解析 message。
+ * 词表与 docs/game/protocol.md 对齐（文档在实现收口处同步）。
+ */
+public enum GameErrorCode {
+    // 传输与解码
+    BAD_JSON, BAD_SHAPE, UNKNOWN_CMD, UNSUPPORTED,
+    // 会话与房间
+    NOT_AUTHED, NOT_IN_ROOM, ALREADY_IN_ROOM, ROOM_NOT_FOUND, ROOM_FULL, ROOM_IN_GAME,
+    NOT_HOST, NOT_READY, STALE_RULES, BAD_RULES, TARGET_NOT_FOUND, TARGET_READY, BANNED, SESSION_CLOSED,
+    // 回合与操作
+    PHASE_LOCKED, WRONG_PHASE, PAUSED, NOT_YOUR_TURN,
+    BAD_MOVE, OUT_OF_RANGE, REPEAT_SHOT, INVALID_PLACEMENT,
+    // 经济（NOT_ENOUGH_COINS→BALANCE_LOW；DAILY_TICKET_LIMIT/AD_LIMIT→QUOTA_EXCEEDED，Java 化收敛）
+    TICKET_DENIED, BALANCE_LOW, QUOTA_EXCEEDED, NOT_IN_QUEUE,
+    // 运维
+    RATE_LIMITED, INTERNAL
+}
