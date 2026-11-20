@@ -15,6 +15,7 @@
         <module>vvv-common</module>
         <module>vvv-poetry</module>
         <module>vvv-student</module>
+        <module>vvv-game</module>
         <module>vvv-roles</module>
         <module>vvv-link</module>
     </modules>
