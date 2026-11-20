@@ -42,4 +42,9 @@ public final class GameTokenResolver {
             return null;
         }
     }
+
+    /** 健康检查用：Redis 是否读得通（一次 EXISTS，不碰业务键）。 */
+    public boolean redisAlive() {
+        return Boolean.TRUE.equals(redis.hasKey(TOKEN_KEY_PREFIX + "health-probe"));
+    }
 }

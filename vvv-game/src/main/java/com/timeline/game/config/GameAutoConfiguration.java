@@ -1,5 +1,9 @@
 package com.timeline.game.config;
 
+import com.timeline.game.api.GameApiController;
+import com.timeline.game.api.GameCommandSink;
+import com.timeline.game.api.GameHandshakeInterceptor;
+import com.timeline.game.api.GameWebSocketHandler;
 import com.timeline.game.persistence.GameCoinLedgerMapper;
 import com.timeline.game.persistence.GameMatchMapper;
 import com.timeline.game.persistence.GameMatchPlayerMapper;
@@ -7,14 +11,21 @@ import com.timeline.game.persistence.GameProfileMapper;
 import com.timeline.game.persistence.GameProgressMapper;
 import com.timeline.game.persistence.GameSeasonMapper;
 import com.timeline.game.persistence.GameWalletMapper;
+import com.timeline.game.service.GameProfileService;
+import com.timeline.game.service.GameSettlementService;
+import com.timeline.game.service.GameWalletService;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.mapper.MapperFactoryBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.time.Clock;
+import java.time.ZoneId;
 
 /**
  * 飞机对决游戏模块（库模块，随 vvv-link 进程装载）。
@@ -103,5 +114,107 @@ public class GameAutoConfiguration {
         MapperFactoryBean<GameSeasonMapper> bean = new MapperFactoryBean<>(GameSeasonMapper.class);
         bean.setSqlSessionFactory(factory);
         return bean;
+    }
+
+    // ---------------------------------------------------------------- 公共时钟
+
+    /**
+     * 逻辑时间统一从这里注入（spec §1 禁墙钟令的执行方式）：生产用系统时钟，
+     * 测试直接 new 服务传固定时钟，不经 Spring。
+     */
+    @Bean
+    public Clock gameClock() {
+        return Clock.systemUTC();
+    }
+
+    /** 日切时区（Coins.dayKey 的口径）。默认东八区——真库用户全在国内。 */
+    @Bean
+    public ZoneId gameZone(@Value("${game.zone:Asia/Shanghai}") String zone) {
+        return ZoneId.of(zone);
+    }
+
+    // ---------------------------------------------------------------- 服务层
+
+    @Bean
+    public GameWalletService gameWalletService(GameWalletMapper wallet, GameCoinLedgerMapper ledger) {
+        return new GameWalletService(wallet, ledger);
+    }
+
+    @Bean
+    public GameSettlementService gameSettlementService(GameMatchMapper match,
+                                                       GameMatchPlayerMapper matchPlayer,
+                                                       GameProgressMapper progress,
+                                                       GameProfileMapper profile,
+                                                       GameWalletService wallet, ZoneId zone) {
+        return new GameSettlementService(match, matchPlayer, progress, profile, wallet, zone);
+    }
+
+    @Bean
+    public GameProfileService gameProfileService(GameProfileMapper profile, GameProgressMapper progress,
+                                                 GameWalletMapper wallet, GameCoinLedgerMapper ledger,
+                                                 GameMatchMapper match, ZoneId zone) {
+        return new GameProfileService(profile, progress, wallet, ledger, match, zone);
+    }
+
+    // ---------------------------------------------------------------- HTTP
+
+    @Bean
+    public GameApiController gameApiController(GameTokenResolver tokens, GameProfileService profiles,
+                                               ZoneId zone, Clock clock) {
+        return new GameApiController(tokens, profiles, zone, clock);
+    }
+
+    // ---------------------------------------------------------------- WS 接入
+
+    /**
+     * WS 三件套（握手鉴权 → 传输层 → 端点注册）。整组挂在 GameCommandSink（=GameHub）上：
+     * 业务路由器注册之前 WS 面不装载，HTTP 读接口与 /health 仍可先行自检。
+     */
+    @org.springframework.context.annotation.Import(GameWebSocketConfiguration.class)
+    static class GameWsImports { }
+
+    @org.springframework.web.socket.config.annotation.EnableWebSocket
+    @ConditionalOnBean(GameCommandSink.class)
+    static class GameWebSocketConfiguration
+        implements org.springframework.web.socket.config.annotation.WebSocketConfigurer {
+
+        private final GameWebSocketHandler handler;
+        private final GameHandshakeInterceptor interceptor;
+        private final String path;
+        private final String allowedOrigins;
+
+        GameWebSocketConfiguration(GameWebSocketHandler handler, GameHandshakeInterceptor interceptor,
+                                   @Value("${game.ws.path:/api/game/ws}") String path,
+                                   @Value("${game.ws.allowed-origins:*}") String allowedOrigins) {
+            this.handler = handler;
+            this.interceptor = interceptor;
+            this.path = path;
+            this.allowedOrigins = allowedOrigins;
+        }
+
+        @Override
+        public void registerWebSocketHandlers(
+            org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry registry) {
+            java.util.List<String> origins = java.util.Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim).filter(s -> !s.isEmpty()).toList();
+            if (origins.isEmpty()) origins = java.util.List.of("*");
+            // TS 版 wss 无同源检查（客户端是 App）；收紧走 game.ws.allowed-origins，默认放开等价旧行为。
+            registry.addHandler(handler, path)
+                .addInterceptors(interceptor)
+                .setAllowedOriginPatterns(origins.toArray(String[]::new));
+        }
+    }
+
+    @Bean
+    @ConditionalOnBean(GameCommandSink.class)
+    public GameHandshakeInterceptor gameHandshakeInterceptor(GameTokenResolver tokens) {
+        return new GameHandshakeInterceptor(tokens);
+    }
+
+    @Bean
+    @ConditionalOnBean(GameCommandSink.class)
+    public GameWebSocketHandler gameWebSocketHandler(
+        GameCommandSink sink, @Value("${game.commandRatePerMinute:1200}") int rate) {
+        return new GameWebSocketHandler(new com.fasterxml.jackson.databind.ObjectMapper(), sink, rate);
     }
 }
