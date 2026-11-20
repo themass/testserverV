@@ -94,7 +94,9 @@ public class DoubaoPhotoSolveProvider implements PhotoSolveProvider {
                 .messages(messages)
                 // 温度低一点：解题要稳定，不要花式发挥
                 .temperature(0.2)
-                .maxTokens(4096)
+                // 可配置：steps+thinking 的长答案会顶到默认值，被截断时 parse 有兜底，
+                // 上限多大取决于接入点，交给 secrets.properties 配。
+                .maxTokens(PhotoSolveConfig.maxTokens())
                 .build();
 
         String raw = callWithTimeout(request, requestId);
@@ -158,8 +160,25 @@ public class DoubaoPhotoSolveProvider implements PhotoSolveProvider {
 
         String json = extractJson(raw);
         if (json == null) {
-            log.warn("photosolve {} response is not JSON: {}", requestId, abbreviate(raw));
-            response.setQuestionFound(false);
+            // 区分两种「不是完整 JSON」：
+            // - 模型试图输出 JSON 但被 maxTokens 截断（或围栏没收尾）：raw 里有 `{`。
+            //   这是**我们**的失败。以前直接 questionFound=false → 客户端 40002「不是题目」，
+            //   明明拍了题却说没题，而且超长答案**每一次**都这样。按本方法的兜底策略，
+            //   把模型吐出的部分当「题干 + 答案」交给用户，至少看得到内容。
+            // - 模型整段输出是话术、没有任何 JSON 痕迹：保持 questionFound=false，
+            //   这才是真正的「图里没有题目」。
+            if (raw == null || raw.indexOf('{') < 0) {
+                log.warn("photosolve {} response is not JSON: {}", requestId, abbreviate(raw));
+                response.setQuestionFound(false);
+                return response;
+            }
+            log.warn("photosolve {} JSON truncated or unbalanced, using fallback text", requestId);
+            PhotoSolveResponse.Question q = new PhotoSolveResponse.Question();
+            q.setIndex(1);
+            q.setText(raw.trim());
+            q.setFinalAnswer("");
+            response.setQuestionFound(true);
+            response.getQuestions().add(q);
             return response;
         }
         try {

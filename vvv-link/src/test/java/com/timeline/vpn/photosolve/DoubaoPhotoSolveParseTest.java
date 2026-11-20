@@ -63,4 +63,26 @@ class DoubaoPhotoSolveParseTest {
         assertFalse(r.isQuestionFound());
         assertTrue(r.getQuestions().isEmpty());
     }
+
+    @Test
+    void truncatedJsonFallsBackToRawTextInsteadOfNotAQuestion() {
+        // maxTokens 截断：JSON 起了头但没收尾。extractJson 括号配不平返回 null，
+        // 以前这里直接 questionFound=false → 客户端 40002「不是题目」。
+        // 明明拍了题，却说没有题——截断是**我们**的失败，不是用户没拍题。
+        // 兜底策略（见 parse 的 javadoc）应把模型吐出的部分当文本给用户。
+        String raw = "{\"questionFound\":true,\"subject\":\"math\",\"questions\":[{\"index\":1,"
+                + "\"text\":\"解方程 $x^2-5x+6=0$\",\"steps\":[{\"index\":1,\"text\":\"因式分解"
+                + "$(x-2)(x-3)=";
+        PhotoSolveResponse r = provider.parse(raw, "req-6");
+        assertTrue(r.isQuestionFound(), "截断的输出不能报「不是题目」");
+        assertTrue(r.getQuestions().get(0).getText().contains("解方程"));
+    }
+
+    @Test
+    void proseWithoutAnyBraceStillMeansNoQuestion() {
+        // 模型完全没吐 JSON（整段是话术）：保持「不是题目」，
+        // 这个负样本防止上一条把语义放得太宽。
+        PhotoSolveResponse r = provider.parse("抱歉，这张图片里我看不到题目。", "req-7");
+        assertFalse(r.isQuestionFound());
+    }
 }

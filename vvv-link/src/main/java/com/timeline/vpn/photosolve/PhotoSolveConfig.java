@@ -96,6 +96,18 @@ public final class PhotoSolveConfig {
         return intOf("photosolve.timeoutSeconds", 60);
     }
 
+    /**
+     * 单次回答的最大输出 token。默认 4096。
+     *
+     * 解题的 JSON 里有 steps 与 thinking，长题真的能顶到上限；顶到时输出被截断，
+     * parse 层会走兜底文本（见 DoubaoPhotoSolveProvider.parse），不至于报「不是题目」。
+     * 上限取决于所用接入点，不能在这里替部署方猜更大的值——要调就在 secrets.properties
+     * 里配 photosolve.maxTokens。
+     */
+    public static int maxTokens() {
+        return intOf("photosolve.maxTokens", 4096);
+    }
+
     /** 用量控制的配置。改额度不需要重新打包，重启即可。 */
     public static Quota quota() {
         return new Quota(
