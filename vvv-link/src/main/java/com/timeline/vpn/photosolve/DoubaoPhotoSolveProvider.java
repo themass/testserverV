@@ -149,9 +149,16 @@ public class DoubaoPhotoSolveProvider implements PhotoSolveProvider {
     /**
      * 把模型输出解析成 {@link PhotoSolveResponse}。
      *
-     * 兜底策略：JSON 解析失败时，把整段文本当作「题干 + 答案」放进一条 question，
-     * questionFound 保持 true（至少让用户看到模型的输出），并在日志里记录原始响应。
-     * 这样模型偶发不听话不会变成对用户来说的「服务失败」。
+     * 兜底分三级，按「能还原多少结构」排：
+     * <ol>
+     *   <li>完整 JSON：正常解析。</li>
+     *   <li>被 maxTokens 砍断的 JSON（raw 里有 <code>{</code> 但括号配不平）：先用
+     *       {@link PhotoSolveJsonSalvage} 把已经写完整的成员补成合法 JSON 再解析——
+     *       第一题的题干/答案/步骤这些结构保住，用户看到的是解题结果。</li>
+     *   <li>连救都救不出来：把整段文本当作「题干 + 答案」放进一条 question，
+     *       questionFound 保持 true（至少让用户看到模型的输出），并在日志里记录原始响应。
+     *       这样模型偶发不听话不会变成对用户来说的「服务失败」。</li>
+     * </ol>
      */
     PhotoSolveResponse parse(String raw, String requestId) {
         PhotoSolveResponse response = new PhotoSolveResponse();
@@ -163,8 +170,7 @@ public class DoubaoPhotoSolveProvider implements PhotoSolveProvider {
             // 区分两种「不是完整 JSON」：
             // - 模型试图输出 JSON 但被 maxTokens 截断（或围栏没收尾）：raw 里有 `{`。
             //   这是**我们**的失败。以前直接 questionFound=false → 客户端 40002「不是题目」，
-            //   明明拍了题却说没题，而且超长答案**每一次**都这样。按本方法的兜底策略，
-            //   把模型吐出的部分当「题干 + 答案」交给用户，至少看得到内容。
+            //   明明拍了题却说没题，而且超长答案**每一次**都这样。
             // - 模型整段输出是话术、没有任何 JSON 痕迹：保持 questionFound=false，
             //   这才是真正的「图里没有题目」。
             if (raw == null || raw.indexOf('{') < 0) {
@@ -172,14 +178,14 @@ public class DoubaoPhotoSolveProvider implements PhotoSolveProvider {
                 response.setQuestionFound(false);
                 return response;
             }
-            log.warn("photosolve {} JSON truncated or unbalanced, using fallback text", requestId);
-            PhotoSolveResponse.Question q = new PhotoSolveResponse.Question();
-            q.setIndex(1);
-            q.setText(raw.trim());
-            q.setFinalAnswer("");
-            response.setQuestionFound(true);
-            response.getQuestions().add(q);
-            return response;
+            // 先试着把砍断的 JSON 补全：能还原出结构就别退化成纯文本
+            json = PhotoSolveJsonSalvage.salvage(raw);
+            if (json == null) {
+                log.warn("photosolve {} JSON truncated and unsalvageable, using fallback text", requestId);
+                return fallbackText(response, raw);
+            }
+            log.warn("photosolve {} JSON truncated, salvaged {} of {} chars",
+                    requestId, json.length(), raw.length());
         }
         try {
             // 先修 LaTeX 反斜杠：\frac 之类会被 JSON 当成合法转义静默吃掉，不修的话公式是坏的但不会报错
@@ -195,18 +201,31 @@ public class DoubaoPhotoSolveProvider implements PhotoSolveProvider {
             }
             if (!found) {
                 response.getQuestions().clear();
+                return response;
+            }
+            // 截断太靠前（例如只写出 `{"k`）：salvage 出来是个空壳，没有任何可用内容。
+            // 返回「found=true 但 0 题」客户端会渲染成空白页，不如把原文给用户。
+            if (response.getQuestions().isEmpty()) {
+                log.warn("photosolve {} salvaged JSON has no questions, using fallback text", requestId);
+                return fallbackText(response, raw);
             }
             return response;
         } catch (Exception e) {
             log.warn("photosolve {} JSON parse failed, using fallback text", requestId, e);
-            PhotoSolveResponse.Question q = new PhotoSolveResponse.Question();
-            q.setIndex(1);
-            q.setText(raw == null ? "" : raw.trim());
-            q.setFinalAnswer("");
-            response.setQuestionFound(true);
-            response.getQuestions().add(q);
-            return response;
+            return fallbackText(response, raw);
         }
+    }
+
+    /** 最后一级兜底：把模型原文当「题干 + 答案」交给用户，保证不返回空白结果。 */
+    private PhotoSolveResponse fallbackText(PhotoSolveResponse response, String raw) {
+        response.setQuestionFound(true);
+        response.getQuestions().clear();
+        PhotoSolveResponse.Question q = new PhotoSolveResponse.Question();
+        q.setIndex(1);
+        q.setText(raw == null ? "" : raw.trim());
+        q.setFinalAnswer("");
+        response.getQuestions().add(q);
+        return response;
     }
 
     private PhotoSolveResponse.Question toQuestion(JsonNode node, int fallbackIndex) {
