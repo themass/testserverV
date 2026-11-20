@@ -81,8 +81,11 @@ public final class GameWalletService {
             // 余额不足（applyCoin 对着快照判的）：流水都没写，原样返回。
             return new GrantResult(0, false, true, w.coinBalance(), daily);
         }
-        if (r.applied() <= 0) {
+        if (r.applied() == 0) {
             // 日限/净增封顶截成 0：不写流水、不动钱包。
+            // 注意判 ==0 而不是 <=0：applied 是有符号入账额（Coins.applyCoin 返回 delta 原值，
+            // 扣费为负——门票 -50 走这里继续写账），负额的余额防线在 addBalance 的
+            // coin_balance+delta>=0 条件更新里，不在这道闸门。
             return new GrantResult(0, r.capped(), false, w.coinBalance(), daily);
         }
 

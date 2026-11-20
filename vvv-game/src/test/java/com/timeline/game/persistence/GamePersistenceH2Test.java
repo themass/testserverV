@@ -201,24 +201,28 @@ class GamePersistenceH2Test {
         assertEquals(new GameProgressMapper.BoardRow(20L, 4, 1, 9), board.get(1));
         assertEquals(new GameProgressMapper.BoardRow(30L, 2, 3, 5), board.get(2));
 
-        // 赛季重置：只清 tier/stars/连败连胜，mmr 与统计、best_* 保留。
-        // LIMIT 分批语义：每批最多 limit 行，已翻到 season=2 的行不再命中 season_no <> 2，
-        // 所以 3 行 = 2 + 1 + 0 收敛；循环补跑是调用方的事。
-        assertEquals(2, m.seasonResetBatch(2, 2));
-        assertEquals(1, m.seasonResetBatch(2, 2));
-        assertEquals(0, m.seasonResetBatch(2, 2)); // 收敛
+        // 跨季翻页（mapper 层语义，TS resetSeasonAll/crossSeason 的持久层两半）：
+        // staleUserIds 按 user_id 确定性扫描且翻页后的行退出谓词，所以"打满 limit 就有下一批"
+        // 必然收敛；降级结果（tier/stars）由调用方逐行用 Rank.resetSeason 算好传给 seasonCross
+        // ——发奖额取决于各自旧段位，批量 SQL 给不了，mapper 只负责扫描与单行写。
+        assertEquals(List.of(10L, 20L), m.staleUserIds(2, 2));
+        m.seasonCross(10L, 2, 3, 4);   // resetSeason(4,1) = (3, starCap(3)-1=4)
+        m.seasonCross(20L, 2, 3, 4);
+        assertEquals(List.of(30L), m.staleUserIds(2, 2));
+        m.seasonCross(30L, 2, 1, 2);   // resetSeason(2,3) = (1, starCap(1)-1=2)
+        assertEquals(List.of(), m.staleUserIds(2, 2)); // 收敛
         GameProgressMapper.ProgressRow p = m.progress(20L);
         assertEquals(2, p.seasonNo());
-        assertEquals(0, p.tier());
-        assertEquals(0, p.stars());
+        assertEquals(3, p.tier());
+        assertEquals(4, p.stars());
         assertEquals(0, p.lossStreak());
-        assertEquals(0, p.streak());
+        assertEquals(3, p.streak());   // 连胜保留：TS resetSeason 不碰 stats.streak（旧断言清零是错的）
         assertEquals(1450, p.mmr());        // 匹配质量保留
         assertEquals(9, p.wins());
         assertEquals(4, p.bestTier());      // 历史最高保留
         assertEquals(1, p.bestStars());
         assertEquals(10, p.scoringGames());
-        // board 带赛季过滤：重置前的 season_no=1 查不到了
+        // board 带赛季过滤：翻页前的 season_no=1 查不到了
         assertTrue(m.board(1, 10).isEmpty());
     }
 

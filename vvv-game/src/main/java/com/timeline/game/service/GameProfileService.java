@@ -28,16 +28,18 @@ public final class GameProfileService {
     private final GameWalletMapper wallet;
     private final GameCoinLedgerMapper ledger;
     private final GameMatchMapper matches;
+    private final GameSeasonService seasons;   // 可空：没装赛季服务就退化为"不懒翻页"（测试常用）
     private final ZoneId zone;
 
     public GameProfileService(GameProfileMapper profiles, GameProgressMapper progress,
                               GameWalletMapper wallet, GameCoinLedgerMapper ledger,
-                              GameMatchMapper matches, ZoneId zone) {
+                              GameMatchMapper matches, GameSeasonService seasons, ZoneId zone) {
         this.profiles = profiles;
         this.progress = progress;
         this.wallet = wallet;
         this.ledger = ledger;
         this.matches = matches;
+        this.seasons = seasons;
         this.zone = zone;
     }
 
@@ -57,6 +59,12 @@ public final class GameProfileService {
             profiles.touchSeen(userId);   // 尽力而为；失败不影响读
         }
         var p = progress.progress(userId);
+        // 跨季懒翻页（TS profile.ts get() 的懒路径，评审 #4）：先被读接口摸到的在线玩家
+        // 不能等 tick 批量——奖励 (tier+1)×50 现在就发，与 sweep 共用 entry_key 幂等键，两路只发一次。
+        if (seasons != null && p != null && p.seasonNo() != GameSeasonService.seasonOf(nowMs)) {
+            seasons.crossUser(userId, GameSeasonService.seasonOf(nowMs), nowMs);
+            p = progress.progress(userId);
+        }
         var w = wallet.wallet(userId);
         return new ProfileView(row.userId(), row.nickname(),
             p == null ? null : new RankView(p.tier(), p.stars(), p.lossStreak(), p.wins(), p.losses(),

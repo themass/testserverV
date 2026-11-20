@@ -52,7 +52,7 @@ SELECT m.match_id, m.capacity, COUNT(p.id) AS seat_rows
 HAVING seat_rows <> m.capacity;
 
 -- (e) 参考项（非告警）：progress.season_no 落后于当前 ACTIVE 赛季的行数。
---     赛季重置是分批跑的（seasonResetBatch + LIMIT），跑批期间非 0 属正常；
+--     赛季翻页是分批跑的（staleUserIds 扫描 + 逐行 seasonCross，跑批期间非 0 属正常；
 --     重置完成后仍非 0 才说明漏行。期望值：重置完成后 = 0。
 SELECT COUNT(*) AS stale_progress_rows
   FROM game_progress g

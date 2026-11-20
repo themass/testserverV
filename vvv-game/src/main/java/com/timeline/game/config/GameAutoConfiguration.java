@@ -12,6 +12,7 @@ import com.timeline.game.persistence.GameProgressMapper;
 import com.timeline.game.persistence.GameSeasonMapper;
 import com.timeline.game.persistence.GameWalletMapper;
 import com.timeline.game.service.GameProfileService;
+import com.timeline.game.service.GameSeasonService;
 import com.timeline.game.service.GameSettlementService;
 import com.timeline.game.service.GameWalletService;
 
@@ -150,10 +151,17 @@ public class GameAutoConfiguration {
     }
 
     @Bean
+    public GameSeasonService gameSeasonService(GameProgressMapper progress, GameSeasonMapper season,
+                                               GameWalletService wallet, ZoneId zone) {
+        return new GameSeasonService(progress, season, wallet, zone);
+    }
+
+    @Bean
     public GameProfileService gameProfileService(GameProfileMapper profile, GameProgressMapper progress,
                                                  GameWalletMapper wallet, GameCoinLedgerMapper ledger,
-                                                 GameMatchMapper match, ZoneId zone) {
-        return new GameProfileService(profile, progress, wallet, ledger, match, zone);
+                                                 GameMatchMapper match, GameSeasonService seasons,
+                                                 ZoneId zone) {
+        return new GameProfileService(profile, progress, wallet, ledger, match, seasons, zone);
     }
 
     // ---------------------------------------------------------------- HTTP
