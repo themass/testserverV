@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.SubtitleDao">
+	<resultMap id="SubtitleMap" type="com.timeline.vpn.model.po.SubtitlePo" autoMapping="true">
+		<id column="id" property="id" />
+	</resultMap>
+
+	<!-- 列表：显式列名，故意不取 content（体积大且列表页用不到）。 -->
+	<select id="getListByVideo" resultMap="SubtitleMap">
+		select id, videoId, title, lang, format, size, enabled, createTime, updateTime
+		from vpn.video_subtitle
+		where videoId=#{videoId} and enabled=1
+		order by id asc
+	</select>
+
+	<!-- 正文：单条按 id 取，只回 id + content。 -->
+	<select id="getContent" resultMap="SubtitleMap">
+		select id, content
+		from vpn.video_subtitle
+		where id=#{id} and enabled=1
+		limit 1
+	</select>
+</mapper>

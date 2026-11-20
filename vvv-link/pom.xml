@@ -112,6 +112,14 @@
             <artifactId>volcengine-java-sdk-ark-runtime</artifactId>
             <version>LATEST</version>
         </dependency>
+
+        <!-- 测试专用：standaloneSetup 起 Controller 需要 spring-test + junit5 引擎，
+             与 vvv-roles / vvv-poetry 同款做法；版本走 spring-boot-dependencies BOM -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
