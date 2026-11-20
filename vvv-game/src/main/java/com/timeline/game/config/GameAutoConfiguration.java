@@ -11,22 +11,31 @@ import com.timeline.game.persistence.GameProfileMapper;
 import com.timeline.game.persistence.GameProgressMapper;
 import com.timeline.game.persistence.GameSeasonMapper;
 import com.timeline.game.persistence.GameWalletMapper;
+import com.timeline.game.service.GameHub;
 import com.timeline.game.service.GameProfileService;
 import com.timeline.game.service.GameSeasonService;
 import com.timeline.game.service.GameSettlementService;
 import com.timeline.game.service.GameWalletService;
+import com.timeline.game.service.Matchmaking;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.mapper.MapperFactoryBean;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Clock;
 import java.time.ZoneId;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 飞机对决游戏模块（库模块，随 vvv-link 进程装载）。
@@ -170,6 +179,86 @@ public class GameAutoConfiguration {
     public GameApiController gameApiController(GameTokenResolver tokens, GameProfileService profiles,
                                                ZoneId zone, Clock clock) {
         return new GameApiController(tokens, profiles, zone, clock);
+    }
+
+    // ---------------------------------------------------------------- 业务路由器
+
+    /**
+     * 匹配队列：默认 BOT_FILL_AFTER_MS 补位表（2/3 人桌 30s、4 人桌 45s），
+     * enqueueWaitMs 用 TS 默认 60s。game.matchBotFillMs=0 可整体关补位。
+     */
+    @Bean
+    public Matchmaking gameMatchmaking(@Value("${game.matchBotFillMs:-1}") long flatFillMs) {
+        return flatFillMs == 0
+            ? new Matchmaking()
+            : Matchmaking.perCapacity(null, Matchmaking.BOT_FILL_AFTER_MS);
+    }
+
+    /**
+     * GameHub（= GameCommandSink，WS 三件套的条件 Bean 就此满足）。
+     * 事务接缝接宿主的 PlatformTransactionManager（MyBatis starter 必带）；
+     * 跨季翻页接 GameSeasonService::sweep。房间号/随机源用默认（SecureRandom/Math::random）。
+     */
+    @Bean
+    public GameHub gameHub(Clock clock, ZoneId zone,
+                           GameProfileService profiles, GameWalletService wallet,
+                           GameSettlementService settlement, Matchmaking matchmaking,
+                           GameSeasonService seasons,
+                           ObjectProvider<PlatformTransactionManager> txManagers) {
+        GameHub.TxRunner tx = null;
+        PlatformTransactionManager tm = txManagers.getIfAvailable();
+        if (tm != null) {
+            TransactionTemplate tt = new TransactionTemplate(tm);
+            // TxRunner.run 是泛型方法，lambda 推不出函数描述符，只能匿名类。
+            tx = new GameHub.TxRunner() {
+                @Override public <T> T run(java.util.function.Supplier<T> work) {
+                    return tt.execute(status -> work.get());
+                }
+            };
+        }
+        return new GameHub(new com.fasterxml.jackson.databind.ObjectMapper(), clock::millis, zone,
+            profiles, wallet, settlement, matchmaking,
+            null, null, seasons::sweep, tx);
+    }
+
+    /**
+     * tick 驱动（TS main.ts 的 setInterval(tick, 200) 直译）：单线程调度器，
+     * Hub 的全部业务语义因此保持单线程假设（类注释约定）。停机顺序：
+     * 先 hub.shutdown()（退门票、关连接），再停调度器。
+     */
+    @Bean
+    public GameTickDriver gameTickDriver(GameHub hub,
+                                         @Value("${game.tickMs:200}") long tickMs) {
+        return new GameTickDriver(hub, tickMs);
+    }
+
+    /** tick 循环宿主（生命周期归 Spring：容器关闭时优雅停机）。 */
+    public static final class GameTickDriver implements DisposableBean {
+        private final GameHub hub;
+        private final ScheduledExecutorService executor =
+            Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "game-tick");
+                t.setDaemon(true);
+                return t;
+            });
+
+        GameTickDriver(GameHub hub, long tickMs) {
+            this.hub = hub;
+            executor.scheduleWithFixedDelay(() -> {
+                try {
+                    hub.tick();
+                } catch (RuntimeException ignored) {
+                    // tick 里任何一桌/一次推送炸了都不能带走调度器（TS setInterval 同语义）；
+                    // 真正的坏状态由审计 SQL 与健康检查兜。
+                }
+            }, tickMs, tickMs, TimeUnit.MILLISECONDS);
+        }
+
+        @Override
+        public void destroy() {
+            hub.shutdown();                      // 退款在关调度器之前：不再有并发 tick
+            executor.shutdownNow();
+        }
     }
 
     // ---------------------------------------------------------------- WS 接入

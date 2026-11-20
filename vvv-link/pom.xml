@@ -33,6 +33,13 @@
             <artifactId>vvv-student</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 飞机对决（/api/game/**）。同款 AutoConfiguration 装配：
+             game.enabled=true 才注册任何 Bean，默认对宿主零影响。 -->
+        <dependency>
+            <groupId>com.timeline</groupId>
+            <artifactId>vvv-game</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.livekit</groupId>
             <artifactId>livekit-server</artifactId>
