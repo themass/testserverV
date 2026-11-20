@@ -107,12 +107,18 @@ public class DataVideoServiceImpl implements DataVideoService {
     @Override
     public InfoListVo<RecommendVo> getVideoChannelItemsPage(BaseQuery baseQuery,
             PageBaseParam param, String channel,String keywork,String channelOrg) {
-        VideoChannelPo po = videoDao.getOneChannel(channelOrg);
+        // 「频道详情必挂」根因修复：channelOrg 是 2024-06 加的参数，app 各页（放映场、
+        // 旧 VideoChannelListFragment、全局搜索）从来只传 channel → getOneChannel(null)
+        // 查不到行 → 原来下一行 po.getChannelType() 直接 NPE，被全局兜底成 errno 10000
+        // 「System error，please try again」。getOneChannel 查的就是 channel 列，
+        // channelOrg 缺失时用 channel 查是同一语义；再查不到就按 null 走
+        // getChannelItems 的 channelType != 'movie' 回退分支，不再崩。
+        VideoChannelPo po = videoDao.getOneChannel(StringUtils.isEmpty(channelOrg) ? channel : channelOrg);
         List<VideoPo> list = null;
         if(!StringUtils.isEmpty(channelOrg) && channelOrg.startsWith("one_")) {
             channel = channelOrg;
         }
-        String channelType = po.getChannelType();
+        String channelType = po == null ? null : po.getChannelType();
         //关键字检索-》使用baseurl来检索
         if(!StringUtils.isEmpty(keywork)) {
             channel = null;
@@ -135,7 +141,9 @@ public class DataVideoServiceImpl implements DataVideoService {
             }
         }
         PageHelper.startPage(param.getStart(), param.getLimit());
-        LOGGER.info("channel="+channel+"-keywork="+keywork+"-channelType="+channelType+"-channelOrg"+channelOrg+"-po="+po.toString());
+        // po 现在可能为 null（老客户端不传 channelOrg），字符串拼接本身安全，
+        // 但 po.toString() 会 NPE——这里改成允许 null 的形式，日志语义不变。
+        LOGGER.info("channel="+channel+"-keywork="+keywork+"-channelType="+channelType+"-channelOrg"+channelOrg+"-po="+po);
         if(!StringUtils.isEmpty(keywork) && keywork.contains(Constant.asc)){
             keywork = keywork.replace(Constant.asc,"");
             list = videoDao.getChannelItemsAsc(channel,keywork,channelType, null);
