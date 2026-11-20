@@ -36,8 +36,20 @@
 | 设计方案 | 本文档 + `ts-server-spec.md`（移植契约），未外部评审 |
 | `game_*` DDL 在真 5.6.40 执行 | **未做**——真库即线上库，脚本备好在 `vvv-game/src/main/resources/db/game/`，执行需用户点头 |
 | Java 引擎与 TS 引擎逐行为对齐（同 seed 同结果） | **已对拍**：引擎 7 套件 75 测试与 vitest 36 用例逐 seed 对齐；机器人决策序列同 seed 校验通过 |
-| 持久层 SQL 正确性 | H2（MODE=MySQL）8 测试绿；**真 5.6.40 语法未过**（注解 SQL 刻意只用 5.6 子集，见 data-model.md） |
-| 钱包/结算幂等路径 | 13 测试绿（H2 + 确定性 fake mapper）；**真并发下 CAS 让渡路径未在真 MySQL 复测** |
-| WebSocket 在宿主进程内跑通（repo 内首次引入 spring-websocket） | **未实测**——单测只覆盖编解码/限流/鉴权逻辑，容器内握手与端到端对局需起 vvv-link 人工验 |
+| 桌子/Hub 与 TS 行为对齐 | **已对拍**：Table 64 测试 1:1 移植 table.ts 测试、GameHub 42 测试覆盖 hub.ts 口径（门票状态机/归因门/派发序/tick 序） |
+| 全模块单测 | **367/367 绿**（H2 模拟库；真 MySQL 语法见下行） |
+| 持久层 SQL 正确性 | H2（MODE=MySQL）绿；**真 5.6.40 语法未过**（注解 SQL 刻意只用 5.6 子集，见 data-model.md） |
+| 宿主装载 | **编译链接通**（vvv-link 已依赖 vvv-game，全 reactor 编译过）；**运行时未起**——game.enabled 默认关，开启需 Nacos 配置 + DDL 先行人工执行 |
+| WebSocket 端到端（真握手 + 双端对局） | **未实测**——单测覆盖编解码/限流/鉴权/业务路由；WS 三件套与 200ms tick 驱动已接线 |
 | 多实例水平扩展 | **未做**——桌子/引擎状态在进程内存（v1 与 TS 版一致），Redis 只放在线态/座位/索引/锁；扩容前必读 design.md 的边界说明 |
 | 客户端改接新协议 | **未做**——Vue 客户端仍是 TS 旧协议线；切换客户端是上线前置工作 |
+
+## 上线开关（人工，按序）
+
+1. 在测试库（或经评审后在线上库）按 `docs/game/migration.md` 执行 `db/game/V001/V002` DDL。
+2. Nacos 的 vvv-link 配置里加 `game.enabled: true`（其余 game.* 全部可省，默认值见
+   GameAutoConfiguration 类注释）；重启 vvv-link。
+3. 自检：`curl 'https://api.ok123find.top/api/game/v1/health'` → `{"module":true,"mysql":true,"redis":true}`。
+4. nginx 路由片段已备好在 `deploy/nginx/snippets-vpn-routes.conf`（/api/game/ws 带 Upgrade 头），
+   按 deploy/README.md 的步骤同步到服务器。
+5. 回归审计：跑 `db/game/audit_integrity_checks.sql`，六项全 0 才算稳定。
