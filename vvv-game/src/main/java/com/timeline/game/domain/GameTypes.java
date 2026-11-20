@@ -45,4 +45,37 @@ public final class GameTypes {
     public record GameView(GameTypes.Mode mode, GameTypes.GamePhase phase, Long deadlineAt,
                            String turn, Integer round,
                            YouView you, List<OtherPlayerView> others) {}
+
+    // ---------------------------------------------------------------- 桌子层（TS types.ts 桌子相关直译）
+
+    /** 桌子来源：好友房 / 匹配局 / 练习局（决定计费、上榜、散桌规则）。 */
+    public enum TableKind { FRIEND, MATCH, PRACTICE }
+
+    /** 桌子相位（对局的 placing/playing/... 在 GamePhase，这是外层）。 */
+    public enum TablePhase { WAITING, IN_GAME }
+
+    /** 座位视图；playerId 对好友房可见（配 roomCode 使用），匹配房客户端本来就带着它。 */
+    public record SeatView(int seat, String playerId, String nickname,
+                           boolean ready, boolean connected, boolean bot) {}
+
+    /** 一局的结果 + 参与 bot 列表（TableResult：结算与"再来一局"都用它）。 */
+    public record TableResult(GameOverReason reason, List<RankEntry> ranking, List<String> botIds) {}
+
+    /**
+     * 桌子全量快照（协议 evt table.state 的数据源）：客户端无脑覆盖。
+     * lastResult：上一局结果；重开局或改规则后清空由桌子逻辑决定。
+     */
+    public record TableView(String roomCode, TableKind kind, int capacity,
+                            Ruleset.RuleSet rules, int rulesVersion, boolean listed,
+                            String hostId, TablePhase phase,
+                            List<SeatView> seats, TableResult lastResult) {}
+
+    /**
+     * 大厅列表条目（evt room.list）：隐私红线——不含 roomCode / playerId / ready。
+     * 只有 friend+listed+waiting+不满 的桌会出现在这里。
+     */
+    public record RoomListEntry(String tableId, int capacity, Ruleset.RuleSet rules,
+                                String hostNickname, int seated, List<PublicSeat> seats, long createdAt) {
+        public record PublicSeat(int seat, String nickname) {}
+    }
 }
