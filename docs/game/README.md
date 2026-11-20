@@ -29,11 +29,15 @@
   `/api/game/v1` 普通转发即可。见 `deploy/nginx/snippets-vpn-routes.conf`。
 - 路径特意绕开旧的 `/**/*.json` 拦截器链，游戏侧用自己的一层 `Vpn-Token` 校验。
 
-## 已实测 / 未实测（诚实清单，随实现更新）
+## 已实测 / 未实测（诚实清单，随实现更新，2026-11-21）
 
 | 事实 | 状态 |
 |---|---|
-| 设计方案 | 本文档，未评审 |
+| 设计方案 | 本文档 + `ts-server-spec.md`（移植契约），未外部评审 |
 | `game_*` DDL 在真 5.6.40 执行 | **未做**——真库即线上库，脚本备好在 `vvv-game/src/main/resources/db/game/`，执行需用户点头 |
-| Java 引擎与 TS 引擎逐行为对齐（同 seed 同结果） | 计划以单测对拍实现，**未实现** |
-| WebSocket 在宿主进程内跑通（repo 内首次引入 spring-boot-starter-websocket） | **未实测** |
+| Java 引擎与 TS 引擎逐行为对齐（同 seed 同结果） | **已对拍**：引擎 7 套件 75 测试与 vitest 36 用例逐 seed 对齐；机器人决策序列同 seed 校验通过 |
+| 持久层 SQL 正确性 | H2（MODE=MySQL）8 测试绿；**真 5.6.40 语法未过**（注解 SQL 刻意只用 5.6 子集，见 data-model.md） |
+| 钱包/结算幂等路径 | 13 测试绿（H2 + 确定性 fake mapper）；**真并发下 CAS 让渡路径未在真 MySQL 复测** |
+| WebSocket 在宿主进程内跑通（repo 内首次引入 spring-websocket） | **未实测**——单测只覆盖编解码/限流/鉴权逻辑，容器内握手与端到端对局需起 vvv-link 人工验 |
+| 多实例水平扩展 | **未做**——桌子/引擎状态在进程内存（v1 与 TS 版一致），Redis 只放在线态/座位/索引/锁；扩容前必读 design.md 的边界说明 |
+| 客户端改接新协议 | **未做**——Vue 客户端仍是 TS 旧协议线；切换客户端是上线前置工作 |
