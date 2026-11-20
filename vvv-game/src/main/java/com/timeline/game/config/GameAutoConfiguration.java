@@ -1,6 +1,15 @@
 package com.timeline.game.config;
 
+import com.timeline.game.persistence.GameCoinLedgerMapper;
+import com.timeline.game.persistence.GameMatchMapper;
+import com.timeline.game.persistence.GameMatchPlayerMapper;
+import com.timeline.game.persistence.GameProfileMapper;
+import com.timeline.game.persistence.GameProgressMapper;
+import com.timeline.game.persistence.GameSeasonMapper;
+import com.timeline.game.persistence.GameWalletMapper;
+
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -41,5 +50,58 @@ public class GameAutoConfiguration {
     @Bean
     public GameModuleMarker gameModuleMarker() {
         return new GameModuleMarker();
+    }
+
+    // ---------------------------------------------------------------- 持久层
+    // 七个 mapper 挂宿主 SqlSessionFactory（同 vvv-student 的接法）：
+    // 库模块不 @MapperScan——扫包会越界到宿主其它 mapper 的注册策略。
+
+    @Bean
+    public MapperFactoryBean<GameProfileMapper> gameProfileMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<GameProfileMapper> bean = new MapperFactoryBean<>(GameProfileMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
+    @Bean
+    public MapperFactoryBean<GameProgressMapper> gameProgressMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<GameProgressMapper> bean = new MapperFactoryBean<>(GameProgressMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
+    @Bean
+    public MapperFactoryBean<GameWalletMapper> gameWalletMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<GameWalletMapper> bean = new MapperFactoryBean<>(GameWalletMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
+    @Bean
+    public MapperFactoryBean<GameCoinLedgerMapper> gameCoinLedgerMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<GameCoinLedgerMapper> bean = new MapperFactoryBean<>(GameCoinLedgerMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
+    @Bean
+    public MapperFactoryBean<GameMatchMapper> gameMatchMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<GameMatchMapper> bean = new MapperFactoryBean<>(GameMatchMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
+    @Bean
+    public MapperFactoryBean<GameMatchPlayerMapper> gameMatchPlayerMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<GameMatchPlayerMapper> bean = new MapperFactoryBean<>(GameMatchPlayerMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
+    @Bean
+    public MapperFactoryBean<GameSeasonMapper> gameSeasonMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<GameSeasonMapper> bean = new MapperFactoryBean<>(GameSeasonMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
     }
 }
