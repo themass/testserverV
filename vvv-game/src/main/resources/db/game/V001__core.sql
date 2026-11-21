@@ -70,7 +70,7 @@ CREATE TABLE game_coin_ledger (
 CREATE TABLE game_match (
   match_id VARCHAR(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL PRIMARY KEY,
   season_no INT NOT NULL,
-  mode VARCHAR(12) NOT NULL,                            -- duel / melee / practice
+  mode VARCHAR(12) NOT NULL,                            -- duel / melee（棋盘玩法，取自引擎；练习桌引擎同为 duel，桌类型不在本列）
   preset VARCHAR(12) NOT NULL,                          -- beginner/standard/advanced/expert
   capacity TINYINT NOT NULL,                            -- 2/3/4
   ticket VARCHAR(12) NOT NULL DEFAULT 'free',           -- free/standard/advanced

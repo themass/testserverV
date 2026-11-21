@@ -268,12 +268,17 @@ public class GameAutoConfiguration {
     /**
      * WS 三件套（握手鉴权 → 传输层 → 端点注册）。整组挂在 GameCommandSink（=GameHub）上：
      * 业务路由器注册之前 WS 面不装载，HTTP 读接口与 /health 仍可先行自检。
+     *
+     * 真机实测修案（2026-11-22，两轮）：
+     * ①原先写成无注解的嵌套壳类 + @Import——Spring 只处理带 @Configuration 的嵌套类，
+     *   壳类被无视，端点从未注册（握手落到静态资源 404 包装）。
+     * ②改 @Configuration 后仍不注册：@ConditionalOnBean(GameCommandSink) 在本类 bean 方法
+     *   登记**之前**评估（成员类比 @Bean 方法先处理），恒为 false。GameHub 在 enabled=true
+     *   下必存在，条件本就多余——删。教训：@ConditionalOnBean 只可靠地看到"更早的配置类"，
+     *   看不到同类里的兄弟 @Bean。
      */
-    @org.springframework.context.annotation.Import(GameWebSocketConfiguration.class)
-    static class GameWsImports { }
-
+    @org.springframework.context.annotation.Configuration
     @org.springframework.web.socket.config.annotation.EnableWebSocket
-    @ConditionalOnBean(GameCommandSink.class)
     static class GameWebSocketConfiguration
         implements org.springframework.web.socket.config.annotation.WebSocketConfigurer {
 
@@ -304,14 +309,14 @@ public class GameAutoConfiguration {
         }
     }
 
+    // 条件删掉的第三个原因同上：handler/interceptor 与 WS 配置同类，条件评估看不到彼此。
+
     @Bean
-    @ConditionalOnBean(GameCommandSink.class)
     public GameHandshakeInterceptor gameHandshakeInterceptor(GameTokenResolver tokens) {
         return new GameHandshakeInterceptor(tokens);
     }
 
     @Bean
-    @ConditionalOnBean(GameCommandSink.class)
     public GameWebSocketHandler gameWebSocketHandler(
         GameCommandSink sink, @Value("${game.commandRatePerMinute:1200}") int rate) {
         return new GameWebSocketHandler(new com.fasterxml.jackson.databind.ObjectMapper(), sink, rate);
