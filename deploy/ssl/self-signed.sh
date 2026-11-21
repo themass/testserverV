@@ -6,7 +6,7 @@
 #   bash self-signed.sh
 set -euo pipefail
 
-DOMAINS=(api.ok123find.top file.ok123find.top poetry.ok123find.top)
+DOMAINS=(api.ok123find.top file.ok123find.top)
 SSL_DIR=/etc/nginx/ssl
 DAYS=365
 
