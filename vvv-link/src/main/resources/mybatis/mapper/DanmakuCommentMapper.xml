@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.DanmakuCommentDao">
+	<resultMap id="DanmakuCommentMap" type="com.timeline.vpn.model.po.DanmakuCommentPo" autoMapping="true">
+		<id column="id" property="id" />
+	</resultMap>
+
+	<sql id="windowColumns">
+		id, namespace, contentId, editionId, atMs, content, userId, authorName, clientMsgId, deleted, createTime
+	</sql>
+
+	<!-- 窗口分页：走 idx_danmaku_comment_window，cursor 传 null 时不加 id 条件。 -->
+	<select id="listWindow" resultMap="DanmakuCommentMap">
+		select <include refid="windowColumns" />
+		from vpn.danmaku_comment
+		where namespace=#{namespace} and contentId=#{contentId} and editionId=#{editionId}
+		and deleted=0
+		and atMs&gt;=#{startMs} and atMs&lt;#{endMs}
+		<if test="cursor != null">
+			and id&gt;#{cursor}
+		</if>
+		order by id asc
+		limit #{limit}
+	</select>
+
+	<!-- 幂等命中：唯一键 uk_danmaku_comment_idem 的等值查询。 -->
+	<select id="getByClientMsg" resultMap="DanmakuCommentMap">
+		select <include refid="windowColumns" />
+		from vpn.danmaku_comment
+		where namespace=#{namespace} and contentId=#{contentId} and editionId=#{editionId}
+		and userId=#{userId} and clientMsgId=#{clientMsgId}
+		limit 1
+	</select>
+
+	<select id="getById" resultMap="DanmakuCommentMap">
+		select <include refid="windowColumns" />
+		from vpn.danmaku_comment
+		where id=#{id}
+		limit 1
+	</select>
+
+	<!-- 撤回：userId 进 where，撤别人的（或不存在的）恒为 0 行。 -->
+	<update id="softDelete">
+		update vpn.danmaku_comment
+		set deleted=1
+		where id=#{id} and userId=#{userId} and deleted=0
+	</update>
+
+	<!-- 限频：走 idx_danmaku_comment_user_time。 -->
+	<select id="countRecent" resultType="int">
+		select count(*)
+		from vpn.danmaku_comment
+		where userId=#{userId} and createTime&gt;=#{since}
+	</select>
+
+	<insert id="insert" parameterType="com.timeline.vpn.model.po.DanmakuCommentPo" useGeneratedKeys="true" keyProperty="id">
+		insert into vpn.danmaku_comment(namespace, contentId, editionId, atMs, content, userId, authorName, clientMsgId)
+		values(#{namespace}, #{contentId}, #{editionId}, #{atMs}, #{content}, #{userId}, #{authorName}, #{clientMsgId})
+	</insert>
+</mapper>
