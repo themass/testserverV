@@ -43,10 +43,14 @@ import org.springframework.context.annotation.Import;
 // DataSourceTransactionManagerAutoConfiguration 注册事务管理器**之前**就被评估——
 // 条件判假、@Transactional 服务全部跳过，而 @Import 的控制器无条件注册，
 // 真宿主上整个应用起不来（2026-11-21 生产实锤：PoetryReviewService bean missing）。
+// 事务条件同时收进类级 @ConditionalOnBean：@Import 的控制器是无条件注册的，
+// 依赖的服务却是条件注册的——这个不对称就是崩溃形状本身。类级条件在
+// ConfigurationClassBeanDefinitionReader 阶段评估（此时 afterName 已保证事务管理器
+// 先注册），任一条件不满足则整模块干净跳过，绝不再半注册拖死宿主。
 @AutoConfiguration(afterName = {
         "org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration",
         "org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration"})
-@ConditionalOnBean(SqlSessionFactory.class)
+@ConditionalOnBean({SqlSessionFactory.class, PlatformTransactionManager.class})
 @ConditionalOnProperty(prefix = "poetry", name = "enabled", havingValue = "true")
 @Import({PoetryController.class, PoetryReviewController.class})
 public class PoetryAutoConfiguration {
