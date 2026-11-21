@@ -2,7 +2,7 @@
 -- audit_integrity_checks.sql —— game_* 一致性核查清单（全部只读 SELECT，不写任何数据）
 --
 -- 怎么跑（手工）：
---   mysql -h mysql.sspacee.com -P 6666 -u <账号> -p vpn < audit_integrity_checks.sql
+--   mysql -h <库主机> -P <端口> -u <账号> -p <库名> < audit_integrity_checks.sql
 --   或用任意只读客户端整段粘贴执行。每一条都应返回 0 行（或差值 0）。
 --   任何一条返回非 0，先别改数据：按 docs/game/data-model.md 的幂等约定回放结算
 --   （finished=0 的行可安全重放），确认根因后再动，改数前后各留一份备份。

@@ -2,7 +2,7 @@
 
 ## 硬性前提（照抄 vvv-student / vvv-poetry 的既有教训）
 
-- 目标库：`mysql.sspacee.com:6666/vpn`，**MySQL 5.6.40**。`local` 与 `prod` 两个 profile 指向**同一台线上库**，
+- 目标库：`spring.datasource.url`（见本机 bootstrap-*.yml，连接串不入库），**MySQL 5.6.40**。`local` 与 `prod` 两个 profile 指向**同一台线上库**，
   账号无建库权限 → 只能靠 `game_` 前缀隔离 + 备份 + 可回退脚本。
 - 5.6 禁用项：JSON 类型、CHECK、生成列、外键、窗口函数。单列索引键远低于 767 字节。
 - 建表全部 `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`；

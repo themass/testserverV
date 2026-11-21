@@ -1,6 +1,6 @@
 # 迁移脚本与执行顺序
 
-**真库即线上库**（local 与 prod 同指 `mysql.sspacee.com:6666/vpn`，MySQL 5.6.40，无建库权限）。
+**真库即线上库**（本机 bootstrap-local/prod.yml 里的同一条 datasource.url，连接串不入库；MySQL 5.6.40，无建库权限）。
 所有脚本备而**未执行**；执行前必须用户点头，且先做 `SHOW CREATE TABLE` 结构备份（8.x mysqldump 对 5.6 会报错）。
 
 ```
