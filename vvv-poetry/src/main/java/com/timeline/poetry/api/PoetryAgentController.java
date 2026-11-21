@@ -24,7 +24,7 @@ public class PoetryAgentController {
     public PoetryAgentController(PoetryAgentService service, String internalToken) { this.service = service; this.internalToken = internalToken; }
 
     @GetMapping("/works/{workId}/snapshot")
-    public ResponseEntity<AgentResponse<JsonNode>> snapshot(@PathVariable String workId, @RequestHeader(name=TOKEN, required=false) String token,
+    public ResponseEntity<AgentResponse<JsonNode>> snapshot(@PathVariable(value="workId") String workId, @RequestHeader(name=TOKEN, required=false) String token,
             @RequestHeader(name=RUN, required=false) String run, @RequestHeader(name=MANDATE, required=false) String mandate,
             @RequestHeader(name="Idempotency-Key", required=false) String key, @RequestHeader(name=ROLE, required=false) String role) {
         AgentResponse<JsonNode> denied = authorize(token, run, mandate, key, role); if (denied != null) return ResponseEntity.status(403).body(denied);
@@ -33,7 +33,7 @@ public class PoetryAgentController {
     }
 
     @GetMapping("/works/{workId}/integrity-gap-report")
-    public ResponseEntity<AgentResponse<JsonNode>> gaps(@PathVariable String workId, @RequestHeader(name=TOKEN, required=false) String token,
+    public ResponseEntity<AgentResponse<JsonNode>> gaps(@PathVariable(value="workId") String workId, @RequestHeader(name=TOKEN, required=false) String token,
             @RequestHeader(name=RUN, required=false) String run, @RequestHeader(name=MANDATE, required=false) String mandate,
             @RequestHeader(name="Idempotency-Key", required=false) String key, @RequestHeader(name=ROLE, required=false) String role) {
         AgentResponse<JsonNode> denied = authorize(token, run, mandate, key, role); if (denied != null) return ResponseEntity.status(403).body(denied);
@@ -49,19 +49,19 @@ public class PoetryAgentController {
 
     /** This endpoint is BFF-only in deployment policy; it records a human decision before DRAFT apply. */
     @PostMapping("/draft/proposals/{proposalId}/reviews")
-    public ResponseEntity<AgentResponse<Map<String,Object>>> review(@PathVariable String proposalId, @RequestHeader(name=TOKEN, required=false) String token,
+    public ResponseEntity<AgentResponse<Map<String,Object>>> review(@PathVariable(value="proposalId") String proposalId, @RequestHeader(name=TOKEN, required=false) String token,
             @RequestHeader(name=RUN, required=false) String run, @RequestHeader(name=MANDATE, required=false) String mandate,
             @RequestHeader(name="Idempotency-Key", required=false) String key, @RequestHeader(name=ROLE, required=false) String role,
             @RequestBody ProposalReview body) { return write(token, run, mandate, key, role, c -> service.reviewProposal(c, proposalId, body)); }
 
     @PostMapping("/draft/proposals/{proposalId}/apply")
-    public ResponseEntity<AgentResponse<Map<String,Object>>> apply(@PathVariable String proposalId, @RequestHeader(name=TOKEN, required=false) String token,
+    public ResponseEntity<AgentResponse<Map<String,Object>>> apply(@PathVariable(value="proposalId") String proposalId, @RequestHeader(name=TOKEN, required=false) String token,
             @RequestHeader(name=RUN, required=false) String run, @RequestHeader(name=MANDATE, required=false) String mandate,
             @RequestHeader(name="Idempotency-Key", required=false) String key, @RequestHeader(name=ROLE, required=false) String role,
             @RequestBody ProposalApply body) { return write(token, run, mandate, key, role, c -> service.apply(c, proposalId, body)); }
 
     @PostMapping("/works/{workId}/compile-requests")
-    public ResponseEntity<AgentResponse<Map<String,Object>>> compile(@PathVariable String workId, @RequestHeader(name=TOKEN, required=false) String token,
+    public ResponseEntity<AgentResponse<Map<String,Object>>> compile(@PathVariable(value="workId") String workId, @RequestHeader(name=TOKEN, required=false) String token,
             @RequestHeader(name=RUN, required=false) String run, @RequestHeader(name=MANDATE, required=false) String mandate,
             @RequestHeader(name="Idempotency-Key", required=false) String key, @RequestHeader(name=ROLE, required=false) String role,
             @RequestBody CompileRequest body) { return write(token, run, mandate, key, role, c -> service.requestCompile(c, workId, body)); }

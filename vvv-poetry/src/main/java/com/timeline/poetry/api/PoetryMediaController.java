@@ -25,8 +25,8 @@ public class PoetryMediaController {
     @GetMapping("/assets")
     public ResponseEntity<Response<List<Asset>>> assets(
         @RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-        @RequestParam(required = false) String level,
-        @RequestParam(defaultValue = "50") int limit, @RequestParam(defaultValue = "0") int offset) {
+        @RequestParam(required = false, value="level") String level,
+        @RequestParam(defaultValue = "50", value="limit") int limit, @RequestParam(defaultValue = "0", value="offset") int offset) {
         ResponseEntity<Response<List<Asset>>> denied = refuse(provided);
         if (denied != null) return denied;
         return ok(new Response<>(200, media.assets(level, limit, offset), null));
@@ -34,7 +34,7 @@ public class PoetryMediaController {
 
     @GetMapping("/assets/{id}")
     public ResponseEntity<Response<Asset>> asset(
-        @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable String id) {
+        @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable(value="id") String id) {
         ResponseEntity<Response<Asset>> denied = refuse(provided);
         if (denied != null) return denied;
         return ok(new Response<>(200, media.asset(id), null));
@@ -42,7 +42,7 @@ public class PoetryMediaController {
 
     @GetMapping("/assets/{id}/chain")
     public ResponseEntity<Response<Chain>> chain(
-        @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable String id) {
+        @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable(value="id") String id) {
         ResponseEntity<Response<Chain>> denied = refuse(provided);
         if (denied != null) return denied;
         return ok(new Response<>(200, media.chain(id), null));
@@ -51,7 +51,7 @@ public class PoetryMediaController {
     @GetMapping("/scripts")
     public ResponseEntity<Response<List<Script>>> scripts(
         @RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-        @RequestParam(defaultValue = "20") int limit, @RequestParam(defaultValue = "0") int offset) {
+        @RequestParam(defaultValue = "20", value="limit") int limit, @RequestParam(defaultValue = "0", value="offset") int offset) {
         ResponseEntity<Response<List<Script>>> denied = refuse(provided);
         if (denied != null) return denied;
         return ok(new Response<>(200, media.scripts(limit, offset), null));
@@ -59,7 +59,7 @@ public class PoetryMediaController {
 
     @GetMapping("/scripts/{id}")
     public ResponseEntity<Response<ScriptDetail>> script(
-        @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable String id) {
+        @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable(value="id") String id) {
         ResponseEntity<Response<ScriptDetail>> denied = refuse(provided);
         if (denied != null) return denied;
         return ok(new Response<>(200, media.scriptDetail(id), null));
@@ -68,7 +68,7 @@ public class PoetryMediaController {
     @PostMapping("/draft/asset/{id}")
     public ResponseEntity<Response<Written>> createAsset(
         @RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-        @PathVariable String id, @RequestBody AssetWrite body) {
+        @PathVariable(value="id") String id, @RequestBody AssetWrite body) {
         ResponseEntity<Response<Written>> denied = refuse(provided);
         if (denied != null) return denied;
         return ok(new Response<>(200, media.createAsset(id, body), null));
@@ -77,7 +77,7 @@ public class PoetryMediaController {
     @PutMapping("/draft/asset/{id}")
     public ResponseEntity<Response<Written>> updateAsset(
         @RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-        @PathVariable String id, @RequestBody AssetWrite body) {
+        @PathVariable(value="id") String id, @RequestBody AssetWrite body) {
         ResponseEntity<Response<Written>> denied = refuse(provided);
         if (denied != null) return denied;
         return ok(new Response<>(200, media.updateAsset(id, body), null));
@@ -86,7 +86,7 @@ public class PoetryMediaController {
     @PostMapping("/draft/script/{id}/{version}")
     public ResponseEntity<Response<Written>> createScript(
         @RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-        @PathVariable String id, @PathVariable String version, @RequestBody ScriptWrite body) {
+        @PathVariable(value="id") String id, @PathVariable(value="version") String version, @RequestBody ScriptWrite body) {
         ResponseEntity<Response<Written>> denied = refuse(provided);
         if (denied != null) return denied;
         return ok(new Response<>(200, media.createScript(id, version, body), null));
@@ -96,7 +96,7 @@ public class PoetryMediaController {
     @PostMapping("/draft/script/{id}/{version}/assets")
     public ResponseEntity<Response<Integer>> registerAssets(
         @RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-        @PathVariable String id, @PathVariable String version, @RequestBody List<ScriptAssetWrite> body) {
+        @PathVariable(value="id") String id, @PathVariable(value="version") String version, @RequestBody List<ScriptAssetWrite> body) {
         ResponseEntity<Response<Integer>> denied = refuse(provided);
         if (denied != null) return denied;
         return ok(new Response<>(200, media.registerAssets(id, version, body), null));

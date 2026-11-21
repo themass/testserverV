@@ -33,7 +33,7 @@ public class PoetryStudioReadController {
     }
 
     @GetMapping("/tasks/{taskId}/runs")
-    public ResponseEntity<StudioResponse<Object>> taskRuns(@RequestHeader(name = TOKEN, required = false) String token, @PathVariable String taskId) {
+    public ResponseEntity<StudioResponse<Object>> taskRuns(@RequestHeader(name = TOKEN, required = false) String token, @PathVariable(value="taskId") String taskId) {
         return read(token, "agent-task-runs:" + taskId, () -> service.taskRuns(taskId));
     }
 
@@ -47,7 +47,7 @@ public class PoetryStudioReadController {
     }
 
     @GetMapping("/proposals/{proposalId}/items")
-    public ResponseEntity<StudioResponse<Object>> proposalItems(@RequestHeader(name = TOKEN, required = false) String token, @PathVariable String proposalId) {
+    public ResponseEntity<StudioResponse<Object>> proposalItems(@RequestHeader(name = TOKEN, required = false) String token, @PathVariable(value="proposalId") String proposalId) {
         return read(token, "agent-proposal-items:" + proposalId, () -> service.proposalItems(proposalId));
     }
 
@@ -58,12 +58,12 @@ public class PoetryStudioReadController {
     }
 
     @GetMapping("/works/{workId}/coverage")
-    public ResponseEntity<StudioResponse<Object>> coverage(@RequestHeader(name = TOKEN, required = false) String token, @PathVariable String workId) {
+    public ResponseEntity<StudioResponse<Object>> coverage(@RequestHeader(name = TOKEN, required = false) String token, @PathVariable(value="workId") String workId) {
         return read(token, "coverage:" + workId, () -> service.coverage(workId));
     }
 
     @GetMapping("/works/{workId}/studio-view")
-    public ResponseEntity<StudioResponse<Object>> studioView(@RequestHeader(name = TOKEN, required = false) String token, @PathVariable String workId) {
+    public ResponseEntity<StudioResponse<Object>> studioView(@RequestHeader(name = TOKEN, required = false) String token, @PathVariable(value="workId") String workId) {
         return read(token, "studio-view:" + workId, () -> service.studioView(workId));
     }
 

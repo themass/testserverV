@@ -36,7 +36,7 @@ public class PoetryStudioWriteController {
 
     @PutMapping("/citations/{claimId}/{sourceId}/locator")
     public ResponseEntity<StudioResponse<Object>> locator(@RequestHeader(name = TOKEN, required = false) String token,
-            @PathVariable String claimId, @PathVariable String sourceId, HttpServletRequest request) {
+            @PathVariable(value="claimId") String claimId, @PathVariable(value="sourceId") String sourceId, HttpServletRequest request) {
         ResponseEntity<StudioResponse<Object>> denied = gate(token); if (denied != null) return denied;
         LocatorUpdate parsed = parse(readBody(request), LocatorUpdate.class);
         return respond(service.setLocator(claimId, sourceId, parsed));
@@ -44,7 +44,7 @@ public class PoetryStudioWriteController {
 
     @PostMapping("/sources/{sourceId}/verification")
     public ResponseEntity<StudioResponse<Object>> verification(@RequestHeader(name = TOKEN, required = false) String token,
-            @PathVariable String sourceId, HttpServletRequest request) {
+            @PathVariable(value="sourceId") String sourceId, HttpServletRequest request) {
         ResponseEntity<StudioResponse<Object>> denied = gate(token); if (denied != null) return denied;
         SourceVerification parsed = parse(readBody(request), SourceVerification.class);
         return respond(service.verifySource(sourceId, parsed));
@@ -52,7 +52,7 @@ public class PoetryStudioWriteController {
 
     @PutMapping("/proposals/{proposalId}/items")
     public ResponseEntity<StudioResponse<Object>> items(@RequestHeader(name = TOKEN, required = false) String token,
-            @PathVariable String proposalId, HttpServletRequest request) {
+            @PathVariable(value="proposalId") String proposalId, HttpServletRequest request) {
         ResponseEntity<StudioResponse<Object>> denied = gate(token); if (denied != null) return denied;
         ItemDecisions parsed = parse(readBody(request), ItemDecisions.class);
         return respond(service.putItemDecisions(proposalId, parsed));

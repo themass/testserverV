@@ -31,7 +31,7 @@ public class PoetryPublishController {
     @PostMapping("/draft/script/{id}/{version}/publish")
     public ResponseEntity<PoetryModels.Response<Written>> publishScript(
         @RequestHeader(name = PoetryStudioWriteController.TOKEN, required = false) String token,
-        @PathVariable String id, @PathVariable String version, @RequestBody ScriptPublish body) {
+        @PathVariable(value="id") String id, @PathVariable(value="version") String version, @RequestBody ScriptPublish body) {
         ResponseEntity<PoetryModels.Response<Written>> denied = gate(token);
         if (denied != null) return denied;
         return ResponseEntity.ok(new PoetryModels.Response<>(200, publish.publishScript(id, version, body), null));
@@ -40,7 +40,7 @@ public class PoetryPublishController {
     @PostMapping("/draft/asset/{id}/publish")
     public ResponseEntity<PoetryModels.Response<Written>> publishAsset(
         @RequestHeader(name = PoetryStudioWriteController.TOKEN, required = false) String token,
-        @PathVariable String id) {
+        @PathVariable(value="id") String id) {
         ResponseEntity<PoetryModels.Response<Written>> denied = gate(token);
         if (denied != null) return denied;
         return ResponseEntity.ok(new PoetryModels.Response<>(200, publish.publishAsset(id), null));

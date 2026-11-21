@@ -37,7 +37,7 @@ public class PoetryDraftController {
 
     @PutMapping("/content/{id}")
     public ResponseEntity<Response<Written>> updateContent(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                            @PathVariable String id, @RequestBody ContentUpdate body) {
+                                                            @PathVariable(value="id") String id, @RequestBody ContentUpdate body) {
         ResponseEntity<Response<Written>> denied = refuse(provided, "authoring");
         if (denied != null) return denied;
         return ok(service.updateContent(id, body));
@@ -53,7 +53,7 @@ public class PoetryDraftController {
 
     @PutMapping("/source/{id}")
     public ResponseEntity<Response<Written>> updateSource(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                           @PathVariable String id, @RequestBody SourceUpdate body) {
+                                                           @PathVariable(value="id") String id, @RequestBody SourceUpdate body) {
         ResponseEntity<Response<Written>> denied = refuse(provided, "authoring");
         if (denied != null) return denied;
         return ok(service.updateSource(id, body));
@@ -69,7 +69,7 @@ public class PoetryDraftController {
 
     @PutMapping("/claim/{id}")
     public ResponseEntity<Response<Written>> updateClaim(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                          @PathVariable String id, @RequestBody ClaimUpdate body) {
+                                                          @PathVariable(value="id") String id, @RequestBody ClaimUpdate body) {
         ResponseEntity<Response<Written>> denied = refuse(provided, "authoring");
         if (denied != null) return denied;
         return ok(service.updateClaim(id, body));
@@ -102,9 +102,9 @@ public class PoetryDraftController {
     @GetMapping("/content")
     public ResponseEntity<Response<List<DraftContent>>> contents(
             @RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-            @RequestParam(required = false) String type, @RequestParam(required = false) String status,
-            @RequestParam(required = false) String q, @RequestParam(defaultValue = "50") int limit,
-            @RequestParam(defaultValue = "0") int offset) {
+            @RequestParam(required = false, value="type") String type, @RequestParam(required = false, value="status") String status,
+            @RequestParam(required = false, value="q") String q, @RequestParam(defaultValue = "50", value="limit") int limit,
+            @RequestParam(defaultValue = "0", value="offset") int offset) {
         ResponseEntity<Response<List<DraftContent>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(service.contents(type, status, q, Math.min(200, Math.max(1, limit)), Math.max(0, offset))));
@@ -112,7 +112,7 @@ public class PoetryDraftController {
 
     @GetMapping("/content/{id}")
     public ResponseEntity<Response<DraftContent>> content(
-            @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable String id) {
+            @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable(value="id") String id) {
         ResponseEntity<Response<DraftContent>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         DraftContent found = service.content(id);
@@ -122,7 +122,7 @@ public class PoetryDraftController {
 
     @GetMapping("/content/{id}/claims")
     public ResponseEntity<Response<List<DraftClaim>>> claims(
-            @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable String id) {
+            @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable(value="id") String id) {
         ResponseEntity<Response<List<DraftClaim>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(service.claims(id)));
@@ -130,7 +130,7 @@ public class PoetryDraftController {
 
     @GetMapping("/content/{id}/selections")
     public ResponseEntity<Response<List<DraftSelection>>> selections(
-            @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable String id) {
+            @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable(value="id") String id) {
         ResponseEntity<Response<List<DraftSelection>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(service.selections(id)));
@@ -138,7 +138,7 @@ public class PoetryDraftController {
 
     @GetMapping("/claim/{id}/citations")
     public ResponseEntity<Response<List<DraftCitation>>> citations(
-            @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable String id) {
+            @RequestHeader(name = TOKEN_HEADER, required = false) String provided, @PathVariable(value="id") String id) {
         ResponseEntity<Response<List<DraftCitation>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(service.citations(id)));
@@ -147,8 +147,8 @@ public class PoetryDraftController {
     @GetMapping("/source")
     public ResponseEntity<Response<List<DraftSource>>> sources(
             @RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-            @RequestParam(required = false) String status, @RequestParam(defaultValue = "50") int limit,
-            @RequestParam(defaultValue = "0") int offset) {
+            @RequestParam(required = false, value="status") String status, @RequestParam(defaultValue = "50", value="limit") int limit,
+            @RequestParam(defaultValue = "0", value="offset") int offset) {
         ResponseEntity<Response<List<DraftSource>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(service.sources(status, Math.min(200, Math.max(1, limit)), Math.max(0, offset))));
@@ -157,7 +157,7 @@ public class PoetryDraftController {
     @GetMapping("/coverage")
     public ResponseEntity<Response<List<DraftCoverage>>> coverage(
             @RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-            @RequestParam(required = false) String type) {
+            @RequestParam(required = false, value="type") String type) {
         ResponseEntity<Response<List<DraftCoverage>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(service.coverage(type)));
@@ -176,7 +176,7 @@ public class PoetryDraftController {
 
     @PutMapping("/version/{id}")
     public ResponseEntity<Response<Written>> updateVersion(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                            @PathVariable String id, @RequestBody VersionUpdate body) {
+                                                            @PathVariable(value="id") String id, @RequestBody VersionUpdate body) {
         ResponseEntity<Response<Written>> denied = refuse(provided, "authoring");
         if (denied != null) return denied;
         return ok(texts.updateVersion(id, body));
@@ -184,7 +184,7 @@ public class PoetryDraftController {
 
     @GetMapping("/versions")
     public ResponseEntity<Response<List<DraftVersion>>> versions(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                                  @RequestParam String work) {
+                                                                  @RequestParam(value="work") String work) {
         ResponseEntity<Response<List<DraftVersion>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(texts.versions(work)));
@@ -192,7 +192,7 @@ public class PoetryDraftController {
 
     @GetMapping("/version/{id}/lines")
     public ResponseEntity<Response<List<DraftLine>>> lines(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                            @PathVariable String id) {
+                                                            @PathVariable(value="id") String id) {
         ResponseEntity<Response<List<DraftLine>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(texts.lines(id)));
@@ -200,7 +200,7 @@ public class PoetryDraftController {
 
     @PostMapping("/version/{id}/lines")
     public ResponseEntity<Response<Written>> addLine(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                      @PathVariable String id, @RequestBody LineWrite body) {
+                                                      @PathVariable(value="id") String id, @RequestBody LineWrite body) {
         ResponseEntity<Response<Written>> denied = refuse(provided, "authoring");
         if (denied != null) return denied;
         return ok(texts.addLine(id, body));
@@ -224,7 +224,7 @@ public class PoetryDraftController {
 
     @PutMapping("/background/{id}")
     public ResponseEntity<Response<Written>> updateBackground(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                               @PathVariable String id, @RequestBody BackgroundWrite body) {
+                                                               @PathVariable(value="id") String id, @RequestBody BackgroundWrite body) {
         ResponseEntity<Response<Written>> denied = refuse(provided, "authoring");
         if (denied != null) return denied;
         return ok(texts.updateBackground(id, body));
@@ -232,7 +232,7 @@ public class PoetryDraftController {
 
     @GetMapping("/backgrounds")
     public ResponseEntity<Response<List<DraftBackground>>> backgrounds(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                                       @RequestParam String work) {
+                                                                       @RequestParam(value="work") String work) {
         ResponseEntity<Response<List<DraftBackground>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(texts.backgrounds(work)));
@@ -240,7 +240,7 @@ public class PoetryDraftController {
 
     @PostMapping("/background/{id}/lines")
     public ResponseEntity<Response<Written>> linkBackgroundLine(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                                 @PathVariable String id, @RequestBody BackgroundLineWrite body) {
+                                                                 @PathVariable(value="id") String id, @RequestBody BackgroundLineWrite body) {
         ResponseEntity<Response<Written>> denied = refuse(provided, "authoring");
         if (denied != null) return denied;
         return ok(texts.linkBackgroundLine(new BackgroundLineWrite(id, body.versionId(), body.lineSeq())));
@@ -248,7 +248,7 @@ public class PoetryDraftController {
 
     @GetMapping("/background/{id}/lines")
     public ResponseEntity<Response<List<DraftLine>>> backgroundLines(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                                      @PathVariable String id) {
+                                                                      @PathVariable(value="id") String id) {
         ResponseEntity<Response<List<DraftLine>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(texts.backgroundLines(id)));
@@ -264,7 +264,7 @@ public class PoetryDraftController {
 
     @GetMapping("/annotations")
     public ResponseEntity<Response<List<DraftAnnotation>>> annotations(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                                        @RequestParam String version) {
+                                                                        @RequestParam(value="version") String version) {
         ResponseEntity<Response<List<DraftAnnotation>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(texts.annotations(version)));
@@ -280,7 +280,7 @@ public class PoetryDraftController {
 
     @GetMapping("/relations")
     public ResponseEntity<Response<List<DraftRelation>>> relations(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                                    @RequestParam String subject) {
+                                                                    @RequestParam(value="subject") String subject) {
         ResponseEntity<Response<List<DraftRelation>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(texts.relations(subject)));
@@ -296,7 +296,7 @@ public class PoetryDraftController {
 
     @GetMapping("/work-authors")
     public ResponseEntity<Response<List<DraftWorkAuthor>>> authors(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                                    @RequestParam String work) {
+                                                                    @RequestParam(value="work") String work) {
         ResponseEntity<Response<List<DraftWorkAuthor>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(texts.authors(work)));
@@ -327,7 +327,7 @@ public class PoetryDraftController {
 
     @GetMapping("/textbook-works")
     public ResponseEntity<Response<List<TextbookWorkWrite>>> textbookWorks(@RequestHeader(name = TOKEN_HEADER, required = false) String provided,
-                                                                           @RequestParam String work) {
+                                                                           @RequestParam(value="work") String work) {
         ResponseEntity<Response<List<TextbookWorkWrite>>> denied = refuse(provided, "draft reads");
         if (denied != null) return denied;
         return ResponseEntity.ok(Response.ok(texts.textbookWorks(work)));

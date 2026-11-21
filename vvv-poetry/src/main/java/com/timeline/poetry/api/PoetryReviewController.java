@@ -29,7 +29,7 @@ public class PoetryReviewController {
     public record LogBody(String subjectId, String decision, String reviewer, String note) {}
 
     @PostMapping("/{type}/{id}/publish")
-    public ResponseEntity<Response<Decision>> publish(@PathVariable String type, @PathVariable String id,
+    public ResponseEntity<Response<Decision>> publish(@PathVariable(value="type") String type, @PathVariable(value="id") String id,
             @RequestHeader(name = TOKEN_HEADER, required = false) String token, @RequestBody Body body) {
         ResponseEntity<Response<Decision>> refused = refuse(type, token);
         if (refused != null) return refused;
@@ -37,7 +37,7 @@ public class PoetryReviewController {
     }
 
     @PostMapping("/{type}/{id}/retract")
-    public ResponseEntity<Response<Decision>> retract(@PathVariable String type, @PathVariable String id,
+    public ResponseEntity<Response<Decision>> retract(@PathVariable(value="type") String type, @PathVariable(value="id") String id,
             @RequestHeader(name = TOKEN_HEADER, required = false) String token, @RequestBody Body body) {
         ResponseEntity<Response<Decision>> refused = refuse(type, token);
         if (refused != null) return refused;
@@ -45,7 +45,7 @@ public class PoetryReviewController {
     }
 
     @PostMapping("/log/{type}")
-    public ResponseEntity<Response<Decision>> log(@PathVariable String type,
+    public ResponseEntity<Response<Decision>> log(@PathVariable(value="type") String type,
             @RequestHeader(name = TOKEN_HEADER, required = false) String token, @RequestBody LogBody body) {
         ResponseEntity<Response<Decision>> refused = refuse(type, token);
         if (refused != null) return refused;
