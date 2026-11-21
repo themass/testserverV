@@ -40,3 +40,27 @@ management:
         server:
           requests: 1ms,5ms,10ms,50ms,100ms,200ms,500ms,1s,5s
 
+# ---------------------------------------------------------------------------
+# 飞机对决（vvv-game 库模块）。本工程无 Nacos，配置全部随仓库走：
+# 改这里、重新打包、重启即生效。下列即 game.* 全部可配项（默认值就是这里写的）。
+# enabled=false 时整个模块不装载：HTTP /api/game/v1/** 与 WS /api/game/ws 都不注册。
+# ---------------------------------------------------------------------------
+game:
+  enabled: true
+  # 日切/赛季时区（钱包 day_key 与赛季边界的口径），国内用户固定东八区。
+  zone: Asia/Shanghai
+  # 引擎心跳间隔毫秒（TS 版 setInterval(tick, 200) 直译）；调大只影响匹配补位/
+  # 超时判定的粒度，不影响对局内逻辑。
+  tickMs: 200
+  # 每条 WS 连接的命令令牌桶（每分钟额度），防客户端失控刷命令；1200≈20 条/秒。
+  commandRatePerMinute: 1200
+  # 匹配补位机器人：-1=按桌容量阶梯补位（2/3 人桌 30s、4 人桌 45s，同 TS）；
+  # 0=完全不补位（真人凑不满就一直等）；>0=所有容量统一按该毫秒数补位。
+  matchBotFillMs: -1
+  ws:
+    # WebSocket 端点，要和 nginx 的 /api/game/ws Upgrade 路由一致（deploy/nginx/）。
+    path: /api/game/ws
+    # 允许握手来源，逗号分隔；* 同 TS 旧版（客户端是 App 无同源检查）。
+    # 上线收紧示例：https://app.ok123find.top
+    allowed-origins: "*"
+

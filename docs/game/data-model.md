@@ -2,9 +2,10 @@
 
 ## 硬性前提（照抄 vvv-student / vvv-poetry 的既有教训）
 
-- 目标库：`spring.datasource.url`（见本机 bootstrap-*.yml，连接串不入库），**MySQL 5.6.40**。`local` 与 `prod` 两个 profile 指向**同一台线上库**，
+- 目标库：`spring.datasource.url`（见本机 bootstrap-*.yml，连接串不入库）。**2026-11-22 真库实测 MySQL 8.0.46**
+  （旧文档写 5.6.40 源自 TS 项目的过时情报）。`local` 与 `prod` 两个 profile 指向**同一台线上库**，
   账号无建库权限 → 只能靠 `game_` 前缀隔离 + 备份 + 可回退脚本。
-- 5.6 禁用项：JSON 类型、CHECK、生成列、外键、窗口函数。单列索引键远低于 767 字节。
+- 写法仍按 5.6 子集（JSON 类型、CHECK、生成列、外键、窗口函数全部不用）：既是历史判断，也保前向兼容。
 - 建表全部 `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`；
   业务键（幂等键、roomCode、match_id）用 `utf8mb4_bin` 保持大小写敏感。
 - 时间：审计列用 `DATETIME DEFAULT CURRENT_TIMESTAMP`（DB 时钟，UTC 部署时注意 server 时区）；
@@ -28,7 +29,7 @@
 派生关系：客户端 `recent` 列表由 `game_match_player` + `game_match` 联查得到（**不另存冗余 recent 表**，
 避免双写不一致）；`ProfileView` = profile + progress + wallet 三行单键读。
 
-## DDL（V001__core.sql 草案，未执行）
+## DDL（V001__core.sql，2026-11-22 已在线上库执行）
 
 ```sql
 CREATE TABLE game_schema_version (

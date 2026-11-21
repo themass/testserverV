@@ -1,7 +1,11 @@
 # 迁移脚本与执行顺序
 
-**真库即线上库**（本机 bootstrap-local/prod.yml 里的同一条 datasource.url，连接串不入库；MySQL 5.6.40，无建库权限）。
-所有脚本备而**未执行**；执行前必须用户点头，且先做 `SHOW CREATE TABLE` 结构备份（8.x mysqldump 对 5.6 会报错）。
+**真库即线上库**（本机 bootstrap-local/prod.yml 里的同一条 datasource.url，连接串不入库；无建库权限）。
+
+> **2026-11-22 执行记录**：V001/V002 已在线上库 `vpn` 执行，9 张 `game_*` 表落地，schema_version 记到 2，
+> `game_season` 种入首季行（season_no=1）。真库实测 `SELECT VERSION()` = **MySQL 8.0.46**——
+> 本文档与 data-model.md 里"5.6.40"的说法源自 TS 项目旧情报，已过时；SQL 仍刻意只用 5.6 子集写法（前向兼容，8.0 一次通过）。
+> 紧急回退：`recovery/drop_game_objects.sql`（只 DROP `game_*`）。
 
 ```
 vvv-game/src/main/resources/db/game/

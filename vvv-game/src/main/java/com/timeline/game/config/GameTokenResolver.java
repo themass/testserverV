@@ -43,8 +43,14 @@ public final class GameTokenResolver {
         }
     }
 
-    /** 健康检查用：Redis 是否读得通（一次 EXISTS，不碰业务键）。 */
+    /** 健康检查用：Redis 是否读得通（PING，不碰任何业务键）。 */
     public boolean redisAlive() {
-        return Boolean.TRUE.equals(redis.hasKey(TOKEN_KEY_PREFIX + "health-probe"));
+        // 早期实现是 hasKey("token_health-probe")——那个键永远不会存在，
+        // Redis 健康也返回 false（首次真机自检抓出）。PING 与键空间无关，
+        // 走 execute 回调让模板负责归还连接。
+        // Spring Data Redis 的 ping() 返回状态字符串 "PONG"，走 execute 回调让模板负责归还连接。
+        String p = redis.execute((org.springframework.data.redis.core.RedisCallback<String>)
+            connection -> connection.ping());
+        return p != null && "PONG".equalsIgnoreCase(p);
     }
 }

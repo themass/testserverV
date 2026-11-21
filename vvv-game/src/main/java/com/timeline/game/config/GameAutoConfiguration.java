@@ -43,12 +43,14 @@ import java.util.concurrent.TimeUnit;
  * 开启条件：game.enabled=true，且宿主有 SqlSessionFactory 与 Redis 连接。
  * 本类不跑迁移：db/game/*.sql 由人工按 docs/game/migration.md 执行（真库即线上库）。
  *
- * 属性（除 enabled 外全部可省）：
+ * 属性（除 enabled 外全部可省；线上值以 vvv-link 的 bootstrap.yml game: 块为准）：
  *   game.enabled=true                  模块总开关
  *   game.ws.path=/api/game/ws          WebSocket 端点
- *   game.presenceTtlSeconds=90         在线态键 TTL
+ *   game.ws.allowed-origins=*          握手来源白名单（逗号分隔）
+ *   game.zone=Asia/Shanghai            日切/赛季时区
+ *   game.tickMs=200                    引擎心跳间隔
  *   game.commandRatePerMinute=1200     每连接命令令牌桶（约 20/s）
- *   game.seasonEnabled=false           赛季发奖/重置定时任务
+ *   game.matchBotFillMs=-1             -1 阶梯补位 / 0 关补位 / >0 统一补位
  *
  * 接线顺序刻意保守：先 AutoConfiguration 空壳跑通宿主启动，再逐步挂
  * domain→persistence→realtime→service→api/ws（docs/game/design.md 待办顺序）。

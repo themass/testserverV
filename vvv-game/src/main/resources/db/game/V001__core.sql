@@ -1,6 +1,6 @@
 -- ============================================================================
 -- V001__core.sql —— game_* 核心表（profile/progress/wallet/ledger/match/match_player/season）
--- 状态：未执行。执行方式见 docs/game/migration.md。
+-- 状态：2026-11-22 已在线上库执行（真库实测 MySQL 8.0.46）。记录见 docs/game/migration.md。
 -- 目标库：本机 bootstrap-*.yml 的 spring.datasource.url 所指库（连接串不入库），
 -- MySQL 5.6（local 与 prod 指向同一台线上库）。
 -- 执行前必须先备份（无建库权限，只能靠前缀隔离 + 备份 + 可回退脚本兜底）。

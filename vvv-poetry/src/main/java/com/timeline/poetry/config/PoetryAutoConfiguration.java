@@ -50,10 +50,26 @@ import org.springframework.context.annotation.Import;
 @AutoConfiguration(afterName = {
         "org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration",
         "org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration"})
+// @Import 是崩溃的第二层（2026-11-21 18:06 生产实锤）：@Import 注册的 bean 走构造器
+// 自动装配，PoetryReviewController(PoetryReviewService, String) 的 String 是**评审令牌值**，
+// 容器里没有任何 String bean——报 "required a bean of type 'java.lang.String'"。
+// 控制器一律改成本类的 @Bean 工厂方法：@Value 注入令牌、@ConditionalOnBean 与所依赖
+// 服务同生共死，模块内不存在「服务有条件、控制器无条件」的不对称。
+//（类上有 @RestController，注册成 bean 后 RequestMappingHandlerMapping 照常收映射。）
 @ConditionalOnBean({SqlSessionFactory.class, PlatformTransactionManager.class})
 @ConditionalOnProperty(prefix = "poetry", name = "enabled", havingValue = "true")
-@Import({PoetryController.class, PoetryReviewController.class})
 public class PoetryAutoConfiguration {
+    @Bean
+    public PoetryController poetryController(PoetryCatalog catalog) { return new PoetryController(catalog); }
+
+    /** Review token is a VALUE (poetry.reviewToken), not a bean; unset -> controller refuses with 503 by design. */
+    @Bean
+    @ConditionalOnBean(PlatformTransactionManager.class)
+    public PoetryReviewController poetryReviewController(PoetryReviewService service,
+            @Value("${poetry.reviewToken:}") String reviewToken) {
+        return new PoetryReviewController(service, reviewToken);
+    }
+
     @Bean
     public MapperFactoryBean<PoetryMapper> poetryMapper(SqlSessionFactory factory) {
         MapperFactoryBean<PoetryMapper> bean = new MapperFactoryBean<>(PoetryMapper.class);
