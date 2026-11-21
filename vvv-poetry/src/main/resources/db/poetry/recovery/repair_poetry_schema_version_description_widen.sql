@@ -1,0 +1,34 @@
+-- recovery 修复件：放宽 poetry_schema_version.description 列宽（2026-11-22）。
+-- MySQL 8.0.46 实测；MySQL 5.6 同样兼容（TEXT 无长度参数）。
+--
+-- ===== 为什么 =====
+-- V001 建表时 description 定为 varchar(200)。阶段 D 从 V021 起账本说明升级为
+-- 整段考证摘要（实测最长 6203 字，V072），V021 首次在真库执行即触发
+-- ERROR 1406 Data too long——此前这批迁移从未执行过，矛盾直到真库才暴露。
+-- 账本说明是本项目的审计证据链本体，不可截断，只能放宽列。
+--
+-- ===== 本文件改什么，不改什么 =====
+-- 改：poetry_schema_version.description 由 varchar(200) 放宽为 TEXT NOT NULL。
+--   纯放宽（expansion），零数据变更，零截断风险；TEXT 上限 65535 字节
+--   （utf8mb4 下约 16383 字），对现有最长 6203 字留有充分余量。
+-- 不改：任何数据行；任何其它表；账本语义。
+--
+-- ===== 为什么放 recovery/ 而不是新开 V0 编号 =====
+-- V001–V076 编号已全部占用，账本连续性不允许打洞插号。本件与
+-- V007__agent_domain_audit_mysql56_resume.sql 同款：操作者在目标库显式执行的
+-- 一次性修复件，audit-migrations.py 按 V{n}_rollback.sql 精确查名，不受影响。
+--
+-- ===== 执行方式 =====
+-- 一条一条执行；执行后跑文末核对。已确认 2026-11-22 01:10 在
+-- mysql.sspacee.com:6666/vpn（MySQL 8.0.46）应用。
+--
+-- ===== 执行前核对 =====
+--   SHOW CREATE TABLE poetry_schema_version\G   -- description 为 varchar(200)
+--
+-- ===== 修改 =====
+ALTER TABLE poetry_schema_version MODIFY description TEXT NOT NULL;
+--
+-- ===== 执行后核对 =====
+--   SHOW CREATE TABLE poetry_schema_version\G   -- description 为 text NOT NULL
+--   SELECT COUNT(*) FROM poetry_schema_version; -- 行数不变
+--   SELECT MAX(CHAR_LENGTH(description)) FROM poetry_schema_version; -- 无截断（与源 SQL 字面一致）
