@@ -38,7 +38,14 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Import;
 
 /** Opt-in only; shares the host's DataSource/SqlSessionFactory. Does not run migrations. */
-@AutoConfiguration(afterName = "org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration")
+// afterName 不可省：poetry 的包名按字母序排在 org.springframework 之前，若不点名，
+// 本类的 @ConditionalOnBean(PlatformTransactionManager) 在
+// DataSourceTransactionManagerAutoConfiguration 注册事务管理器**之前**就被评估——
+// 条件判假、@Transactional 服务全部跳过，而 @Import 的控制器无条件注册，
+// 真宿主上整个应用起不来（2026-11-21 生产实锤：PoetryReviewService bean missing）。
+@AutoConfiguration(afterName = {
+        "org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration",
+        "org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration"})
 @ConditionalOnBean(SqlSessionFactory.class)
 @ConditionalOnProperty(prefix = "poetry", name = "enabled", havingValue = "true")
 @Import({PoetryController.class, PoetryReviewController.class})
