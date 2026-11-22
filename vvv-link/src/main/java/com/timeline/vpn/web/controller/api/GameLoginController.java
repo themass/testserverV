@@ -3,6 +3,8 @@ package com.timeline.vpn.web.controller.api;
 import com.timeline.vpn.Constant;
 import com.timeline.vpn.exception.ApiException;
 import com.timeline.vpn.exception.LoginException;
+import com.timeline.vpn.model.form.UserRegForm;
+import com.timeline.vpn.model.form.UserResetPwdForm;
 import com.timeline.vpn.model.param.BaseQuery;
 import com.timeline.vpn.model.param.DevApp;
 import com.timeline.vpn.model.vo.JsonResult;
@@ -50,6 +52,15 @@ public class GameLoginController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameLoginController.class);
 
+    /**
+     * 注册时服务端固定写入的中性性别值。UserRegForm.sex 是 @NotBlank 必填，但飞机对决 H5
+     * 没有性别输入项，这里给个占位值过校验。口径依据：vpn.user.sex 列是 VARCHAR(8) NULL，
+     * 全仓除 UserPo/UserVo 的 getter/setter 与 UserMapper 的 insert 外没有任何 UI/业务读取它
+     * （recommend_sex 那套是渠道常量 SEX，与此列无关），所以取值不破坏任何现有界面；
+     * 无强约束时按约定取 "0" 表示"未填/中性"。
+     */
+    private static final String DEFAULT_SEX = "0";
+
     private final UserService userService;
 
     /** 单构造器：Spring 隐式注入（与测试直接 new 传假 Service 两用）。 */
@@ -91,6 +102,135 @@ public class GameLoginController {
             LOGGER.error("game login error: name=" + name, e);
             return new JsonResult(Constant.ResultErrno.ERRNO_SYSTEM, "系统繁忙，请稍后再试");
         }
+    }
+
+    /**
+     * 注册（POST /api/game/v1/register，body {"name","pwd","rePwd","email"可选}）。
+     *
+     * <p>业务完整复用 {@link UserService#reg}：PBKDF2 哈希、RADIUS 加账号、设备登记、
+     * 邀请码（本入口不传 inviteCode）、引用积分链路一律照旧，不复制任何逻辑。
+     *
+     * <p>sex 是 UserRegForm 的必填字段（@NotBlank），但飞机对决 H5 没有性别这个输入项，
+     * 服务端固定填 {@link #DEFAULT_SEX}（口径见常量注释）；H5 也不传 code/channel/ref，
+     * reg() 内对这些都有 null 保护（handleRef 的 StringUtils.isEmpty 短路、
+     * applyInvite 的入参判空 + try/catch），无需补。
+     */
+    @PostMapping("/register")
+    public JsonResult register(HttpServletRequest request,
+                               @RequestBody(required = false) Map<String, String> body) {
+        String name = body == null ? null : body.get("name");
+        String pwd = body == null ? null : body.get("pwd");
+        String rePwd = body == null ? null : body.get("rePwd");
+        String email = body == null ? null : body.get("email");
+        if (!StringUtils.hasText(name) || !StringUtils.hasText(pwd) || !StringUtils.hasText(rePwd)) {
+            return new JsonResult(Constant.ResultErrno.ERRNO_PARAM, "用户名和密码不能为空");
+        }
+        // 两次密码先在门口比：reg() 的不一致分支抛 DataException(RESULT.ERROR.DATA) 且 errno 出
+        // 21000，还会在 service 侧按"垃圾用户"打 error 日志——这条路径不该走那个语义
+        if (!pwd.equals(rePwd)) {
+            return new JsonResult(Constant.ResultErrno.ERRNO_PARAM, "两次输入的密码不一致");
+        }
+        UserRegForm form = new UserRegForm();
+        form.setName(name);
+        form.setPwd(pwd);
+        form.setRePwd(rePwd);
+        form.setSex(DEFAULT_SEX);
+        form.setEmail(email);   // 可选，null 直接落库（列本身 NULL）
+        try {
+            userService.reg(form, buildBaseQuery(request));
+            return new JsonResult(Constant.ResultErrno.ERRNO_SUCCESS, null);
+        } catch (ApiException e) {
+            // reg() 的两把 key：EXIST→用户名已存在（11001）、DATA→密码不一致（兜底，正常走不到）
+            LOGGER.warn("game register failed: name={}, key={}", name, e.getMessage());
+            return regError(e.getMessage(), e.getStatus());
+        } catch (RuntimeException e) {
+            LOGGER.error("game register error: name=" + name, e);
+            return new JsonResult(Constant.ResultErrno.ERRNO_SYSTEM, "注册失败，请稍后再试");
+        }
+    }
+
+    /**
+     * 找回密码——发验证码（POST /api/game/v1/findpass，body {"email"}）。
+     *
+     * <p>直接调 {@link UserService#requestPasswordReset}：邮箱没有绑定账号时 service 本身就是
+     * 静默返回（不泄露"该邮箱是否注册过"），这里保持同一语义，照样 errno 0——文案由前端统一
+     * 提示"若邮箱已绑定账号，验证码已发送"，后端不出文案以免两个口径。
+     */
+    @PostMapping("/findpass")
+    public JsonResult findPass(@RequestBody(required = false) Map<String, String> body) {
+        String email = body == null ? null : body.get("email");
+        if (!StringUtils.hasText(email)) {
+            return new JsonResult(Constant.ResultErrno.ERRNO_PARAM, "邮箱不能为空");
+        }
+        try {
+            userService.requestPasswordReset(email);
+            return new JsonResult(Constant.ResultErrno.ERRNO_SUCCESS, null);
+        } catch (ApiException e) {
+            LOGGER.warn("game findpass failed: key={}", e.getMessage());
+            if (Constant.ResultMsg.RESULT_RESET_MAIL_FAIL.equals(e.getMessage())) {
+                // SMTP 发送失败（service 明确抛这一把 key），errno 沿用 LoginException 的 11001
+                return new JsonResult(e.getStatus(), "邮件发送失败，请稍后再试");
+            }
+            return new JsonResult(Constant.ResultErrno.ERRNO_SYSTEM, "发送失败，请稍后再试");
+        } catch (RuntimeException e) {
+            LOGGER.error("game findpass error", e);
+            return new JsonResult(Constant.ResultErrno.ERRNO_SYSTEM, "发送失败，请稍后再试");
+        }
+    }
+
+    /**
+     * 找回密码——改密码（POST /api/game/v1/resetpass，body {"email","code","pwd","rePwd"}）。
+     *
+     * <p>直接调 {@link UserService#resetPassword}：验证码哈希比对、5 次尝试上限、30 分钟 TTL、
+     * 用完作废全在 service 内，这里只做参数拼装与中文文案映射。密码不一致不在门口拦：
+     * service 有明确的 RESULT.ERROR.RESETPWD.MISMATCH，映射即可，不必复制它的判断。
+     */
+    @PostMapping("/resetpass")
+    public JsonResult resetPass(@RequestBody(required = false) Map<String, String> body) {
+        String email = body == null ? null : body.get("email");
+        String code = body == null ? null : body.get("code");
+        String pwd = body == null ? null : body.get("pwd");
+        String rePwd = body == null ? null : body.get("rePwd");
+        if (!StringUtils.hasText(email) || !StringUtils.hasText(code)
+                || !StringUtils.hasText(pwd) || !StringUtils.hasText(rePwd)) {
+            return new JsonResult(Constant.ResultErrno.ERRNO_PARAM, "邮箱、验证码和密码不能为空");
+        }
+        UserResetPwdForm form = new UserResetPwdForm();
+        form.setEmail(email);
+        form.setCode(code);
+        form.setPwd(pwd);
+        form.setRePwd(rePwd);
+        try {
+            userService.resetPassword(form);
+            return new JsonResult(Constant.ResultErrno.ERRNO_SUCCESS, null);
+        } catch (ApiException e) {
+            LOGGER.warn("game resetpass failed: email={}, key={}", email, e.getMessage());
+            String key = e.getMessage();
+            if (Constant.ResultMsg.RESULT_RESET_CODE_EXPIRED.equals(key)) {
+                // 过期与"尝试次数用尽"service 都是这一把 key，对玩家同一句话
+                return new JsonResult(Constant.ResultErrno.ERRNO_PWD, "验证码已过期，请重新获取");
+            }
+            if (Constant.ResultMsg.RESULT_RESET_PWD_MISMATCH.equals(key)) {
+                return new JsonResult(Constant.ResultErrno.ERRNO_PARAM, "两次输入的密码不一致");
+            }
+            // 含 RESULT.ERROR.RESETCODE（验证码错但还没到次数上限）：不透露"码是对是错"的细节
+            return new JsonResult(Constant.ResultErrno.ERRNO_SYSTEM, "重置失败，请稍后再试");
+        } catch (RuntimeException e) {
+            LOGGER.error("game resetpass error: email=" + email, e);
+            return new JsonResult(Constant.ResultErrno.ERRNO_SYSTEM, "重置失败，请稍后再试");
+        }
+    }
+
+    /** 注册错误文案：EXIST→已存在（11001）；DATA→reg() 里只可能是两次密码不一致（兜底）。 */
+    private static JsonResult regError(String key, int status) {
+        if (Constant.ResultMsg.RESULT_EXIST_ERROR.equals(key)) {
+            return new JsonResult(Constant.ResultErrno.ERRNO_PWD, "用户名已存在");
+        }
+        if (Constant.ResultMsg.RESULT_DATA_ERROR.equals(key)) {
+            return new JsonResult(Constant.ResultErrno.ERRNO_PARAM, "两次输入的密码不一致");
+        }
+        // status 不用 e.getStatus()：21000/11001 这些码对 H5 没有意义，未知一律按系统错误出
+        return new JsonResult(Constant.ResultErrno.ERRNO_SYSTEM, "注册失败，请稍后再试");
     }
 
     /** 中文错误文案（按 login() 实际会抛的三把 key 映射；未知 key 不透露细节）。 */
