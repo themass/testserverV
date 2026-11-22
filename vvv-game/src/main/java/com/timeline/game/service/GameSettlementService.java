@@ -7,6 +7,7 @@ import com.timeline.game.persistence.GameMatchMapper;
 import com.timeline.game.persistence.GameMatchPlayerMapper;
 import com.timeline.game.persistence.GameProfileMapper;
 import com.timeline.game.persistence.GameProgressMapper;
+import com.timeline.game.persistence.GameShotMapper;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -39,6 +40,8 @@ public final class GameSettlementService {
     private final GameProgressMapper progressMapper;
     private final GameProfileMapper profileMapper;
     private final GameWalletService walletService;
+    /** game_shot 落库（可空 = 不记逐发明细：纯内存装配/单测）；写入在 settle 抢占之后、同事务。 */
+    private final GameShotMapper shotMapper;
     private final ZoneId zone;
 
     public GameSettlementService(GameMatchMapper matchMapper,
@@ -46,12 +49,14 @@ public final class GameSettlementService {
                                  GameProgressMapper progressMapper,
                                  GameProfileMapper profileMapper,
                                  GameWalletService walletService,
+                                 GameShotMapper shotMapper,
                                  ZoneId zone) {
         this.matchMapper = matchMapper;
         this.matchPlayerMapper = matchPlayerMapper;
         this.progressMapper = progressMapper;
         this.profileMapper = profileMapper;
         this.walletService = walletService;
+        this.shotMapper = shotMapper;
         this.zone = zone;
     }
 
@@ -67,6 +72,10 @@ public final class GameSettlementService {
 
     /** 单个真人的结算摘要（Hub 推送 profile/rankChanged/coinsChanged 的数据源）。 */
     public record PlayerDelta(long userId, int deltaStar, int coinApplied, boolean coinCapped) {}
+
+    /** 逐发炮弹（game_shot 一行的原料）：电脑发炮 byUser=null；result 用 wire 小写词 miss/body/head。 */
+    public record ShotRecord(Long byUser, Long targetUser, int row, int col,
+                             String result, String planeId, long atMs) {}
 
     public record SettleOutcome(boolean claimed, List<PlayerDelta> deltas) {}
 
@@ -94,14 +103,27 @@ public final class GameSettlementService {
     // ---------------------------------------------------------------- 结算
 
     /**
-     * scoreTable 落库版（spec §4）：friend 桌完全不记账 → claim 抢占 → 逐真人
+     * scoreTable 落库版（spec §4）：friend 桌完全不记账 → claim 抢占 → 逐发炮弹落
+     * game_shot（与抢占同事务；INSERT IGNORE 挡重放）→ 逐真人
      * 段位/MMR（仅计分段）→ 战绩 → +5 完成币（人人有，bot 局也发）→ 门票胜奖 →
      * 座位行回写 → markClosed。claimed=false 时什么都没发生（重放路径）。
      */
-    public SettleOutcome settle(GameContext ctx) {
+    public SettleOutcome settle(GameContext ctx) { return settle(ctx, List.of()); }
+
+    /** shots = Hub 本局缓冲的逐发明细（回放/反作弊，V002）；空表或 shotMapper 装配为 null 则不记。 */
+    public SettleOutcome settle(GameContext ctx, List<ShotRecord> shots) {
         // friend 桌对档案完全隐身（spec §6.2）：调用方本来就不会给它记 match 行，这里是防御性双保险。
         if (ctx.kind() == GameTypes.TableKind.FRIEND) return new SettleOutcome(false, List.of());
         if (matchMapper.claimSettlement(ctx.gameId()) == 0) return new SettleOutcome(false, List.of());
+
+        // 逐发明细（回放/反作弊）：抢占成功后、同事务落库；(match_id, seq) 全局发炮序。
+        if (shotMapper != null) {
+            int seq = 0;
+            for (ShotRecord s : shots) {
+                shotMapper.insert(ctx.gameId(), seq++, s.byUser(), s.targetUser(),
+                    s.row(), s.col(), s.result(), s.planeId(), s.atMs());
+            }
+        }
 
         GameMatchMapper.MatchRow match = matchMapper.match(ctx.gameId());
         List<Long> humans = ctx.humans();

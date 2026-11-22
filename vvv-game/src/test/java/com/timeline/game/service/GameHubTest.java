@@ -19,6 +19,7 @@ import com.timeline.game.persistence.GameMatchPlayerMapper;
 import com.timeline.game.persistence.GameProfileMapper;
 import com.timeline.game.persistence.GameProgressMapper;
 import com.timeline.game.persistence.GameSeasonMapper;
+import com.timeline.game.persistence.GameShotMapper;
 import com.timeline.game.persistence.GameWalletMapper;
 import com.timeline.game.protocol.GameEnvelopeCodec;
 
@@ -126,6 +127,7 @@ class GameHubTest {
         cfg.addMapper(GameMatchMapper.class);
         cfg.addMapper(GameMatchPlayerMapper.class);
         cfg.addMapper(GameSeasonMapper.class);
+        cfg.addMapper(GameShotMapper.class);
         SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(cfg);
         session = factory.openSession(true);
         matchMapper = session.getMapper(GameMatchMapper.class);
@@ -157,7 +159,8 @@ class GameHubTest {
         return new GameHub(mapper, clock::get, ZONE, profiles, wallet,
             new GameSettlementService(matchMapper, session.getMapper(GameMatchPlayerMapper.class),
                 session.getMapper(GameProgressMapper.class),
-                session.getMapper(GameProfileMapper.class), wallet, ZONE),
+                session.getMapper(GameProfileMapper.class), wallet,
+                session.getMapper(GameShotMapper.class), ZONE),
             mm, codes, Mulberry32.of(42), hook, tx);
     }
 
@@ -919,6 +922,29 @@ class GameHubTest {
         assertEquals("scoring", win.path("data").path("reason").asText());
         assertEquals(0, last(loserSid, "rank.changed").path("data").path("delta").asInt()); // 列兵垫底保护
         assertEquals(5, last(winnerSid, "coins.now").path("data").path("delta").asInt());
+    }
+
+    @Test
+    void 匹配局逐发炮弹随结算落game_shot() throws Exception {
+        connect("s1", 10, null);
+        connect("s2", 20, null);
+        send("s1", "queue.join", "{\"capacity\":2,\"preset\":\"standard\"}");
+        send("s2", "queue.join", "{\"capacity\":2,\"preset\":\"standard\"}");
+        send("s1", "game.place", "{\"planes\":[{\"row\":2,\"col\":2}]}");
+        send("s2", "game.place", "{\"planes\":[{\"row\":7,\"col\":7}]}");
+        String winnerSid = turnOf("s1").equals("10") ? "s1" : "s2";
+        long winId = winnerSid.equals("s1") ? 10 : 20;
+        long loseId = winId == 10 ? 20 : 10;
+        finishDuel("s1", "s2");
+
+        // finishDuel 一炮毙命：本局唯一一发 = 胜者打向败者机头的 head（V002 回放口径）。
+        var shots = session.getMapper(GameShotMapper.class)
+            .shotsOfMatch(gameIdFromLedger(winId));
+        assertEquals(1, shots.size());
+        assertEquals(winId, shots.get(0).byUser());
+        assertEquals(loseId, shots.get(0).targetUser());
+        assertEquals("head", shots.get(0).result());
+        assertEquals(AT, shots.get(0).atMs());
     }
 
     @Test

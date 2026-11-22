@@ -103,6 +103,8 @@ public final class GameHub implements GameCommandSink {
     private final Map<String, Integer> gamesPlayedByRoom = new HashMap<>();
     /** 已 recordStart 过的局 id（一桌一局只记一次，rematch 记新局）。 */
     private final Map<String, String> recordedGameId = new HashMap<>();
+    /** roomCode → 本局逐发炮弹（结算随抢占同事务落 game_shot；重开/结算/关桌三处清缓冲）。 */
+    private final Map<String, List<GameSettlementService.ShotRecord>> pendingShots = new HashMap<>();
     /** playerId → 上次推送时的赛季号（跨季推送去重；键恒用裸 playerId，与 onDisconnect 一致）。 */
     private final Map<String, Integer> seenSeason = new HashMap<>();
     /** 跨季钩子（可空 = tick 跳过跨季处理）：见 {@link SeasonResetHook}。 */
@@ -620,12 +622,40 @@ public final class GameHub implements GameCommandSink {
      */
     private void dispatchTable(Table table, List<TableOutbound> out) {
         boolean ended = false;
+        Set<EngineEvent> buffered = null;   // 批内去重：一条广播事件按收件人出现多次，共享同一实例
         for (TableOutbound o : out) {
             String code = tableByPlayer.get(o.to());
             boolean deliverable = code != null ? code.equals(table.roomCode()) : table.closed();
             if (deliverable) deliver(o);
-            if (o.event() instanceof TableEvent.FromEngine fe
-                && fe.event() instanceof EngineEvent.GameOver) ended = true;
+            // game_shot 缓冲（V002）：致命一炮的 GameShot 与 GameOver 同批到达——捕获在计分前，同批不漏。
+            if (o.event() instanceof TableEvent.FromEngine fe) {
+                EngineEvent ev = fe.event();
+                if ((ev instanceof EngineEvent.GameShot || ev instanceof EngineEvent.RoundResult)
+                    && table.kind() != GameTypes.TableKind.FRIEND) {
+                    if (buffered == null) {
+                        buffered = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+                    }
+                    if (buffered.add(ev)) {
+                        List<GameSettlementService.ShotRecord> buf =
+                            pendingShots.computeIfAbsent(table.roomCode(), k -> new ArrayList<>());
+                        long now = nowMs.getAsLong();
+                        if (ev instanceof EngineEvent.GameShot shot) {
+                            // duel 事件不带靶子：两人桌的另一座位即目标（电脑座位解析为 null）
+                            String targetId = null;
+                            for (GameTypes.SeatView s : table.view().seats()) {
+                                if (s != null && !s.playerId().equals(shot.by())) targetId = s.playerId();
+                            }
+                            buf.add(shotRecord(shot.by(), targetId, shot.row(), shot.col(),
+                                shot.result(), shot.planeId(), now));
+                        } else { // melee 私有视图：只收"我打出去的"半边（incoming 是别人那半的重复）
+                            for (GameTypes.TargetShot s : ((EngineEvent.RoundResult) ev).shots()) {
+                                buf.add(shotRecord(o.to(), s.targetId(), s.row(), s.col(),
+                                    s.result(), s.planeId(), now));
+                            }
+                        }
+                    }
+                } else if (ev instanceof EngineEvent.GameOver) ended = true;
+            }
         }
         // broadcastStart 的 state 半边（TS 唯一让客户端提前拿到摆放 deadlineAt 的地方）：
         // sealed TableEvent 没有携带 game 视图的变体，桌层只广播 tableState；开局这一刻由 Hub
@@ -639,7 +669,10 @@ public final class GameHub implements GameCommandSink {
         }
         // P3 计分（spec §21.2）：结算放在投递之后、sync 之前——留下的人此刻还挂在归属表上
         if (ended) {
-            scoreTable(table);
+            // 逐发明细随 settle 抢占落库（game_shot，V002）：本局缓冲整体交给结算，
+            // 抢占失败（重放）也丢弃——对端节点赢抢占时带的是它自己的完整缓冲。
+            List<GameSettlementService.ShotRecord> shots = pendingShots.remove(table.roomCode());
+            scoreTable(table, shots == null ? List.of() : shots);
             gamesPlayedByRoom.merge(table.roomCode(), 1, Integer::sum);
             // 下一局（rematch 或匹配桌续局）开局时要再补一次私有快照
             startSnapshotSent.remove(table.roomCode());
@@ -647,6 +680,23 @@ public final class GameHub implements GameCommandSink {
         recordStartIfNeeded(table);
         sync(table);
         if (table.kind() == GameTypes.TableKind.FRIEND) roomDirty.add(table.capacity());
+    }
+
+    /** playerId → userId：引擎侧身份就是 String.valueOf(userId)，非数字（电脑座位）→ null。 */
+    private static Long toUserId(String playerId) {
+        if (playerId == null) return null;
+        try {
+            return Long.valueOf(playerId);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /** 引擎发炮事件 → 落库原料（wire 口径的小写 result：miss/body/head，与 EngineEventCodec 一致）。 */
+    private static GameSettlementService.ShotRecord shotRecord(String by, String target, int row, int col,
+                                                               Rules.ShotResult result, String planeId, long atMs) {
+        return new GameSettlementService.ShotRecord(
+            toUserId(by), toUserId(target), row, col, result.name().toLowerCase(), planeId, atMs);
     }
 
     /** 让出座位的人解除归属；关闭的桌子整个删除（I4）。M5：只遍历本桌成员集合。 */
@@ -671,6 +721,7 @@ public final class GameHub implements GameCommandSink {
         if (table.closed()) {
             membersByTable.remove(table.roomCode());
             startSnapshotSent.remove(table.roomCode());
+            pendingShots.remove(table.roomCode());   // 弃局无 gameOver：半局缓冲随桌一起丢（无 match 收尾就不落明细）
             if (tables.get(table.roomCode()) == table) tables.remove(table.roomCode());
             gamesPlayedByRoom.remove(table.roomCode());
             recordedGameId.remove(table.roomCode());
@@ -694,7 +745,7 @@ public final class GameHub implements GameCommandSink {
      * 只回报完成币，门票胜奖已计入钱包——profile 推送在 settle 之后读档，余额里已含胜奖，
      * 客户端账变提示合并为一条（流水明细走 coins.ledger）。
      */
-    private void scoreTable(Table table) {
+    private void scoreTable(Table table, List<GameSettlementService.ShotRecord> shots) {
         if (table.kind() == GameTypes.TableKind.FRIEND) return;
         Table.LastGame game = table.lastGame();
         if (game == null) return;
@@ -731,7 +782,7 @@ public final class GameHub implements GameCommandSink {
             // 结算上下文只要对局结果本体（botIds 已折进 withBots 判定），名次序原样保留。
             new GameTypes.GameResult(game.result().reason(), game.result().ranking()),
             withBots, now);
-        GameSettlementService.SettleOutcome outcome = inTx(() -> settlement.settle(ctx));
+        GameSettlementService.SettleOutcome outcome = inTx(() -> settlement.settle(ctx, shots));
         // claimed=false：重放（同一 tableId:gamesPlayed 已结过），星/币不双发、也不再推
         if (!outcome.claimed()) return;
 

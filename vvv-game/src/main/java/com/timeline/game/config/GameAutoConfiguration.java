@@ -10,6 +10,7 @@ import com.timeline.game.persistence.GameMatchPlayerMapper;
 import com.timeline.game.persistence.GameProfileMapper;
 import com.timeline.game.persistence.GameProgressMapper;
 import com.timeline.game.persistence.GameSeasonMapper;
+import com.timeline.game.persistence.GameShotMapper;
 import com.timeline.game.persistence.GameWalletMapper;
 import com.timeline.game.service.GameHub;
 import com.timeline.game.service.GameProfileService;
@@ -128,6 +129,13 @@ public class GameAutoConfiguration {
         return bean;
     }
 
+    @Bean
+    public MapperFactoryBean<GameShotMapper> gameShotMapper(SqlSessionFactory factory) {
+        MapperFactoryBean<GameShotMapper> bean = new MapperFactoryBean<>(GameShotMapper.class);
+        bean.setSqlSessionFactory(factory);
+        return bean;
+    }
+
     // ---------------------------------------------------------------- 公共时钟
 
     /**
@@ -157,8 +165,9 @@ public class GameAutoConfiguration {
                                                        GameMatchPlayerMapper matchPlayer,
                                                        GameProgressMapper progress,
                                                        GameProfileMapper profile,
-                                                       GameWalletService wallet, ZoneId zone) {
-        return new GameSettlementService(match, matchPlayer, progress, profile, wallet, zone);
+                                                       GameWalletService wallet,
+                                                       GameShotMapper shot, ZoneId zone) {
+        return new GameSettlementService(match, matchPlayer, progress, profile, wallet, shot, zone);
     }
 
     @Bean

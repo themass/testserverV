@@ -14,6 +14,7 @@ import com.timeline.game.persistence.GameMatchPlayerMapper;
 import com.timeline.game.persistence.GameProfileMapper;
 import com.timeline.game.persistence.GameProgressMapper;
 import com.timeline.game.persistence.GameSeasonMapper;
+import com.timeline.game.persistence.GameShotMapper;
 import com.timeline.game.persistence.GameWalletMapper;
 
 import java.io.InputStream;
@@ -53,6 +54,7 @@ class GameSettlementServiceTest {
     private GameProgressMapper progressMapper;
     private GameWalletMapper walletMapper;
     private GameCoinLedgerMapper ledgerMapper;
+    private GameShotMapper shotMapper;
     private GameSettlementService svc;
 
     @BeforeEach
@@ -83,6 +85,7 @@ class GameSettlementServiceTest {
         cfg.addMapper(GameMatchMapper.class);
         cfg.addMapper(GameMatchPlayerMapper.class);
         cfg.addMapper(GameSeasonMapper.class);
+        cfg.addMapper(GameShotMapper.class);
         SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(cfg);
         session = factory.openSession(true);
         matchMapper = session.getMapper(GameMatchMapper.class);
@@ -90,9 +93,10 @@ class GameSettlementServiceTest {
         progressMapper = session.getMapper(GameProgressMapper.class);
         walletMapper = session.getMapper(GameWalletMapper.class);
         ledgerMapper = session.getMapper(GameCoinLedgerMapper.class);
+        shotMapper = session.getMapper(GameShotMapper.class);
         svc = new GameSettlementService(matchMapper, matchPlayerMapper, progressMapper,
             session.getMapper(GameProfileMapper.class),
-            new GameWalletService(walletMapper, ledgerMapper), ZONE);
+            new GameWalletService(walletMapper, ledgerMapper), shotMapper, ZONE);
     }
 
     @AfterEach
@@ -305,5 +309,38 @@ class GameSettlementServiceTest {
         assertEquals(1, capped.applied());
         assertTrue(capped.capped());
         assertEquals(500, walletMapper.wallet(30L).netGain());
+    }
+
+    @Test
+    void settleWritesShotsOnceInSeqOrder() {
+        recordTwoHumans("t6:0");
+        // 电脑发炮 byUser=null；seq 由 settle 按列表序 0..n-1 赋，重放（抢占失败）不重插。
+        var shots = List.of(
+            new GameSettlementService.ShotRecord(10L, 20L, 7, 7, "head", "p1", START + 1000),
+            new GameSettlementService.ShotRecord(null, 10L, 2, 2, "miss", "p0", START + 2000));
+        var out = svc.settle(ctx("t6:0", GameTypes.TableKind.MATCH, null, false,
+            List.of(10L, 20L), duel10Beats20()), shots);
+        assertTrue(out.claimed());
+
+        var rows = shotMapper.shotsOfMatch("t6:0");
+        assertEquals(2, rows.size());
+        assertEquals(10L, rows.get(0).byUser());
+        assertEquals(20L, rows.get(0).targetUser());
+        assertEquals("head", rows.get(0).result());
+        assertEquals(7, rows.get(0).rowNo());
+        assertNull(rows.get(1).byUser());          // 电脑发炮
+        assertEquals("miss", rows.get(1).result());
+
+        // 重放：claimed=false 且明细一条不加（uk(match_id,seq) 之前，抢占闸门先挡住）。
+        var again = svc.settle(ctx("t6:0", GameTypes.TableKind.MATCH, null, false,
+            List.of(10L, 20L), duel10Beats20()), shots);
+        assertFalse(again.claimed());
+        assertEquals(2, shotMapper.countByMatch("t6:0"));
+
+        // 空明细照常结算（melee 之外/装配缺 shotMapper 的等价路径）。
+        recordTwoHumans("t6:1");
+        assertTrue(svc.settle(ctx("t6:1", GameTypes.TableKind.MATCH, null, false,
+            List.of(10L, 20L), duel10Beats20())).claimed());
+        assertEquals(0, shotMapper.countByMatch("t6:1"));
     }
 }
