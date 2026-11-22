@@ -2,7 +2,7 @@
 
 本轮改动全部本地验证完毕，剩两步需要服务器权限的操作（jar 替换 + H5 上传）。照单执行即可。
 
-## 1. 后端 jar（必做——capacity 字段和 game_shot 落表都等它）
+## 1. 后端 jar（✅ 已部署并线上验收 2026-11-22）
 
 线上 jar 早于两处改动：**matches/recent 的 capacity 字段**（缺它档案页显示"对决undefined人"→"对决2人"）与 **game_shot 逐发落表**。
 
@@ -21,7 +21,26 @@ scp vvv-link/target/vvv-link-1.0.0-SNAPSHOT.jar <server>:/opt/vvv/vvv-link-new.j
 curl -s https://api.ok123find.top/vvv/api/game/v1/health   # 期望 {"module":true,"mysql":true,"redis":true}
 ```
 
-## 2. H5 前端（浏览器玩家入口）
+## 2. H5 前端（已部署 ✅ 2026-11-22，方案 B：服务器拉源码构建）
+
+实际落地与本文原方案不同，以下即线上现状：
+
+- 源码仓库：`/root/work/agent-docs`（GitHub 公共仓库直接 clone，分支 main）。
+- Node 运行时：`/usr/local/node20`（Ubuntu 18.04 glibc 2.27 跑不了官方 Node≥18，
+  装的 unofficial-builds glibc-217 版 Node 20.18.1 + corepack pnpm 9）。
+  **所有构建命令先 `export PATH=/usr/local/node20/bin:$PATH`**，否则 npm 的 shebang 命中系统 node8。
+- 发布目录：`/home/web/webroot/plane-duel/`（nginx worker 以 `user web` 运行，
+  `/root` 是 700，**产物不能从仓库目录原地 serve**，必须 rsync 到此目录并 chown web:web）。
+- 一键发布：`/root/work/deploy-plane-h5.sh`（git pull → pnpm test → build:h5 → rsync → chown → curl 自检；
+  `--skip-test` 跳过测试）。
+- nginx：`/root/local/nginx-1.24.0/conf/server/vpn.conf` 内
+  `location ^~ /plane/ { alias /home/web/webroot/plane-duel/; try_files $uri $uri/ /plane/index.html; expires -1; }`
+  （备份 `vpn.conf.pre-plane-20261122232644`）。nginx 非 systemd 管理，
+  校验/重载一律用 `/root/local/nginx-1.24.0/sbin/nginx -t|-s reload -c /root/local/nginx-1.24.0/conf/nginx.conf`。
+
+入口：`https://api.ok123find.top/plane/?vpnToken=<平台token>`。
+
+以下为原方案记录（已按上面执行，保留备查）：
 
 产物：`plane-duel/apps/client/dist/`（本轮 `pnpm build:h5` 构建，gzip 后 JS 47.6 kB）。
 打包件：`/Users/gqli/work/deepagents/docs/myproject/plane-duel/plane-duel-h5-dist.tar.gz`（未入库的构建产物）。
