@@ -1,42 +1,57 @@
-# 部署交接（2026-11-22 收口）
+# 部署实况（2026-11-23 加固上线后）
 
-本轮改动全部本地验证完毕，剩两步需要服务器权限的操作（jar 替换 + H5 上传）。照单执行即可。
+## 0. 进程守护（本轮新增）
 
-## 1. 后端 jar（✅ 已部署并线上验收 2026-11-22）
-
-线上 jar 早于两处改动：**matches/recent 的 capacity 字段**（缺它档案页显示"对决undefined人"→"对决2人"）与 **game_shot 逐发落表**。
+jar 与 nginx 均已交 systemd 托管（`enabled + active`，崩溃 5s 自拉起、开机自启）：
 
 ```bash
-# 本地产物：/Users/gqli/work/testserverV/vvv-link/target/vvv-link-1.0.0-SNAPSHOT.jar（本轮已构建，369/369 测试绿）
-scp vvv-link/target/vvv-link-1.0.0-SNAPSHOT.jar <server>:/opt/vvv/vvv-link-new.jar
+systemctl status vvv-link        # jar：User=web，JDK=/home/web/local/jdk-21.0.3，日志 journalctl -u vvv-link -f
+systemctl status nginx           # 二进制沿用 /root/local/nginx-1.24.0（非 apt 包），Type=forking 跟 /var/run/nginx.pid
 ```
 
-服务器上（沿用现有部署方式替换 + 重启）。**注意**：本轮 `bootstrap.yml` 把
-`game.ws.allowed-origins` 从 `*` 收紧为 `"https://api.ok123find.top,https://localhost"`
-——如果服务器上手工改过 yml，合并时别把收紧覆盖回 `*`。
+**改配置/换包一律走 systemctl**（`systemctl restart vvv-link` / `nginx -t && systemctl reload nginx`），别再手工 `java -jar` / `./nginx` 起——手起进程 systemd 会视为孤儿并可能重复拉起。
 
-重启后自检：
+## 1. 后端 jar（✅ 2026-11-23 加固版已上线）
+
+本轮上线内容（commit 0cffb626，vvv-game 376/376 + vvv-link 107/107 绿）：
+
+- **Web 登录接口** `POST /api/game/v1/login`：`{"name","pwd"}` → `{errno,data:{token,name},error}`；
+  token 与 App 的 login.json 同体系（cacheService.putUser），Redis 键带 `token_` 前缀，
+  GameTokenResolver 已兼容裸串/带前缀两种形态。
+- **WS 发送装饰器**：`ConcurrentWebSocketSessionDecorator(5s, 512KB)`，防 tick/请求线程并发撕裂；
+  慢客户端缓冲溢出即断开（走正常重连恢复）。
+- **WS 心跳**：独立线程 `game-ws-ping`，`game.ws.pingMs=25000`（0=关，不建议），半开连接自动回收。
+- **token 滑动续期**：游戏侧鉴权成功即 EXPIRE 重置 24h（活跃不掉线，闲置 24h 过期回登录页）。
+- **allowed-origins**（bootstrap.yml）：`https://api.ok123find.top,https://localhost,https://game.ok123find.top`。
+
+jar 在 `/home/web/work/testserverV/vvv-link/target/`（旧包备份 `.bak-20261123`）。换包流程：
 
 ```bash
+# 本地：mvn package -DskipTests → scp 到 /home/web/work/testserverV/vvv-link-new.jar
+# 服务器：mv 换名（保备份）→ chown web:web → systemctl restart vvv-link
 curl -s https://api.ok123find.top/vvv/api/game/v1/health   # 期望 {"module":true,"mysql":true,"redis":true}
 ```
 
-## 2. H5 前端（已部署 ✅ 2026-11-22，方案 B：服务器拉源码构建）
+## 2. H5 前端（✅ 玩家入口 = 独立页面域名）
 
-实际落地与本文原方案不同，以下即线上现状：
+**正式入口：`https://game.ok123find.top/`**（页面域名，与 api 接口域名职责分离；
+token 不进 URL，玩家先见登录页）。api.ok123find.top 上的 `/plane/` 已下线（404）。
 
-- 源码仓库：`/root/work/agent-docs`（GitHub 公共仓库直接 clone，分支 main）。
-- Node 运行时：`/usr/local/node20`（Ubuntu 18.04 glibc 2.27 跑不了官方 Node≥18，
-  装的 unofficial-builds glibc-217 版 Node 20.18.1 + corepack pnpm 9）。
-  **所有构建命令先 `export PATH=/usr/local/node20/bin:$PATH`**，否则 npm 的 shebang 命中系统 node8。
-- 发布目录：`/home/web/webroot/plane-duel/`（nginx worker 以 `user web` 运行，
-  `/root` 是 700，**产物不能从仓库目录原地 serve**，必须 rsync 到此目录并 chown web:web）。
-- 一键发布：`/root/work/deploy-plane-h5.sh`（git pull → pnpm test → build:h5 → rsync → chown → curl 自检；
-  `--skip-test` 跳过测试）。
-- nginx：`/root/local/nginx-1.24.0/conf/server/vpn.conf` 内
-  `location ^~ /plane/ { alias /home/web/webroot/plane-duel/; try_files $uri $uri/ /plane/index.html; expires -1; }`
-  （备份 `vpn.conf.pre-plane-20261122232644`）。nginx 非 systemd 管理，
-  校验/重载一律用 `/root/local/nginx-1.24.0/sbin/nginx -t|-s reload -c /root/local/nginx-1.24.0/conf/nginx.conf`。
+- DNS：`game` A → 8.217.122.83（dnsowl 面板维护）。
+- 证书：Let's Encrypt（certbot webroot，cron 自动续期，deploy hook
+  `/etc/letsencrypt/renewal-hooks/deploy/game-ok123.sh` 同步到 `/root/local/nginx/conf/ssl/game-*.pem` 并重载）。
+- nginx：`conf/server/game.conf` —— 静态站 root `/home/web/webroot/plane-duel`（try_files → /index.html）+
+  `/vvv/api/game/ws`（Upgrade）与 `/vvv/api/game/v1/`（rewrite）反代 `vpn_server`，形状与 api 域一致 →
+  页面同源调接口，客户端基址零配置。
+- 发布：`/root/work/deploy-plane-h5.sh`（git pull → pnpm test → build:h5 → rsync → chown web:web → curl 自检；
+  `--skip-test` 跳测试）。
+- 源码构建环境：`/usr/local/node20`（unofficial-builds glibc-217 版，Ubuntu 18.04 唯一可行）+
+  corepack pnpm 9；构建命令前必须 `export PATH=/usr/local/node20/bin:$PATH`。
+
+登录链路：登录页 → `POST /vvv/api/game/v1/login`（game 域反代）→ token 存 localStorage →
+WS 握手时代码拼 `?vpnToken=`（浏览器 WS 无法设 header 的固有限制，URL 栏不可见；
+access log 会含该参数，脱敏属网关层后续项）。会话闲置 24h 过期后，客户端在第 3 次重连失败时
+自动回登录页（此前无 profile.now 成功经历才判定，避免误踢对局中玩家）。
 
 入口：`https://api.ok123find.top/plane/?vpnToken=<平台token>`。
 
