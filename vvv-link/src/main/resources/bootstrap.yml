@@ -60,7 +60,10 @@ game:
   ws:
     # WebSocket 端点，要和 nginx 的 /api/game/ws Upgrade 路由一致（deploy/nginx/）。
     path: /api/game/ws
-    # 允许握手来源，逗号分隔；* 同 TS 旧版（客户端是 App 无同源检查）。
-    # 上线收紧示例：https://app.ok123find.top
-    allowed-origins: "*"
+    # 允许握手来源，逗号分隔。收紧后的线上口径（2026-11-22）：
+    #   https://api.ok123find.top  —— H5 与 API 同 nginx 部署（同源握手）；
+    #   https://localhost          —— Capacitor 原生壳 WebView（androidScheme=https）。
+    # 本机浏览器直连联调时临时加回自己的 dev origin（如 http://127.0.0.1:5173），或用
+    # bootstrap-local.yml 覆盖该项，别把 dev 源写回线上默认值。
+    allowed-origins: "https://api.ok123find.top,https://localhost"
 
