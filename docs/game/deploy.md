@@ -24,11 +24,11 @@ curl -s https://api.ok123find.top/vvv/api/game/v1/health   # 期望 {"module":tr
 ## 2. H5 前端（浏览器玩家入口）
 
 产物：`plane-duel/apps/client/dist/`（本轮 `pnpm build:h5` 构建，gzip 后 JS 47.6 kB）。
-打包件：`/Users/gqli/work/deepagents/docs/myproject/plane-duel-h5-dist.tar.gz`。
+打包件：`/Users/gqli/work/deepagents/docs/myproject/plane-duel/plane-duel-h5-dist.tar.gz`（未入库的构建产物）。
 
 ```bash
-# 本地重打包（如需）：cd plane-duel/apps/client && pnpm build:h5 && tar -czf ../../plane-duel-h5-dist.tar.gz -C dist .
-scp plane-duel-h5-dist.tar.gz <server>:/tmp/
+# 本地重打包（如需）：cd plane-duel/apps/client && pnpm build:h5 && tar -czf ../plane-duel-h5-dist.tar.gz -C dist .
+scp /Users/gqli/work/deepagents/docs/myproject/plane-duel/plane-duel-h5-dist.tar.gz <server>:/tmp/
 ```
 
 服务器上解压到静态目录（例 `/var/www/plane-duel/`），nginx 加一个 server 或 location：
