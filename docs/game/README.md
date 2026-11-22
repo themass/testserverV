@@ -51,10 +51,7 @@
 
 1. ~~执行 DDL~~ **已完成（2026-11-22 线上库）**；回退脚本仍在 `db/game/recovery/drop_game_objects.sql`。
 2. `bootstrap.yml` 的 `game.enabled: true` **已就位**（game.* 全部可配项连同默认值与注释写在该文件里）；改值 = 改文件 + 重新打包 + 重启。
-3. 自检：`curl 'https://api.sspacee.com/vvv/api/game/v1/health'` → `{"module":true,"mysql":true,"redis":true}`。
-   域名定版（用户拍板 2026-11-22）：Java 服务端对外域名是 **`api.sspacee.com`**（路径不变 `/vvv/api/game/**`），
-   不再用 ok123find.top。截至本次实测 `api.sspacee.com` 公网 DNS 还查不到 A 记录（223.5.5.5/8.8.8.8/1.1.1.1 均空），
-   暂只能经过渡别名 `api.ok123find.top` 验到（2026-11-22 三项全 true）；DNS 指过去后以 api.sspacee.com 复测。
+3. 自检：`curl 'https://api.ok123find.top/vvv/api/game/v1/health'` → `{"module":true,"mysql":true,"redis":true}`（**2026-11-22 线上已验过，三项全 true**）。
 4. nginx 路由片段在 `deploy/nginx/snippets-vpn-routes.conf`（`/vvv/api/game/ws` 带 Upgrade 头 + `/vvv/api/game/v1/` 普通转发，均为 `^~` 精确块、置于通用 `/vvv/` 兜底块语义之上）。
    现状：HTTP 已由通用 `/vvv/` 块兜住能通；**WS 的 Upgrade 块还未同步到线上 nginx**——客户端切 WS 前必须同步，否则握手走通用块（无 1.1/Upgrade）会失败。
 5. 回归审计：跑 `db/game/audit_integrity_checks.sql`，六项全 0 才算稳定（2026-11-22 建表当晚 + 对局落库后各跑一遍，全绿）。

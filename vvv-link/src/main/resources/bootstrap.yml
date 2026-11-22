@@ -61,6 +61,6 @@ game:
     # WebSocket 端点，要和 nginx 的 /api/game/ws Upgrade 路由一致（deploy/nginx/）。
     path: /api/game/ws
     # 允许握手来源，逗号分隔；* 同 TS 旧版（客户端是 App 无同源检查）。
-    # 上线收紧示例：https://api.sspacee.com（Java 服务端定版域名）
+    # 上线收紧示例：https://app.ok123find.top
     allowed-origins: "*"
 

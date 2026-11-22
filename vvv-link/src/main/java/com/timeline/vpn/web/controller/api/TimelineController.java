@@ -26,8 +26,7 @@ import java.util.Collections;
  * DELETE {base}/{namespace}/{contentId}/{editionId}/comments/{id}
  * </pre>
  *
- * <p>base 挂在 {@code https://api.sspacee.com/vvv/api}（域名定版 2026-11-22 用户拍板；
- * 过渡期 api.ok123find.top 仍可达。nginx 的通用 /vvv/ 转发，剥掉 /vvv 前缀），
+ * <p>base 挂在 {@code https://api.ok123find.top/vvv/api}（nginx 的通用 /vvv/ 转发，剥掉 /vvv 前缀），
  * 这里映射成 {@code /api/timeline/v1}。返回信封是自定义的 {@link TimelineResult}，刻意不用 JsonResult
  * ——非测试环境 JsonResult 会 AES 加密 data，而且弹幕路径不带 .json，HostFilter 不生效时
  * DevAppContext 直接为 null。业务异常仍落到 CommonHandlerExceptionResolver（errno 11003，data 为
