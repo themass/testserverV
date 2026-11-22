@@ -15,7 +15,7 @@ public interface GameMatchMapper {
                     String ticket, long startedAtMs, long endedAtMs, int finished,
                     String closeReason, int humanCount) {}
     /** recent 列表派生行：match 总账 + 该玩家自己的座位行联查（不另存冗余表）。 */
-    record RecentRow(String matchId, String mode, String preset, long startedAtMs,
+    record RecentRow(String matchId, String mode, String preset, int capacity, long startedAtMs,
                      long endedAtMs, int finalRank, int hits, int deltaStar, int win,
                      int scoring) {}
 
@@ -56,7 +56,7 @@ public interface GameMatchMapper {
      * 玩家的最近战绩：uk_game_match_player_seat 保证一局一人一行，联查不重复；
      * ix_game_match_player_user (user_id, match_id) 支撑按人取行。只回 finished=1 的局。
      */
-    @Select("SELECT m.match_id, m.mode, m.preset, m.started_at_ms, m.ended_at_ms, "
+    @Select("SELECT m.match_id, m.mode, m.preset, m.capacity, m.started_at_ms, m.ended_at_ms, "
         + "p.final_rank, p.hits, p.delta_star, p.win, p.scoring "
         + "FROM game_match m JOIN game_match_player p ON p.match_id=m.match_id "
         + "WHERE p.user_id=#{userId} AND m.finished=1 "

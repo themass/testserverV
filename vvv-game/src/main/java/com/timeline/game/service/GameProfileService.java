@@ -162,13 +162,13 @@ public final class GameProfileService {
         return List.copyOf(out);
     }
 
-    public record MatchBrief(String matchId, String mode, String preset, long startedAtMs, long endedAtMs,
-                             int finalRank, int hits, int deltaStar, int win, int scoring) {}
+    public record MatchBrief(String matchId, String mode, String preset, int capacity, long startedAtMs,
+                             long endedAtMs, int finalRank, int hits, int deltaStar, int win, int scoring) {}
 
     public List<MatchBrief> recentMatches(long userId, int limit) {
         List<MatchBrief> out = new ArrayList<>();
         for (var m : matches.recentByUser(userId, Math.min(limit, 50))) {
-            out.add(new MatchBrief(m.matchId(), m.mode(), m.preset(), m.startedAtMs(), m.endedAtMs(),
+            out.add(new MatchBrief(m.matchId(), m.mode(), m.preset(), m.capacity(), m.startedAtMs(), m.endedAtMs(),
                 m.finalRank(), m.hits(), m.deltaStar(), m.win(), m.scoring()));
         }
         return List.copyOf(out);
