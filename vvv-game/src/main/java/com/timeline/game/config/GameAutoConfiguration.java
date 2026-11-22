@@ -275,6 +275,49 @@ public class GameAutoConfiguration {
     // ---------------------------------------------------------------- WS 接入
 
     /**
+     * WS 心跳驱动（上线加固 2026-11-22）：独立单线程调度器（GameTickDriver 同款生命周期
+     * 模式，daemon 线程），每周期对全部 open 的游戏 WS 连接发 ping 帧——浏览器协议层
+     * 自动回 pong，客户端零改动；半开连接一个周期内被发现并关闭，不再占着座位。
+     * 刻意与 tick 调度器分离：ping 发送再慢（装饰器超时上限 5s/条）也不碰引擎线程。
+     * game.ws.pingMs=0 关闭（默认 25000；nginx 侧 proxy_read_timeout 300s 是兜底，这里
+     * 才是真心跳）。
+     */
+    @Bean
+    public GamePingDriver gamePingDriver(GameWebSocketHandler handler,
+                                         @Value("${game.ws.pingMs:25000}") long pingMs) {
+        return new GamePingDriver(handler, pingMs);
+    }
+
+    /** 心跳循环宿主（生命周期归 Spring：容器关闭时优雅停机）。 */
+    public static final class GamePingDriver implements DisposableBean {
+        private final ScheduledExecutorService executor;
+
+        GamePingDriver(GameWebSocketHandler handler, long pingMs) {
+            if (pingMs <= 0) {
+                this.executor = null;                        // 0/负数 = 关闭心跳
+                return;
+            }
+            this.executor = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "game-ws-ping");
+                t.setDaemon(true);
+                return t;
+            });
+            executor.scheduleWithFixedDelay(() -> {
+                try {
+                    handler.pingAll();
+                } catch (RuntimeException ignored) {
+                    // 整轮炸了（理论上进不去 pingAll 的逐连接 try/catch）也不能带走调度器
+                }
+            }, pingMs, pingMs, TimeUnit.MILLISECONDS);
+        }
+
+        @Override
+        public void destroy() {
+            if (executor != null) executor.shutdownNow();
+        }
+    }
+
+    /**
      * WS 三件套（握手鉴权 → 传输层 → 端点注册）。整组挂在 GameCommandSink（=GameHub）上：
      * 业务路由器注册之前 WS 面不装载，HTTP 读接口与 /health 仍可先行自检。
      *

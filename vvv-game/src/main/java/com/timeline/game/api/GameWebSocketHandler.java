@@ -6,8 +6,10 @@ import com.timeline.game.protocol.GameErrorCode;
 import com.timeline.game.protocol.GameEvt;
 
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.PingMessage;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
@@ -26,20 +28,34 @@ public final class GameWebSocketHandler extends TextWebSocketHandler {
     /** 单帧上限（TS main.ts 的 4KB maxPayload 直译；超限不断连只丢帧回 BAD_SHAPE）。 */
     static final int MAX_FRAME_BYTES = 4096;
 
+    /**
+     * 出站装饰器参数（上线加固 2026-11-22）：WS 的 WebSocketSession 不保证 sendMessage
+     * 并发安全，而本连接的 send 会同时被 Hub tick 线程（推送）与容器线程（回执/错误）调用。
+     * afterConnectionEstablished 里包一层 ConcurrentWebSocketSessionDecorator——它是本类内
+     * 唯一持有 session 的地方（Hub 只拿 GameConnection，即 Conn），所以包装点在 Conn 构造处，
+     * 全部出站发送路径（含 tick 侧）拿到的都是包装后的对象。
+     * 发送超时 5s、缓冲上限 512KB：客户端读得慢时宁可丢连接，不能拖死 tick 线程。
+     */
+    static final int SEND_TIME_LIMIT_MS = 5000;
+    static final int SEND_BUFFER_LIMIT_BYTES = 512 * 1024;
+
     private final ObjectMapper mapper;
     private final GameCommandSink sink;
     private final int ratePerMinute;
     private final Map<String, Conn> sessions = new ConcurrentHashMap<>();
 
-    /** 一个连接：WS 会话 + 发送锁（容器不保证 send 并发安全）+ 令牌桶。 */
+    /** 一个连接：WS 会话（已包并发装饰器）+ 发送锁（容器不保证 send 并发安全）+ 令牌桶。 */
     private final class Conn implements GameConnection {
         final WebSocketSession ws;
         final long userId;
         final long openedAtNanos = System.nanoTime();
         GameRateLimiter limiter;
 
-        Conn(WebSocketSession ws, long userId) {
-            this.ws = ws;
+        Conn(WebSocketSession raw, long userId) {
+            // 唯一包装点：本类是 session 的唯一持有者（Hub 只拿到本 Conn，即 GameConnection），
+            // 在这里包一次，tick 线程与容器线程的全部出站发送就都走并发安全的装饰器。
+            this.ws = new ConcurrentWebSocketSessionDecorator(raw, SEND_TIME_LIMIT_MS,
+                SEND_BUFFER_LIMIT_BYTES);
             this.userId = userId;
             this.limiter = new GameRateLimiter(ratePerMinute);
         }
@@ -48,14 +64,16 @@ public final class GameWebSocketHandler extends TextWebSocketHandler {
         public synchronized void send(String json) {
             try {
                 if (ws.isOpen()) ws.sendMessage(new TextMessage(json));
-            } catch (IOException ignored) {
-                // 半开连接：真正断开由 onClose / 容器超时兜底，这里静默
+            } catch (IOException | RuntimeException ignored) {
+                // 半开连接：真正断开由 onClose / 容器超时兜底，这里静默。
+                // RuntimeException 也要接：装饰器发送超时/缓冲溢出时会抛（并自行关闭会话），
+                // 绝不能让它冒回 tick 循环把整轮推送带走。
             }
         }
 
         @Override
         public void close() {
-            try { ws.close(CloseStatus.NORMAL); } catch (IOException ignored) { }
+            try { ws.close(CloseStatus.NORMAL); } catch (IOException | RuntimeException ignored) { }
         }
     }
 
@@ -126,6 +144,29 @@ public final class GameWebSocketHandler extends TextWebSocketHandler {
 
     /** 当前在线连接数（健康检查用）。 */
     public int onlineCount() { return sessions.size(); }
+
+    /**
+     * 心跳轮（GamePingDriver 专用，跑在独立 ping 线程上，不在 tick 线程）：
+     * 对全部连接发一个空 PingMessage——浏览器对 ping 帧在协议层自动回 pong，
+     * 客户端零改动。逐连接 try/catch：一条坏连接不带走整轮；!isOpen 或发送失败
+     * 即 close（半开连接一个周期内回收，不占座位）。断开语义仍由容器回调
+     * afterConnectionClosed 收敛——这里绝不直调 sink.onDisconnect（Hub 的单线程
+     * 假设只允许 tick/容器线程调用它）。返回本轮成功发出的 ping 数（日志/测试用）。
+     */
+    public int pingAll() {
+        int sent = 0;
+        for (Conn c : sessions.values()) {
+            try {
+                if (!c.ws.isOpen()) { c.close(); continue; }
+                c.ws.sendMessage(new PingMessage());
+                sent++;
+            } catch (Exception e) {
+                // 发送炸了（含装饰器超时/溢出抛出的运行时异常）＝这条已不可信，关掉
+                c.close();
+            }
+        }
+        return sent;
+    }
 
     /** 优雅停机：广播关闭前逐个静默断开（TS shutdown 1s 硬切的 Java 侧对应物）。 */
     public void closeAll() {
