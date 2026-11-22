@@ -43,7 +43,7 @@
 | HTTP 业务接口 | **线上实测全通**（2026-11-22，经 `/vvv` 前缀 + 真 token）：profile 首见建档 / nickname 改名与 BAD_SHAPE 校验 / ledger / ad-reward 连发两次（幂等键递增、日上限计数正确）/ rank/list / matches/recent，且全部真库落盘核对过 |
 | WebSocket 端到端（真握手 + 对局） | **全链路实测**（2026-11-22，node ws 客户端）：101 握手→profile.now→room.list→practice.create→摆船→回合制开火→game.shot/destroyed/over→结算落库，BAD_SHAPE/UNKNOWN_CMD/NOT_IN_ROOM/WRONG_PHASE/NOT_YOUR_TURN 错误路径全验过。第一版跑挂抓出**真 bug**：WS 端点从未注册（嵌套壳类无 @Configuration + 同类兄弟 @Bean 上的 @ConditionalOnBean 评估时序恒 false），已修。**双真人对局未实测**（同机双开需两个账号，单局全流程已覆盖协议面）。粗糙点：握手 401 被宿主全局异常包装成 `errno:10000` 系统错误而非 401，客户端按"连不上"处理即可 |
 | 多实例水平扩展 | **未做**——桌子/引擎状态在进程内存（v1 与 TS 版一致），Redis 只放在线态/座位/索引/锁；扩容前必读 design.md 的边界说明 |
-| 客户端改接新协议 | **未做**——Vue 客户端仍是 TS 旧协议线；切换客户端是上线前置工作 |
+| 客户端改接新协议 | **已完成并全链路实测**（2026-11-22，plane-duel@59057c2）：`apps/client/src/net/socket.ts` 重写为 v1 信封适配层（对外保持旧接口，视图层与 store 零改动），浏览器 → nginx → Java → MySQL 完整人机练习局跑通（摆阵→回合开炮→game.over→+5 币落库→结算页），落库核对后测试数据已清。坑：Redis db1 会逐出空闲测试 token，鉴权 token 必须即铸即用 |
 
 ## 上线开关（本工程无 Nacos，配置全在 `vvv-link/src/main/resources/bootstrap.yml` 的 `game:` 块）
 
