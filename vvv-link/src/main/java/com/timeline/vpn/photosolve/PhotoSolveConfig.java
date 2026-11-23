@@ -15,6 +15,7 @@ import com.timeline.vpn.util.Secrets;
  * photosolve.doubao.endpoint=    # 默认 https://ark.cn-beijing.volces.com/api/v3/
  * photosolve.maxImages=          # 一次请求最多几张图，默认 4
  * photosolve.maxBytes=           # 单张图上限（字节），默认 5MB
+ * photosolve.maxTokens=          # 单次回答最大输出 token，默认 4096；按接入点上限调
  * photosolve.timeoutSeconds=     # 调模型的总超时，默认 60
  * photosolve.quota.freePerDay=   # 免费用户每天可用次数，默认 10
  * photosolve.quota.vipPerDay=    # VIP 每天可用次数，默认 50
