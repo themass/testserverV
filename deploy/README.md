@@ -50,6 +50,33 @@ upstream companion_server { server 127.0.0.1:8081; keepalive 16; }
 外部探测指纹完全一致：`:8888` 响应逐字节相同、443 上 `jc.sspacee.com`/`sspacee.com`
 两张证书的**序列号都相同**。写文档时不要把两者当成两台机器）。
 
+**DNS 实况（2026-11-24 复查，用户已加记录）**：
+
+| 域 | A 记录 | 网关上现在能给什么 |
+|---|---|---|
+| `poetry.sspacee.com` | **`8.217.122.83`（网关）** | 80 → 落默认 vhost `404`；443 → **握手失败**（现证书 SAN 只有 `api.ok123find.top / api.ok124find.top / book.ok123find.top / file.ok123find.top`） |
+| `api.sspacee.com` | **仍无记录** | — |
+
+⚠ **两个决定要挑明**：
+
+1. `poetry.sspacee.com` 指向了**网关 8.217.122.83**，不是应用机 `64.32.22.150`。
+   本仓库 `poetry-sspacee.conf` 是按「应用机 nginx 终结 TLS + 本机反代 8888」写的——
+   那个文件在网关上用不了（网关无 `server/*.conf` include、无 `/home/file/poetry` 目录）。
+   要么把 A 改指应用机（PWA 与 jar 同机，同域反代最省事），要么在网关上新写一个
+   `poetry.sspacee.com` server 块（静态 root 指到网关本地目录 + 反代 `vpn_server`）。
+   **不管选哪个，证书都得先把该名加进 SAN**（否则 443 永远红）。
+2. `api.sspacee.com` 还没加记录，所以 `certbot.sh` 里已加的该名现在**会 FAIL**——
+   先加 A 记录（→ `8.217.122.83`）再跑 certbot。
+
+**证书 SAN 实况（2026-11-24 实测 `openssl s_client -servername …`）**：
+
+现网关证书 SAN = `api.ok123find.top`、`api.ok124find.top`、`book.ok123find.top`、`file.ok123find.top`
+——**四个**，而 `deploy/ssl/certbot.sh` 的 `DOMAINS` 只列了两个。两个多出来的名都活着：
+`api.ok124find.top`（注意 `124` 是 `123` 的错拼变体）实测 `/vvv/api/version.json` → **200**，
+`book.ok123find.top` → 404。也就是说**线上证书比脚本能重建的更宽**：哪天证书由这个脚本重新签发，
+`api.ok124find.top` 会静默失效。要么把这两个名补进 `DOMAINS`（前提：它们仍在用），要么确认废弃后
+有意识地接受失效——**别在没查清之前重签**。（未改脚本，等你确认这两个名是否还有客户端在用。）
+
 **现网可用通路（2026-11-24 实测）**：
 
 | 通路 | 实测 | 说明 |
