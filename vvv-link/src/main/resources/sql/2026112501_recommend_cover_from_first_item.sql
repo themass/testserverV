@@ -17,6 +17,16 @@
 --   items 行 channelType 若为 'movie' 则列表页本来就查不到它，不能拿来当封面——WHERE 里同样排除。
 --
 -- 执行顺序：① 备份表 ② 预览将被改的行 ③ UPDATE ④ 验证。出问题跑最后的回滚段。
+--
+-- 【风险须先库内核实】探针（2026-11-25）对 GET /vvv/api/video/channel/items.json?channel=ddys其他
+--   等多变体均返回 errno 0 空列表——线上这批 ddys 频道可能压根没有条目行，或 videoitems_1 与
+--   videochannel_1 不在同一库（先例见 2026112100_video_subtitle.sql 注释「两张表不同机器上
+--   不保证同库」）。执行前先在目标库跑：
+--     SELECT channel, COUNT(*) FROM vpn.videoitems_1
+--     WHERE channel IN (SELECT channel FROM vpn.videochannel_1
+--                       WHERE enable=1 AND channelType='movie' AND (pic IS NULL OR pic=''))
+--     GROUP BY channel;
+--   有行才继续；没行/不同库则本脚本只会空转（EXISTS 保护），需要跨库导出封面另议。
 
 -- ① 备份（把当前全部空 pic 行落表，回滚就靠它）
 CREATE TABLE IF NOT EXISTS vpn.videochannel_1_pic_bak_20261125 (
