@@ -66,12 +66,15 @@ class StudentSqlGuardTest {
         String raw = new String(getClass().getResourceAsStream("/db/student/S001__learning_records.sql").readAllBytes(),
             java.nio.charset.StandardCharsets.UTF_8);
         // The header comments name the banned things on purpose; only executable DDL is checked.
+        // String literals are cleared for the same reason: S001 itself carries prose like
+        // "...; no foreign keys" in a schema_version row, and that prose used to trip this guard.
         StringBuilder code = new StringBuilder();
         for (String line : raw.split("\n")) {
             int dash = line.indexOf("--");
             code.append(dash >= 0 ? line.substring(0, dash) : line).append('\n');
         }
-        String ddl = code.toString().toLowerCase();
+        String ddl = java.util.regex.Pattern.compile("'[^']*'").matcher(code.toString())
+            .replaceAll("''").toLowerCase();
         for (String banned : new String[] {" ip ", "ip_addr", "phone", "email", "real_name", "school", "imei", "idfa",
                 "voice", "face", "recording", "latitude", "longitude", "retell_text", "free_text", "message"})
             assertFalse(ddl.contains(banned), "S001 must not contain a column like: " + banned);
