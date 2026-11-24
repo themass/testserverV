@@ -44,7 +44,7 @@ Agent 另有一条只读边：可读底座作上下文，不可写库
 | 核查 SQL | `audit_integrity_checks.sql` 106 项 | 已实测（草稿全 0；演练库 5 项非 0） |
 | 自检与词表 | `PoetrySelfCheck` + `Vocabulary` | 已实现（fail-soft，只告警） |
 | 限流与日志 | `PoetryAccessGuard` | 已实现（单实例，非分布式） |
-| Agent | 无代码 | 明确未实现；底座已为它留出草稿区与 claim 词表 |
+| Agent | 无代码 | 明确未实现；底座已为它留出草稿区与 claim 词表。**2026-11-24 补**：仓库里已有五个 agent 家族（内容生产、学生端讲诗、companion、job-come、naviforge），端口/在线状态/入口定案见 `agents.md`；这张图说的「Agent」= 内容生产那一支，它对 Java 只有一条边：**读已发布 + 写 DRAFT**，没有公网入口 |
 
 ## 进程与装配（2026-11-24 补：这一层此前没写进架构文档）
 
@@ -76,8 +76,10 @@ student 自己只加设备登记、bundle 缓存与限流。
 1. `StudentCorsFilter` 的白名单在跨域上实际**不起决定作用**（宿主过滤器在前、且已应答预检）；
    唐诗读接口本无 cookie 会话，所以现在没有数据泄漏，但**写侧（review/publish）也在 `/**` 范围内**，
    靠的只是 token 头，不是 CORS。
-2. 「poetry.sspacee.com 静态 + api 单独一个域」这个拓扑要成立，前端跨域就必须真受白名单管——
-   这条缺不补，白名单就是装饰。
+2. ~~「poetry.sspacee.com 静态 + api 单独一个域」这个拓扑要成立，前端跨域就必须真受白名单管~~
+   —— 2026-11-24 拓扑改定为 **PWA 与 API 同源**（都在网关 `poetry.sspacee.com`），
+   唐诗这条不再触发跨域，此缺口**不是上线阻塞项**；但它对旧业务（vpn/chat/game 的写侧）依然成立，
+   仍要修。
 
 修法（未做，等排期）：把 `MyCorsFilter` 的注册范围收到旧业务前缀（如 `/vvv/api/**` 里
 除 poetry/student 之外的部分），或按前缀分别注册；改完必须重新实测两个 origin 的预检行为。

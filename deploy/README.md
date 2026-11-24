@@ -7,16 +7,34 @@
 | `deploy/nginx/vpn.conf` | `/etc/nginx/conf.d/vpn.conf` |
 | `deploy/nginx/snippets-vpn-routes.conf` | `/etc/nginx/snippets/vpn-routes.conf` |
 | `deploy/nginx/snippets-proxy-common.conf` | `/etc/nginx/snippets/proxy-common.conf` |
-| `deploy/nginx/poetry-sspacee.conf` | `/root/local/nginx-1.24.0/conf/server/poetry-sspacee.conf`（应用机） |
-| `deploy/nginx/poetry-routes-sspacee.conf` | `/root/local/nginx-1.24.0/conf/server/poetry-routes-sspacee.conf`（应用机） |
+| `deploy/nginx/poetry-sspacee.conf` | `/root/local/nginx-1.24.0/conf/server/poetry-sspacee.conf`（应用机）——**备选，未上线** |
+| `deploy/nginx/poetry-routes-sspacee.conf` | `/root/local/nginx-1.24.0/conf/server/poetry-routes-sspacee.conf`（应用机）——**备选，未上线** |
+| `deploy/nginx/poetry-gateway.conf` | `/etc/nginx/conf.d/poetry-gateway.conf`（网关）——**2026-11-24 定案走这套** |
+| `deploy/nginx/snippets-poetry-routes.conf` | `/etc/nginx/snippets/poetry-routes.conf`（网关） |
 
 上游 `vpn_server`、`chat_server`、`chat_server1`、`fetchurl_server`、`book_server` 仍在 `nginx.conf` 的 `http {}` 里定义，这里不重复。
 
 **新增上游 `companion_server`**（陪伴 / agent 服务）也要手动加到 `nginx.conf` 的 `http {}` 里
-（`upstream` 只允许出现在 `http {}`，写进 snippet 会让 `nginx -t` 失败）：
+（`upstream` 只允许出现在 `http {}`，写进 snippet 会让 `nginx -t` 失败）。
+
+⚠ **但先读这条实测（2026-11-24）**：网关上 companion 通路**已经生效**，用的是另一套名字——
+`myproject/companion-agent/scripts/nginx/` 里的 `ca_api` 上游 + `/v1/**`、`/companion-health`、
+`/metrics` 三个 location（实测 401 / 200 / 403）。本仓库写的 `companion_server` +
+`/api/agent/v1/**` + `/companion/**` **没放上网关**（这两个前缀实测返回 nginx 自己的 HTML 404）。
+两套不是谁写错了：`/v1` 是旧聊天栈（在跑），`/api/agent/v1` 是新栈（配了 Postgres+Redis 才启用，
+见 companion 的 `serve.py`）。**别造第三个上游名**——上线新栈时把本文件两段的 `proxy_pass`
+改成 `ca_api`。细节与全 agent 盘点见 `docs/poetry/agents.md`。
+
+`ca_api` 的正确写法（`104.160.191.87:8081`，**不是本机进程**——网关自己 `127.0.0.1:8081` 无监听）：
 
 ```nginx
-upstream companion_server { server 127.0.0.1:8081; keepalive 16; }
+upstream ca_api { server 104.160.191.87:8081 max_fails=3 fail_timeout=10s; keepalive 16; }
+```
+
+本仓库早期草稿把它写成过 `127.0.0.1:8081`，那是错的，已改：
+
+```nginx
+upstream companion_server { server 104.160.191.87:8081 max_fails=3 fail_timeout=10s; keepalive 16; }
 ```
 
 ## 步骤
@@ -50,23 +68,22 @@ upstream companion_server { server 127.0.0.1:8081; keepalive 16; }
 外部探测指纹完全一致：`:8888` 响应逐字节相同、443 上 `jc.sspacee.com`/`sspacee.com`
 两张证书的**序列号都相同**。写文档时不要把两者当成两台机器）。
 
-**DNS 实况（2026-11-24 复查，用户已加记录）**：
+**DNS 实况（2026-11-24 二次复查，用户已加记录）**：
 
 | 域 | A 记录 | 网关上现在能给什么 |
 |---|---|---|
 | `poetry.sspacee.com` | **`8.217.122.83`（网关）** | 80 → 落默认 vhost `404`；443 → **握手失败**（现证书 SAN 只有 `api.ok123find.top / api.ok124find.top / book.ok123find.top / file.ok123find.top`） |
-| `api.sspacee.com` | **仍无记录** | — |
+| `api.sspacee.com` | **`8.217.122.83`（网关）** | 同上：80 `404`、443 握手失败（`--resolve` 实测，两个名都一样） |
 
-⚠ **两个决定要挑明**：
+> 测量口径：`dig @8.8.8.8 / @1.1.1.1 / @223.5.5.5` 三家一致给 `8.217.122.83`；
+> **本机 `dig` 那次给过 `64.32.22.150`，是过期缓存**（TTL 未到），别拿本机结果判断线上。
+> 早先记录里「`api.sspacee.com` 仍无记录」已被推翻——DNS 这步已经做完了。
 
-1. `poetry.sspacee.com` 指向了**网关 8.217.122.83**，不是应用机 `64.32.22.150`。
-   本仓库 `poetry-sspacee.conf` 是按「应用机 nginx 终结 TLS + 本机反代 8888」写的——
-   那个文件在网关上用不了（网关无 `server/*.conf` include、无 `/home/file/poetry` 目录）。
-   要么把 A 改指应用机（PWA 与 jar 同机，同域反代最省事），要么在网关上新写一个
-   `poetry.sspacee.com` server 块（静态 root 指到网关本地目录 + 反代 `vpn_server`）。
-   **不管选哪个，证书都得先把该名加进 SAN**（否则 443 永远红）。
-2. `api.sspacee.com` 还没加记录，所以 `certbot.sh` 里已加的该名现在**会 FAIL**——
-   先加 A 记录（→ `8.217.122.83`）再跑 certbot。
+⇒ **剩下的两步都在网关上**：(1) 放 `poetry-gateway.conf` + `snippets-poetry-routes.conf`；
+(2) 把 `api.sspacee.com`、`poetry.sspacee.com` 加进证书 SAN（`certbot.sh` 的 `DOMAINS` 已含两名）。
+顺序必须是**先证书后 server_name**：vhost 先进、SAN 还没换，则这个名的每次握手都失败。
+`poetry.sspacee.com` 走的是「**页面与 API 同源**」，所以宿主的通配 CORS 不再是唐诗上线的阻塞项
+（仍然要修，见 `docs/poetry/architecture.md`）；`api.sspacee.com` 只给旧 App 与新客户端做 API 入口。
 
 **证书 SAN 实况（2026-11-24 实测 `openssl s_client -servername …`）**：
 
@@ -85,67 +102,76 @@ upstream companion_server { server 127.0.0.1:8081; keepalive 16; }
 | `https://api.ok123find.top/vvv/api/student/v1/config` | `200` + `errno:10000` | 通路在、模块没装配（`student.enabled` 不在服务器 yml，见下） |
 | `http://<任一 IP>:8888/api/poetry/v1/**` | `200` | 直连 jar；无 TLS，只用于验活与 publish |
 | `https://api.ok123find.top/api/poetry/v1/**`（不带 `/vvv`） | `404` | 本仓库 `snippets-vpn-routes.conf` 里的过渡别名段**尚未放上网关** |
-| `poetry / api-poetry / agent-poetry.sspacee.com` | **无 DNS** | 三域方案已于 2026-11-24 改规划（见下表）：只留 `poetry`，后两个放弃 |
+| `https://api.ok123find.top/v1/sessions`、`/companion-health` | `401`（agent 自己鉴权）、`200` | **companion-agent 已在线上**（上游 `ca_api` → `104.160.191.87:8081`）；`/metrics` → 403（只对内网，正确） |
+| `https://api.ok123find.top/api/agent/v1/health` | `404`，**nginx 自己的 HTML**（不是 agent 的 JSON） | companion 新聊天栈那两个前缀**没放上网关**；见 `docs/poetry/agents.md` 的命名冲突 |
+| `poetry / api.sspacee.com` | DNS 已到网关，但 80 `404`、443 握手失败 | vhost 与 SAN 都还没做（见上） |
+| `api-poetry / agent-poetry.sspacee.com` | **无 DNS** | 已放弃/暂缓（见下表） |
 
-目标态（2026-11-24 规划：Java 只对外**一个** API 域；DNS 与证书未做）：
+目标态（2026-11-24 定案：Java 只对外**一个** API 域；两个 sspacee 子域都在网关）：
 
 | 域名 | 用途 | 解析到 | 终结方 |
 |---|---|---|---|
 | `api.sspacee.com` | **Java 后端唯一新名**（poetry/student/game/roles 全部 `/vvv/api/**`，路径形状与旧名完全一致） | 网关 `8.217.122.83` | 网关 nginx（与 `api.ok123find.top` 同一 vhost、同一 SAN 证书） |
 | `api.ok123find.top` | 同一个后端的老名，**不动**（已装 App 的用户继续用） | 网关 `8.217.122.83` | 网关 nginx |
-| `poetry.sspacee.com` | **唐诗学生端 PWA（纯静态）**；API 走 `api.sspacee.com` | 应用机（`64.32.22.150`；同机另有 `104.160.191.87`） | 应用机 nginx（`/root/local/nginx-1.24.0`） |
+| `poetry.sspacee.com` | **唐诗学生端 PWA + 同源 API**（`/api/student/v1/**`、`/api/poetry/v1/**`，以后 `/agent/v1/**`）——前端零改动、不涉及跨域 | 网关 `8.217.122.83` | 网关 nginx（`poetry-gateway.conf`） |
 | `file.ok123find.top` | 文件下载（`/file/`、`/image/`、`/soft`） | 网关 `8.217.122.83` | 网关 nginx |
 
 已放弃/暂缓的域名（不再进方案）：
 
 - `api-poetry.sspacee.com` —— 取消。单一 api 域下它是冗余的第二入口，只增加证书与排查面。
-- `agent-poetry.sspacee.com` —— 暂缓。`agent-bff :8100` **今天没有进程**（实测无监听），等有 BFF 再谈。
+- `agent-poetry.sspacee.com` —— **取消（不是暂缓）**。`agent-bff :8100` 今天没有进程只是表层原因；
+  真正的原因是内容生产 agent 不该有公网入口（写边界见 `docs/poetry/architecture.md`），
+  远端使用走 SSH 隧道。详见 `docs/poetry/agents.md`。
 - `sspcee.com` —— **未注册**（whois `No match for domain "SSPCEE.COM"`，无 NS）。你的域是
   `sspacee.com`（dnspod：`f1g1ns1/2.dnspod.net`）。若确实想要 sspcee 那个拼法，先注册再规划。
 
-> ⚠ 静态与 API 分域 = 跨域。`vvv-link` 宿主的 `MyCorsFilter` 现在是
+> CORS 仍然是一个要修的缺口，但**不再是唐诗上线的阻塞项**：定案后 PWA 与 API 同源，
+> 浏览器根本不触发跨域。留着的害处是别处——`vvv-link` 宿主的 `MyCorsFilter` 现在是
 > `addAllowedOriginPattern("*")` + `allowCredentials(true)` 注册在 `/**`（实测任意 Origin
-> 都反射回 `Access-Control-Allow-Origin` + `Allow-Credentials: true`），所以
-> `StudentCorsFilter` 的白名单当前**不起决定作用**。分域上线前应先把宿主 CORS 收到旧业务前缀，
-> 详见 `docs/poetry/architecture.md`「一个已知缺口」。
+> 都反射回 `Access-Control-Allow-Origin` + `Allow-Credentials: true`），旧业务的写侧也在
+> 范围内，靠的只是 token 头不是 CORS。修法见 `docs/poetry/architecture.md`「一个已知缺口」。
 
-要点：sspacee.com 系静态域**不经网关**，DNS A → 应用机直连（与 `sspacee.com`/`jc`/`gpt` 同款），
-证书**每域一张** certbot；`api.sspacee.com` 相反——它**就在网关上**，进的是 `certbot.sh` 那张
-SAN 组，不是每域一张。`jc.sspacee.com` 上**没有** poetry 路由（实测 404，那是简历产品的 vhost），
+要点：网关上两个 sspacee 名进的是 `certbot.sh` **同一张** SAN 证书（不是每域一张）；
+应用机自己的 `sspacee.com`/`jc`/`gpt` 仍是每域一张，两套惯例别混。`jc.sspacee.com` 上
+**没有** poetry 路由（实测 404，那是简历产品的 vhost，JC 的 agent 内嵌在它自己的 API 进程里），
 不要拿它验唐诗 API。
 
 ## 步骤（两条独立线，可分别做）
 
 **A. Java 新名 `api.sspacee.com`（在网关 8.217.122.83 上）**
 
-1. DNS：`api` A → `8.217.122.83`（dnspod 面板）。
-2. 证书：网关 root 执行 `bash deploy/ssl/certbot.sh 你的邮箱`（`DOMAINS` 已含三个名；
-   **先加 DNS**，否则 webroot 校验失败）。新 SAN 生效前 `server_name` 里加了该名也没事，
-   只是 TLS 会警告。
+1. DNS：**已完成**（实测 A → `8.217.122.83`）。
+2. 证书：网关 root 执行 `bash deploy/ssl/certbot.sh 你的邮箱`（`DOMAINS` 已含三个名）。
+   先看清上面「证书 SAN 实况」那条——现网证书比脚本宽，别贸然重签。
 3. 放文件：`vpn.conf`（两处 `server_name` 加 `api.sspacee.com`）、
    `snippets-vpn-routes.conf` → `/etc/nginx/snippets/vpn-routes.conf`。
 4. `nginx -t && systemctl reload nginx`。
 5. 验证：`curl -s https://api.sspacee.com/vvv/api/poetry/v1/coverage` → 与
    `api.ok123find.top` 同名路径**逐字节一致**。老名一律不动。
 
-**B. 唐诗 PWA 静态域 `poetry.sspacee.com`（在应用机上）**
+**B. 唐诗 PWA `poetry.sspacee.com`（已定：也在网关上）**
 
-1. DNS：`poetry` A → `64.32.22.150`。
-2. 证书：应用机 root 执行 `bash deploy/ssl/certbot-poetry-sspacee.sh 你的邮箱`
-   （每域一张；`DOMAINS` 已收敛到只签 `poetry.sspacee.com`——`api-poetry`/`agent-poetry`
-   随规划调整删掉了，别再加回来）。
-3. 放文件：`poetry-sspacee.conf`、`poetry-routes-sspacee.conf`
-   → `/root/local/nginx-1.24.0/conf/server/`（该机 nginx 用 `include server/*.conf`，无 snippets 目录）。
-   ⚠ 走「静态与 API 分域」时，要先把该文件里两段 API 反代去掉（前端改指
-   `https://api.sspacee.com/vvv/api/...`），并先收宿主 CORS（见 architecture.md）；
-   否则维持「同域反代」这一版，前端不用改。
-4. 前端产物落位（见下「前端上线要求」）。
-5. `nginx -t && nginx -s reload`（二进制在 `/root/local/nginx-1.24.0/sbin/nginx`，不在 PATH）。
-6. 验证：
+DNS 已完成（A → `8.217.122.83`）。剩下的顺序（每一步都不需要停现网）：
+
+1. 放文件：`poetry-gateway.conf`、`snippets-poetry-routes.conf`。放的时候 443 引用的是
+   `/etc/nginx/ssl/` 里**已存在**的旧证书，`nginx -t` 能过，只是这个名的 TLS 名字不匹配——
+   先放文件是为了 80 端口的 acme-challenge 有个确定的落点（不放，poetry 名的校验请求会
+   落进默认 server，成不成看运气）。
+   ⚠ 放置路径先跑 `nginx -T | grep -n "include\|vpn.conf"` 核实（两份文档对网关 nginx
+   布局记法不一致，见 `poetry-gateway.conf` 文件头）。
+2. 证书：网关 root 执行 `bash deploy/ssl/certbot.sh 你的邮箱`——**先确认现网那两个多出来的
+   SAN 名（api.ok124find / book.ok123find）怎么处理**（见上），否则别重签。
+3. 前端产物落位到**网关**的 `/home/file/poetry/`（见下「前端上线要求」——定案在网关后，
+   静态目录也在网关，不再是应用机）。
+4. `nginx -t && systemctl reload nginx`。
+5. 验证：
    - `curl -I https://poetry.sspacee.com/` → 200（index.html，`Cache-Control: no-cache`）
    - `curl -I https://poetry.sspacee.com/sw.js` → `Cache-Control: no-store`
-   - 同域版：`curl -s https://poetry.sspacee.com/api/student/v1/config` → JSON（须 vvv-link 已起）
-   - 分域版：`curl -s https://api.sspacee.com/vvv/api/student/v1/config` → JSON
+   - `curl -s https://poetry.sspacee.com/api/student/v1/config` → JSON（同源 API；须 vvv-link 已起）
+   - `curl -s https://api.sspacee.com/vvv/api/student/v1/config` → 与旧名同名路径逐字节一致
+   - 讲诗 agent（`/agent/v1/**`）**今天没有进程**：那段 location 是注释状态，起进程时再放开
+     （上游、鉴权两个坑写在那段注释里）。agent 全家族盘点与入口定案见
+     [`docs/poetry/agents.md`](../docs/poetry/agents.md)——内容生产 agent 永久不给公网入口。
 
 ## 前端上线要求（构建与目录约定）
 
@@ -167,12 +193,17 @@ SAN 组，不是每域一张。`jc.sspacee.com` 上**没有** poetry 路由（�
    从 `public/` 拷到站根（2026-11-24 补：此前构建**不产** manifest，nginx 的
    `location = /manifest.webmanifest` 会一直 404）。前端 `index.html` 已带
    `<link rel="manifest" href="/manifest.webmanifest">`。
-3. 场景素材（`/assets/`）是**内容寻址**的，走一年 immutable；前端自身的 `src/`、`public/`
-   没有内容哈希，由 `location /` 的 `no-cache` 覆盖——发版不会被缓存黏住。
+3. 场景素材（`/assets/`）是**内容寻址**的，走一年 immutable；素材文件在**应用机**
+   （jar 的 `student.asset.root`），网关那侧由 `snippets-poetry-routes.conf` 反代过去，
+   **不要**在网关上再存一份。前端自身的 `src/`、`public/` 没有内容哈希，由 `location /`
+   的 `no-cache` 覆盖——发版不会被缓存黏住。
 3. PWA 更新链路依赖 `sw.js` 永不缓存——路由已对 `/sw.js` 强制 `no-store`，别在别处覆盖。
 4. 前端 API 基址走同源（`/api/student/v1`、`/api/poetry/v1`），不要在前端写死域名。
 
-> 上线时 nginx root 指向 `current/dist`，与 `poetry-routes-sspacee.conf` 内写死的路径一致。
+> 上线时 nginx root 指向 `current/dist`，与 `snippets-poetry-routes.conf` 内写死的路径一致。
+> ⚠ 定案在网关后，`dist/` 落在**网关**；jar 的 `student.app.root` 指的是**应用机**上的同名目录，
+> 两处不是同一份。于是 `http://<应用机 IP>:8888/app/` 这条自查通路只在应用机也放了一份 dist 时才有内容
+> （下面「最短看到效果」用的就是它）——要留这条通路，就把 dist 同时拷到应用机那份。
 
 ## 最短看到效果（不必等 DNS 与证书）
 
@@ -194,9 +225,9 @@ SAN 组，不是每域一张。`jc.sspacee.com` 上**没有** poetry 路由（�
 ```yaml
 student:
   enabled: true
-  app.root: /home/file/poetry/current/dist    # 8888 的 /app/ 也可达（与 nginx 同一目录）
+  app.root: /home/file/poetry/current/dist    # 应用机上那份；网关上的那份 jar 看不见（见上面那条 ⚠）
   asset.root: /home/file/poetry/assets
-  cors.allowedOrigins: https://poetry.sspacee.com   # 静态与 API 分域时必须登记；同域版可留默认壳来源
+  cors.allowedOrigins: https://poetry.sspacee.com   # 定案后同源，这里其实用不上；留着是为了以后真分域时不用再查
   agentEnabled: false                          # companion agent 通路（:8081）没上线前保持 false
 ```
 

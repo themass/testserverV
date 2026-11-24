@@ -3,8 +3,15 @@
 # sspacee.com/jc.sspacee.com/gpt.sspacee.com 的 certbot 惯例一致；**不进**
 # certbot.sh 的 SAN 组，那组是网关 8.217.122.83 上的 ok123find/api.sspacee 系，两回事）。
 #
+# ⚠ **2026-11-24 定案后本脚本不是正路**：`poetry.sspacee.com` 的 A 已在网关
+#   8.217.122.83（三家公共 resolver 实测），PWA 走 deploy/nginx/poetry-gateway.conf，
+#   证书进 certbot.sh 那张 SAN。**只有在把 A 改回应用机时才用这里**（每域一张 +
+#   poetry-sspacee.conf 那一套）。留着是为了那条备选路不用重写脚本，别在网关上跑它
+#   ——网关上跑会把 poetry 签成一张独立证书，跟 vpn.conf 用的 /etc/nginx/ssl 那张分家。
+#
 # 2026-11-24 规划调整：`api-poetry`/`agent-poetry` 两个名已放弃——Java 只对外一个
-# API 域（`api.sspacee.com`，走 certbot.sh 那张 SAN 证书），所以这里只签静态域。
+# API 域（`api.sspacee.com`，走 certbot.sh 那张 SAN 证书），内容生产 agent 永久不给公网
+# 入口（见 docs/poetry/agents.md），所以这里只签静态域。
 #
 # 前提：**先加 DNS A 记录 → 应用机**（一台机两个公网 IP：64.32.22.150 与 104.160.191.87，
 # 2026-11-24 确认；两个都通，写哪个都行），80 端口公网可达。

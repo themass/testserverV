@@ -2,8 +2,14 @@
 # Let's Encrypt 正式证书（免费，Android 与 AdMob 都信任）。
 #
 # 前提：
-#   1. 域名 api.ok123find.top、file.ok123find.top、api.sspacee.com 的 A 记录指向本服务器
-#      （api.sspacee.com 是 Java 后端的新名，2026-11-24 规划：与旧名同一路由别名）；
+#   1. 下面 DOMAINS 里每个名的 A 记录都指向本服务器（网关 8.217.122.83）：
+#      api.ok123find.top 与 file.ok123find.top 是旧名；api.sspacee.com 是 Java 后端的新名
+#      （与旧名同一路由别名）；poetry.sspacee.com 是唐诗 PWA，2026-11-24 定案**也在网关上**
+#      （deploy/nginx/poetry-gateway.conf），所以它进这张 SAN，不再用
+#      certbot-poetry-sspacee.sh 每域一张那一套（那个脚本留着只服务「改回应用机」的备选）。
+#      ⚠ 现网这张证书的 SAN 比本脚本还多两个名：api.ok124find.top（实测 200，仍活着）、
+#      book.ok123find.top（实测 404）。没查清是否还有客户端在用之前，**别用本脚本重签**——
+#      重签会让那两个名静默失效。查清后要么补进 DOMAINS，要么有意识地接受失效。
 #   2. 服务器 80 端口可以从公网访问（Let's Encrypt 通过它校验域名）。
 #
 # 用法（root 执行）：
@@ -11,7 +17,7 @@
 set -euo pipefail
 
 EMAIL="${1:?用法: $0 你的邮箱}"
-DOMAINS=(api.ok123find.top file.ok123find.top api.sspacee.com)
+DOMAINS=(api.ok123find.top file.ok123find.top api.sspacee.com poetry.sspacee.com)
 WEBROOT=/var/www/letsencrypt
 SSL_DIR=/etc/nginx/ssl
 LIVE_DIR="/etc/letsencrypt/live/${DOMAINS[0]}"
