@@ -29,4 +29,10 @@
 	    </if>
 	    order by sortType desc , id desc
 	</select>
+
+	<!-- 歌词生成读单条：拿 url/baseurl/file 拼音频地址（SoundAudioUrl.resolve）。 -->
+	<select id="getSoundItemById" resultMap="SoundItemsMap">
+	    select * from vpn.sounditems where id=#{id}
+	    limit 1
+	</select>
 </mapper>

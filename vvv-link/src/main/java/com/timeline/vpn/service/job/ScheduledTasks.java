@@ -32,6 +32,9 @@ public class ScheduledTasks {
     @Autowired
     private HostIpCacheV2 hostIpCacheV2;
 
+    @Autowired
+    private SoundSubtitleBackfill soundSubtitleBackfill;
+
     // Running every 8 minutes
     @Scheduled(cron = "0 0/8 * ? * *")
     public void hostIpMonitorExecute() {
@@ -77,5 +80,11 @@ public class ScheduledTasks {
     @Scheduled(cron = "0 * * ? * *")
     public void hostIpCacheV2Execute() {
         hostIpCacheV2.execute();
+    }
+
+    // 声音馆歌词补量：每 30 分钟一批（契约 §2 Phase 2；跨实例互斥在 job 里用 vpn.lock_job）
+    @Scheduled(cron = "0 0/30 * ? * *")
+    public void soundSubtitleBackfillExecute() {
+        soundSubtitleBackfill.execute();
     }
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.timeline.vpn.dao.db.SoundSubtitleDao">
+	<resultMap id="SoundSubtitleMap" type="com.timeline.vpn.model.po.SoundSubtitlePo" autoMapping="true">
+		<id column="id" property="id" />
+	</resultMap>
+	<resultMap id="SoundItemsMap" type="com.timeline.vpn.model.po.SoundItems">
+	</resultMap>
+
+	<!-- 列表：显式列名，故意不取 content（体积大且列表页用不到）；size 现算字节数
+	     （OCTET_LENGTH 而不是 LENGTH：utf8mb4 下 LENGTH 是字符数，端上拿它估下载量要的是字节）。 -->
+	<select id="getListBySoundItem" resultMap="SoundSubtitleMap">
+		select id, soundItemId, title, lang, format, OCTET_LENGTH(content) as size, enabled, createTime
+		from vpn.sound_subtitle
+		where soundItemId=#{soundItemId} and enabled=1
+		order by id asc
+	</select>
+
+	<!-- 正文：单条按 id 取，回 id + content + format + lang（契约 §2 item.json）。 -->
+	<select id="getContent" resultMap="SoundSubtitleMap">
+		select id, content, format, lang
+		from vpn.sound_subtitle
+		where id=#{id} and enabled=1
+		limit 1
+	</select>
+
+	<!-- 状态机用的一行：不含 content。 -->
+	<select id="getBySoundItem" resultMap="SoundSubtitleMap">
+		select id, soundItemId, title, lang, format, sourceFileHash, genStatus, engine, enabled, createTime
+		from vpn.sound_subtitle
+		where soundItemId=#{soundItemId}
+		limit 1
+	</select>
+
+	<!-- 补量：还没有任何轨的条目（UNIQUE(soundItemId) 下一条目最多一行）。 -->
+	<select id="listItemsWithoutTrack" resultMap="SoundItemsMap">
+		select s.id, s.baseurl, s.url, s.name, s.file, s.fileDate, s.myFile, s.channel
+		from vpn.sounditems s
+		left join vpn.sound_subtitle t on t.soundItemId = s.id
+		where t.id is null
+		order by s.id desc
+		limit #{limit}
+	</select>
+
+	<insert id="insertRunning" useGeneratedKeys="true" keyProperty="id">
+		insert into vpn.sound_subtitle
+		(soundItemId,title,lang,format,content,sourceFileHash,genStatus,engine,enabled,createTime)
+		values
+		(#{soundItemId},#{title},#{lang},#{format},#{content},#{sourceFileHash},#{genStatus},#{engine},1,#{createTime})
+	</insert>
+
+	<update id="updateGenStatus">
+		update vpn.sound_subtitle set genStatus=#{genStatus} where id=#{id}
+	</update>
+
+	<update id="updateGenerated">
+		update vpn.sound_subtitle
+		set content=#{content}, sourceFileHash=#{sourceFileHash}, engine=#{engine}, genStatus=#{genStatus}
+		where id=#{id}
+	</update>
+</mapper>

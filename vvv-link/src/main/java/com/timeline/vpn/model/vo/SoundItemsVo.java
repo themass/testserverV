@@ -6,10 +6,23 @@ package com.timeline.vpn.model.vo;
  * @version V1.0
  */
 public class SoundItemsVo {
+    /**
+     * 条目 id（vpn.sounditems.id）。契约 sound-lyrics-contract §2 Phase 0：
+     * 歌词/翻译等按条目挂的元数据全靠它。VoBuilder 的 BeanUtils 从 PO 同名属性自动拷出；
+     * mapper 是 select *（SoundChannelMapper.xml），列里本来就有 id，只是 VO 以前没透出。
+     * 老客户端忽略多余字段，安全。
+     */
+    private Integer id;
     private String url;
     private String name;
     private String file;
     private String fileDate;
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
     public String getUrl() {
         return url;
     }

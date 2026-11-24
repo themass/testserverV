@@ -54,4 +54,17 @@ public class CommonThreadPoolConfig {
         return threadPoolTaskExecutor;
     }
 
+    /**
+     * 声音馆歌词离线 ASR 生成线程池（契约 sound-lyrics-contract §2 Phase 2）。
+     * 一次任务 = 一次 Deepgram url 模式调用（服务端拉整条音频，分钟级），刻意窄：
+     * 按需触发同条目已有去重，补量 job 每轮也有限条，宽池只会把 Deepgram 并发配额打爆。
+     */
+    @Bean("soundAsrExecutor")
+    public ExecutorService soundAsrExecutor() {
+        ExecutorService threadPoolTaskExecutor = Executors.newFixedThreadPool(3,
+                new NamedThreadFactory("soundAsrExecutor"));
+        ThreadPoolMonitorUtils.addToMonitor(threadPoolTaskExecutor);
+        return threadPoolTaskExecutor;
+    }
+
 }
