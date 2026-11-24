@@ -5,14 +5,18 @@ import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Locale;
 
 /**
  * 声音条目的音频地址规范化 + 指纹（纯函数，单测 SoundAudioUrlTest）。
  *
- * <p>口径（DataSoundServiceImpl.getSoundItems 现行语义）：
- * url 列就是端上公网串流地址；myFile 只是国内镜像（端上按访客 IP 切换），
- * 服务端 ASR（Deepgram 在美区拉流）不喂镜像；url 缺失才退回 baseurl+file 拼接。
- * 拼不出可用地址返回 null——生成侧据此直接判 failed，不空转调 API。
+ * <p>口径以 2026-11-24 线上冒烟实测为准：items.json 真实行里
+ * <b>url 是网页路径</b>（/yousheng/2474.html），mp3 在 file 列
+ * （https://mmssxs1.com/有声连载/欲孽23.mp3）。所以规则是
+ * 「谁是不可否认的 http(s) 绝对地址就用谁」：url 绝对 → url；file 绝对 → file；
+ * 否则 baseurl+file 拼接。myFile 只是国内镜像（端上按访客 IP 切换），
+ * Deepgram 在美区拉流不喂镜像。拼不出可用地址返回 null——生成侧据此直接判
+ * failed，不空转调 API。
  */
 public final class SoundAudioUrl {
 
@@ -23,8 +27,11 @@ public final class SoundAudioUrl {
         if (item == null) {
             return null;
         }
-        if (!StringUtils.isEmpty(item.getUrl())) {
+        if (isHttpUrl(item.getUrl())) {
             return item.getUrl().trim();
+        }
+        if (isHttpUrl(item.getFile())) {
+            return item.getFile().trim();
         }
         if (!StringUtils.isEmpty(item.getBaseurl()) && !StringUtils.isEmpty(item.getFile())) {
             String base = item.getBaseurl().trim();
@@ -38,6 +45,15 @@ public final class SoundAudioUrl {
             return base + file;
         }
         return null;
+    }
+
+    /** 大小写不敏感的 http(s):// 前缀判定；页面路径/裸文件名一律不算可拉取音频。 */
+    private static boolean isHttpUrl(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return false;
+        }
+        String v = value.trim().toLowerCase(Locale.ROOT);
+        return v.startsWith("http://") || v.startsWith("https://");
     }
 
     /** URL 的 SHA-256（小写 hex，64 字符）：写进 sourceFileHash，换文件自动失效旧歌词。 */
