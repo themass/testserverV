@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -180,8 +181,13 @@ public class PhotoSolveController extends BaseController {
     /**
      * 部署自检：`curl -F` 之前先确认密钥、模型名读到了。
      * 只返回布尔值，不泄露任何密钥内容。
+     *
+     * GET 与 POST 都受理：类注释和部署文档一直写的是 {@code GET /health.json}，
+     * 但方法原来只有 {@code @PostMapping}——GET 落到全局兜底的
+     * HttpRequestMethodNotSupportedException 分支（errno 11002），文档与实现互相矛盾。
+     * 部署脚本用 {@code curl <url>}（默认 GET）做健康检查，必须能用 GET。
      */
-    @PostMapping(value = "/health.json")
+    @RequestMapping(value = "/health.json", method = {RequestMethod.GET, RequestMethod.POST})
     public JsonResult health() {
         java.util.Map<String, Object> data = new java.util.LinkedHashMap<>();
         data.put("provider", provider.name());

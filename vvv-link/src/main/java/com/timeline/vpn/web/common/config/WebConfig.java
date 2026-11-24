@@ -42,8 +42,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**/*.json");
 
         // UserCheckHandlerInterceptor
+        // health.json 必须排除：它是部署自检（裸 curl，没有客户端签名 UA）。
+        // HostFilter 对无签名 UA 得到 DevApp=null（DeviceUtil.getAPPInfo 匹配不到
+        // VVV/x.y.z.w 正则返回 null），UserCheckHandlerInterceptor 见 null 直接
+        // throw RuntimeException("welcome") → 全局兜底 errno 10000，自检永远红。
         registry.addInterceptor(userCheckHandlerInterceptor)
-                .addPathPatterns("/**/*.json");
+                .addPathPatterns("/**/*.json")
+                .excludePathPatterns(HEALTH_EXCLUSIONS);
 
         // CostHandlerInterceptor
         registry.addInterceptor(costHandlerInterceptor)
@@ -51,7 +56,8 @@ public class WebConfig implements WebMvcConfigurer {
 
         // BlackdevHandlerInterceptor
         registry.addInterceptor(blackdevHandlerInterceptor)
-                .addPathPatterns("/**/*.json");
+                .addPathPatterns("/**/*.json")
+                .excludePathPatterns(HEALTH_EXCLUSIONS);
 
         // VersionHandlerInterceptor with exclusions
         registry.addInterceptor(versionHandlerInterceptor)
@@ -61,9 +67,13 @@ public class WebConfig implements WebMvcConfigurer {
                         "/login.json",
                         "/logout.json",
                         "/api/monitor/collect.json",
-                        "/api/data/**"
-                );
+                        "/api/data/**",
+                        // 同上：签名/黑名单/版本都要读 DevApp，裸 curl 的部署自检进不去
+                        "/api/photosolve/v1/health.json");
     }
+
+    /** 部署自检端点：不带客户端签名，必须绕开所有读 DevAppContext 的拦截器。 */
+    private static final String[] HEALTH_EXCLUSIONS = {"/api/photosolve/v1/health.json"};
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         // 添加自定义参数解析器

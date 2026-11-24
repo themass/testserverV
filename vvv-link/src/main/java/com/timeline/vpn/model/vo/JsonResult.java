@@ -66,7 +66,11 @@ public class JsonResult {
     public Object getData() {
         DevApp app = DevAppContext.get();
         //TODO 测试时注释
-        if(data!=null&&!app.isTest()){
+        // app==null：部署自检端点（如 photosolve health）被拦截器排除后，请求不过
+        // HostFilter 的签名解析，这里拿不到 DevApp。原先直接 app.isTest() 会 NPE，
+        // 又被全局兜底成 errno 10000——自检明明到了 controller 却报系统错误。
+        // 没有 DevApp 就没有 authKey，本来也加密不了；原样下发明文。
+        if(data!=null&&app!=null&&!app.isTest()){
             String json = JsonUtil.writeValueAsString(data);
             String encry = AES2.encode(json, app.getAuthKey());
             return encry;
