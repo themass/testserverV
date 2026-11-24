@@ -14,24 +14,21 @@
 
 上游 `vpn_server`、`chat_server`、`chat_server1`、`fetchurl_server`、`book_server` 仍在 `nginx.conf` 的 `http {}` 里定义，这里不重复。
 
-**新增上游 `companion_server`**（陪伴 / agent 服务）也要手动加到 `nginx.conf` 的 `http {}` 里
+**新增上游 `companion_server`** 也要手动加到 `nginx.conf` 的 `http {}` 里
 （`upstream` 只允许出现在 `http {}`，写进 snippet 会让 `nginx -t` 失败）。
 
-⚠ **但先读这条实测（2026-11-24）**：网关上 companion 通路**已经生效**，用的是另一套名字——
-`myproject/companion-agent/scripts/nginx/` 里的 `ca_api` 上游 + `/v1/**`、`/companion-health`、
-`/metrics` 三个 location（实测 401 / 200 / 403）。本仓库写的 `companion_server` +
-`/api/agent/v1/**` + `/companion/**` **没放上网关**（这两个前缀实测返回 nginx 自己的 HTML 404）。
-两套不是谁写错了：`/v1` 是旧聊天栈（在跑），`/api/agent/v1` 是新栈（配了 Postgres+Redis 才启用，
-见 companion 的 `serve.py`）。**别造第三个上游名**——上线新栈时把本文件两段的 `proxy_pass`
-改成 `ca_api`。细节与全 agent 盘点见 `docs/poetry/agents.md`。
+⚠ **这不是唐诗的服务**：陪伴产品（companion-agent）的 agent 跑在它自己的进程里，
+路由出现在本仓库只因为**网关的 nginx 配置在这仓库里**（共享机，见
+[`docs/poetry/network-architecture.md`](../docs/poetry/network-architecture.md)）。
+唐诗的架构文档不规定它，改唐诗时也别顺手改它。
 
-`ca_api` 的正确写法（`104.160.191.87:8081`，**不是本机进程**——网关自己 `127.0.0.1:8081` 无监听）：
+状态实测（2026-11-24，只读）：线上生效的是 `ca_api` 上游 + `/v1/**`、`/companion-health`、
+`/metrics`（401 / 200 / 403），由 `8a91149c`（2026-11-12「nginx 加陪伴与 agent 路由」）引入的
+那套写法；本仓库这两段的 `companion_server` + `/api/agent/v1/**` + `/companion/**`
+**没放上网关**（实测返回 nginx 自己的 HTML 404）。**别定义第三个指同一台的上游名**。
 
-```nginx
-upstream ca_api { server 104.160.191.87:8081 max_fails=3 fail_timeout=10s; keepalive 16; }
-```
-
-本仓库早期草稿把它写成过 `127.0.0.1:8081`，那是错的，已改：
+`ca_api` 的地址实测是 `104.160.191.87:8081`——本仓库早期把它写成 `127.0.0.1:8081` 是错的
+（网关本机无监听），已改：
 
 ```nginx
 upstream companion_server { server 104.160.191.87:8081 max_fails=3 fail_timeout=10s; keepalive 16; }
@@ -68,6 +65,15 @@ upstream companion_server { server 104.160.191.87:8081 max_fails=3 fail_timeout=
 外部探测指纹完全一致：`:8888` 响应逐字节相同、443 上 `jc.sspacee.com`/`sspacee.com`
 两张证书的**序列号都相同**。写文档时不要把两者当成两台机器）。
 
+⚠ **唐诗涉及的是三台机器，不是两台**：除了网关与应用机，内容底座在**第三台**
+`47.82.163.162` ← `mysql.sspacee.com:6666/vpn`（`dig @8.8.8.8` + `:6666` 握手横幅实测；
+横幅 `server_version=8.0.46-0ubuntu0.24.04.5`）。这一跳此前从没写进唐诗文档，
+而迁移执行位置、备份、跨机防火墙都挂在它上面。完整进程/端口/边界见
+[`docs/poetry/network-architecture.md`](../docs/poetry/network-architecture.md)。
+**最该补的一项**：jar 的 `:8888` 今天在两个公网 IP 上**明文可达、无来源限制**（实测读接口直接 200），
+配上 `poetry.reviewToken` 之后写侧也会从这条绕开网关——应把 `:8888` 收成只允许
+`8.217.122.83` 与本机回环（安全组或 iptables，你执行）。
+
 **DNS 实况（2026-11-24 二次复查，用户已加记录）**：
 
 | 域 | A 记录 | 网关上现在能给什么 |
@@ -103,7 +109,7 @@ upstream companion_server { server 104.160.191.87:8081 max_fails=3 fail_timeout=
 | `http://<任一 IP>:8888/api/poetry/v1/**` | `200` | 直连 jar；无 TLS，只用于验活与 publish |
 | `https://api.ok123find.top/api/poetry/v1/**`（不带 `/vvv`） | `404` | 本仓库 `snippets-vpn-routes.conf` 里的过渡别名段**尚未放上网关** |
 | `https://api.ok123find.top/v1/sessions`、`/companion-health` | `401`（agent 自己鉴权）、`200` | **companion-agent 已在线上**（上游 `ca_api` → `104.160.191.87:8081`）；`/metrics` → 403（只对内网，正确） |
-| `https://api.ok123find.top/api/agent/v1/health` | `404`，**nginx 自己的 HTML**（不是 agent 的 JSON） | companion 新聊天栈那两个前缀**没放上网关**；见 `docs/poetry/agents.md` 的命名冲突 |
+| `https://api.ok123find.top/api/agent/v1/health` | `404`，**nginx 自己的 HTML**（不是 agent 的 JSON） | 这是**陪伴产品**的路由，不是唐诗的；记录在此只因为网关配置在本仓库（共享机）。唐诗的架构文档不管它，见 `docs/poetry/network-architecture.md` |
 | `poetry / api.sspacee.com` | DNS 已到网关，但 80 `404`、443 握手失败 | vhost 与 SAN 都还没做（见上） |
 | `api-poetry / agent-poetry.sspacee.com` | **无 DNS** | 已放弃/暂缓（见下表） |
 

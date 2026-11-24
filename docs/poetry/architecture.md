@@ -44,7 +44,7 @@ Agent 另有一条只读边：可读底座作上下文，不可写库
 | 核查 SQL | `audit_integrity_checks.sql` 106 项 | 已实测（草稿全 0；演练库 5 项非 0） |
 | 自检与词表 | `PoetrySelfCheck` + `Vocabulary` | 已实现（fail-soft，只告警） |
 | 限流与日志 | `PoetryAccessGuard` | 已实现（单实例，非分布式） |
-| Agent | 无代码 | 明确未实现；底座已为它留出草稿区与 claim 词表。**2026-11-24 补**：仓库里已有五个 agent 家族（内容生产、学生端讲诗、companion、job-come、naviforge），端口/在线状态/入口定案见 `agents.md`；这张图说的「Agent」= 内容生产那一支，它对 Java 只有一条边：**读已发布 + 写 DRAFT**，没有公网入口 |
+| Agent | 代码在 `poetry-agent` 仓库，**服务器上没部署** | 这张图说的「Agent」= **内容生产那一支**（唐诗只有两个 agent：内容生产 + 学生端讲诗；见 `agents.md`）。它对 Java 只有一条边：**读已发布 + 写 DRAFT**，没有公网入口。进程/端口/三台机器的实测见 `network-architecture.md` |
 
 ## 进程与装配（2026-11-24 补：这一层此前没写进架构文档）
 
