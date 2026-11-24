@@ -2,7 +2,8 @@
 # Let's Encrypt 正式证书（免费，Android 与 AdMob 都信任）。
 #
 # 前提：
-#   1. 域名 api.ok123find.top、file.ok123find.top 的 A 记录指向本服务器；
+#   1. 域名 api.ok123find.top、file.ok123find.top、api.sspacee.com 的 A 记录指向本服务器
+#      （api.sspacee.com 是 Java 后端的新名，2026-11-24 规划：与旧名同一路由别名）；
 #   2. 服务器 80 端口可以从公网访问（Let's Encrypt 通过它校验域名）。
 #
 # 用法（root 执行）：
@@ -10,7 +11,7 @@
 set -euo pipefail
 
 EMAIL="${1:?用法: $0 你的邮箱}"
-DOMAINS=(api.ok123find.top file.ok123find.top)
+DOMAINS=(api.ok123find.top file.ok123find.top api.sspacee.com)
 WEBROOT=/var/www/letsencrypt
 SSL_DIR=/etc/nginx/ssl
 LIVE_DIR="/etc/letsencrypt/live/${DOMAINS[0]}"
