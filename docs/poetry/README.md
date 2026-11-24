@@ -2,6 +2,8 @@
 
 | 文件 | 用途 | 什么情况下必须读 |
 |---|---|---|
+| `network-architecture.md` | **唐诗自己的**进程 / 端口 / 三台机器 / 域名 / 读写边界实测 | 部署、排障、加路由、改防火墙之前 |
+| `agents.md` | 唐诗的两个 agent（内容生产、讲诗）：端口、令牌切分、入口定案 | 接 agent、放开 agent 路由之前 |
 | `architecture.html` | 一张图说清底座 / 应用 / Agent 的边界（可直接浏览器打开） | 任何人想搞清"数据从哪来、谁能写、学生能看到什么" |
 | `architecture.json` | 上述图的可编辑源（Archify 规格） | 要改图时，改这里再重新生成 |
 | `data-model.md` | 实体关系、字段语义、枚举词表、约定、全面性缺口 | 录数据、改表、加接口之前 |
@@ -13,7 +15,12 @@
 
 ## 迁移与核查：唯一正确顺序（2026-11-06 已在真库执行）
 
-**先看清是哪台库**：宿主 `local` 与 `prod` 两个 profile 的 datasource **完全相同**（`mysql.sspacee.com:6666/vpn`，MySQL 5.6.40）。
+**先看清是哪台库**：宿主 `local` 与 `prod` 两个 profile 的 datasource **完全相同**
+（`mysql.sspacee.com:6666/vpn`）。**这台库是第三台机器** `47.82.163.162`，
+既不是网关也不是应用机——此前唐诗文档只写了两台机，漏了这一跳，见
+[`network-architecture.md`](network-architecture.md)。
+版本：迁移当时（2026-11-06）是 **5.6.40**，今天握手横幅实测已是 **8.0.46**；
+SQL 仍只用 5.6 子集写法，理由是前向兼容，不是「服务器还是 5.6」。
 也就是说：跑迁移就是跑在那台线上库上。它现在已经有 26 张 `poetry_` 表，**全 DRAFT、无任何内容可见**；
 该账号没有建库权限，所以不可能另起 dev 库——只能前缀隔离 + 备份 + 可回退。
 
@@ -49,7 +56,7 @@ mysql dev_db < vvv-poetry/src/main/resources/db/poetry/demo_publish_chunwang.sql
 
 | 事实 | 状态 |
 |---|---|
-| V001/V002/V003/V004 在真 MySQL **5.6.40** 全部执行成功；29 张表、中文无损（V006 后含 poetry_asset / poetry_script / poetry_script_asset） | **已实测（真库）** |
+| V001/V002/V003/V004 在真 MySQL **5.6.40**（迁移当时）全部执行成功；29 张表、中文无损（V006 后含 poetry_asset / poetry_script / poetry_script_asset）；同一套脚本在今天的 **8.0.46** 上同样有效 | **已实测（真库）** |
 | 106 项核查在真库：草稿态全 0 | **已实测** |
 | 演练发布后 5 个核查项非 0（未核查来源被发布 2、缺已采用年代说 1、发布无审核轨迹 2、占位/演练 locator 2、DEMO 来源 1） | **已实测** |
 | 撤回演练后：读闸门全部 0 条、核查回到全 0 | **已实测** |

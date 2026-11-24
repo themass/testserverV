@@ -1,6 +1,12 @@
 # 内容底座数据模型
 
-状态：**已在真实 MySQL 5.6.40 上落地**（库 `vpn`，与宿主应用同库，靠 `poetry_` 前缀隔离）。
+状态：**已在真实 MySQL 上落地**（库 `vpn`，与宿主应用同库，靠 `poetry_` 前缀隔离）。
+**版本口径（2026-11-24 更正）**：V001–V007 迁移是在 2026-11-06 的 **MySQL 5.6.40** 上执行的
+（V007 把 `poetry_agent_tool_receipt.idempotency_key` 限到 128 字符，就是为绕开 5.6 的
+767 字节索引上限）；**今天那台库已经是 8.0.46**（`mysql.sspacee.com:6666` 握手横幅实测
+`8.0.46-0ubuntu0.24.04.5`，与 `docs/game/README.md` 11-22 的 `SELECT VERSION()` 一致）。
+所以 SQL 仍按 5.6 子集写（无 CTE、无 JSON、字面量禁反斜杠）的理由已不是「服务器是 5.6」，
+而是**前向兼容**：同一套脚本在两版都能一次跑过。
 迁移脚本：`V001__foundation.sql`（22 表，2026-11-06 00:33 已应用）→ `V003__integrity.sql`（加固 +4 表，2026-11-06 14:14 已应用）→ `V002__draft_seed.sql` → `V004__chunwang_context_draft.sql`（《春望》草稿闭环）→ `V006__media_and_script.sql`（+3 表：`poetry_asset` / `poetry_script` / `poetry_script_asset`，2026-11-06 15:44 已应用），**均已执行**；126 项核查真库全 0（15:45 实测）。
 全部 `poetry_` 前缀，**无外键**；回退只有 `drop_poetry_objects.sql`（会清空所有 poetry 表）。
 现场事实：服务端默认字符集是 `utf8`，我们的表显式声明 `utf8mb4`（中文实测正常）；该账号**没有建库权限**，所以只能同库前缀隔离，不能另起 `*_dev` 库。

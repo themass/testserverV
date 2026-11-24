@@ -32,7 +32,7 @@
 | 7 | ~~无写入/审核服务入口~~ **已做最小闭环**：状态转移 + 核查 + 留痕；仍**不创建内容**（录入还是受控 SQL） | 只有读接口 | 录数据靠手工 SQL，符合当前阶段（内容少、必须人审） | **推迟**：但文档必须写死"录入=受控 SQL"，否则将来做 CMS 会绕过所有约定 |
 | 8 | ~~无回滚脚本~~ **已做**：`drop_poetry_objects.sql`（26 张表，含顺序说明） | 脚本靠手工执行；无 drop 清单 | 误执行或需要回退时没有标准动作 | **现在做**：补 `drop_poetry_objects.sql` + 执行前检查清单（MySQL 版本、InnoDB、字符集、备份） |
 | 9 | ~~配置项只有 `poetry.enabled`~~ **已加** `poetry.reviewToken`（不配=写侧 503）、`poetry.rateLimitPerMinute` | 无法控制分页上限、schema 版本要求 | **推迟** |
-| 10 | **测试缺口**：核查 SQL 仍未纳入回归（但已在**真 MySQL 5.6.40** 手工执行通过：106 项全 0） | 现有 4 个测试类不含 audit 文件；`TRIM`、`LIMIT/OFFSET`、`utf8mb4_bin` 排序未在真实 MySQL 验证 | 核查文件写错不会被发现（本轮已手工用 H2 跑通一次） | **现在做**：加一个测试读取 `audit_integrity_checks.sql` 并断言全部返回 0 |
+| 10 | **测试缺口**：核查 SQL 仍未纳入回归（但已在**真库**手工执行通过：106 项全 0；当时库是 5.6.40，今天同一台已是 8.0.46——见 `data-model.md` 版本口径） | 现有 4 个测试类不含 audit 文件；`TRIM`、`LIMIT/OFFSET`、`utf8mb4_bin` 排序未在真实 MySQL 验证 | 核查文件写错不会被发现（本轮已手工用 H2 跑通一次） | **现在做**：加一个测试读取 `audit_integrity_checks.sql` 并断言全部返回 0 |
 | 11 | ~~覆盖声明硬编码~~ **已做**：读 `poetry_coverage`；Java 只保留一句产品声明 | `PoetryCatalog.timeline()` | 覆盖范围无法随数据变化 | **现在做**：改为读覆盖元数据（见 `data-model.md` 缺口） |
 
 ## 3. 本轮（V003 + 词表 + 自检 + 限流）之后仍然欠的
