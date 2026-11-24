@@ -39,8 +39,13 @@ class PoetryStudioApplyTest {
             fx.agent.apply(fx.contextFor("proposal_leg", "idem-leg"), "proposal_leg", new ProposalApply("review_leg")),
             "executable changes with no per-item decisions must be refused");
         assertEquals(0, annotationCount("proposal_leg"), "nothing may be written");
-        assertEquals("APPROVED", fx.jdbc.queryForObject("SELECT status FROM poetry_agent_proposal WHERE id='proposal_leg'", String.class),
-            "a refused apply must leave the proposal as it was");
+        // The proposal's own status column stays 'DRAFT' until a successful apply flips it to
+        // 'APPLIED'; the human review lives in review_status. Assert both — the refusal must
+        // leave the row exactly as approveProposal set it.
+        assertEquals("APPROVED", fx.jdbc.queryForObject("SELECT review_status FROM poetry_agent_proposal WHERE id='proposal_leg'", String.class),
+            "a refused apply must leave the human review as it was");
+        assertEquals("DRAFT", fx.jdbc.queryForObject("SELECT status FROM poetry_agent_proposal WHERE id='proposal_leg'", String.class),
+            "a refused apply must not advance the proposal status");
     }
 
     @Test void onlyExplicitlyApprovedExecutableItemsAreApplied() throws Exception {

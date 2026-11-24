@@ -39,6 +39,9 @@ class PoetryIntegrationTest {
             new org.springframework.jdbc.datasource.DataSourceTransactionManager(ds)).executeWithoutResult(status ->
                 new ResourceDatabasePopulator(new org.springframework.core.io.ByteArrayResource(
                     seed.getBytes(java.nio.charset.StandardCharsets.UTF_8))).execute(ds));
+        // V003 adds poetry_coverage and poetry_background.audience — the read path (PoetryMapper)
+        // queries those since V003 landed, so the fixture must carry it too.
+        new ResourceDatabasePopulator(new ClassPathResource("db/poetry/V003__integrity.sql")).execute(ds);
         jdbc = new JdbcTemplate(ds);
         Configuration config = new Configuration(new Environment("test", new JdbcTransactionFactory(), ds));
         // Match the host: no underscore-to-camel-case setting or custom record mapping.
@@ -61,7 +64,8 @@ class PoetryIntegrationTest {
     }
     @Test void draftSeedIsPresentButInvisibleEvenViaChildUrls() throws Exception {
         assertEquals(8, jdbc.queryForObject("SELECT COUNT(*) FROM poetry_text_line", Integer.class));
-        assertEquals(2, jdbc.queryForObject("SELECT COUNT(*) FROM poetry_schema_version", Integer.class));
+        // V001+V002+V003 each stamp one schema_version row.
+        assertEquals(3, jdbc.queryForObject("SELECT COUNT(*) FROM poetry_schema_version", Integer.class));
         assertTrue(catalog.contents(null, 20, 0).items().isEmpty());
         assertThrows(PoetryCatalog.NotFound.class, () -> catalog.work("work-chun-wang"));
         mvc.perform(get("/api/poetry/v1/versions/text-chun-wang-draft/lines")).andExpect(status().isNotFound());
@@ -147,9 +151,13 @@ class PoetryIntegrationTest {
             .andExpect(status().isOk()).andExpect(jsonPath("$.data.items[0].lineSeq").value(1))
             .andExpect(jsonPath("$.data.hasMore").value(true));
     }
-    @Test void foreignKeysRejectBrokenReferencesAndDuplicateTextLines() {
-        assertThrows(Exception.class, () -> jdbc.update("INSERT INTO poetry_text_line VALUES ('absent',1,'x',NULL)"));
+    @Test void noForeignKeysByRuleButPrimaryKeyStillRejectsDuplicateTextLines() {
+        // Project rule (V001 header): no FOREIGN KEY in DDL. An orphan line is therefore NOT blocked
+        // at the DDL layer — audit_integrity_checks.sql is the declared substitute. The DDL still
+        // enforces the (version_id, line_seq) primary key, which is what this pins down.
+        jdbc.update("INSERT INTO poetry_text_line VALUES ('no-such-version',1,'orphan by design',NULL)");
         assertThrows(Exception.class, () -> jdbc.update("INSERT INTO poetry_text_line VALUES ('text-chun-wang-draft',1,'x',NULL)"));
+        assertThrows(Exception.class, () -> jdbc.update("INSERT INTO poetry_text_line VALUES ('no-such-version',1,'dup seq',NULL)"));
     }
     @Test void emptyTypedEndpointsExecuteTheirQueries() {
         reviewWorkAndSource(); reviewNode("person-du-fu");
