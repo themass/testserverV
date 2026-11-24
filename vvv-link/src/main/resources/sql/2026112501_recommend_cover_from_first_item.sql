@@ -1,5 +1,10 @@
 -- 2026112501 列表页频道卡缺封面 → 回填该频道第一部电影的封面（手工执行，生产 MySQL 由用户跑）
 --
+-- 【已取代】③ 的相关子查询+EXISTS 在生产实跑超时被掐（断连＝整事务回滚，库未被改）：
+--   36 个空封面频道各扫两趟 videoitems_1，而 ddys 系频道在 items 表没有条目行 → 全表扫空转。
+--   执行改用 2026112502_recommend_cover_fast.sql（先建 channel 索引再回填）。
+--   本文件保留作口径说明与备份/回滚结构参考。
+--
 -- 【重要更正】「列表页」(recommend/movie.json, dataType=5) 的频道卡并不在 vpn.recommend：
 --   DataServiceImpl.getRecommendMoviePage → DataVideoServiceImpl.getVideoChannel
 --   → VpnRecommandMapper 无关，走 VideoMapper.getChannel：
