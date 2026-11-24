@@ -44,4 +44,42 @@ Agent 另有一条只读边：可读底座作上下文，不可写库
 | 核查 SQL | `audit_integrity_checks.sql` 106 项 | 已实测（草稿全 0；演练库 5 项非 0） |
 | 自检与词表 | `PoetrySelfCheck` + `Vocabulary` | 已实现（fail-soft，只告警） |
 | 限流与日志 | `PoetryAccessGuard` | 已实现（单实例，非分布式） |
-| Agent | 无代码 | 明确未实现；底座已为它留出草稿区与 claim 词表 |
+| Agent | 无代码 | 明确未实现；底座已为它留出草稿区与 claim 词表。**2026-11-24 补**：仓库里已有五个 agent 家族（内容生产、学生端讲诗、companion、job-come、naviforge），端口/在线状态/入口定案见 `agents.md`；这张图说的「Agent」= 内容生产那一支，它对 Java 只有一条边：**读已发布 + 写 DRAFT**，没有公网入口 |
+
+## 进程与装配（2026-11-24 补：这一层此前没写进架构文档）
+
+唐诗的 Java 侧只有**一个进程**：`vvv-link` jar（`bootstrap.yml: port 8888`）。
+poetry 与 student 不是独立服务、没有独立端口，而是同一个 jar 里靠
+`@ConditionalOnProperty` 装载的两个模块——**开关不在 yml 里，模块就整个不存在**，
+请求落到宿主兜底（实测 `errno:10000`），不是 404、更不是崩。
+
+| 模块 | 开关 | 对外路由 | 关键件 |
+|---|---|---|---|
+| `vvv-poetry` | `poetry.enabled` | `/api/poetry/v1/**`（读 + review/publish） | `PoetrySql`（读侧复查 fail closed）、`AuditRunner`（106 项）、`PoetrySelfCheck`、`PoetryAccessGuard` |
+| `vvv-student` | `student.enabled` | `/api/student/v1/**` + `/app/` + `/assets/` | `StudentContentController`（config/timeline/overview/works/{id}/lesson/pack/bundles/claims·citations/assets·chain）、`StudentDeviceController`、`StudentSqlGuard`、`StudentCorsFilter`（白名单 origin，Bearer 非 cookie 故不放 credentials）、`StudentAccessGuard`、`BundleStore`、`StudentStaticResources` |
+| `vvv-game` / `vvv-roles` / 旧 vpn 业务 | 各自开关 | `/vvv/api/**` | 同 jar，与唐诗互不干扰（旧拦截器只匹配 `/**/*.json`，`@MapperScan` 只扫 `com.timeline.vpn.dao.db`） |
+
+student 层的读边界：**它不另开一条写口**——`ContentService` 的构造参数里就有
+`PoetryCatalog`，读的还是同一个内容底座，因此发布闸门对两个模块同时生效；
+student 自己只加设备登记、bundle 缓存与限流。
+
+装配开关必须在**服务器上**加（`bootstrap-*.yml` 被 `.gitignore` 排除，含库口令，
+不随 jar 走）——这是「代码没错但线上没装配」这类现象的唯一根因，见 `deploy/README.md`。
+
+## 一个已知缺口：宿主的通配 CORS（2026-11-24 实测）
+
+`vvv-link` 里有个 `MyCorsFilter`：`addAllowedOriginPattern("*")` +
+`allowCredentials(true)`，注册在 `/**`。实测带任意 `Origin` 请求现网
+`/vvv/api/poetry/v1/**` 会拿到 `Access-Control-Allow-Origin: <该 Origin>`
++ `Access-Control-Allow-Credentials: true`。两个后果：
+
+1. `StudentCorsFilter` 的白名单在跨域上实际**不起决定作用**（宿主过滤器在前、且已应答预检）；
+   唐诗读接口本无 cookie 会话，所以现在没有数据泄漏，但**写侧（review/publish）也在 `/**` 范围内**，
+   靠的只是 token 头，不是 CORS。
+2. ~~「poetry.sspacee.com 静态 + api 单独一个域」这个拓扑要成立，前端跨域就必须真受白名单管~~
+   —— 2026-11-24 拓扑改定为 **PWA 与 API 同源**（都在网关 `poetry.sspacee.com`），
+   唐诗这条不再触发跨域，此缺口**不是上线阻塞项**；但它对旧业务（vpn/chat/game 的写侧）依然成立，
+   仍要修。
+
+修法（未做，等排期）：把 `MyCorsFilter` 的注册范围收到旧业务前缀（如 `/vvv/api/**` 里
+除 poetry/student 之外的部分），或按前缀分别注册；改完必须重新实测两个 origin 的预检行为。
